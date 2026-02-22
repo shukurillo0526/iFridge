@@ -80,14 +80,14 @@ class InventoryItem {
   }
 
   /// Factory for Supabase rows with joined `ingredients` table.
-  /// Expects: `inventory_items.select('*, ingredients(display_name_en, category, image_url)')`.
+  /// Expects: `inventory_items.select('*, ingredients(display_name_en, category)')`.
   factory InventoryItem.fromSupabase(Map<String, dynamic> row) {
     final ingredient = row['ingredients'] as Map<String, dynamic>?;
     return InventoryItem(
       id: row['id'] as String,
       ingredientId: row['ingredient_id'] as String,
       name: ingredient?['display_name_en'] ?? 'Unknown',
-      imageUrl: ingredient?['image_url'] as String?,
+      imageUrl: null,
       quantity: (row['quantity'] as num).toDouble(),
       unit: row['unit'] as String? ?? 'piece',
       itemState: row['item_state'] as String? ?? 'sealed',

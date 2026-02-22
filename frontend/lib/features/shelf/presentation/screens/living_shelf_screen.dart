@@ -59,7 +59,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
 
       final data = await Supabase.instance.client
           .from('inventory_items')
-          .select('*, ingredients(display_name_en, category, image_url)')
+          .select('*, ingredients(display_name_en, category)')
           .eq('user_id', _demoUserId)
           .order('computed_expiry', ascending: true);
 
