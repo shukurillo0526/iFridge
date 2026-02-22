@@ -1,0 +1,14 @@
+# Virtual environment
+venv/
+
+# Environment secrets (NEVER upload this)
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
