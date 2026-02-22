@@ -1,11 +1,11 @@
 {
-    "name": "ifridge_app",
-    "short_name": "ifridge_app",
+    "name": "iFridge",
+    "short_name": "iFridge",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "I-Fridge: The Intelligent Fridge Ecosystem",
+    "description": "iFridge: The Intelligent Fridge Ecosystem",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
