@@ -12,6 +12,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
+import 'package:ifridge_app/core/utils/category_images.dart';
 import 'package:ifridge_app/features/scan/presentation/screens/audit_screen.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -417,7 +418,7 @@ class _ScanScreenState extends State<ScanScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Summary Header
-          if (_isReceiptMode)
+          if (_scanMode == 0)
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -687,6 +688,86 @@ class _ScanScreenState extends State<ScanScreen>
       ),
     );
   }
+
+  // ── Barcode Scanner ─────────────────────────────────────────────
+
+  Future<void> _openBarcodeScanner() async {
+    final barcode = await showDialog<String>(
+      context: context,
+      builder: (ctx) {
+        final controller = TextEditingController();
+        return AlertDialog(
+          backgroundColor: AppTheme.surface,
+          title: const Text('Enter Barcode',
+              style: TextStyle(color: Colors.white)),
+          content: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: 'e.g., 8801234567890',
+              hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+              filled: true,
+              fillColor: AppTheme.background,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+              style: FilledButton.styleFrom(
+                backgroundColor: IFridgeTheme.secondary,
+              ),
+              child: const Text('Look Up'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (barcode == null || barcode.isEmpty) return;
+
+    setState(() {
+      _scanning = true;
+      _error = null;
+    });
+
+    try {
+      final result = await _api.lookupBarcode(barcode);
+      if (!mounted) return;
+
+      setState(() => _scanning = false);
+
+      if (result != null && result['product'] != null) {
+        final product = result['product'] as Map<String, dynamic>;
+        _showManualEntryForm(
+          prefillName: product['product_name'] as String? ?? barcode,
+          prefillCategory: product['categories'] as String?,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No product found for barcode $barcode'),
+            backgroundColor: Colors.orange.shade800,
+          ),
+        );
+        _showManualEntryForm(prefillName: barcode);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _scanning = false;
+        _error = 'Barcode lookup failed: $e';
+      });
+    }
+  }
 }
 
 class _ManualEntryBottomSheet extends StatefulWidget {
@@ -710,9 +791,13 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
   String _category = 'Produce';
   
   final List<String> _categories = [
-    'Produce', 'Vegetable', 'Fruit', 'Meat', 'Seafood', 
-    'Dairy', 'Milk', 'Eggs', 'Bakery', 'Bread', 
-    'Pantry', 'Frozen', 'Beverage', 'Snack'
+    'Produce', 'Vegetable', 'Fruit', 'Meat', 'Poultry', 'Seafood',
+    'Dairy', 'Milk', 'Cheese', 'Yogurt', 'Eggs',
+    'Bakery', 'Bread', 'Grain', 'Pasta',
+    'Pantry', 'Canned', 'Frozen',
+    'Beverage', 'Juice', 'Snack',
+    'Condiment', 'Spice', 'Oil', 'Sauce',
+    'Nuts', 'Legumes', 'Tofu', 'Protein',
   ];
 
   final List<String> _units = [
@@ -737,22 +822,39 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
   }
 
   void _updateExpiryByCategory(String cat) {
-    int days = 14;
-    switch (cat) {
-      case 'Produce': 
-      case 'Vegetable':
-      case 'Fruit': days = 7; break;
-      case 'Meat':
-      case 'Seafood': days = 3; break;
-      case 'Dairy':
-      case 'Milk': days = 10; break;
-      case 'Eggs': days = 21; break;
-      case 'Bakery':
-      case 'Bread': days = 5; break;
-      case 'Pantry': days = 180; break;
-      case 'Frozen': days = 90; break;
-      case 'Beverage': days = 30; break;
-      case 'Snack': days = 60; break;
+    final lc = cat.toLowerCase();
+    int days;
+    switch (lc) {
+      case 'produce':
+      case 'vegetable': days = 7; break;
+      case 'fruit': days = 5; break;
+      case 'meat':
+      case 'poultry': days = 3; break;
+      case 'seafood': days = 2; break;
+      case 'dairy': days = 10; break;
+      case 'milk': days = 7; break;
+      case 'cheese': days = 30; break;
+      case 'yogurt': days = 14; break;
+      case 'eggs': days = 21; break;
+      case 'bakery':
+      case 'bread': days = 5; break;
+      case 'grain':
+      case 'pasta': days = 365; break;
+      case 'pantry':
+      case 'canned': days = 365; break;
+      case 'frozen': days = 90; break;
+      case 'beverage':
+      case 'juice': days = 30; break;
+      case 'snack': days = 60; break;
+      case 'condiment':
+      case 'sauce': days = 180; break;
+      case 'spice': days = 730; break; // 2 years
+      case 'oil': days = 365; break;
+      case 'nuts': days = 180; break;
+      case 'legumes': days = 365; break;
+      case 'tofu': days = 7; break;
+      case 'protein': days = 3; break;
+      default: days = 14;
     }
     setState(() {
       _expiryDate = DateTime.now().add(Duration(days: days));
@@ -922,17 +1024,31 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                       color: AppTheme.surface,
                       child: Container(
                         width: constraints.maxWidth,
-                        constraints: const BoxConstraints(maxHeight: 200),
+                        constraints: const BoxConstraints(maxHeight: 240),
                         child: ListView.builder(
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,
                           itemCount: options.length,
                           itemBuilder: (context, index) {
                             final option = options.elementAt(index);
+                            final cat = option['category'] as String? ?? '';
                             return ListTile(
-                              leading: const Icon(Icons.fastfood, color: AppTheme.accent),
-                              title: Text(option['display_name_en'], style: const TextStyle(color: Colors.white)),
-                              subtitle: Text(option['category'] ?? '', style: TextStyle(color: Colors.white.withValues(alpha: 0.5))),
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  categoryImageUrl(cat),
+                                  width: 40,
+                                  height: 40,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => Container(
+                                    width: 40, height: 40,
+                                    color: IFridgeTheme.bgElevated,
+                                    child: Center(child: Text(categoryEmoji(cat), style: const TextStyle(fontSize: 20))),
+                                  ),
+                                ),
+                              ),
+                              title: Text(option['display_name_en'] ?? '', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                              subtitle: Text(cat, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12)),
                               onTap: () => onSelected(option),
                             );
                           },
@@ -1045,90 +1161,6 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
         ),
       ),
     );
-  }
-
-  // ── Barcode Scanner ────────────────────────────────────────────────
-
-  Future<void> _openBarcodeScanner() async {
-    // For web, barcode scanning requires camera access
-    // Show a dialog with a text field to manually enter barcode for now
-    final barcode = await showDialog<String>(
-      context: context,
-      builder: (ctx) {
-        final controller = TextEditingController();
-        return AlertDialog(
-          backgroundColor: AppTheme.surface,
-          title: const Text('Enter Barcode',
-              style: TextStyle(color: Colors.white)),
-          content: TextField(
-            controller: controller,
-            keyboardType: TextInputType.number,
-            style: const TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              hintText: 'e.g., 8801234567890',
-              hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
-              filled: true,
-              fillColor: AppTheme.background,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(ctx, controller.text.trim()),
-              style: FilledButton.styleFrom(
-                backgroundColor: IFridgeTheme.secondary,
-              ),
-              child: const Text('Look Up'),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (barcode == null || barcode.isEmpty) return;
-
-    setState(() {
-      _scanning = true;
-      _error = null;
-    });
-
-    try {
-      final result = await _api.lookupBarcode(barcode);
-      if (!mounted) return;
-
-      setState(() => _scanning = false);
-
-      if (result != null && result['product'] != null) {
-        final product = result['product'] as Map<String, dynamic>;
-        // Auto-open manual entry with pre-filled data
-        _showManualEntryForm(
-          prefillName: product['product_name'] as String? ?? barcode,
-          prefillCategory: product['categories'] as String?,
-        );
-      } else {
-        // Product not found — let user add manually
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('No product found for barcode $barcode'),
-            backgroundColor: Colors.orange.shade800,
-          ),
-        );
-        _showManualEntryForm(prefillName: barcode);
-      }
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _scanning = false;
-        _error = 'Barcode lookup failed: $e';
-      });
-    }
   }
 }
 
