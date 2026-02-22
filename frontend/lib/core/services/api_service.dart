@@ -10,11 +10,11 @@ import 'package:http_parser/http_parser.dart';
 
 class ApiConfig {
   // Local Ollama-powered backend
-  static const String baseUrl = 'http://localhost:8000';
+  // static const String baseUrl = 'http://localhost:8000';
 
-  // Railway production URL (uncomment for deployment):
-  // static const String baseUrl =
-  //     'https://merry-motivation-production-3529.up.railway.app';
+  // Railway production URL:
+  static const String baseUrl =
+      'https://merry-motivation-production-3529.up.railway.app';
 }
 
 class ApiService {
