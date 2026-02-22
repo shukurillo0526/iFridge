@@ -25,7 +25,7 @@ class IFridgeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'I-Fridge',
+      title: 'iFridge',
       debugShowCheckedModeBanner: false,
       theme: IFridgeTheme.darkTheme,
       home: const AppShell(),
