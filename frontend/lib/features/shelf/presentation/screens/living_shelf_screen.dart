@@ -12,9 +12,7 @@ import 'package:ifridge_app/core/widgets/slide_in_item.dart';
 import 'package:ifridge_app/features/shelf/domain/inventory_item.dart';
 import 'package:ifridge_app/features/shelf/presentation/widgets/inventory_item_card.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/cook_screen.dart';
-
-/// Demo user UUID — matches the seed_data.sql deterministic UUID.
-const _demoUserId = '00000000-0000-4000-8000-000000000001';
+import 'package:ifridge_app/core/services/auth_helper.dart';
 
 class LivingShelfScreen extends StatefulWidget {
   const LivingShelfScreen({super.key});
@@ -60,7 +58,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
       final data = await Supabase.instance.client
           .from('inventory_items')
           .select('*, ingredients(display_name_en, category)')
-          .eq('user_id', _demoUserId)
+          .eq('user_id', currentUserId())
           .order('computed_expiry', ascending: true);
 
 
@@ -91,7 +89,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
           filter: PostgresChangeFilter(
             type: PostgresChangeFilterType.eq,
             column: 'user_id',
-            value: _demoUserId,
+            value: currentUserId(),
           ),
           callback: (payload) {
             // Reload full inventory on any change

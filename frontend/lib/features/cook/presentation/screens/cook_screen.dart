@@ -12,7 +12,7 @@ import 'package:ifridge_app/core/widgets/slide_in_item.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/recipe_detail_screen.dart';
 
-const _demoUserId = '00000000-0000-4000-8000-000000000001';
+import 'package:ifridge_app/core/services/auth_helper.dart';
 
 class CookScreen extends StatefulWidget {
   const CookScreen({super.key});
@@ -68,7 +68,7 @@ class _CookScreenState extends State<CookScreen>
       final inventoryRows = await client
           .from('inventory_items')
           .select('ingredient_id')
-          .eq('user_id', _demoUserId);
+          .eq('user_id', currentUserId());
 
       final ownedIds = (inventoryRows as List)
           .map((r) => r['ingredient_id'] as String)
@@ -80,7 +80,7 @@ class _CookScreenState extends State<CookScreen>
 
       try {
         rpcResponse = await client.rpc('get_recommended_recipes', params: {
-          'p_user_id': _demoUserId,
+          'p_user_id': currentUserId(),
           'p_limit': 50,
         });
         if (rpcResponse.isEmpty) useDirectQuery = true;
@@ -248,7 +248,7 @@ class _CookScreenState extends State<CookScreen>
     final rows = await client
         .from('inventory_items')
         .select('ingredients(display_name_en)')
-        .eq('user_id', _demoUserId);
+        .eq('user_id', currentUserId());
     final ingredientNames = (rows as List)
         .map((r) => r['ingredients']?['display_name_en'] as String?)
         .whereType<String>()

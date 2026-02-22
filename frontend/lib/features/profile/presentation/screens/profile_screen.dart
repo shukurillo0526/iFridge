@@ -11,8 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/widgets/shimmer_loading.dart';
 import 'package:ifridge_app/features/gamification/domain/badges.dart' show levelFromXp;
-
-const _demoUserId = '00000000-0000-4000-8000-000000000001';
+import 'package:ifridge_app/core/services/auth_helper.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -59,9 +58,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       // Parallel queries
       final results = await Future.wait([
-        client.from('users').select().eq('id', _demoUserId).maybeSingle(),
-        client.from('gamification_stats').select().eq('user_id', _demoUserId).maybeSingle(),
-        client.from('user_flavor_profile').select().eq('user_id', _demoUserId).maybeSingle(),
+        client.from('users').select().eq('id', currentUserId()).maybeSingle(),
+        client.from('gamification_stats').select().eq('user_id', currentUserId()).maybeSingle(),
+        client.from('user_flavor_profile').select().eq('user_id', currentUserId()).maybeSingle(),
       ]);
 
       final userData = results[0];
@@ -221,6 +220,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 icon: const Icon(Icons.refresh),
                 onPressed: _loadProfile,
                 tooltip: 'Refresh',
+              ),
+              IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () async {
+                  await Supabase.instance.client.auth.signOut();
+                },
+                tooltip: 'Sign Out',
               ),
             ],
           ),

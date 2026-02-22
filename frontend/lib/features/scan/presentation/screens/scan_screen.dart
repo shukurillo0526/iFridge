@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
+import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/features/scan/presentation/screens/audit_screen.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -770,8 +771,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
       // Insert into Supabase inventory_items
       try {
         final client = Supabase.instance.client;
-        final user = client.auth.currentUser;
-        final userId = user?.id ?? '00000000-0000-4000-8000-000000000001';
+        final userId = currentUserId();
 
         // 1. Upsert into ingredients table (find or create)
         final existingIngredient = await client

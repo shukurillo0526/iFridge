@@ -8,6 +8,7 @@ import 'package:ifridge_app/features/shelf/presentation/screens/living_shelf_scr
 import 'package:ifridge_app/features/cook/presentation/screens/cook_screen.dart';
 import 'package:ifridge_app/features/scan/presentation/screens/scan_screen.dart';
 import 'package:ifridge_app/features/profile/presentation/screens/profile_screen.dart';
+import 'package:ifridge_app/features/auth/presentation/screens/auth_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -28,7 +29,26 @@ class IFridgeApp extends StatelessWidget {
       title: 'iFridge',
       debugShowCheckedModeBanner: false,
       theme: IFridgeTheme.darkTheme,
-      home: const AppShell(),
+      home: const _AuthGate(),
+    );
+  }
+}
+
+/// Auth gate — routes to AuthScreen or AppShell based on session state.
+class _AuthGate extends StatelessWidget {
+  const _AuthGate();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<AuthState>(
+      stream: Supabase.instance.client.auth.onAuthStateChange,
+      builder: (context, snapshot) {
+        final session = Supabase.instance.client.auth.currentSession;
+        if (session != null) {
+          return const AppShell();
+        }
+        return const AuthScreen();
+      },
     );
   }
 }

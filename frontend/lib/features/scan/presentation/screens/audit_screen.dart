@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
+import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:math' as math;
 
@@ -85,7 +86,7 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
         if (actionMsg == 'Accepted') {
           try {
             final client = Supabase.instance.client;
-            const userId = '00000000-0000-4000-8000-000000000001';
+            final userId = currentUserId();
 
             // 1. Find or create ingredient
             final existing = await client
