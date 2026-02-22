@@ -95362,7 +95362,7 @@ A.zF.prototype={
 yb(a,b){return this.aAG(a,b)},
 aAG(a,b){var s=0,r=A.D(t.P),q,p=this,o,n,m
 var $async$yb=A.z(function(c,d){if(c===1)return A.A(d,r)
-for(;;)switch(s){case 0:o=A.aNv("POST",A.dt("http://localhost:8000/api/v1/receipt/scan",0,null))
+for(;;)switch(s){case 0:o=A.aNv("POST",A.dt("https://merry-motivation-production-3529.up.railway.app/api/v1/receipt/scan",0,null))
 n=t.N
 o.r.M(0,A.a3(["Accept","application/json"],n,n))
 o.y.push(A.aNu("file",b,A.CH("image","jpeg",null),a))
@@ -95379,7 +95379,7 @@ return A.C($async$yb,r)},
 x_(a,b){return this.avw(a,b)},
 avw(a,b){var s=0,r=A.D(t.P),q,p=this,o,n,m
 var $async$x_=A.z(function(c,d){if(c===1)return A.A(d,r)
-for(;;)switch(s){case 0:o=A.aNv("POST",A.dt("http://localhost:8000/api/v1/vision/detect-ingredients",0,null))
+for(;;)switch(s){case 0:o=A.aNv("POST",A.dt("https://merry-motivation-production-3529.up.railway.app/api/v1/vision/detect-ingredients",0,null))
 n=t.N
 o.r.M(0,A.a3(["Accept","application/json"],n,n))
 o.y.push(A.aNu("file",b,A.CH("image","jpeg",null),a))
@@ -95396,7 +95396,7 @@ return A.C($async$x_,r)},
 yU(a){return this.a4H(a)},
 a4H(a){var s=0,r=A.D(t.P),q,p=this,o,n,m
 var $async$yU=A.z(function(b,c){if(b===1)return A.A(c,r)
-for(;;)switch(s){case 0:o=A.dt("http://localhost:8000/api/v1/ai/cooking-tip",0,null)
+for(;;)switch(s){case 0:o=A.dt("https://merry-motivation-production-3529.up.railway.app/api/v1/ai/cooking-tip",0,null)
 n=t.N
 m=A.p(n,n)
 m.m(0,"step_text",a)
@@ -95412,7 +95412,7 @@ return A.C($async$yU,r)},
 yP(a){return this.a4A(a)},
 a4A(a){var s=0,r=A.D(t.P),q,p=this,o,n,m
 var $async$yP=A.z(function(b,c){if(b===1)return A.A(c,r)
-for(;;)switch(s){case 0:o=A.dt("http://localhost:8000/api/v1/ai/generate-recipe",0,null)
+for(;;)switch(s){case 0:o=A.dt("https://merry-motivation-production-3529.up.railway.app/api/v1/ai/generate-recipe",0,null)
 n=t.N
 m=A.p(n,t.K)
 m.m(0,"ingredients",a)
