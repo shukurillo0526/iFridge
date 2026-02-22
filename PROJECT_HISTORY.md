@@ -16,7 +16,7 @@ The master plan for I-Fridge encompasses:
 
 ## 🏗️ What We Have Built (The Consumer Pivot - Phases 1-7)
 
-We have successfully completed the 7-phase consumer pivot, resulting in a polished, AI-powered MVP.
+We have successfully completed the 7-phase consumer pivot, resulting in a polished, AI-powered MVP that is fully deployed as a responsive Web Application via GitHub Pages.
 
 ### Phase 1: Existing UI/UX Polish & Functional Fixes
 - Audited all current screens (Shelf, Scan, Cook, Profile).
@@ -24,9 +24,10 @@ We have successfully completed the 7-phase consumer pivot, resulting in a polish
 - Enhanced empty states and loading indicators using Shimmer skeleton screens.
 
 ### Phase 2: Ingredient Adding & Expiry Intelligence
-- **Advanced Manual Entry:** Upgraded the Scan screen's manual entry with category dropdowns (Produce, Meat, Dairy, etc.) and 12+ metric types (pcs, kg, L, etc.). Form now directly upserts into Supabase.
+- **Advanced Manual Entry:** Upgraded the Scan screen's manual entry with a highly-responsive Supabase **Autocomplete** functionality. Upon selecting a Google-like suggestion, it automatically infers category and metric type.
+- **Smart Expiry Engine:** Implemented a robust offline fallback system that algorithmically assigns Estimated Expiry Dates based purely on the selected ingredient category natively in Dart.
 - **OCR Receipt Parsing:** Built a FastAPI backend integrating Google Gemini 1.5 Flash. Tuned the prompt specifically for complex Korean grocery receipts (e.g., 진안식자재마트), successfully extracting items, sizes, origin markers, and tax-exempt tags.
-- **Heuristic Expiry Engine:** Developed a robust fallback system with 25+ category-specific shelf-life estimates to automatically assign expiration dates when not found via OCR.
+- **Direct Photo Scan Logic:** Completely separated the UI logic so receipt parsing and direct photo ingredient detection (loose items on a counter) use dedicated APIs, eliminating cross-contamination of display metrics.
 
 ### Phase 3: Social-Style Recommendation Algorithm
 - Rebranded the rigid 5-tier matching system into engaging social-style feeds:
@@ -80,6 +81,21 @@ Following the consumer pivot, we replaced expensive cloud AI services with local
 ### Phase 11: Smart Search
 - Added an AI-powered Search overlay in the Cook screen (`_RecipeSearchDelegate`).
 - Enables fuzzy semantic-style filtering across all recommended recipes natively in Flutter.
+
+---
+
+## 🚀 Phase 12-13: Deployment & Branding (Complete)
+
+### Phase 12: Application Branding
+- Explicitly standardized the application name exactly as **"iFridge"**.
+- Generated a custom, ultra-premium 1:1 squircle iOS app icon featuring a glassmorphic 3D rendering of a refrigerator holding vibrant fruits.
+- Spliced, cropped, and embedded this custom icon into the `manifest.json` as `Icon-192`, `Icon-512`, and `favicon.png`.
+
+### Phase 13: GitHub Monorepo & CI/CD
+- Demolished fractured sub-git folders and consolidated both Flutter Front-end and FastAPI Back-end into a single **Monorepo**.
+- Programmed a `flutter_web_deploy.yml` GitHub Actions Workflow to autonomously trigger on `main` branch pushes.
+- Fixed notorious WASM CanvasKit web-rendering blank screen crashes and Case-Sensitive (`--base-href /iFridge/`) directory routing issues on GitHub Pages.
+- Synced the Flutter application directly to the live Railway Production API, cleanly publishing the app to the internet.
 
 ---
 
