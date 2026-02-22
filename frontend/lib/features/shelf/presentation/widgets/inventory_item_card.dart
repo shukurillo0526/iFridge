@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
+import 'package:ifridge_app/core/utils/category_images.dart';
 import 'package:ifridge_app/features/shelf/domain/inventory_item.dart';
 import 'package:ifridge_app/features/shelf/presentation/widgets/freshness_overlay.dart';
 
@@ -107,32 +108,18 @@ class InventoryItemCard extends StatelessWidget {
                           borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(14),
                           ),
-                          image: item.imageUrl != null
-                              ? DecorationImage(
-                                  image: NetworkImage(item.imageUrl!),
-                                  fit: BoxFit.cover,
-                                  colorFilter: isExpired
-                                      ? const ColorFilter.mode(
-                                          Colors.grey, BlendMode.saturation)
-                                      : null,
-                                )
-                              : null,
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              item.imageUrl ?? categoryImageUrl(item.category),
+                            ),
+                            fit: BoxFit.cover,
+                            colorFilter: isExpired
+                                ? const ColorFilter.mode(
+                                    Colors.grey, BlendMode.saturation)
+                                : null,
+                          ),
                         ),
-                        child: item.imageUrl == null
-                            ? Center(
-                                child: ColorFiltered(
-                                  colorFilter: isExpired
-                                      ? const ColorFilter.mode(
-                                          Colors.grey, BlendMode.saturation)
-                                      : const ColorFilter.mode(
-                                          Colors.transparent, BlendMode.multiply),
-                                  child: Text(
-                                    _categoryEmoji(item.category),
-                                    style: const TextStyle(fontSize: 36),
-                                  ),
-                                ),
-                              )
-                            : null,
+                        child: null,
                       ),
                     ),
 

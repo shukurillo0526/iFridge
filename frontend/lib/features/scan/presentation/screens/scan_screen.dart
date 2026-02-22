@@ -27,7 +27,8 @@ class _ScanScreenState extends State<ScanScreen>
   final ApiService _api = ApiService();
 
   bool _scanning = false;
-  bool _isReceiptMode = true;
+  // 0 = Receipt, 1 = Photo, 2 = Barcode
+  int _scanMode = 0;
   Map<String, dynamic>? _results;
   String? _error;
   late AnimationController _pulseController;
@@ -209,69 +210,26 @@ class _ScanScreenState extends State<ScanScreen>
               ),
               child: Row(
                 children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _isReceiptMode = true),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          color: _isReceiptMode
-                              ? AppTheme.accent.withValues(alpha: 0.15)
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.receipt_long,
-                                color: _isReceiptMode
-                                    ? AppTheme.accent
-                                    : Colors.white38,
-                                size: 20),
-                            const SizedBox(height: 4),
-                            Text('Receipt',
-                                style: TextStyle(
-                                    color: _isReceiptMode
-                                        ? AppTheme.accent
-                                        : Colors.white38,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600)),
-                          ],
-                        ),
-                      ),
-                    ),
+                  _ModeTab(
+                    icon: Icons.receipt_long,
+                    label: 'Receipt',
+                    isActive: _scanMode == 0,
+                    activeColor: AppTheme.accent,
+                    onTap: () => setState(() => _scanMode = 0),
                   ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _isReceiptMode = false),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          color: !_isReceiptMode
-                              ? IFridgeTheme.primary.withValues(alpha: 0.15)
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.photo_camera,
-                                color: !_isReceiptMode
-                                    ? IFridgeTheme.primary
-                                    : Colors.white38,
-                                size: 20),
-                            const SizedBox(height: 4),
-                            Text('Photo',
-                                style: TextStyle(
-                                    color: !_isReceiptMode
-                                        ? IFridgeTheme.primary
-                                        : Colors.white38,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600)),
-                          ],
-                        ),
-                      ),
-                    ),
+                  _ModeTab(
+                    icon: Icons.photo_camera,
+                    label: 'Photo',
+                    isActive: _scanMode == 1,
+                    activeColor: IFridgeTheme.primary,
+                    onTap: () => setState(() => _scanMode = 1),
+                  ),
+                  _ModeTab(
+                    icon: Icons.qr_code_scanner,
+                    label: 'Barcode',
+                    isActive: _scanMode == 2,
+                    activeColor: IFridgeTheme.secondary,
+                    onTap: () => setState(() => _scanMode = 2),
                   ),
                 ],
               ),
@@ -280,55 +238,81 @@ class _ScanScreenState extends State<ScanScreen>
             const SizedBox(height: 24),
 
             // Camera button
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: FilledButton.icon(
-                onPressed: () => _isReceiptMode
-                    ? _captureImage(ImageSource.camera)
-                    : _capturePhoto(ImageSource.camera),
-                icon: const Icon(Icons.camera_alt, size: 22),
-                label: const Text(
-                  'Take Photo',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppTheme.accent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+            if (_scanMode != 2) ...[
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: FilledButton.icon(
+                  onPressed: () => _scanMode == 0
+                      ? _captureImage(ImageSource.camera)
+                      : _capturePhoto(ImageSource.camera),
+                  icon: const Icon(Icons.camera_alt, size: 22),
+                  label: const Text(
+                    'Take Photo',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppTheme.accent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
+
+            // Barcode scan button
+            if (_scanMode == 2) ...[
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: FilledButton.icon(
+                  onPressed: _openBarcodeScanner,
+                  icon: const Icon(Icons.qr_code_scanner, size: 22),
+                  label: const Text(
+                    'Scan Barcode',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: IFridgeTheme.secondary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+              ),
+            ],
 
             const SizedBox(height: 12),
 
             // Gallery button
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: OutlinedButton.icon(
-                onPressed: () => _isReceiptMode
-                    ? _captureImage(ImageSource.gallery)
-                    : _capturePhoto(ImageSource.gallery),
-                icon: Icon(Icons.photo_library,
-                    size: 22, color: Colors.white.withValues(alpha: 0.7)),
-                label: Text(
-                  'Choose from Gallery',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white.withValues(alpha: 0.7),
+            if (_scanMode != 2) ...[
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: OutlinedButton.icon(
+                  onPressed: () => _scanMode == 0
+                      ? _captureImage(ImageSource.gallery)
+                      : _capturePhoto(ImageSource.gallery),
+                  icon: Icon(Icons.photo_library,
+                      size: 22, color: Colors.white.withValues(alpha: 0.7)),
+                  label: Text(
+                    'Choose from Gallery',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white.withValues(alpha: 0.7),
+                    ),
                   ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
             
             const SizedBox(height: 12),
             
@@ -692,18 +676,23 @@ class _ScanScreenState extends State<ScanScreen>
 
   // ── Manual Entry Form ────────────────────────────────────────────
 
-  void _showManualEntryForm() {
+  void _showManualEntryForm({String? prefillName, String? prefillCategory}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const _ManualEntryBottomSheet(),
+      builder: (context) => _ManualEntryBottomSheet(
+        prefillName: prefillName,
+        prefillCategory: prefillCategory,
+      ),
     );
   }
 }
 
 class _ManualEntryBottomSheet extends StatefulWidget {
-  const _ManualEntryBottomSheet();
+  final String? prefillName;
+  final String? prefillCategory;
+  const _ManualEntryBottomSheet({this.prefillName, this.prefillCategory});
 
   @override
   State<_ManualEntryBottomSheet> createState() => _ManualEntryBottomSheetState();
@@ -738,6 +727,12 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
   @override
   void initState() {
     super.initState();
+    if (widget.prefillName != null) {
+      _ingredientName = widget.prefillName!;
+    }
+    if (widget.prefillCategory != null && _categories.contains(widget.prefillCategory)) {
+      _category = widget.prefillCategory!;
+    }
     _updateExpiryByCategory(_category);
   }
 
@@ -1047,6 +1042,139 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
               child: const Text('Add to Shelf', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  // ── Barcode Scanner ────────────────────────────────────────────────
+
+  Future<void> _openBarcodeScanner() async {
+    // For web, barcode scanning requires camera access
+    // Show a dialog with a text field to manually enter barcode for now
+    final barcode = await showDialog<String>(
+      context: context,
+      builder: (ctx) {
+        final controller = TextEditingController();
+        return AlertDialog(
+          backgroundColor: AppTheme.surface,
+          title: const Text('Enter Barcode',
+              style: TextStyle(color: Colors.white)),
+          content: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: 'e.g., 8801234567890',
+              hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+              filled: true,
+              fillColor: AppTheme.background,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+              style: FilledButton.styleFrom(
+                backgroundColor: IFridgeTheme.secondary,
+              ),
+              child: const Text('Look Up'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (barcode == null || barcode.isEmpty) return;
+
+    setState(() {
+      _scanning = true;
+      _error = null;
+    });
+
+    try {
+      final result = await _api.lookupBarcode(barcode);
+      if (!mounted) return;
+
+      setState(() => _scanning = false);
+
+      if (result != null && result['product'] != null) {
+        final product = result['product'] as Map<String, dynamic>;
+        // Auto-open manual entry with pre-filled data
+        _showManualEntryForm(
+          prefillName: product['product_name'] as String? ?? barcode,
+          prefillCategory: product['categories'] as String?,
+        );
+      } else {
+        // Product not found — let user add manually
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No product found for barcode $barcode'),
+            backgroundColor: Colors.orange.shade800,
+          ),
+        );
+        _showManualEntryForm(prefillName: barcode);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _scanning = false;
+        _error = 'Barcode lookup failed: $e';
+      });
+    }
+  }
+}
+
+// ── Mode Tab Widget ─────────────────────────────────────────────────
+
+class _ModeTab extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool isActive;
+  final Color activeColor;
+  final VoidCallback onTap;
+
+  const _ModeTab({
+    required this.icon,
+    required this.label,
+    required this.isActive,
+    required this.activeColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isActive
+                ? activeColor.withValues(alpha: 0.15)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon,
+                  color: isActive ? activeColor : Colors.white38, size: 20),
+              const SizedBox(height: 4),
+              Text(label,
+                  style: TextStyle(
+                      color: isActive ? activeColor : Colors.white38,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600)),
+            ],
+          ),
         ),
       ),
     );

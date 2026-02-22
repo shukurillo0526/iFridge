@@ -237,6 +237,22 @@ class ApiService {
     );
   }
 
+  // ── Barcode Lookup ───────────────────────────────────────────────
+
+  Future<Map<String, dynamic>?> lookupBarcode(String code) async {
+    try {
+      final response = await _client.get(
+        Uri.parse('${ApiConfig.baseUrl}/api/v1/barcode/lookup?code=$code'),
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body) as Map<String, dynamic>;
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
   void dispose() => _client.close();
 }
 
