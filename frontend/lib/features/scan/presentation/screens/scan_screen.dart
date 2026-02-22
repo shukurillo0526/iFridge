@@ -551,11 +551,57 @@ class _ScanScreenState extends State<ScanScreen>
                 color: AppTheme.freshGreen,
                 trailing: IconButton(
                   icon: const Icon(Icons.add_shopping_cart, color: AppTheme.accent),
-                  onPressed: () {
-                    // TODO: Phase 2 Connect specific item insert to Supabase RPC
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Added $canonicalName!')),
-                    );
+                  onPressed: () async {
+                    try {
+                      final client = Supabase.instance.client;
+                      final userId = currentUserId();
+
+                      // 1. Find or create ingredient
+                      final existing = await client
+                          .from('ingredients')
+                          .select('id')
+                          .ilike('display_name_en', canonicalName)
+                          .maybeSingle();
+
+                      String ingredientId;
+                      if (existing != null) {
+                        ingredientId = existing['id'];
+                      } else {
+                        final inserted = await client.from('ingredients').insert({
+                          'display_name_en': canonicalName,
+                          'category': category.isNotEmpty ? category : 'Pantry',
+                        }).select('id').single();
+                        ingredientId = inserted['id'];
+                      }
+
+                      // 2. Insert into inventory_items
+                      final qtyNum = double.tryParse(qty) ?? 1.0;
+                      await client.from('inventory_items').insert({
+                        'user_id': userId,
+                        'ingredient_id': ingredientId,
+                        'quantity': qtyNum,
+                        'unit': unit.isEmpty ? 'pcs' : unit,
+                        'location': 'Fridge', // Default location
+                        'expiry_date': i['expiry_date'] ?? DateTime.now().add(const Duration(days: 7)).toIso8601String(),
+                      });
+
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Added $canonicalName!'),
+                          backgroundColor: AppTheme.freshGreen,
+                        ),
+                      );
+                    } catch (e) {
+                      debugPrint('Error adding to shelf: $e');
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Failed to add $canonicalName'),
+                          backgroundColor: Colors.redAccent,
+                        ),
+                      );
+                    }
                   },
                 ),
               );

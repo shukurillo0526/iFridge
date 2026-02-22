@@ -1,0 +1,68 @@
+Analyzing frontend...                                           
+
+   info - Use the null-aware marker '?' rather than a null check via an 'if' - lib\core\services\api_service.dart:110:7 - use_null_aware_elements
+   info - Use the null-aware marker '?' rather than a null check via an 'if' - lib\core\services\api_service.dart:111:7 - use_null_aware_elements
+   info - Use the null-aware marker '?' rather than a null check via an 'if' - lib\core\services\api_service.dart:112:7 - use_null_aware_elements
+   info - Use the null-aware marker '?' rather than a null check via an 'if' - lib\core\services\api_service.dart:156:7 - use_null_aware_elements
+   info - Use the null-aware marker '?' rather than a null check via an 'if' - lib\core\services\api_service.dart:177:7 - use_null_aware_elements
+   info - Use the null-aware marker '?' rather than a null check via an 'if' - lib\core\services\api_service.dart:178:7 - use_null_aware_elements
+   info - Use the null-aware marker '?' rather than a null check via an 'if' - lib\core\services\api_service.dart:179:7 - use_null_aware_elements
+   info - Use the null-aware marker '?' rather than a null check via an 'if' - lib\core\services\api_service.dart:198:7 - use_null_aware_elements
+   info - Dangling library doc comment - lib\core\theme\app_theme.dart:1:1 - dangling_library_doc_comments
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\core\theme\app_theme.dart:85:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\core\theme\app_theme.dart:103:46 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\core\theme\app_theme.dart:107:29 - deprecated_member_use
+   info - Unnecessary use of multiple underscores - lib\core\widgets\shimmer_loading.dart:48:20 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\core\widgets\shimmer_loading.dart:84:26 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\core\widgets\shimmer_loading.dart:100:24 - unnecessary_underscores
+   info - The import of 'dart:ui' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' - lib\features\auth\presentation\screens\auth_screen.dart:6:8 - unnecessary_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\cook\presentation\screens\cook_screen.dart:824:64 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\cook\presentation\screens\cook_screen.dart:827:50 - deprecated_member_use
+   info - Unnecessary use of multiple underscores - lib\features\cook\presentation\screens\cook_screen.dart:834:29 - unnecessary_underscores
+   info - The import of 'dart:ui' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' - lib\features\cook\presentation\screens\cooking_run_screen.dart:7:8 - unnecessary_import
+warning - Unused import: 'dart:convert' - lib\features\cook\presentation\screens\recipe_detail_screen.dart:15:8 - unused_import
+   info - The local variable '_newServings' starts with an underscore - lib\features\cook\presentation\screens\recipe_detail_screen.dart:89:9 - no_leading_underscores_for_local_identifiers
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\features\cook\presentation\screens\recipe_detail_screen.dart:502:48 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\features\cook\presentation\screens\recipe_detail_screen.dart:511:48 - use_build_context_synchronously
+   info - Don't invoke 'print' in production code - lib\features\gamification\data\gamification_repository.dart:50:7 - avoid_print
+   info - Dangling library doc comment - lib\features\gamification\domain\badges.dart:1:1 - dangling_library_doc_comments
+   info - Dangling library doc comment - lib\features\gamification\presentation\widgets\xp_toast.dart:1:1 - dangling_library_doc_comments
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\gamification\presentation\widgets\xp_toast.dart:85:42 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\gamification\presentation\widgets\xp_toast.dart:86:44 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\gamification\presentation\widgets\xp_toast.dart:92:49 - deprecated_member_use
+  error - Target of URI doesn't exist: 'package:flutter_gen/gen_l10n/app_localizations.dart' - lib\features\profile\presentation\screens\profile_screen.dart:16:8 - uri_does_not_exist
+  error - Undefined name 'AppLocalizations' - lib\features\profile\presentation\screens\profile_screen.dart:155:18 - undefined_identifier
+   info - Unnecessary use of multiple underscores - lib\features\profile\presentation\screens\profile_screen.dart:309:47 - unnecessary_underscores
+  error - The named parameter 'color' is required, but there's no corresponding argument - lib\features\profile\presentation\screens\profile_screen.dart:386:34 - missing_required_argument
+  error - The argument type 'List<double>' can't be assigned to the parameter type 'Map<String, double>'.  - lib\features\profile\presentation\screens\profile_screen.dart:387:35 - argument_type_not_assignable
+  error - The named parameter 'labels' isn't defined - lib\features\profile\presentation\screens\profile_screen.dart:388:27 - undefined_named_parameter
+   info - The 'child' argument should be last in widget constructor invocations - lib\features\profile\presentation\screens\profile_screen.dart:471:29 - sort_child_properties_last
+  error - Expected an identifier - lib\features\profile\presentation\screens\profile_screen.dart:490:27 - missing_identifier
+  error - The named parameter '' isn't defined - lib\features\profile\presentation\screens\profile_screen.dart:490:27 - undefined_named_parameter
+  error - Expected an identifier - lib\features\profile\presentation\screens\profile_screen.dart:544:20 - missing_identifier
+  error - Expected to find ':' - lib\features\profile\presentation\screens\profile_screen.dart:544:20 - expected_token
+  error - Too many positional arguments: 0 expected, but 1 found - lib\features\profile\presentation\screens\profile_screen.dart:547:17 - extra_positional_arguments_could_be_named
+  error - Expected to find ')' - lib\features\profile\presentation\screens\profile_screen.dart:550:15 - expected_token
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\features\profile\presentation\screens\profile_screen.dart:628:44 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\features\profile\presentation\screens\profile_screen.dart:693:56 - use_build_context_synchronously
+   info - Use the null-aware marker '?' rather than a null check via an 'if' - lib\features\profile\presentation\screens\profile_screen.dart:743:15 - use_null_aware_elements
+warning - Unused import: 'dart:math' - lib\features\scan\presentation\screens\audit_screen.dart:5:8 - unused_import
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\features\scan\presentation\screens\scan_screen.dart:589:44 - use_build_context_synchronously
+   info - Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check - lib\features\scan\presentation\screens\scan_screen.dart:598:44 - use_build_context_synchronously
+warning - The value of the field '_selectedIngredientId' isn't used - lib\features\scan\presentation\screens\scan_screen.dart:830:11 - unused_field
+   info - Unnecessary use of multiple underscores - lib\features\scan\presentation\screens\scan_screen.dart:1089:53 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\features\scan\presentation\screens\scan_screen.dart:1089:57 - unnecessary_underscores
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\scan\presentation\screens\scan_screen.dart:1112:15 - deprecated_member_use
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\features\scan\presentation\screens\scan_screen.dart:1153:21 - deprecated_member_use
+   info - Dangling library doc comment - lib\features\shelf\domain\inventory_item.dart:1:1 - dangling_library_doc_comments
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\shelf\presentation\widgets\freshness_overlay.dart:24:27 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\shelf\presentation\widgets\freshness_overlay.dart:25:27 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\shelf\presentation\widgets\freshness_overlay.dart:35:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\shelf\presentation\widgets\freshness_overlay.dart:59:62 - deprecated_member_use
+warning - The declaration '_categoryEmoji' isn't referenced - lib\features\shelf\presentation\widgets\inventory_item_card.dart:278:10 - unused_element
+  error - Target of URI doesn't exist: 'package:flutter_gen/gen_l10n/app_localizations.dart' - lib\main.dart:14:8 - uri_does_not_exist
+  error - The values in a const list literal must be constants - lib\main.dart:35:9 - non_constant_list_element
+  error - Undefined name 'AppLocalizations' - lib\main.dart:35:9 - undefined_identifier
+  error - Undefined name 'AppLocalizations' - lib\main.dart:88:18 - undefined_identifier
+   info - The local variable '_navItems' starts with an underscore - lib\main.dart:89:11 - no_leading_underscores_for_local_identifiers
+

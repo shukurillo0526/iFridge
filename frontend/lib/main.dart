@@ -10,6 +10,8 @@ import 'package:ifridge_app/features/scan/presentation/screens/scan_screen.dart'
 import 'package:ifridge_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:ifridge_app/features/auth/presentation/screens/auth_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,16 @@ class IFridgeApp extends StatelessWidget {
       title: 'iFridge',
       debugShowCheckedModeBanner: false,
       theme: IFridgeTheme.darkTheme,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', ''),
+        Locale('ko', ''),
+      ],
       home: const _AuthGate(),
     );
   }
@@ -71,15 +83,16 @@ class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
     ProfileScreen(),
   ];
 
-  static const _navItems = [
-    _NavItem(icon: Icons.kitchen_outlined, activeIcon: Icons.kitchen, label: 'Shelf'),
-    _NavItem(icon: Icons.restaurant_menu_outlined, activeIcon: Icons.restaurant_menu, label: 'Cook'),
-    _NavItem(icon: Icons.camera_alt_outlined, activeIcon: Icons.camera_alt, label: 'Scan'),
-    _NavItem(icon: Icons.person_outline, activeIcon: Icons.person, label: 'Profile'),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final _navItems = [
+      _NavItem(icon: Icons.kitchen_outlined, activeIcon: Icons.kitchen, label: l10n?.tabShelf ?? 'Shelf'),
+      _NavItem(icon: Icons.restaurant_menu_outlined, activeIcon: Icons.restaurant_menu, label: l10n?.tabCook ?? 'Cook'),
+      _NavItem(icon: Icons.camera_alt_outlined, activeIcon: Icons.camera_alt, label: l10n?.tabScan ?? 'Scan'),
+      _NavItem(icon: Icons.person_outline, activeIcon: Icons.person, label: l10n?.tabProfile ?? 'Profile'),
+    ];
+
     return Scaffold(
       extendBody: true, // content goes behind the nav bar
       body: AnimatedSwitcher(

@@ -40,6 +40,9 @@ dependencies:
   http_parser: ^4.1.0
   wakelock_plus: ^1.4.0
   mobile_scanner: ^6.0.2
+  intl: ^0.20.2
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +65,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
 
   # To add assets to your application, add an assets section, like this:
   # assets:

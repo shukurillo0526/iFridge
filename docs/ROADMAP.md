@@ -63,7 +63,7 @@ These should be done first to ensure the core MVP is rock-solid.
 - Users can ask follow-up questions mid-cooking: "Can I substitute butter with oil?" → "How much oil?" → "What temperature?"
 - Use streaming responses for a real-time feel.
 
-### 3.2 Smart Expiry Prediction (AI-Enhanced)
+### 3.2 Smart Expirery Prediction (AI-Enhanced)
 - Train a lightweight model on historical expiry data (purchase date → actual discard date).
 - Factor in storage location (fridge vs pantry), packaging type, and season.
 - Replace the current static category-based algorithm with learned predictions.

@@ -10,8 +10,10 @@ import 'dart:math' as math;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/widgets/shimmer_loading.dart';
+import 'package:ifridge_app/core/widgets/slide_in_item.dart';
 import 'package:ifridge_app/features/gamification/domain/badges.dart' show levelFromXp;
 import 'package:ifridge_app/core/services/auth_helper.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -41,6 +43,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     'Bitter': 0.5, 'Umami': 0.5, 'Spicy': 0.5,
   };
 
+  // Shopping list (local state — persisted via Supabase later)
+  final List<Map<String, dynamic>> _shoppingList = [];
+
+  // Meal plan: 7 days, null = no meal planned
+  final List<String?> _mealPlan = List.filled(7, null);
+
   @override
   void initState() {
     super.initState();
@@ -61,11 +69,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         client.from('users').select().eq('id', currentUserId()).maybeSingle(),
         client.from('gamification_stats').select().eq('user_id', currentUserId()).maybeSingle(),
         client.from('user_flavor_profile').select().eq('user_id', currentUserId()).maybeSingle(),
+        client.from('shopping_list').select().eq('user_id', currentUserId()).order('created_at'),
+        client.from('meal_plan').select('*, recipes(title)').eq('user_id', currentUserId()).gte('planned_date', DateTime.now().toIso8601String().split('T')[0]),
       ]);
 
-      final userData = results[0];
-      final statsData = results[1];
-      final flavorData = results[2];
+      final userData = results[0] as Map<String, dynamic>?;
+      final statsData = results[1] as Map<String, dynamic>?;
+      final flavorData = results[2] as Map<String, dynamic>?;
 
       setState(() {
         // User
@@ -96,6 +106,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
           };
         }
 
+        // Shopping List
+        final shoppingData = results[3] as List;
+        _shoppingList.clear();
+        for (final item in shoppingData) {
+          _shoppingList.add({
+            'id': item['id'],
+            'name': item['ingredient_name'],
+            'checked': item['is_purchased'] == true,
+          });
+        }
+
+        // Meal Plan
+        final mealData = results[4] as List;
+        // Reset to nulls
+        _mealPlan.fillRange(0, 7, null);
+        final today = DateTime.now();
+        final todayStr = today.toIso8601String().split('T')[0];
+        
+        for (final meal in mealData) {
+          final plannedDateStr = meal['planned_date'] as String;
+          final diffOptions = DateTime.parse(plannedDateStr).difference(DateTime.parse(todayStr)).inDays;
+          if (diffOptions >= 0 && diffOptions < 7) {
+            final recipeMeta = meal['recipes'] as Map?;
+            _mealPlan[diffOptions] = recipeMeta?['title'] as String? ?? 'Unknown Recipe';
+          }
+        }
+
         _loading = false;
       });
     } catch (e) {
@@ -115,6 +152,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }
 
+    final l10n = AppLocalizations.of(context);
+
     if (_error != null) {
       return Scaffold(
         backgroundColor: AppTheme.background,
@@ -126,13 +165,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Icon(Icons.cloud_off, size: 64, color: Colors.white.withValues(alpha: 0.3)),
                 const SizedBox(height: 16),
-                const Text('Couldn\'t load profile',
-                    style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w600)),
+                Text(l10n?.profileLoadError ?? 'Couldn\'t load profile',
+                    style: const TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 24),
                 FilledButton.icon(
                   onPressed: _loadProfile,
                   icon: const Icon(Icons.refresh),
-                  label: const Text('Retry'),
+                  label: Text(l10n?.retry ?? 'Retry'),
                   style: FilledButton.styleFrom(backgroundColor: AppTheme.accent),
                 ),
               ],
@@ -204,7 +243,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Level $_level • $_totalXp XP',
+                        '${l10n?.profileGamificationLevel(_level) ?? 'Level $_level'} • $_totalXp XP',
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.6),
                           fontSize: 14,
@@ -219,14 +258,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: _loadProfile,
-                tooltip: 'Refresh',
+                tooltip: l10n?.refresh ?? 'Refresh',
               ),
               IconButton(
                 icon: const Icon(Icons.logout),
                 onPressed: () async {
                   await Supabase.instance.client.auth.signOut();
                 },
-                tooltip: 'Sign Out',
+                tooltip: l10n?.signOut ?? 'Sign Out',
               ),
             ],
           ),
@@ -237,99 +276,272 @@ class _ProfileScreenState extends State<ProfileScreen> {
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 // XP Progress
-                _SectionCard(
-                  title: 'Level Progress',
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Level $_level',
-                            style: const TextStyle(
-                              color: IFridgeTheme.primary,
-                              fontWeight: FontWeight.w700,
+                SlideInItem(
+                  delay: 0,
+                  child: _SectionCard(
+                    title: l10n?.profileLevelProgress ?? 'Level Progress',
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              l10n?.profileLevel(_level) ?? 'Level $_level',
+                              style: const TextStyle(
+                                color: IFridgeTheme.primary,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
-                          ),
-                          Text(
-                            '$_totalXp / $nextLevelXp XP',
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.5),
-                              fontSize: 13,
+                            Text(
+                              '$_totalXp / $nextLevelXp XP',
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.5),
+                                fontSize: 13,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      TweenAnimationBuilder<double>(
-                        tween: Tween(begin: 0, end: progress.clamp(0.0, 1.0)),
-                        duration: const Duration(milliseconds: 800),
-                        curve: Curves.easeOutCubic,
-                        builder: (_, value, __) => ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: LinearProgressIndicator(
-                            value: value,
-                            minHeight: 10,
-                            backgroundColor: Colors.white.withValues(alpha: 0.08),
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Color.lerp(IFridgeTheme.primary, IFridgeTheme.secondary, value) ?? IFridgeTheme.primary,
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0, end: progress.clamp(0.0, 1.0)),
+                          duration: const Duration(milliseconds: 800),
+                          curve: Curves.easeOutCubic,
+                          builder: (_, value, __) => ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: LinearProgressIndicator(
+                              value: value,
+                              minHeight: 10,
+                              backgroundColor: Colors.white.withValues(alpha: 0.08),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Color.lerp(IFridgeTheme.primary, IFridgeTheme.secondary, value) ?? IFridgeTheme.primary,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
 
                 const SizedBox(height: 12),
 
                 // Stats
-                _SectionCard(
-                  title: 'Your Impact',
-                  child: Row(
-                    children: [
-                      _StatTile(
-                          value: '$_mealsCooked',
-                          label: 'Meals\nCooked',
-                          icon: Icons.restaurant),
-                      _StatTile(
-                          value: '$_itemsSaved',
-                          label: 'Items\nSaved',
-                          icon: Icons.eco),
-                      _StatTile(
+                SlideInItem(
+                  delay: 100,
+                  child: _SectionCard(
+                    title: l10n?.profileYourImpact ?? 'Your Impact',
+                    child: Row(
+                      children: [
+                        // Stat: Meals Cooked
+                        _StatTile(
+                          icon: Icons.restaurant,
+                          value: _mealsCooked.toString(),
+                          label: l10n?.profileMealsCooked ?? 'Meals Cooked',
+                        ),
+                        // Stat: Items Saved
+                        _StatTile(
+                          icon: Icons.eco,
+                          value: _itemsSaved.toString(),
+                          label: l10n?.profileItemsSaved ?? 'Items Saved',
+                        ),
+                        // Stat: Day Streak
+                        _StatTile(
+                          icon: Icons.local_fire_department,
                           value: '$_currentStreak',
-                          label: 'Day\nStreak',
-                          icon: Icons.local_fire_department),
-                    ],
+                          label: l10n?.profileDayStreak ?? 'Day Streak',
+                        ),
+                      ],
+                    ),
                   ),
                 ),
 
                 const SizedBox(height: 12),
 
-                // Badges
-                _SectionCard(
-                  title: 'Earned Badges',
-                  child: Wrap(
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: allBadges,
+                // ── Badges Section ─────────────────────────────────────
+                SlideInItem(
+                  delay: 350,
+                  child: _SectionCard(
+                    title: l10n?.profileBadges ?? 'Badges & Achievements',
+                    child: Wrap(
+                      spacing: 12,
+                      runSpacing: 16,
+                      children: allBadges.map((badge) {
+                        return badge;
+                      }).toList(),
+                    ),
                   ),
                 ),
 
                 const SizedBox(height: 12),
 
                 // Flavor Profile
-                _SectionCard(
-                  title: 'Flavor Profile',
-                  child: SizedBox(
-                    height: 200,
-                    child: CustomPaint(
-                      size: const Size(200, 200),
-                      painter: _FlavorRadarPainter(
-                        values: _flavorValues,
-                        color: AppTheme.accent,
+                SlideInItem(
+                  delay: 200,
+                  child: _SectionCard(
+                    title: l10n?.profileFlavorProfile ?? 'Flavor Profile',
+                    child: SizedBox(
+                      height: 220,
+                      width: double.infinity,
+                      child: CustomPaint(
+                        painter: _FlavorRadarPainter(
+                          values: _flavorValues,
+                          color: IFridgeTheme.primary,
+                        ),
                       ),
                     ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // ── Shopping List Section ─────────────────────────────────
+
+                SlideInItem(
+                  delay: 250,
+                  child: _SectionCard(
+                    title: l10n?.profileShoppingList ?? 'Shopping List',
+                    trailing: IconButton(
+                      icon: const Icon(Icons.add_circle_outline,
+                          color: IFridgeTheme.primary, size: 22),
+                      onPressed: _addShoppingItem,
+                      tooltip: l10n?.addShoppingItem ?? 'Add Item',
+                    ),
+                    child: _shoppingList.isEmpty
+                        ? Center(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Column(
+                                children: [
+                                  Icon(Icons.shopping_cart_outlined,
+                                      size: 40,
+                                      color: Colors.white.withValues(alpha: 0.2)),
+                                  const SizedBox(height: 8),
+                                  Text(l10n?.shoppingListEmpty ?? 'Your shopping list is empty',
+                                      style: TextStyle(
+                                          color: Colors.white.withValues(alpha: 0.4),
+                                          fontSize: 13)),
+                                ],
+                              ),
+                            ),
+                          )
+                        : Column(
+                            children: _shoppingList.asMap().entries.map((entry) {
+                              final idx = entry.key;
+                              final item = entry.value;
+                              return _ShoppingItemTile(
+                                name: item['name'] as String,
+                                checked: item['checked'] as bool,
+                                onToggle: () async {
+                                  final newVal = !(item['checked'] as bool);
+                                  setState(() {
+                                    _shoppingList[idx] = {
+                                      ...item,
+                                      'checked': newVal,
+                                    };
+                                  });
+                                  await Supabase.instance.client
+                                      .from('shopping_list')
+                                      .update({'is_purchased': newVal})
+                                      .eq('id', item['id']);
+                                },
+                                onDismiss: () async {
+                                  final itemId = item['id'];
+                                  setState(() => _shoppingList.removeAt(idx));
+                                  await Supabase.instance.client
+                                      .from('shopping_list')
+                                      .delete()
+                                      .eq('id', itemId);
+                                },
+                              );
+                            }).toList(),
+                          ),
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                // ── Meal Planner Section ───────────────────────────────
+                SlideInItem(
+                  delay: 300,
+                  child: _SectionCard(
+                    title: l10n?.profileMealPlanner ?? 'Meal Planner',
+                    child: _mealPlan.every((m) => m == null)
+                        ? Container(
+                            padding: const EdgeInsets.symmetric(vertical: 24),
+                            alignment: Alignment.center,
+                            child: Column(
+                              children: [
+                                Icon(Icons.calendar_today, size: 40, color: Colors.white.withValues(alpha: 0.1)),
+                                const SizedBox(height: 8),
+                                Text(
+                                  l10n?.mealPlannerEmpty ?? 'No meals planned',
+                                  style: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
+                                ),
+                                const SizedBox(height: 12),
+                                OutlinedButton(
+                                  onPressed: () => _assignMeal(0),
+                                  style: OutlinedButton.styleFrom(
+                                      foregroundColor: IFridgeTheme.primary,
+                                      side: const BorderSide(color: IFridgeTheme.primary)),
+                                  child: Text(l10n?.planToday ?? 'Plan Today'),
+                                )
+                              ],
+                            ),
+                          )
+                          // If not all null, show the 7-day list
+                          : Column(
+                              children: List.generate(7, (i) {
+                                final dayDate = DateTime.now().add(Duration(days: i));
+                                final dayName = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][dayDate.weekday - 1];
+                                final isToday = i == 0;
+                                final meal = _mealPlan[i];
+                                
+                                return Container(
+                                  margin: const EdgeInsets.only(bottom: 8),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color: isToday ? AppTheme.accent.withValues(alpha: 0.1) : AppTheme.background,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: isToday ? AppTheme.accent.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.05),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 48,
+                                        child: Text(
+                                          isToday ? (l10n?.today ?? 'Today') : dayName,
+                                          style: TextStyle(
+                                            color: isToday ? AppTheme.accent : Colors.white54,
+                                            fontWeight: isToday ? FontWeight.bold : FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          meal ?? (l10n?.planMeal ?? 'Plan meal...'),
+                                          style: TextStyle(
+                                            color: meal != null ? Colors.white : Colors.white38,
+                                            fontStyle: meal != null ? FontStyle.normal : FontStyle.italic,
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                          meal != null ? Icons.edit : Icons.add_circle_outline,
+                                          size: 18,
+                                          color: meal != null ? Colors.white54 : AppTheme.accent,
+                                        ),
+                                        onPressed: () => _assignMeal(i),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
+                            ),
                   ),
                 ),
 
@@ -364,6 +576,135 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ))
         .toList();
   }
+
+  // ── Shopping List Helpers ───────────────────────────────────────
+
+  void _addShoppingItem() {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: IFridgeTheme.bgElevated,
+        title: const Text('Add Shopping Item',
+            style: TextStyle(color: Colors.white)),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: 'e.g. Eggs, Milk, Rice',
+            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+            filled: true,
+            fillColor: AppTheme.background,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+        actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () async {
+                final text = controller.text.trim();
+                if (text.isNotEmpty) {
+                  // Optimistic UI insert could go here, but let's just insert and reload
+                  final res = await Supabase.instance.client.from('shopping_list').insert({
+                    'user_id': currentUserId(),
+                    'ingredient_name': text,
+                    'is_purchased': false,
+                  }).select().single();
+                  
+                  setState(() {
+                    _shoppingList.add({
+                      'id': res['id'],
+                      'name': text,
+                      'checked': false,
+                    });
+                  });
+                }
+                if (mounted) Navigator.pop(ctx);
+              },
+              style: FilledButton.styleFrom(
+                  backgroundColor: IFridgeTheme.primary),
+              child: const Text('Add'),
+            ),
+        ],
+      ),
+    );
+  }
+
+  // ── Meal Planner Helpers ────────────────────────────────────────
+
+  void _assignMeal(int dayIndex) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppTheme.surface,
+      isScrollControlled: true,
+      builder: (ctx) {
+        return FractionallySizedBox(
+          heightFactor: 0.8,
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text('Select Recipe for Meal', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+              ),
+              Expanded(
+                child: FutureBuilder(
+                  future: Supabase.instance.client.from('recipes').select('id, title, prep_time_minutes, cook_time_minutes').limit(50),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasError || !snapshot.hasData) {
+                      return const Center(child: Text('Failed to load recipes', style: TextStyle(color: Colors.white54)));
+                    }
+                    final recipes = snapshot.data as List;
+                    if (recipes.isEmpty) {
+                      return const Center(child: Text('No recipes found', style: TextStyle(color: Colors.white54)));
+                    }
+                    return ListView.builder(
+                      itemCount: recipes.length,
+                      itemBuilder: (context, index) {
+                        final recipe = recipes[index];
+                        final title = recipe['title'] as String;
+                        final duration = (recipe['prep_time_minutes'] ?? 0) + (recipe['cook_time_minutes'] ?? 0);
+                        return ListTile(
+                          title: Text(title, style: const TextStyle(color: Colors.white)),
+                          subtitle: Text('$duration mins', style: const TextStyle(color: Colors.white54)),
+                          trailing: const Icon(Icons.add_circle_outline, color: IFridgeTheme.primary),
+                          onTap: () async {
+                            final targetDate = DateTime.now().add(Duration(days: dayIndex));
+                            final dateStr = targetDate.toIso8601String().split('T')[0];
+                            
+                            await Supabase.instance.client.from('meal_plan').insert({
+                              'user_id': currentUserId(),
+                              'recipe_id': recipe['id'],
+                              'planned_date': dateStr,
+                              'meal_type': 'dinner'
+                            });
+                            
+                            setState(() {
+                              _mealPlan[dayIndex] = title;
+                            });
+                            if (mounted) Navigator.pop(ctx);
+                          },
+                        );
+                      },
+                    );
+                  }
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    );
+  }
 }
 
 // ── Section Card ─────────────────────────────────────────────────
@@ -371,8 +712,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 class _SectionCard extends StatelessWidget {
   final String title;
   final Widget child;
+  final Widget? trailing;
 
-  const _SectionCard({required this.title, required this.child});
+  const _SectionCard({required this.title, required this.child, this.trailing});
 
   @override
   Widget build(BuildContext context) {
@@ -387,15 +729,22 @@ class _SectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.2,
+                ),
+              ),
+              if (trailing != null) trailing!,
+            ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           child,
         ],
       ),
@@ -621,4 +970,65 @@ class _FlavorRadarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+// ── Shopping Item Tile ───────────────────────────────────────────
+
+class _ShoppingItemTile extends StatelessWidget {
+  final String name;
+  final bool checked;
+  final VoidCallback onToggle;
+  final VoidCallback onDismiss;
+
+  const _ShoppingItemTile({
+    required this.name,
+    required this.checked,
+    required this.onToggle,
+    required this.onDismiss,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dismissible(
+      key: Key(name),
+      direction: DismissDirection.endToStart,
+      onDismissed: (_) => onDismiss(),
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 16),
+        decoration: BoxDecoration(
+          color: Colors.red.withValues(alpha: 0.2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Icon(Icons.delete, color: Colors.redAccent),
+      ),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        decoration: BoxDecoration(
+          color: AppTheme.background,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+        ),
+        child: ListTile(
+          dense: true,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+          leading: IconButton(
+            icon: Icon(
+              checked ? Icons.check_circle : Icons.radio_button_unchecked,
+              color: checked ? AppTheme.accent : Colors.white38,
+            ),
+            onPressed: onToggle,
+          ),
+          title: Text(
+            name,
+            style: TextStyle(
+              color: checked ? Colors.white38 : Colors.white,
+              decoration: checked ? TextDecoration.lineThrough : null,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

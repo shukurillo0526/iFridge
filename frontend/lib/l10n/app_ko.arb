@@ -1,0 +1,38 @@
+{
+    "@@locale": "ko",
+    "appTitle": "iFridge (냉장고)",
+    
+    "tabShelf": "내 냉장고",
+    "tabCook": "요리",
+    "tabScan": "스캔",
+    "tabProfile": "프로필",
+
+    "profileTitle": "프로필",
+    "profileGamificationLevel": "레벨 {level}",
+    "profileMealsCooked": "요리한 횟수",
+    "profileItemsSaved": "절약한 식재료",
+    "profileDayStreak": "연속 달성",
+    
+    "profileFlavorProfile": "나의 입맛 프로필",
+    "profileBadges": "배지 및 업적",
+    "profileShoppingList": "장바구니",
+    "profileMealPlanner": "식단 플래너",
+
+    "actionAdd": "추가",
+    "actionCancel": "취소",
+    "actionSave": "저장",
+    "actionDelete": "삭제",
+    "profileLoadError": "프로필을 불러올 수 없습니다",
+    "retry": "다시 시도",
+    "refresh": "새로고침",
+    "signOut": "로그아웃",
+    "profileLevelProgress": "레벨 진행도",
+    "profileLevel": "레벨 {level}",
+    "profileYourImpact": "나의 영향력",
+    "addShoppingItem": "아이템 추가",
+    "shoppingListEmpty": "쇼핑 리스트가 비어 있습니다",
+    "mealPlannerEmpty": "예정된 식사가 없습니다",
+    "planToday": "오늘 식사 계획하기",
+    "today": "오늘",
+    "planMeal": "식사 계획..."
+}

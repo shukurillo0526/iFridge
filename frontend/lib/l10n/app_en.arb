@@ -1,0 +1,55 @@
+{
+    "@@locale": "en",
+    "appTitle": "iFridge",
+    "@appTitle": {
+        "description": "The title of the application"
+    },
+    
+    "tabShelf": "Shelf",
+    "tabCook": "Cook",
+    "tabScan": "Scan",
+    "tabProfile": "Profile",
+
+    "profileTitle": "Profile",
+    "profileGamificationLevel": "Level {level}",
+    "@profileGamificationLevel": {
+        "placeholders": {
+            "level": {
+                "type": "int"
+            }
+        }
+    },
+    "profileMealsCooked": "Meals Cooked",
+    "profileItemsSaved": "Items Saved",
+    "profileDayStreak": "Day Streak",
+    
+    "profileFlavorProfile": "Flavor Profile",
+    "profileBadges": "Badges & Achievements",
+    "profileShoppingList": "Shopping List",
+    "profileMealPlanner": "Meal Planner",
+
+    "actionAdd": "Add",
+    "actionCancel": "Cancel",
+    "actionSave": "Save",
+    "actionDelete": "Delete",
+    "profileLoadError": "Couldn't load profile",
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "signOut": "Sign Out",
+    "profileLevelProgress": "Level Progress",
+    "profileLevel": "Level {level}",
+    "@profileLevel": {
+        "placeholders": {
+            "level": {
+                "type": "int"
+            }
+        }
+    },
+    "profileYourImpact": "Your Impact",
+    "addShoppingItem": "Add Item",
+    "shoppingListEmpty": "Your shopping list is empty",
+    "mealPlannerEmpty": "No meals planned",
+    "planToday": "Plan Today",
+    "today": "Today",
+    "planMeal": "Plan meal..."
+}

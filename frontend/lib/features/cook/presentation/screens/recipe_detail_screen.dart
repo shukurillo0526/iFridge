@@ -10,6 +10,9 @@ import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/widgets/shimmer_loading.dart';
 import 'package:ifridge_app/core/widgets/slide_in_item.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/cooking_run_screen.dart';
+import 'package:ifridge_app/core/services/auth_helper.dart';
+import 'package:ifridge_app/core/services/api_service.dart';
+import 'dart:convert';
 
 class RecipeDetailScreen extends StatefulWidget {
   final String recipeId;
@@ -79,6 +82,186 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       });
     } catch (e) {
       setState(() => _loading = false);
+    }
+  }
+
+  void _showAdjustPortionsDialog() {
+    int _newServings = widget.servings ?? 2;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: IFridgeTheme.bgElevated,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (context, setStateSB) {
+            return Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Adjust Portions',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Current recipe makes ${widget.servings ?? "?"} servings.',
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: _newServings > 1 ? () => setStateSB(() => _newServings--) : null,
+                        icon: const Icon(Icons.remove_circle_outline, color: IFridgeTheme.primary, size: 32),
+                      ),
+                      const SizedBox(width: 24),
+                      Text(
+                        '$_newServings',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 24),
+                      IconButton(
+                        onPressed: () => setStateSB(() => _newServings++),
+                        icon: const Icon(Icons.add_circle_outline, color: IFridgeTheme.primary, size: 32),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: FilledButton.icon(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _adjustWithAi(_newServings);
+                      },
+                      icon: const Icon(Icons.auto_awesome),
+                      label: Text('Scale to $_newServings Servings'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: IFridgeTheme.primary,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _adjustWithAi(int newServings) async {
+    if (newServings == widget.servings) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppTheme.surface,
+        title: const Row(
+          children: [
+            Icon(Icons.auto_awesome, color: IFridgeTheme.primary),
+            SizedBox(width: 8),
+            Text('AI Chef', style: TextStyle(color: Colors.white)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Scaling recipe to $newServings servings...',
+              style: const TextStyle(color: Colors.white70),
+            ),
+            const SizedBox(height: 16),
+            const LinearProgressIndicator(color: IFridgeTheme.primary),
+          ],
+        ),
+      ),
+    );
+
+    try {
+      final ingredientNames = _ingredients.map((ing) {
+        final ingData = ing['ingredients'] as Map<String, dynamic>?;
+        return ingData?['display_name_en'] as String? ?? '';
+      }).where((name) => name.isNotEmpty).toList();
+
+      final api = ApiService();
+      final result = await api.generateRecipe(
+        ingredients: ingredientNames,
+        cuisine: widget.cuisine,
+        servings: newServings,
+      );
+      api.dispose();
+
+      if (!mounted) return;
+      Navigator.pop(context); // close dialog
+
+      if (result['status'] == 'success' && result['recipe'] != null) {
+        final r = result['recipe'];
+        // Show success snackbar and reload the UI state if you want to replace the current display,
+        // but since AI returns a full new recipe (without DB IDs), 
+        // it's easier to just push a new generic RecipeDetail Screen or show a dialog.
+        // For Phase 18, we can just show a modal or update state:
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            backgroundColor: AppTheme.surface,
+            title: Text(r['title'] ?? 'Adjusted Recipe', style: const TextStyle(color: Colors.white)),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Makes $newServings servings', style: TextStyle(color: IFridgeTheme.primary, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 16),
+                  const Text('Ingredients:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  if (r['ingredients'] != null)
+                    ...(r['ingredients'] as List).map((ing) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Text('• ${ing['amount']} ${ing['unit']} ${ing['name']}', style: const TextStyle(color: Colors.white70)),
+                        )),
+                  const SizedBox(height: 16),
+                  const Text('Steps:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  if (r['instructions'] != null)
+                    ...(r['instructions'] as List).map((step) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Text('${step['step_number']}. ${step['instruction_text']}', style: const TextStyle(color: Colors.white70)),
+                        )),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
+            ],
+          ),
+        );
+
+      } else {
+        throw Exception('Failed to parse AI output');
+      }
+    } catch (e) {
+      if (!mounted) return;
+      Navigator.pop(context); // close dialog
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('AI scaling failed: $e'), backgroundColor: Colors.redAccent),
+      );
     }
   }
 
@@ -234,6 +417,18 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
+                    const Spacer(),
+                    TextButton.icon(
+                      onPressed: _showAdjustPortionsDialog,
+                      icon: const Icon(Icons.auto_awesome, size: 16),
+                      label: const Text('Scale'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: IFridgeTheme.primary,
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -266,6 +461,75 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                 }, childCount: _ingredients.length),
               ),
             ),
+
+            // ── Add Missing to Shopping List Button ────────────────
+            if (_ingredients.any((ing) {
+              final id = (ing['ingredients'] as Map?)?['id'];
+              return !widget.ownedIngredientIds.contains(id) &&
+                  ing['is_optional'] != true;
+            }))
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      final missingItems = _ingredients.where((ing) {
+                        final id = (ing['ingredients'] as Map?)?['id'];
+                        return !widget.ownedIngredientIds.contains(id) &&
+                            ing['is_optional'] != true;
+                      }).toList();
+
+                      if (missingItems.isEmpty) return;
+
+                      final insertData = missingItems.map((ing) {
+                        final ingData = ing['ingredients'] as Map<String, dynamic>?;
+                        final name = ingData?['display_name_en'] ?? 'Unknown';
+                        return {
+                          'user_id': currentUserId(),
+                          'ingredient_name': name,
+                          'quantity': ing['quantity'],
+                          'unit': ing['unit'],
+                          'is_purchased': false,
+                        };
+                      }).toList();
+
+                      try {
+                        await Supabase.instance.client
+                            .from('shopping_list')
+                            .insert(insertData);
+                            
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Added missing items to Shopping List!'),
+                              backgroundColor: IFridgeTheme.primary,
+                            ),
+                          );
+                        }
+                      } catch (e) {
+                         if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Failed to add items: $e'),
+                              backgroundColor: Colors.redAccent,
+                            ),
+                          );
+                        }
+                      }
+                    },
+                    icon: const Icon(Icons.shopping_cart_outlined, size: 20),
+                    label: const Text(
+                      'Add missing to Shopping List',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: IFridgeTheme.primary,
+                      side: const BorderSide(color: IFridgeTheme.primary),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                  ),
+                ),
+              ),
 
             // ── Steps Section ──────────────────────────────────────
             SliverToBoxAdapter(
