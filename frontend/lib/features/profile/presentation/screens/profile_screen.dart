@@ -913,7 +913,7 @@ class _FlavorRadarPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2 - 30;
+    final radius = math.min(size.width, size.height) / 2 - 30; // Constrain by smallest dimension
     final axes = values.keys.toList();
     final n = axes.length;
     final angleStep = (2 * math.pi) / n;

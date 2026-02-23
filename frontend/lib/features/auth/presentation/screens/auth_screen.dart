@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:ifridge_app/main.dart'; // For AppShell fallback
 
 class AuthScreen extends StatefulWidget {
@@ -49,6 +50,20 @@ class _AuthScreenState extends State<AuthScreen>
     });
     try {
       await authAction();
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+        // Feedback for signups regarding email verification
+        if (_isSignUp && Supabase.instance.client.auth.currentSession == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Please check your email to verify your account.'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      }
     } on AuthException catch (e) {
       if (mounted) {
         setState(() {
@@ -98,7 +113,7 @@ class _AuthScreenState extends State<AuthScreen>
     try {
       await Supabase.instance.client.auth.signInWithOAuth(
         OAuthProvider.google,
-        redirectTo: null, // Uses default window redirection for web
+        redirectTo: kIsWeb ? null : 'io.supabase.flutter://login-callback', // Use deep link for iOS/Android
       );
     } catch (e) {
       if (mounted) {
