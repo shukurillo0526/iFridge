@@ -63,8 +63,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     try {
       final client = Supabase.instance.client;
+      final currentUser = client.auth.currentUser;
 
-      // Parallel queries
+      // Guest / Anonymous User handling
+      if (currentUser == null || currentUser.isAnonymous) {
+        setState(() {
+          _userName = 'Guest Chef';
+          _totalXp = 0;
+          _level = 1;
+          _mealsCooked = 0;
+          _itemsSaved = 0;
+          _currentStreak = 0;
+          _badges = [];
+          _flavorValues = {
+            'Sweet': 0.5, 'Salty': 0.5, 'Sour': 0.5,
+            'Bitter': 0.5, 'Umami': 0.5, 'Spicy': 0.5,
+          };
+          _shoppingList.clear();
+          _mealPlan.fillRange(0, 7, null);
+          _loading = false;
+        });
+        return;
+      }
+
+      // Parallel queries for authentic users
       final results = await Future.wait([
         client.from('users').select().eq('id', currentUserId()).maybeSingle(),
         client.from('gamification_stats').select().eq('user_id', currentUserId()).maybeSingle(),
@@ -73,9 +95,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
         client.from('meal_plan').select('*, recipes(title)').eq('user_id', currentUserId()).gte('planned_date', DateTime.now().toIso8601String().split('T')[0]),
       ]);
 
-      final userData = results[0] as Map<String, dynamic>?;
-      final statsData = results[1] as Map<String, dynamic>?;
-      final flavorData = results[2] as Map<String, dynamic>?;
+      var userData = results[0] as Map<String, dynamic>?;
+      var statsData = results[1] as Map<String, dynamic>?;
+      var flavorData = results[2] as Map<String, dynamic>?;
+
+      // App-level Self-Healing Fallback for User Initialization
+      // If the backend SQL trigger hasn't fired or is missing, we create default rows here.
+      if (userData == null) {
+        final email = client.auth.currentUser?.email ?? 'chef@ifridge.local';
+        final defaultName = email.split('@')[0];
+        try {
+          await client.from('users').insert({
+            'id': currentUserId(),
+            'email': email,
+            'display_name': defaultName,
+          });
+          userData = {'display_name': defaultName};
+        } catch (_) {} // Ignore insert errors if it already exists
+      }
+
+      if (statsData == null) {
+        try {
+          await client.from('gamification_stats').insert({'user_id': currentUserId()});
+          statsData = {
+            'xp_points': 0,
+            'total_meals_cooked': 0,
+            'items_saved': 0,
+            'current_streak': 0,
+          };
+        } catch (_) {}
+      }
+
+      if (flavorData == null) {
+        try {
+          await client.from('user_flavor_profile').insert({'user_id': currentUserId()});
+          flavorData = {
+            'sweet': 0.5, 'salty': 0.5, 'sour': 0.5,
+            'bitter': 0.5, 'umami': 0.5, 'spicy': 0.5,
+          };
+        } catch (_) {}
+      }
 
       setState(() {
         // User
@@ -107,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
 
         // Shopping List
-        final shoppingData = results[3] as List;
+        final shoppingData = (results[3] as List<dynamic>?) ?? [];
         _shoppingList.clear();
         for (final item in shoppingData) {
           _shoppingList.add({
@@ -118,7 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
 
         // Meal Plan
-        final mealData = results[4] as List;
+        final mealData = (results[4] as List<dynamic>?) ?? [];
         // Reset to nulls
         _mealPlan.fillRange(0, 7, null);
         final today = DateTime.now();

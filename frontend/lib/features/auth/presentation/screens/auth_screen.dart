@@ -3,7 +3,6 @@
 // Beautiful login screen with Google OAuth and Guest login.
 // Uses Supabase Auth for both flows.
 
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
@@ -18,7 +17,11 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen>
     with SingleTickerProviderStateMixin {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  
   bool _loading = false;
+  bool _isSignUp = false;
   String? _error;
   late AnimationController _pulseController;
 
@@ -33,8 +36,58 @@ class _AuthScreenState extends State<AuthScreen>
 
   @override
   void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
     _pulseController.dispose();
     super.dispose();
+  }
+
+  Future<void> _processAuth(Future<void> Function() authAction) async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      await authAction();
+    } on AuthException catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = e.message;
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = 'An unexpected error occurred. Please try again.';
+          _loading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _signInOutWithEmail() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() => _error = 'Please enter both email and password.');
+      return;
+    }
+
+    await _processAuth(() async {
+      if (_isSignUp) {
+        await Supabase.instance.client.auth.signUp(
+          email: email,
+          password: password,
+        );
+      } else {
+        await Supabase.instance.client.auth.signInWithPassword(
+          email: email,
+          password: password,
+        );
+      }
+    });
   }
 
   Future<void> _signInWithGoogle() async {
@@ -45,12 +98,12 @@ class _AuthScreenState extends State<AuthScreen>
     try {
       await Supabase.instance.client.auth.signInWithOAuth(
         OAuthProvider.google,
-        redirectTo: null, // Uses default for web
+        redirectTo: null, // Uses default window redirection for web
       );
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = 'Google sign‑in failed. Please try again.';
+          _error = 'Google sign‑in failed: ${e.toString()}';
           _loading = false;
         });
       }
@@ -167,14 +220,75 @@ class _AuthScreenState extends State<AuthScreen>
                       ),
                     ),
 
-                    const SizedBox(height: 56),
+                    const SizedBox(height: 48),
+
+                    // ── Email & Password Fields ──
+                    _TextField(
+                      controller: _emailController,
+                      hintText: 'Email',
+                      icon: Icons.email_outlined,
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    const SizedBox(height: 16),
+                    _TextField(
+                      controller: _passwordController,
+                      hintText: 'Password',
+                      icon: Icons.lock_outline,
+                      obscureText: true,
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // ── Email Sign In / Sign Up Button ──
+                    _AuthButton(
+                      onPressed: _loading ? null : _signInOutWithEmail,
+                      icon: _isSignUp ? Icons.person_add_alt_1 : Icons.login,
+                      label: _isSignUp ? 'Create Account' : 'Sign In',
+                      isPrimary: true,
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // ── Toggle Mode ──
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _isSignUp = !_isSignUp;
+                          _error = null;
+                        });
+                      },
+                      child: Text(
+                        _isSignUp
+                            ? 'Already have an account? Sign In'
+                            : 'Need an account? Sign Up',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.8),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 32),
+                    
+                    Row(
+                      children: [
+                        Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.2))),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text('OR', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12)),
+                        ),
+                        Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.2))),
+                      ],
+                    ),
+
+                    const SizedBox(height: 32),
 
                     // ── Google Sign In ──
                     _AuthButton(
                       onPressed: _loading ? null : _signInWithGoogle,
                       icon: Icons.g_mobiledata,
                       label: 'Continue with Google',
-                      isPrimary: true,
+                      isPrimary: false, // Changed from true to false
                     ),
 
                     const SizedBox(height: 14),
@@ -301,6 +415,48 @@ class _AuthButton extends StatelessWidget {
                 ),
               ),
             ),
+    );
+  }
+}
+
+// ── Stylish Text Field ──────────────────────────────────────────
+
+class _TextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final IconData icon;
+  final bool obscureText;
+  final TextInputType keyboardType;
+
+  const _TextField({
+    required this.controller,
+    required this.hintText,
+    required this.icon,
+    this.obscureText = false,
+    this.keyboardType = TextInputType.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+      ),
+      child: TextField(
+        controller: controller,
+        obscureText: obscureText,
+        keyboardType: keyboardType,
+        style: const TextStyle(color: Colors.white, fontSize: 15),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.4)),
+          prefixIcon: Icon(icon, color: Colors.white.withValues(alpha: 0.5), size: 22),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        ),
+      ),
     );
   }
 }
