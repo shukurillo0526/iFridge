@@ -405,7 +405,7 @@ class _ScanScreenState extends State<ScanScreen>
   // ── Results State (Parsed Receipt) ───────────────────────────────
 
   Widget _buildResults() {
-    final data = _results?['data'] as Map<String, dynamic>?;
+    final data = _results;
     if (data == null) return _buildCaptureState();
 
     final store = data['store'] as String? ?? 'Unknown Store';

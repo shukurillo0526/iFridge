@@ -918,6 +918,16 @@ class _FlavorRadarPainter extends CustomPainter {
     final n = axes.length;
     final angleStep = (2 * math.pi) / n;
 
+    // Normalize values
+    double maxVal = 0;
+    for (final val in values.values) {
+      if (val > maxVal) maxVal = val;
+    }
+    final normalizedValues = <String, double>{};
+    for (final entry in values.entries) {
+      normalizedValues[entry.key] = maxVal > 0 ? entry.value / maxVal : 0;
+    }
+
     // Draw grid rings
     for (var ring = 1; ring <= 4; ring++) {
       final r = radius * ring / 4;
@@ -980,7 +990,7 @@ class _FlavorRadarPainter extends CustomPainter {
     final dataPath = Path();
     for (var i = 0; i <= n; i++) {
       final angle = -math.pi / 2 + angleStep * (i % n);
-      final val = values[axes[i % n]] ?? 0;
+      final val = normalizedValues[axes[i % n]] ?? 0;
       final r = radius * val;
       final p = Offset(
         center.dx + r * math.cos(angle),
@@ -1009,7 +1019,7 @@ class _FlavorRadarPainter extends CustomPainter {
     // Draw data points
     for (var i = 0; i < n; i++) {
       final angle = -math.pi / 2 + angleStep * i;
-      final val = values[axes[i]] ?? 0;
+      final val = normalizedValues[axes[i]] ?? 0;
       final r = radius * val;
       final p = Offset(
         center.dx + r * math.cos(angle),
