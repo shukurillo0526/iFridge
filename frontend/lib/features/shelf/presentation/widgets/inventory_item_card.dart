@@ -275,31 +275,5 @@ class InventoryItemCard extends StatelessWidget {
     }
   }
 
-  String _categoryEmoji(String category) {
-    switch (category.toLowerCase()) {
-      case 'fruit':
-        return '🍎';
-      case 'vegetable':
-        return '🥦';
-      case 'dairy':
-        return '🥛';
-      case 'protein':
-      case 'meat':
-        return '🥩';
-      case 'seafood':
-        return '🐟';
-      case 'grain':
-      case 'bread':
-        return '🍞';
-      case 'spice':
-      case 'seasoning':
-        return '🧂';
-      case 'beverage':
-        return '🧃';
-      case 'egg':
-        return '🥚';
-      default:
-        return '🧊';
-    }
-  }
+
 }

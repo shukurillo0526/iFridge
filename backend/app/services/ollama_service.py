@@ -79,6 +79,8 @@ class OllamaService:
         image_bytes: bytes,
         prompt: str,
         model: Optional[str] = None,
+        temperature: float = 0.2,
+        max_tokens: int = 2048,
     ) -> str:
         """
         Send an image + prompt to a vision model via /api/chat.
@@ -102,12 +104,12 @@ class OllamaService:
             "messages": messages,
             "stream": False,
             "options": {
-                "temperature": 0.1,
-                "num_predict": 2048,
+                "temperature": temperature,
+                "num_predict": max_tokens,
             },
         }
 
-        logger.info(f"[Ollama] Vision request → {model}")
+        logger.info(f"[Ollama] Vision request → {model} (temp={temperature}, max_tok={max_tokens})")
         resp = await self._client.post(
             f"{self.base_url}/api/chat",
             json=payload,
@@ -232,10 +234,10 @@ class OllamaService:
         return cleaned.strip()
 
     def _parse_json_response(self, raw: str) -> Dict[str, Any]:
-        """Parse a raw LLM response into JSON, handling code fences."""
+        """Parse a raw LLM response into JSON, handling code fences and edge cases."""
         text = raw.strip()
 
-        # Strip markdown code fences
+        # Strip markdown code fences (```json ... ``` or ``` ... ```)
         if text.startswith("```"):
             lines = text.split("\n")
             text = "\n".join(lines[1:])
@@ -245,21 +247,38 @@ class OllamaService:
 
         # Try direct parse
         try:
-            return json.loads(text)
+            result = json.loads(text)
+            if isinstance(result, list):
+                return {"items": result}
+            return result
         except json.JSONDecodeError:
             pass
 
-        # Try to find JSON object within text
+        # Try to find JSON object within text (handles preamble/postamble text)
         start = text.find("{")
         end = text.rfind("}") + 1
         if start >= 0 and end > start:
+            candidate = text[start:end]
             try:
-                return json.loads(text[start:end])
+                result = json.loads(candidate)
+                return result
             except json.JSONDecodeError:
                 pass
 
-        logger.warning(f"[Ollama] Failed to parse JSON: {text[:200]}")
-        return {"error": "Failed to parse JSON", "raw_response": text}
+        # Try to find JSON array within text
+        start = text.find("[")
+        end = text.rfind("]") + 1
+        if start >= 0 and end > start:
+            candidate = text[start:end]
+            try:
+                result = json.loads(candidate)
+                if isinstance(result, list):
+                    return {"items": result}
+            except json.JSONDecodeError:
+                pass
+
+        logger.warning(f"[Ollama] Failed to parse JSON from response ({len(text)} chars): {text[:300]}")
+        return {"error": "Failed to parse JSON", "raw_response": text[:500]}
 
     # ── Cleanup ──────────────────────────────────────────────────
 

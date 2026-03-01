@@ -33,6 +33,7 @@ class _ScanScreenState extends State<ScanScreen>
   Map<String, dynamic>? _results;
   String? _error;
   late AnimationController _pulseController;
+  final Set<int> _addedIndices = {};
 
   @override
   void initState() {
@@ -75,8 +76,10 @@ class _ScanScreenState extends State<ScanScreen>
       );
 
       setState(() {
-        _results = result;
+        // Backend wraps in {status, source, data: {store, date, items}}
+        _results = (result['data'] as Map<String, dynamic>?) ?? result;
         _scanning = false;
+        _addedIndices.clear();
       });
     } catch (e) {
       setState(() {
@@ -111,8 +114,10 @@ class _ScanScreenState extends State<ScanScreen>
       );
 
       setState(() {
-        _results = result;
+        // Backend wraps in {status, source, data: {items: [...]}}
+        _results = (result['data'] as Map<String, dynamic>?) ?? result;
         _scanning = false;
+        _addedIndices.clear();
       });
     } catch (e) {
       setState(() {
@@ -131,7 +136,6 @@ class _ScanScreenState extends State<ScanScreen>
           'Scan Food',
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
-        backgroundColor: AppTheme.surface,
         centerTitle: true,
       ),
       body: _scanning
@@ -525,7 +529,62 @@ class _ScanScreenState extends State<ScanScreen>
               ),
             ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
+
+          // ── Summary counter + Add All ──
+          if (items.isNotEmpty) ...[
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: IFridgeTheme.bgElevated,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    '${_addedIndices.length} / ${items.length} added',
+                    style: const TextStyle(
+                        color: IFridgeTheme.textSecondary,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const Spacer(),
+                if (_addedIndices.length < items.length)
+                  FilledButton.icon(
+                    onPressed: () => _addAllToShelf(items),
+                    icon: const Icon(Icons.playlist_add_check, size: 18),
+                    label: const Text('Add All'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppTheme.freshGreen,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                  )
+                else
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: AppTheme.freshGreen.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Row(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(Icons.check_circle, size: 16, color: AppTheme.freshGreen),
+                      SizedBox(width: 6),
+                      Text('All Added',
+                          style: TextStyle(
+                              color: AppTheme.freshGreen,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600)),
+                    ]),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+          ],
 
           // Parsed Items List
           if (items.isNotEmpty) ...[
@@ -534,8 +593,9 @@ class _ScanScreenState extends State<ScanScreen>
               'Review and add to shelf',
               Colors.white,
             ),
-            ...items.map((item) {
-              final i = item as Map<String, dynamic>;
+            ...items.asMap().entries.map((entry) {
+              final idx = entry.key;
+              final i = entry.value as Map<String, dynamic>;
               final canonicalName = i['canonical_name'] ?? i['item_name'] ?? 'Unknown';
               final qty = i['quantity']?.toString() ?? '1';
               final unit = i['unit'] ?? '';
@@ -543,66 +603,21 @@ class _ScanScreenState extends State<ScanScreen>
               final expiry = i['expiry_date'] != null 
                   ? DateTime.parse(i['expiry_date']).toString().split(' ')[0] 
                   : 'Unknown';
+              final isAdded = _addedIndices.contains(idx);
 
-              return _resultTile(
-                icon: Icons.check_circle_outline,
-                title: canonicalName,
-                subtitle: '$qty $unit • $category\nExp: $expiry',
-                color: AppTheme.freshGreen,
-                trailing: IconButton(
-                  icon: const Icon(Icons.add_shopping_cart, color: AppTheme.accent),
-                  onPressed: () async {
-                    try {
-                      final client = Supabase.instance.client;
-                      final userId = currentUserId();
-
-                      // 1. Find or create ingredient
-                      final existing = await client
-                          .from('ingredients')
-                          .select('id')
-                          .ilike('display_name_en', canonicalName)
-                          .maybeSingle();
-
-                      String ingredientId;
-                      if (existing != null) {
-                        ingredientId = existing['id'];
-                      } else {
-                        final inserted = await client.from('ingredients').insert({
-                          'display_name_en': canonicalName,
-                          'category': category.isNotEmpty ? category : 'Pantry',
-                        }).select('id').single();
-                        ingredientId = inserted['id'];
-                      }
-
-                      // 2. Insert into inventory_items
-                      final qtyNum = double.tryParse(qty) ?? 1.0;
-                      await client.from('inventory_items').insert({
-                        'user_id': userId,
-                        'ingredient_id': ingredientId,
-                        'quantity': qtyNum,
-                        'unit': unit.isEmpty ? 'pcs' : unit,
-                        'location': 'Fridge', // Default location
-                        'expiry_date': i['expiry_date'] ?? DateTime.now().add(const Duration(days: 7)).toIso8601String(),
-                      });
-
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Added $canonicalName!'),
-                          backgroundColor: AppTheme.freshGreen,
+              return Opacity(
+                opacity: isAdded ? 0.5 : 1.0,
+                child: _resultTile(
+                  icon: isAdded ? Icons.check_circle : Icons.check_circle_outline,
+                  title: canonicalName,
+                  subtitle: '$qty $unit • $category\nExp: $expiry',
+                  color: isAdded ? IFridgeTheme.textMuted : AppTheme.freshGreen,
+                  trailing: isAdded
+                      ? const Icon(Icons.done, color: AppTheme.freshGreen)
+                      : IconButton(
+                          icon: const Icon(Icons.add_shopping_cart, color: AppTheme.accent),
+                          onPressed: () => _addSingleItem(i, idx),
                         ),
-                      );
-                    } catch (e) {
-                      debugPrint('Error adding to shelf: $e');
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Failed to add $canonicalName'),
-                          backgroundColor: Colors.redAccent,
-                        ),
-                      );
-                    }
-                  },
                 ),
               );
             }),
@@ -618,6 +633,7 @@ class _ScanScreenState extends State<ScanScreen>
               onPressed: () => setState(() {
                 _results = null;
                 _error = null;
+                _addedIndices.clear();
               }),
               icon: Icon(Icons.refresh, color: Colors.white.withValues(alpha: 0.7)),
               label: Text('Scan Another', style: TextStyle(color: Colors.white.withValues(alpha: 0.7))),
@@ -668,6 +684,84 @@ class _ScanScreenState extends State<ScanScreen>
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Add a single item to the shelf
+  Future<void> _addSingleItem(Map<String, dynamic> i, int idx) async {
+    final canonicalName = i['canonical_name'] ?? i['item_name'] ?? 'Unknown';
+    final qty = i['quantity']?.toString() ?? '1';
+    final unit = i['unit'] ?? '';
+    final category = i['category'] ?? '';
+    try {
+      final userId = currentUserId();
+      await _api.addInventoryItem(
+        userId: userId,
+        ingredientName: canonicalName,
+        category: category.isNotEmpty ? category : 'Pantry',
+        quantity: double.tryParse(qty) ?? 1.0,
+        unit: unit.isEmpty ? 'pcs' : unit,
+        location: 'Fridge',
+        expiryDate: i['expiry_date'],
+      );
+
+      if (!mounted) return;
+      setState(() => _addedIndices.add(idx));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Added $canonicalName!'),
+          backgroundColor: AppTheme.freshGreen,
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    } catch (e) {
+      debugPrint('Error adding to shelf: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to add $canonicalName'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    }
+  }
+
+  /// Bulk-add all remaining items
+  Future<void> _addAllToShelf(List items) async {
+    final userId = currentUserId();
+    int added = 0;
+
+    for (int idx = 0; idx < items.length; idx++) {
+      if (_addedIndices.contains(idx)) continue;
+      final i = items[idx] as Map<String, dynamic>;
+      final canonicalName = i['canonical_name'] ?? i['item_name'] ?? 'Unknown';
+      final qty = i['quantity']?.toString() ?? '1';
+      final unit = i['unit'] ?? '';
+      final category = i['category'] ?? '';
+
+      try {
+        await _api.addInventoryItem(
+          userId: userId,
+          ingredientName: canonicalName,
+          category: category.isNotEmpty ? category : 'Pantry',
+          quantity: double.tryParse(qty) ?? 1.0,
+          unit: unit.isEmpty ? 'pcs' : unit,
+          location: 'Fridge',
+          expiryDate: i['expiry_date'],
+        );
+        added++;
+        if (mounted) setState(() => _addedIndices.add(idx));
+      } catch (e) {
+        debugPrint('Bulk add error for $canonicalName: $e');
+      }
+    }
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Added $added items to shelf!'),
+        backgroundColor: AppTheme.freshGreen,
       ),
     );
   }
@@ -827,7 +921,6 @@ class _ManualEntryBottomSheet extends StatefulWidget {
 
 class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
   final _formKey = GlobalKey<FormState>();
-  String? _selectedIngredientId;
   String _ingredientName = '';
   double _quantity = 1.0;
   String _unit = 'pcs';
@@ -835,6 +928,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
   
   // Category to bind the state of the dropdown
   String _category = 'Produce';
+  String _location = 'Fridge';
   
   final List<String> _categories = [
     'Produce', 'Vegetable', 'Fruit', 'Meat', 'Poultry', 'Seafood',
@@ -911,39 +1005,20 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
-      // Insert into Supabase inventory_items
+      // Insert via backend API (bypasses RLS)
       try {
-        final client = Supabase.instance.client;
         final userId = currentUserId();
+        final api = ApiService();
 
-        // 1. Upsert into ingredients table (find or create)
-        final existingIngredient = await client
-            .from('ingredients')
-            .select('id')
-            .ilike('display_name_en', _ingredientName)
-            .maybeSingle();
-
-        String ingredientId;
-        if (existingIngredient != null) {
-          ingredientId = existingIngredient['id'];
-        } else {
-          final inserted = await client.from('ingredients').insert({
-            'display_name_en': _ingredientName,
-            'category': _category,
-            'default_unit': _unit,
-          }).select('id').single();
-          ingredientId = inserted['id'];
-        }
-
-        // 2. Insert into inventory_items
-        await client.from('inventory_items').insert({
-          'user_id': userId,
-          'ingredient_id': ingredientId,
-          'quantity': _quantity,
-          'unit': _unit,
-          'location': 'Fridge',
-          'expiry_date': _expiryDate.toIso8601String(),
-        });
+        await api.addInventoryItem(
+          userId: userId,
+          ingredientName: _ingredientName,
+          category: _category,
+          quantity: _quantity,
+          unit: _unit,
+          location: _location,
+          expiryDate: _expiryDate.toIso8601String(),
+        );
 
         if (!mounted) return;
         Navigator.pop(context);
@@ -1009,7 +1084,36 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                 color: Colors.white,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
+
+            // Location picker
+            SegmentedButton<String>(
+              segments: const [
+                ButtonSegment(value: 'Fridge', label: Text('Fridge'), icon: Icon(Icons.kitchen, size: 16)),
+                ButtonSegment(value: 'Freezer', label: Text('Freezer'), icon: Icon(Icons.ac_unit, size: 16)),
+                ButtonSegment(value: 'Pantry', label: Text('Pantry'), icon: Icon(Icons.shelves, size: 16)),
+              ],
+              selected: {_location},
+              onSelectionChanged: (v) => setState(() => _location = v.first),
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return IFridgeTheme.primary.withValues(alpha: 0.15);
+                  }
+                  return IFridgeTheme.bgElevated;
+                }),
+                foregroundColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return IFridgeTheme.primary;
+                  }
+                  return IFridgeTheme.textMuted;
+                }),
+                side: WidgetStateProperty.all(
+                  BorderSide(color: Colors.white.withValues(alpha: 0.08)),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
 
             // Autocomplete Field
             LayoutBuilder(
@@ -1086,7 +1190,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                                   width: 40,
                                   height: 40,
                                   fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => Container(
+                                  errorBuilder: (_, _, _) => Container(
                                     width: 40, height: 40,
                                     color: IFridgeTheme.bgElevated,
                                     child: Center(child: Text(categoryEmoji(cat), style: const TextStyle(fontSize: 20))),
@@ -1109,7 +1213,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
 
             // Category Dropdown
             DropdownButtonFormField<String>(
-              value: _category,
+              initialValue: _category,
               decoration: InputDecoration(
                 labelText: 'Category',
                 border: OutlineInputBorder(
@@ -1150,7 +1254,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                 Expanded(
                   flex: 3,
                   child: DropdownButtonFormField<String>(
-                    value: _unit,
+                    initialValue: _unit,
                     decoration: InputDecoration(
                       labelText: 'Metric Type',
                       border: OutlineInputBorder(

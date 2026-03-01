@@ -28,6 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // User data
   String _userName = 'Chef';
+  String _userEmail = '';
   int _totalXp = 0;
   int _level = 1;
 
@@ -69,6 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (currentUser == null || currentUser.isAnonymous) {
         setState(() {
           _userName = 'Guest Chef';
+          _userEmail = '';
           _totalXp = 0;
           _level = 1;
           _mealsCooked = 0;
@@ -139,6 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         // User
         _userName = userData?['display_name'] ?? 'Chef';
+        _userEmail = client.auth.currentUser?.email ?? '';
 
         // Gamification
         _totalXp = (statsData?['xp_points'] as int?) ?? 0;
@@ -252,60 +255,108 @@ class _ProfileScreenState extends State<ProfileScreen> {
         slivers: [
           // ── Header ─────────────────────────────────────────────
           SliverAppBar(
-            expandedHeight: 200,
+            expandedHeight: 220,
             pinned: true,
-            backgroundColor: AppTheme.surface,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                     colors: [
-                      AppTheme.accent.withValues(alpha: 0.4),
+                      IFridgeTheme.primary.withValues(alpha: 0.3),
+                      IFridgeTheme.secondary.withValues(alpha: 0.2),
                       AppTheme.background,
                     ],
+                    stops: const [0.0, 0.5, 1.0],
                   ),
                 ),
                 child: SafeArea(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Avatar
-                      Container(
-                        width: 72,
-                        height: 72,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            colors: [IFridgeTheme.primary, IFridgeTheme.secondary],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppTheme.accent.withValues(alpha: 0.4),
-                              blurRadius: 20,
+                      // Avatar with animated gradient ring
+                      GestureDetector(
+                        onTap: _editDisplayName,
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: const SweepGradient(
+                              colors: [
+                                IFridgeTheme.primary,
+                                IFridgeTheme.secondary,
+                                IFridgeTheme.primary,
+                              ],
                             ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Text('👨‍🍳', style: TextStyle(fontSize: 36)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: IFridgeTheme.primary.withValues(alpha: 0.4),
+                                blurRadius: 24,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.all(3),
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppTheme.background,
+                            ),
+                            child: const Center(
+                              child: Text('👨‍🍳', style: TextStyle(fontSize: 36)),
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 12),
-                      Text(
-                        _userName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
+                      // Name (tappable to edit)
+                      GestureDetector(
+                        onTap: _editDisplayName,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              _userName,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Icon(Icons.edit, size: 14,
+                                color: Colors.white.withValues(alpha: 0.4)),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        '${l10n?.profileGamificationLevel(_level) ?? 'Level $_level'} • $_totalXp XP',
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.6),
-                          fontSize: 14,
+                      if (_userEmail.isNotEmpty)
+                        Text(
+                          _userEmail,
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.4),
+                            fontSize: 12,
+                          ),
+                        ),
+                      const SizedBox(height: 4),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: IFridgeTheme.primary.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: IFridgeTheme.primary.withValues(alpha: 0.3),
+                          ),
+                        ),
+                        child: Text(
+                          '${l10n?.profileGamificationLevel(_level) ?? 'Level $_level'} • $_totalXp XP',
+                          style: TextStyle(
+                            color: IFridgeTheme.primary.withValues(alpha: 0.9),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],
@@ -318,13 +369,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 icon: const Icon(Icons.refresh),
                 onPressed: _loadProfile,
                 tooltip: l10n?.refresh ?? 'Refresh',
-              ),
-              IconButton(
-                icon: const Icon(Icons.logout),
-                onPressed: () async {
-                  await Supabase.instance.client.auth.signOut();
-                },
-                tooltip: l10n?.signOut ?? 'Sign Out',
               ),
             ],
           ),
@@ -391,23 +435,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: l10n?.profileYourImpact ?? 'Your Impact',
                     child: Row(
                       children: [
-                        // Stat: Meals Cooked
-                        _StatTile(
+                        _AnimatedStatTile(
                           icon: Icons.restaurant,
-                          value: _mealsCooked.toString(),
+                          targetValue: _mealsCooked,
                           label: l10n?.profileMealsCooked ?? 'Meals Cooked',
+                          color: IFridgeTheme.primary,
                         ),
-                        // Stat: Items Saved
-                        _StatTile(
+                        _AnimatedStatTile(
                           icon: Icons.eco,
-                          value: _itemsSaved.toString(),
+                          targetValue: _itemsSaved,
                           label: l10n?.profileItemsSaved ?? 'Items Saved',
+                          color: IFridgeTheme.secondary,
                         ),
-                        // Stat: Day Streak
-                        _StatTile(
+                        _AnimatedStatTile(
                           icon: Icons.local_fire_department,
-                          value: '$_currentStreak',
+                          targetValue: _currentStreak,
                           label: l10n?.profileDayStreak ?? 'Day Streak',
+                          color: IFridgeTheme.accent,
                         ),
                       ],
                     ),
@@ -421,12 +465,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   delay: 350,
                   child: _SectionCard(
                     title: l10n?.profileBadges ?? 'Badges & Achievements',
-                    child: Wrap(
-                      spacing: 12,
-                      runSpacing: 16,
-                      children: allBadges.map((badge) {
-                        return badge;
-                      }).toList(),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final itemWidth = (constraints.maxWidth - 24) / 4; // 4 per row
+                        return Wrap(
+                          spacing: 8,
+                          runSpacing: 12,
+                          children: allBadges.map((badge) {
+                            return SizedBox(width: itemWidth.clamp(60, 90), child: badge);
+                          }).toList(),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -456,14 +505,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 SlideInItem(
                   delay: 250,
-                  child: _SectionCard(
-                    title: l10n?.profileShoppingList ?? 'Shopping List',
-                    trailing: IconButton(
-                      icon: const Icon(Icons.add_circle_outline,
-                          color: IFridgeTheme.primary, size: 22),
-                      onPressed: _addShoppingItem,
-                      tooltip: l10n?.addShoppingItem ?? 'Add Item',
-                    ),
+                  child: Builder(
+                    builder: (context) {
+                      final checkedCount = _shoppingList.where((i) => i['checked'] == true).length;
+                      final totalCount = _shoppingList.length;
+                      return _SectionCard(
+                        title: totalCount > 0
+                            ? '${l10n?.profileShoppingList ?? 'Shopping List'} ($checkedCount/$totalCount)'
+                            : l10n?.profileShoppingList ?? 'Shopping List',
+                        trailing: IconButton(
+                          icon: const Icon(Icons.add_circle_outline,
+                              color: IFridgeTheme.primary, size: 22),
+                          onPressed: _addShoppingItem,
+                          tooltip: l10n?.addShoppingItem ?? 'Add Item',
+                        ),
                     child: _shoppingList.isEmpty
                         ? Center(
                             child: Padding(
@@ -513,6 +568,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               );
                             }).toList(),
                           ),
+                      );
+                    },
                   ),
                 ),
 
@@ -586,15 +643,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                         ),
                                       ),
-                                      IconButton(
-                                        icon: Icon(
-                                          meal != null ? Icons.edit : Icons.add_circle_outline,
-                                          size: 18,
-                                          color: meal != null ? Colors.white54 : AppTheme.accent,
+                                      GestureDetector(
+                                        onLongPress: meal != null ? () => _clearMeal(i) : null,
+                                        child: IconButton(
+                                          icon: Icon(
+                                            meal != null ? Icons.edit : Icons.add_circle_outline,
+                                            size: 18,
+                                            color: meal != null ? Colors.white54 : AppTheme.accent,
+                                          ),
+                                          onPressed: () => _assignMeal(i),
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                                         ),
-                                        onPressed: () => _assignMeal(i),
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                                       ),
                                     ],
                                   ),
@@ -606,9 +666,212 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 const SizedBox(height: 12),
 
+                // ── Account Section ────────────────────────────────────
+                SlideInItem(
+                  delay: 350,
+                  child: _SectionCard(
+                    title: 'Account',
+                    child: Column(
+                      children: [
+                        // Email display
+                        if (_userEmail.isNotEmpty)
+                          _SettingsRow(
+                            icon: Icons.email_outlined,
+                            label: _userEmail,
+                            trailing: const SizedBox.shrink(),
+                          ),
+                        // Sign Out
+                        _SettingsRow(
+                          icon: Icons.logout,
+                          label: l10n?.signOut ?? 'Sign Out',
+                          onTap: () async {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                backgroundColor: IFridgeTheme.bgElevated,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                title: const Text('Sign Out?', style: TextStyle(color: Colors.white)),
+                                content: const Text('You will need to sign in again.',
+                                    style: TextStyle(color: Colors.white70)),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () => Navigator.pop(ctx, true),
+                                    style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
+                                    child: const Text('Sign Out'),
+                                  ),
+                                ],
+                              ),
+                            );
+                            if (confirm == true) {
+                              await Supabase.instance.client.auth.signOut();
+                            }
+                          },
+                        ),
+                        // Delete Account
+                        _SettingsRow(
+                          icon: Icons.delete_forever,
+                          label: 'Delete Account',
+                          iconColor: Colors.redAccent,
+                          labelColor: Colors.redAccent,
+                          onTap: () async {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                backgroundColor: IFridgeTheme.bgElevated,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                title: const Text('Delete Account?',
+                                    style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w700)),
+                                content: const Text(
+                                  'This action is permanent and cannot be undone. All your data will be lost.',
+                                  style: TextStyle(color: Colors.white70),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  FilledButton(
+                                    onPressed: () => Navigator.pop(ctx, true),
+                                    style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
+                                    child: const Text('Delete Forever'),
+                                  ),
+                                ],
+                              ),
+                            );
+                            if (confirm == true && mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Account deletion requested. Contact support to finalize.'),
+                                  backgroundColor: Colors.redAccent,
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                // ── Settings Section ───────────────────────────────────
+                SlideInItem(
+                  delay: 400,
+                  child: _SectionCard(
+                    title: 'Settings',
+                    child: Column(
+                      children: [
+                        _SettingsRow(
+                          icon: Icons.language,
+                          label: 'Language',
+                          trailing: Text(
+                            Localizations.localeOf(context).languageCode.toUpperCase(),
+                            style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 13),
+                          ),
+                        ),
+                        _SettingsRow(
+                          icon: Icons.dark_mode,
+                          label: 'Theme',
+                          trailing: Text(
+                            'Dark',
+                            style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 13),
+                          ),
+                        ),
+                        _SettingsRow(
+                          icon: Icons.info_outline,
+                          label: 'About iFridge',
+                          onTap: () {
+                            showAboutDialog(
+                              context: context,
+                              applicationName: 'iFridge',
+                              applicationVersion: '1.0.0',
+                              applicationIcon: const Text('🧊', style: TextStyle(fontSize: 48)),
+                              children: [
+                                const Text('Smart kitchen ecosystem powered by AI.'),
+                              ],
+                            );
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            'v1.0.0',
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              fontSize: 11,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 32),
 
               ]),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Edit Display Name ──────────────────────────────────────────
+
+  void _editDisplayName() {
+    final controller = TextEditingController(text: _userName);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: IFridgeTheme.bgElevated,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Edit Display Name',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: 'Your name',
+            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+            filled: true,
+            fillColor: AppTheme.background,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            prefixIcon: const Icon(Icons.person_outline, color: IFridgeTheme.primary),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              final newName = controller.text.trim();
+              if (newName.isNotEmpty && newName != _userName) {
+                try {
+                  await Supabase.instance.client
+                      .from('users')
+                      .update({'display_name': newName})
+                      .eq('id', currentUserId());
+                  setState(() => _userName = newName);
+                } catch (e) {
+                  debugPrint('Error updating name: $e');
+                }
+              }
+              if (mounted) Navigator.pop(ctx);
+            },
+            style: FilledButton.styleFrom(backgroundColor: IFridgeTheme.primary),
+            child: const Text('Save'),
           ),
         ],
       ),
@@ -764,6 +1027,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     );
   }
+
+  // ── Clear Meal Helper ──────────────────────────────────────────
+
+  void _clearMeal(int dayIndex) async {
+    final targetDate = DateTime.now().add(Duration(days: dayIndex));
+    final dateStr = targetDate.toIso8601String().split('T')[0];
+    try {
+      await Supabase.instance.client
+          .from('meal_plan')
+          .delete()
+          .eq('user_id', currentUserId())
+          .eq('planned_date', dateStr);
+      setState(() => _mealPlan[dayIndex] = null);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Meal cleared'),
+          backgroundColor: AppTheme.surface,
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    } catch (e) {
+      debugPrint('Error clearing meal: $e');
+    }
+  }
 }
 
 // ── Section Card ─────────────────────────────────────────────────
@@ -811,42 +1099,59 @@ class _SectionCard extends StatelessWidget {
   }
 }
 
-// ── Stat Tile ────────────────────────────────────────────────────
+// ── Animated Stat Tile ───────────────────────────────────────────
 
-class _StatTile extends StatelessWidget {
-  final String value;
+class _AnimatedStatTile extends StatelessWidget {
+  final int targetValue;
   final String label;
   final IconData icon;
+  final Color color;
 
-  const _StatTile(
-      {required this.value, required this.label, required this.icon});
+  const _AnimatedStatTile({
+    required this.targetValue,
+    required this.label,
+    required this.icon,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Column(
-        children: [
-          Icon(icon, color: AppTheme.accent, size: 22),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0, end: targetValue.toDouble()),
+        duration: const Duration(milliseconds: 1200),
+        curve: Curves.easeOutCubic,
+        builder: (_, value, __) => Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: color.withValues(alpha: 0.1),
+              ),
+              child: Icon(icon, color: color, size: 22),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.5),
-              fontSize: 11,
-              height: 1.3,
+            const SizedBox(height: 8),
+            Text(
+              value.toInt().toString(),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.5),
+                fontSize: 11,
+                height: 1.3,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1096,6 +1401,57 @@ class _ShoppingItemTile extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Settings Row ─────────────────────────────────────────────────
+
+class _SettingsRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+  final Color? iconColor;
+  final Color? labelColor;
+
+  const _SettingsRow({
+    required this.icon,
+    required this.label,
+    this.trailing,
+    this.onTap,
+    this.iconColor,
+    this.labelColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: iconColor ?? Colors.white54),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: labelColor ?? Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            if (trailing != null) trailing!,
+            if (onTap != null && trailing == null)
+              Icon(Icons.chevron_right, size: 18,
+                  color: Colors.white.withValues(alpha: 0.3)),
+          ],
         ),
       ),
     );

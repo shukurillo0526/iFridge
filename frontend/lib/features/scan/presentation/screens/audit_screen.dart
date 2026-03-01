@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'dart:math' as math;
+import 'package:ifridge_app/core/services/api_service.dart';
+import 'package:ifridge_app/core/utils/category_images.dart';
 
 class AuditItem {
   final String id;
@@ -31,6 +31,7 @@ class AuditScreen extends StatefulWidget {
 
 class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin {
   late List<AuditItem> _items;
+  final List<AuditItem> _undoStack = [];
   double _swipeOffset = 0.0;
   double _swipeAngle = 0.0;
 
@@ -62,7 +63,10 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
   }
 
   void _swipeLeft() {
-    // Reject
+    // Reject — push to undo stack
+    if (_items.isNotEmpty) {
+      _undoStack.add(_items.last);
+    }
     _animateAndRemove(-MediaQuery.of(context).size.width, 'Rejected');
   }
 
@@ -85,38 +89,13 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
         // ── Persist accepted items to Supabase ──
         if (actionMsg == 'Accepted') {
           try {
-            final client = Supabase.instance.client;
             final userId = currentUserId();
-
-            // 1. Find or create ingredient
-            final existing = await client
-                .from('ingredients')
-                .select('id')
-                .ilike('display_name_en', removed.title)
-                .maybeSingle();
-
-            String ingredientId;
-            if (existing != null) {
-              ingredientId = existing['id'];
-            } else {
-              final inserted = await client.from('ingredients').insert({
-                'display_name_en': removed.title,
-                'category': removed.category,
-              }).select('id').single();
-              ingredientId = inserted['id'];
-            }
-
-            // 2. Insert into inventory_items
-            await client.from('inventory_items').insert({
-              'user_id': userId,
-              'ingredient_id': ingredientId,
-              'quantity': 1,
-              'unit': 'pcs',
-              'location': 'Fridge',
-              'expiry_date': DateTime.now()
-                  .add(const Duration(days: 7))
-                  .toIso8601String(),
-            });
+            final api = ApiService();
+            await api.addInventoryItem(
+              userId: userId,
+              ingredientName: removed.title,
+              category: removed.category,
+            );
           } catch (e) {
             // Silently log — don't crash the audit flow
             debugPrint('Audit save error: $e');
@@ -163,6 +142,36 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
                   fontSize: 16,
                   height: 1.4,
                 ),
+              ),
+            ),
+            // Undo + counter row
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (_undoStack.isNotEmpty)
+                    TextButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          _items.add(_undoStack.removeLast());
+                        });
+                      },
+                      icon: const Icon(Icons.undo, size: 16),
+                      label: const Text('Undo'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: IFridgeTheme.primary,
+                      ),
+                    ),
+                  const Spacer(),
+                  Text(
+                    '${_items.length} remaining',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.5),
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
               ),
             ),
             Expanded(
@@ -245,18 +254,37 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
             flex: 3,
             child: Container(
               decoration: BoxDecoration(
-                color: AppTheme.accent.withValues(alpha: 0.1),
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-              ),
-              child: Center(
-                child: Icon(
-                  item.category == 'Produce' ? Icons.eco 
-                  : item.category == 'Dairy' ? Icons.water_drop 
-                  : item.category == 'Meat' ? Icons.set_meal 
-                  : Icons.kitchen,
-                  size: 100,
-                  color: AppTheme.accent.withValues(alpha: 0.5),
+                image: DecorationImage(
+                  image: NetworkImage(categoryImageUrl(item.category)),
+                  fit: BoxFit.cover,
+                  onError: (_, _) {},
                 ),
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.5),
+                    ],
+                  ),
+                ),
+                alignment: Alignment.bottomLeft,
+                padding: const EdgeInsets.all(16),
+                child: Row(children: [
+                  Text(categoryEmoji(item.category),
+                      style: const TextStyle(fontSize: 28)),
+                  const SizedBox(width: 8),
+                  Text(item.category,
+                      style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600)),
+                ]),
               ),
             ),
           ),

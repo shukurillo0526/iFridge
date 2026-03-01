@@ -26,6 +26,7 @@ class GenerateRecipeRequest(BaseModel):
     max_time_minutes: Optional[int] = None
     difficulty: Optional[int] = None  # 1-3
     servings: Optional[int] = 2
+    shelf_only: Optional[bool] = False
 
 class SubstituteRequest(BaseModel):
     ingredient: str
@@ -58,9 +59,13 @@ async def generate_recipe(req: GenerateRecipeRequest):
 
     constraint_text = "\n".join(constraints) if constraints else "No constraints"
 
+    shelf_constraint = ""
+    if req.shelf_only:
+        shelf_constraint = "\nIMPORTANT: Use ONLY the listed ingredients. Do NOT add any extra ingredients that are not in the list. You may use common pantry staples like salt, pepper, oil, and water."
+
     prompt = f"""Create a recipe using these ingredients: {', '.join(req.ingredients)}.
 Servings: {req.servings or 2}
-{constraint_text}
+{constraint_text}{shelf_constraint}
 
 Return JSON only:
 {{"title": "Recipe Name", "description": "Short description", "prep_time_minutes": 10, "cook_time_minutes": 20, "servings": 2, "difficulty": 1, "cuisine": "...", "ingredients": [{{"name": "...", "quantity": 1, "unit": "pcs"}}], "steps": [{{"step": 1, "text": "...", "time_seconds": 60}}]}}"""

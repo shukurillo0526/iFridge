@@ -99,6 +99,39 @@ Following the consumer pivot, we replaced expensive cloud AI services with local
 
 ---
 
+## 🎨 Phase 14: Page-by-Page UX Overhaul (Complete)
+
+Systematically iterated through each major screen, fixing bugs, adding features, and elevating the visual experience.
+
+### Cook Page
+- **AI Recipe Generation:** Added an "AI Generate" feature that reads the user's current shelf inventory from Supabase and streams a custom recipe from the local `qwen2.5:3b` model.
+- **Shelf-Only Toggle:** Introduced a switch to constrain AI-generated recipes to only ingredients currently available on the shelf.
+- **AI Tips Integration:** Wired "💡 Ask AI for a tip" button in CookingRunScreen to fetch contextual cooking advice from the local LLM.
+
+### Scan Page
+- **Two-Stage AI Pipeline:** Completely rewrote the receipt scanning (`ocr_parser.py`) and photo detection (`vision_detect.py`) backends to use a robust two-stage pipeline: `moondream` (vision) describes the image → `qwen2.5:3b` (text LLM) structures the output into JSON.
+- **Frontend Data Path Fix:** Corrected the `_captureImage` and `_capturePhoto` functions to unwrap the `data` key from API responses, resolving the "0 items detected" bug.
+- **Item Addition Tracking:** Added `_addedIndices` to visually mark items already added with a checkmark and reduced opacity.
+- **Bulk Add:** Implemented "Add All to Shelf" button for efficient batch operations.
+- **Scan Summary Counter:** Added a counter (e.g., "3 / 12 added") to the results screen.
+- **Manual Entry:** Added a location picker (Fridge, Freezer, Pantry) to the manual entry form.
+- **RLS Bypass:** Created a new backend endpoint (`/api/v1/inventory/add-item`) using the service role key to bypass Supabase Row Level Security restrictions on the `ingredients` table. All inventory operations (single add, bulk add, manual add, audit accept) now route through this endpoint.
+
+### Audit Screen
+- **Category Images:** Integrated `categoryImageUrl()` on audit cards for visual identification.
+- **Undo-Reject:** Implemented an undo button with `_undoStack` to recover accidentally rejected items.
+- **RLS Fix:** Routed ingredient creation through the new backend API endpoint.
+
+### Profile Page
+- **Header Redesign:** Replaced the basic avatar with a `SweepGradient` ring effect, added email subtitle, and made the display name tappable to edit (saves to Supabase `users.display_name`).
+- **Animated Stats:** Replaced static stat tiles with `TweenAnimationBuilder` count-up animations and color-coded icon backgrounds (green/teal/orange).
+- **Badge Layout Fix:** Used `LayoutBuilder` to constrain badges to 4 per row, preventing overflow on small screens.
+- **Account Section:** Added email display, Sign Out (with confirmation dialog — moved from AppBar), and Delete Account (with warning).
+- **Settings Section:** Added Language display, Theme indicator, "About iFridge" dialog, and version number.
+- **Shopping List Counter:** Title now shows checked vs total count (e.g., "Shopping List (2/5)").
+- **Meal Planner Clear:** Long-press the edit icon on any planned meal to remove it from the schedule.
+
+
 ## 🚀 The Future
 
 I-Fridge is now a fully functional, AI-powered smart kitchen app. Future considerations include:

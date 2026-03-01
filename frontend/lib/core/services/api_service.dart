@@ -10,11 +10,11 @@ import 'package:http_parser/http_parser.dart';
 
 class ApiConfig {
   // Local Ollama-powered backend
-  // static const String baseUrl = 'http://localhost:8000';
+  static const String baseUrl = 'http://localhost:8000';
 
   // Railway production URL:
-  static const String baseUrl =
-      'https://merry-motivation-production-3529.up.railway.app';
+  // static const String baseUrl =
+  //     'https://merry-motivation-production-3529.up.railway.app';
 }
 
 class ApiService {
@@ -170,6 +170,7 @@ class ApiService {
     int? maxTimeMinutes,
     int? difficulty,
     int servings = 2,
+    bool shelfOnly = false,
   }) async {
     final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/ai/generate-recipe');
     final body = {
@@ -178,6 +179,7 @@ class ApiService {
       if (maxTimeMinutes != null) 'max_time_minutes': maxTimeMinutes,
       if (difficulty != null) 'difficulty': difficulty,
       'servings': servings,
+      'shelf_only': shelfOnly,
     };
     final response = await _client.post(
       uri,
@@ -209,6 +211,36 @@ class ApiService {
   Future<Map<String, dynamic>> getAiStatus() async {
     final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/ai/status');
     final response = await _client.get(uri, headers: _headers);
+    return _handleResponse(response);
+  }
+
+  // ── Inventory ─────────────────────────────────────────────────
+
+  /// Add an item to inventory via the backend (bypasses RLS).
+  Future<Map<String, dynamic>> addInventoryItem({
+    required String userId,
+    required String ingredientName,
+    String category = 'Pantry',
+    double quantity = 1.0,
+    String unit = 'pcs',
+    String location = 'Fridge',
+    String? expiryDate,
+  }) async {
+    final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/inventory/add-item');
+    final body = {
+      'user_id': userId,
+      'ingredient_name': ingredientName,
+      'category': category,
+      'quantity': quantity,
+      'unit': unit,
+      'location': location,
+      if (expiryDate != null) 'expiry_date': expiryDate,
+    };
+    final response = await _client.post(
+      uri,
+      headers: {..._headers, 'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
     return _handleResponse(response);
   }
 
