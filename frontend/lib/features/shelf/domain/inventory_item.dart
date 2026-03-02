@@ -97,7 +97,7 @@ class InventoryItem {
       computedExpiry: row['computed_expiry'] != null
           ? DateTime.tryParse(row['computed_expiry'].toString())
           : null,
-      location: row['location'] as String? ?? 'fridge',
+      location: (row['location'] as String? ?? 'fridge').toLowerCase(),
       source: row['source'] as String? ?? 'manual',
       confidenceScore: (row['confidence_score'] as num?)?.toDouble(),
       category: ingredient?['category'] as String? ?? 'other',

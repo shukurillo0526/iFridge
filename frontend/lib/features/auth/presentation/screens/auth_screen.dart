@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:flutter/foundation.dart'; // For kIsWeb
-import 'package:ifridge_app/main.dart'; // For AppShell fallback
+import 'package:ifridge_app/core/services/auth_helper.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -111,9 +111,15 @@ class _AuthScreenState extends State<AuthScreen>
       _error = null;
     });
     try {
+      // On web: redirect back to wherever the app is actually running.
+      // On mobile: use deep link scheme.
+      final redirectUrl = kIsWeb
+          ? Uri.base.origin  // e.g. http://localhost:55555 or https://yourapp.github.io
+          : 'io.supabase.flutter://login-callback';
+
       await Supabase.instance.client.auth.signInWithOAuth(
         OAuthProvider.google,
-        redirectTo: kIsWeb ? null : 'io.supabase.flutter://login-callback', // Use deep link for iOS/Android
+        redirectTo: redirectUrl,
       );
     } catch (e) {
       if (mounted) {
@@ -131,14 +137,19 @@ class _AuthScreenState extends State<AuthScreen>
       _error = null;
     });
     try {
+      // Each guest gets a unique anonymous UUID in Supabase.
+      // Their data is isolated and can be migrated when they
+      // later sign up with email or Google (via identity linking).
       await Supabase.instance.client.auth.signInAnonymously();
+      
+      // Initialize profile rows for this anonymous user
+      await ensureUserInitialized();
     } catch (e) {
       if (mounted) {
-        // Fallback: If anonymous auth is disabled on Supabase, 
-        // bypass auth screen and use the demo UUID for testing.
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const AppShell()),
-        );
+        setState(() {
+          _error = 'Guest sign‑in failed. Please try email or Google instead.';
+          _loading = false;
+        });
       }
     }
   }

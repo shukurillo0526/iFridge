@@ -84,7 +84,6 @@ CREATE INDEX IF NOT EXISTS idx_history_user_cooked
 CREATE INDEX IF NOT EXISTS idx_shopping_user_purchased
     ON public.shopping_list(user_id, is_purchased);
 
--- Meal plan: upcoming week lookups
+-- Meal plan: date lookups
 CREATE INDEX IF NOT EXISTS idx_meal_plan_upcoming
-    ON public.meal_plan(user_id, planned_date)
-    WHERE planned_date >= CURRENT_DATE;
+    ON public.meal_plan(user_id, planned_date);

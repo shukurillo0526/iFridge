@@ -99,7 +99,7 @@ class _CookScreenState extends State<CookScreen>
             .select(
               '*, recipe_ingredients(ingredient_id, quantity, unit, is_optional, prep_note, ingredients(display_name_en))',
             )
-            .limit(50);
+            .limit(200);
 
         for (final recipe in (recipeRows as List)) {
           final ri = (recipe['recipe_ingredients'] as List?) ?? [];

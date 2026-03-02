@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
-import 'package:ifridge_app/core/utils/category_images.dart';
+import 'package:ifridge_app/core/utils/ingredient_icons.dart';
 import 'package:ifridge_app/features/shelf/domain/inventory_item.dart';
 import 'package:ifridge_app/features/shelf/presentation/widgets/freshness_overlay.dart';
 
@@ -108,18 +108,21 @@ class InventoryItemCard extends StatelessWidget {
                           borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(14),
                           ),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              item.imageUrl ?? categoryImageUrl(item.category),
+                        ),
+                        child: Center(
+                          child: Text(
+                            IngredientIcons.getEmoji(
+                              item.name,
+                              category: item.category,
                             ),
-                            fit: BoxFit.cover,
-                            colorFilter: isExpired
-                                ? const ColorFilter.mode(
-                                    Colors.grey, BlendMode.saturation)
-                                : null,
+                            style: TextStyle(
+                              fontSize: 44,
+                              color: isExpired
+                                  ? Colors.grey
+                                  : null,
+                            ),
                           ),
                         ),
-                        child: null,
                       ),
                     ),
 

@@ -158,9 +158,37 @@ Systematically audited and rebuilt the app's data layer for efficiency, consiste
 - Added trigram index on `ingredients.display_name_en` for faster autocomplete.
 - **Removed shared demo UUID** — guests now use Supabase anonymous auth with real UUIDs, eliminating data collision.
 
+## 🍽️ Phase 16: Recipe Seeding & Ingredient Icons (Complete)
+
+Massively expanded the recipe database and introduced per-ingredient visual identity.
+
+### 100-Recipe Collection
+- **Seeded 100 recipes** across 4 SQL files (`seed_recipes_part1-4.sql`), each with full `recipe_ingredients` and `recipe_steps` (human text + robot action JSON).
+- **Cuisines covered:** American, Korean, Japanese, Italian, Thai, Mexican, French, Indian, Spanish, Greek, Chinese, Turkish, Vietnamese, Middle Eastern, British, Russian, Mediterranean.
+- **Tags span:** breakfast, lunch, dinner, dessert, side, soup, salad, appetizer, snack, quick, baking, fried, grilled, spicy, healthy, vegetarian, comfort, no-cook.
+- **Highlights:** American Pancakes, Korean Maeuntang (spicy fish soup), Bibimbap, Tteokbokki, Bulgogi, Doenjang Jjigae, Shoyu Ramen, Margherita Pizza, Pad Thai, Butter Chicken, and more.
+- **Helper function:** `_ensure_ing()` auto-creates missing ingredients with proper `canonical_name` during seeding.
+
+### Ingredient Icon System
+- **`seed_ingredients.sql`:** 24 common ingredients with bilingual names (EN/KO), shelf-life data, and storage zones.
+- **`migration_007`:** Added `image_url` column to `ingredients` table.
+- **`ingredient_icons.dart`:** 70+ emoji mappings (🥔🥕🧅🥚🍗🍚🥛 etc.) with per-ingredient match → category fallback → default.
+- **`InventoryItemCard`:** Replaced unreliable Unsplash `NetworkImage` with instant-loading emoji icons.
+
+### Inventory Add Fix
+- **Upsert logic:** Backend `add-item` endpoint now checks for existing items at the same `(user_id, ingredient_id, location)` — increments quantity instead of failing with `duplicate key` constraint violation.
+- **`canonical_name`:** Now properly set when creating new ingredients (was missing, caused NOT NULL violations).
+- **Location normalization:** Lowercased on insert for consistent shelf filtering.
+
+### Query Limits
+- Increased recipe query limits from 50 → 200 in Cook screen and Profile screen to display all 100 recipes.
+
+---
+
 ## 🚀 The Future
 
-I-Fridge is now a fully functional, AI-powered smart kitchen app. Future considerations include:
+I-Fridge is now a fully functional, AI-powered smart kitchen app with 100 recipes. Future considerations include:
 1. Scaling the database with Kaggle image datasets for visual ingredient matching.
 2. Expanding the `pgvector` similarity search based on user swipe/cook history to further personalize the "For You" feed.
 3. Live integrations with grocery delivery APIs (e.g., Instacart, Coupang) for 1-click restocking of "Missing Ingredients".
+

@@ -32,6 +32,8 @@ class AddItemRequest(BaseModel):
 async def add_inventory_item(req: AddItemRequest):
     """
     Upsert an ingredient and add it to inventory.
+    If the same ingredient already exists in the same location,
+    increments quantity instead of creating a duplicate.
     Uses the service role key, so RLS is bypassed.
     """
     db = get_supabase()
@@ -49,10 +51,13 @@ async def add_inventory_item(req: AddItemRequest):
         if existing.data and len(existing.data) > 0:
             ingredient_id = existing.data[0]["id"]
         else:
+            # canonical_name is required (NOT NULL UNIQUE)
+            canonical = req.ingredient_name.strip().lower().replace(" ", "_")
             inserted = (
                 db.table("ingredients")
                 .insert({
-                    "display_name_en": req.ingredient_name,
+                    "canonical_name": canonical,
+                    "display_name_en": req.ingredient_name.strip(),
                     "category": req.category,
                     "default_unit": req.unit,
                 })
@@ -60,26 +65,55 @@ async def add_inventory_item(req: AddItemRequest):
             )
             ingredient_id = inserted.data[0]["id"]
 
-        # 2. Insert inventory item
+        # 2. Upsert inventory item (increment qty if exists)
+        location = req.location.lower()  # normalize for consistency
         expiry = req.expiry_date or (
             datetime.now() + timedelta(days=7)
         ).isoformat()
 
-        db.table("inventory_items").insert({
-            "user_id": req.user_id,
-            "ingredient_id": ingredient_id,
-            "quantity": req.quantity,
-            "unit": req.unit,
-            "location": req.location,
-            "expiry_date": expiry,
-        }).execute()
+        # Check if item already exists for this user+ingredient+location
+        existing_inv = (
+            db.table("inventory_items")
+            .select("id, quantity")
+            .eq("user_id", req.user_id)
+            .eq("ingredient_id", ingredient_id)
+            .eq("location", location)
+            .limit(1)
+            .execute()
+        )
 
-        logger.info(f"[Inventory] Added {req.ingredient_name} (id={ingredient_id})")
-        return {
-            "status": "success",
-            "ingredient_id": ingredient_id,
-            "message": f"Added {req.ingredient_name} to shelf",
-        }
+        if existing_inv.data and len(existing_inv.data) > 0:
+            # Update quantity (add to existing)
+            old_qty = existing_inv.data[0]["quantity"]
+            new_qty = old_qty + req.quantity
+            db.table("inventory_items").update({
+                "quantity": new_qty,
+                "manual_expiry_date": expiry,
+            }).eq("id", existing_inv.data[0]["id"]).execute()
+
+            logger.info(f"[Inventory] Updated {req.ingredient_name} qty: {old_qty} → {new_qty}")
+            return {
+                "status": "updated",
+                "ingredient_id": ingredient_id,
+                "message": f"Updated {req.ingredient_name} quantity to {new_qty}",
+            }
+        else:
+            # Insert new inventory item
+            db.table("inventory_items").insert({
+                "user_id": req.user_id,
+                "ingredient_id": ingredient_id,
+                "quantity": req.quantity,
+                "unit": req.unit,
+                "location": location,
+                "manual_expiry_date": expiry,
+            }).execute()
+
+            logger.info(f"[Inventory] Added {req.ingredient_name} (id={ingredient_id})")
+            return {
+                "status": "success",
+                "ingredient_id": ingredient_id,
+                "message": f"Added {req.ingredient_name} to shelf",
+            }
 
     except Exception as e:
         logger.error(f"[Inventory] Failed to add item: {e}")

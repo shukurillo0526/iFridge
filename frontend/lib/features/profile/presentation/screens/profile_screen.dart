@@ -977,7 +977,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Expanded(
                 child: FutureBuilder(
-                  future: Supabase.instance.client.from('recipes').select('id, title, prep_time_minutes, cook_time_minutes').limit(50),
+                  future: Supabase.instance.client.from('recipes').select('id, title, prep_time_minutes, cook_time_minutes').limit(200),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
