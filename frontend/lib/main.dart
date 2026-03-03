@@ -7,6 +7,7 @@ import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/features/shelf/presentation/screens/living_shelf_screen.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/cook_screen.dart';
 import 'package:ifridge_app/features/scan/presentation/screens/scan_screen.dart';
+import 'package:ifridge_app/features/explore/presentation/screens/explore_screen.dart';
 import 'package:ifridge_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:ifridge_app/features/auth/presentation/screens/auth_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -80,6 +81,7 @@ class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
     LivingShelfScreen(),
     CookScreen(),
     ScanScreen(),
+    ExploreScreen(),
     ProfileScreen(),
   ];
 
@@ -90,6 +92,7 @@ class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
       _NavItem(icon: Icons.kitchen_outlined, activeIcon: Icons.kitchen, label: l10n?.tabShelf ?? 'Shelf'),
       _NavItem(icon: Icons.restaurant_menu_outlined, activeIcon: Icons.restaurant_menu, label: l10n?.tabCook ?? 'Cook'),
       _NavItem(icon: Icons.camera_alt_outlined, activeIcon: Icons.camera_alt, label: l10n?.tabScan ?? 'Scan'),
+      _NavItem(icon: Icons.explore_outlined, activeIcon: Icons.explore, label: 'Explore'),
       _NavItem(icon: Icons.person_outline, activeIcon: Icons.person, label: l10n?.tabProfile ?? 'Profile'),
     ];
 
