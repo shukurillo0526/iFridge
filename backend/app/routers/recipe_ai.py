@@ -140,3 +140,46 @@ Give a brief, practical cooking tip (2-3 sentences max)."""
         "source": "ollama-local",
         "data": {"tip": response.strip()},
     }
+
+
+class NormalizeRecipeRequest(BaseModel):
+    raw_text: str
+    recipe_title: Optional[str] = None
+
+
+@router.post("/api/v1/ai/normalize-recipe")
+async def normalize_recipe(req: NormalizeRecipeRequest):
+    """
+    Take raw/terse recipe text and return structured, detailed steps
+    with timer data. Useful for importing or enriching recipes.
+    """
+    ollama = get_ollama_service()
+    if not await ollama.is_available():
+        raise HTTPException(status_code=503, detail="AI service unavailable. Start Ollama.")
+
+    title_hint = f" for '{req.recipe_title}'" if req.recipe_title else ""
+
+    prompt = f"""Convert this raw recipe text{title_hint} into detailed, beginner-friendly cooking steps.
+
+Raw text:
+{req.raw_text}
+
+For each step:
+- Write clear, specific instructions a beginner can follow
+- Include exact measurements, temperatures, and visual cues
+- Add timer_seconds for any step that involves waiting (boiling, baking, simmering, resting)
+- Set timer_auto_start to true for passive waiting steps (simmer, bake, rest)
+
+Return JSON only:
+{{"steps": [{{"step": 1, "text": "...", "timer_seconds": null, "timer_auto_start": false}}]}}"""
+
+    system = "You are a professional chef. Convert terse recipe instructions into detailed, beginner-friendly steps. Return only valid JSON."
+
+    result = await ollama.generate_text_json(prompt, system_prompt=system)
+
+    return {
+        "status": "success" if "error" not in result else "partial",
+        "source": "ollama-local",
+        "data": result,
+    }
+

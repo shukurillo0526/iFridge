@@ -10,6 +10,7 @@ import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/widgets/shimmer_loading.dart';
 import 'package:ifridge_app/core/widgets/slide_in_item.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/cooking_run_screen.dart';
+import 'package:ifridge_app/features/cook/presentation/screens/recipe_prep_screen.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
 import 'dart:convert';
@@ -632,14 +633,15 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => CookingRunScreen(
+                          builder: (_) => RecipePrepScreen(
                             recipeId: widget.recipeId,
                             title: widget.title,
-                            steps: _steps,
+                            originalServings: widget.servings ?? 4,
                             ingredients: _ingredients,
-                            matchedIngredientsCount:
-                                widget.ownedIngredientIds.length,
+                            steps: _steps,
+                            ownedIngredientIds: widget.ownedIngredientIds,
                             matchPct: widget.matchPct,
+                            tierColor: widget.tierColor,
                           ),
                         ),
                       );
