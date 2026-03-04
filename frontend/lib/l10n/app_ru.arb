@@ -36,5 +36,23 @@
     "mealPlannerEmpty": "Нет запланированных блюд",
     "planToday": "Запланировать",
     "today": "Сегодня",
-    "planMeal": "Спланировать..."
+    "planMeal": "Спланировать...",
+
+    "tabExplore": "Обзор",
+    "scanFood": "Сканировать еду",
+    "scanCalories": "Сканировать калории",
+    "takePhoto": "Сделать фото",
+    "chooseFromGallery": "Выбрать из галереи",
+    "analyzeCalories": "Анализ калорий",
+    "caloriesPerServing": "ккал/порция",
+    "totalCalories": "ккал всего",
+    "creatorProfile": "Профиль автора",
+    "follow": "Подписаться",
+    "following": "Подписан",
+    "nutritionTracker": "Трекер питания",
+    "reels": "Рилсы",
+    "community": "Сообщество",
+    "hasRecipe": "Есть рецепт",
+    "noReelsYet": "Рилсов пока нет",
+    "settings": "Настройки"
 }

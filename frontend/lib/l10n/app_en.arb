@@ -51,5 +51,23 @@
     "mealPlannerEmpty": "No meals planned",
     "planToday": "Plan Today",
     "today": "Today",
-    "planMeal": "Plan meal..."
+    "planMeal": "Plan meal...",
+
+    "tabExplore": "Explore",
+    "scanFood": "Scan Food",
+    "scanCalories": "Scan Calories",
+    "takePhoto": "Take Photo",
+    "chooseFromGallery": "Choose from Gallery",
+    "analyzeCalories": "Analyze Calories",
+    "caloriesPerServing": "cal/serving",
+    "totalCalories": "cal total",
+    "creatorProfile": "Creator Profile",
+    "follow": "Follow",
+    "following": "Following",
+    "nutritionTracker": "Nutrition Tracker",
+    "reels": "Reels",
+    "community": "Community",
+    "hasRecipe": "Has Recipe",
+    "noReelsYet": "No reels yet",
+    "settings": "Settings"
 }

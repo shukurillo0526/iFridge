@@ -104,4 +104,55 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get planMeal => 'Taom rejalashtirish...';
+
+  @override
+  String get tabExplore => 'Kashfiyot';
+
+  @override
+  String get scanFood => 'Taom skanerlash';
+
+  @override
+  String get scanCalories => 'Kaloriya skanerlash';
+
+  @override
+  String get takePhoto => 'Rasm olish';
+
+  @override
+  String get chooseFromGallery => 'Galereyadan tanlash';
+
+  @override
+  String get analyzeCalories => 'Kaloriyalarni tahlil qilish';
+
+  @override
+  String get caloriesPerServing => 'kal/porsiya';
+
+  @override
+  String get totalCalories => 'jami kal';
+
+  @override
+  String get creatorProfile => 'Muallif profili';
+
+  @override
+  String get follow => 'Kuzatish';
+
+  @override
+  String get following => 'Kuzatilmoqda';
+
+  @override
+  String get nutritionTracker => 'Ovqatlanish kuzatuvi';
+
+  @override
+  String get reels => 'Rillar';
+
+  @override
+  String get community => 'Jamoa';
+
+  @override
+  String get hasRecipe => 'Retsept bor';
+
+  @override
+  String get noReelsYet => 'Hozircha rillar yo\'q';
+
+  @override
+  String get settings => 'Sozlamalar';
 }

@@ -104,4 +104,55 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get planMeal => '식사 계획...';
+
+  @override
+  String get tabExplore => '탐색';
+
+  @override
+  String get scanFood => '음식 스캔';
+
+  @override
+  String get scanCalories => '칼로리 스캔';
+
+  @override
+  String get takePhoto => '사진 찍기';
+
+  @override
+  String get chooseFromGallery => '갤러리에서 선택';
+
+  @override
+  String get analyzeCalories => '칼로리 분석';
+
+  @override
+  String get caloriesPerServing => 'kcal/인분';
+
+  @override
+  String get totalCalories => 'kcal 합계';
+
+  @override
+  String get creatorProfile => '크리에이터 프로필';
+
+  @override
+  String get follow => '팔로우';
+
+  @override
+  String get following => '팔로잉';
+
+  @override
+  String get nutritionTracker => '영양 추적기';
+
+  @override
+  String get reels => '릴스';
+
+  @override
+  String get community => '커뮤니티';
+
+  @override
+  String get hasRecipe => '레시피 있음';
+
+  @override
+  String get noReelsYet => '아직 릴스가 없습니다';
+
+  @override
+  String get settings => '설정';
 }

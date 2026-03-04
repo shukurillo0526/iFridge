@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/features/explore/presentation/screens/creator_page.dart';
+import 'package:ifridge_app/features/cook/presentation/screens/recipe_detail_screen.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -256,157 +257,192 @@ class _ReelCardState extends State<_ReelCard> {
     final authorName = author?['display_name'] ?? 'Chef';
     final postType = widget.post['post_type'] ?? 'tip';
     final isReel = postType == 'reel' && videoUrl != null;
+    final recipeId = widget.post['recipe_id'];
+
+    // Color based on post type
+    final gradColors = isReel
+        ? [Colors.deepPurple.withValues(alpha: 0.5), Colors.black.withValues(alpha: 0.9)]
+        : [IFridgeTheme.primary.withValues(alpha: 0.3), Colors.black.withValues(alpha: 0.9)];
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      width: double.infinity,
+      height: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
         gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            isReel
-                ? Colors.deepPurple.withValues(alpha: 0.2)
-                : IFridgeTheme.primary.withValues(alpha: 0.08),
-            AppTheme.surface,
-          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: gradColors,
         ),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Author + type badge
-            Row(
+      child: Stack(
+        children: [
+          // Center icon / type indicator
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                CircleAvatar(
-                  radius: 18,
-                  backgroundColor: IFridgeTheme.primary.withValues(alpha: 0.2),
-                  child: Text(authorName[0].toUpperCase(),
-                    style: const TextStyle(color: IFridgeTheme.primary, fontWeight: FontWeight.w700)),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      final authorId = widget.post['author_id'];
-                      if (authorId != null) {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (_) => CreatorPage(creatorId: authorId, creatorName: authorName)));
-                      }
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(authorName,
-                          style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
-                        Text(isReel ? '🎬 Reel' : '💡 Tip',
-                          style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11)),
-                      ],
-                    ),
+                Icon(isReel ? Icons.play_circle_outline : Icons.lightbulb_outline,
+                  size: 72, color: Colors.white.withValues(alpha: 0.1)),
+                const SizedBox(height: 8),
+                Text(isReel ? 'Video Reel' : 'Cooking Tip',
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.1), fontSize: 16, fontWeight: FontWeight.w600)),
+              ],
+            ),
+          ),
+
+          // Right-side action column (TikTok-style)
+          Positioned(
+            right: 12,
+            bottom: 120,
+            child: Column(
+              children: [
+                // Author avatar
+                GestureDetector(
+                  onTap: () {
+                    final authorId = widget.post['author_id'];
+                    if (authorId != null) {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (_) => CreatorPage(creatorId: authorId, creatorName: authorName)));
+                    }
+                  },
+                  child: CircleAvatar(
+                    radius: 22,
+                    backgroundColor: IFridgeTheme.primary.withValues(alpha: 0.3),
+                    child: Text(authorName[0].toUpperCase(),
+                      style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
                   ),
                 ),
+                const SizedBox(height: 20),
+                // Like
+                _VerticalAction(
+                  icon: _liked ? Icons.favorite : Icons.favorite_border,
+                  color: _liked ? Colors.red : Colors.white,
+                  label: '$_likeCount',
+                  onTap: _toggleLike),
+                const SizedBox(height: 16),
+                // Bookmark
+                _VerticalAction(
+                  icon: _bookmarked ? Icons.bookmark : Icons.bookmark_border,
+                  color: _bookmarked ? IFridgeTheme.primary : Colors.white,
+                  label: _bookmarked ? 'Saved' : 'Save',
+                  onTap: _toggleBookmark),
+                const SizedBox(height: 16),
+                // Recipe link
+                if (recipeId != null)
+                  _VerticalAction(
+                    icon: Icons.restaurant_menu,
+                    color: Colors.orange,
+                    label: 'Recipe',
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (_) => RecipeDetailScreen(
+                          recipeId: recipeId,
+                          title: caption.length > 30 ? '${caption.substring(0, 30)}...' : caption,
+                          tierColor: IFridgeTheme.primary,
+                          ownedIngredientIds: const {},
+                        )));
+                    }),
+                if (recipeId != null) const SizedBox(height: 16),
+                // Play video
                 if (isReel)
+                  _VerticalAction(
+                    icon: Icons.play_arrow,
+                    color: Colors.red,
+                    label: 'Play',
+                    onTap: () async {
+                      final uri = Uri.parse(videoUrl);
+                      if (await canLaunchUrl(uri)) await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    }),
+              ],
+            ),
+          ),
+
+          // Bottom overlay — caption, author, tags
+          Positioned(
+            left: 16,
+            right: 60,
+            bottom: 24,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Author name
+                GestureDetector(
+                  onTap: () {
+                    final authorId = widget.post['author_id'];
+                    if (authorId != null) {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (_) => CreatorPage(creatorId: authorId, creatorName: authorName)));
+                    }
+                  },
+                  child: Text('@$authorName',
+                    style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
+                ),
+                const SizedBox(height: 6),
+                // Caption
+                Text(caption,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.white, fontSize: 14, height: 1.4)),
+                const SizedBox(height: 8),
+                // Tags
+                if (tags.isNotEmpty)
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 4,
+                    children: tags.map((t) => Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8)),
+                      child: Text('#$t',
+                        style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 11)),
+                    )).toList(),
+                  ),
+                // Recipe badge
+                if (recipeId != null) ...[
+                  const SizedBox(height: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
-                      color: Colors.red.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(10)),
+                      color: Colors.orange.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.orange.withValues(alpha: 0.3))),
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.play_arrow, color: Colors.red, size: 16),
+                        Icon(Icons.restaurant_menu, size: 14, color: Colors.orange),
                         SizedBox(width: 4),
-                        Text('Watch', style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.w700)),
+                        Text('Has Recipe', style: TextStyle(color: Colors.orange, fontSize: 11, fontWeight: FontWeight.w700)),
                       ],
                     ),
                   ),
+                ],
               ],
             ),
-            const Spacer(),
-
-            // Caption
-            Text(caption,
-              style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700, height: 1.4)),
-            const SizedBox(height: 12),
-
-            // Tags
-            if (tags.isNotEmpty)
-              Wrap(
-                spacing: 6,
-                runSpacing: 4,
-                children: tags.map((t) => Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: IFridgeTheme.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8)),
-                  child: Text('#$t',
-                    style: TextStyle(color: IFridgeTheme.primary.withValues(alpha: 0.8), fontSize: 12)),
-                )).toList(),
-              ),
-
-            const Spacer(),
-
-            // Action bar
-            Row(
-              children: [
-                // Like
-                _ActionButton(
-                  icon: _liked ? Icons.favorite : Icons.favorite_border,
-                  color: _liked ? Colors.red : Colors.white54,
-                  label: '$_likeCount',
-                  onTap: _toggleLike),
-                const SizedBox(width: 16),
-                // Bookmark
-                _ActionButton(
-                  icon: _bookmarked ? Icons.bookmark : Icons.bookmark_border,
-                  color: _bookmarked ? IFridgeTheme.primary : Colors.white54,
-                  label: _bookmarked ? 'Saved' : 'Save',
-                  onTap: _toggleBookmark),
-                const Spacer(),
-                // Play / Open
-                if (isReel)
-                  FilledButton.icon(
-                    onPressed: () async {
-                      final uri = Uri.parse(videoUrl);
-                      if (await canLaunchUrl(uri)) await launchUrl(uri, mode: LaunchMode.externalApplication);
-                    },
-                    icon: const Icon(Icons.play_arrow, size: 20),
-                    label: const Text('Play Video'),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10)),
-                  ),
-              ],
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _ActionButton extends StatelessWidget {
+class _VerticalAction extends StatelessWidget {
   final IconData icon;
   final Color color;
   final String label;
   final VoidCallback onTap;
-  const _ActionButton({required this.icon, required this.color, required this.label, required this.onTap});
+  const _VerticalAction({required this.icon, required this.color, required this.label, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+      child: Column(
         children: [
-          Icon(icon, size: 22, color: color),
-          const SizedBox(width: 4),
-          Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600)),
+          Icon(icon, size: 28, color: color),
+          const SizedBox(height: 2),
+          Text(label, style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w600)),
         ],
       ),
     );

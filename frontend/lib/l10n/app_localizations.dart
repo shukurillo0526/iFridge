@@ -287,6 +287,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Plan meal...'**
   String get planMeal;
+
+  /// No description provided for @tabExplore.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get tabExplore;
+
+  /// No description provided for @scanFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Food'**
+  String get scanFood;
+
+  /// No description provided for @scanCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Calories'**
+  String get scanCalories;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get chooseFromGallery;
+
+  /// No description provided for @analyzeCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze Calories'**
+  String get analyzeCalories;
+
+  /// No description provided for @caloriesPerServing.
+  ///
+  /// In en, this message translates to:
+  /// **'cal/serving'**
+  String get caloriesPerServing;
+
+  /// No description provided for @totalCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'cal total'**
+  String get totalCalories;
+
+  /// No description provided for @creatorProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Creator Profile'**
+  String get creatorProfile;
+
+  /// No description provided for @follow.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get follow;
+
+  /// No description provided for @following.
+  ///
+  /// In en, this message translates to:
+  /// **'Following'**
+  String get following;
+
+  /// No description provided for @nutritionTracker.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition Tracker'**
+  String get nutritionTracker;
+
+  /// No description provided for @reels.
+  ///
+  /// In en, this message translates to:
+  /// **'Reels'**
+  String get reels;
+
+  /// No description provided for @community.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get community;
+
+  /// No description provided for @hasRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Has Recipe'**
+  String get hasRecipe;
+
+  /// No description provided for @noReelsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No reels yet'**
+  String get noReelsYet;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
 }
 
 class _AppLocalizationsDelegate

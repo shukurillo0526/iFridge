@@ -27,6 +27,7 @@ class RecipeDetailScreen extends StatefulWidget {
   final double matchPct;
   final Color tierColor;
   final Set<String> ownedIngredientIds;
+  final int? caloriesPerServing;
 
   const RecipeDetailScreen({
     super.key,
@@ -41,6 +42,7 @@ class RecipeDetailScreen extends StatefulWidget {
     this.matchPct = 0,
     required this.tierColor,
     required this.ownedIngredientIds,
+    this.caloriesPerServing,
   });
 
   @override
@@ -389,6 +391,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       icon: Icons.signal_cellular_alt,
                       label: '${'⚡' * widget.difficulty!} Difficulty',
                     ),
+                  if (widget.caloriesPerServing != null && widget.caloriesPerServing! > 0)
+                    _QuickChip(
+                      icon: Icons.local_fire_department,
+                      label: '${widget.caloriesPerServing} cal/serving',
+                    ),
                 ],
               ),
             ),
@@ -642,6 +649,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                             ownedIngredientIds: widget.ownedIngredientIds,
                             matchPct: widget.matchPct,
                             tierColor: widget.tierColor,
+                            caloriesPerServing: widget.caloriesPerServing,
                           ),
                         ),
                       );

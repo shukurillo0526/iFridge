@@ -104,4 +104,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get planMeal => 'Plan meal...';
+
+  @override
+  String get tabExplore => 'Explore';
+
+  @override
+  String get scanFood => 'Scan Food';
+
+  @override
+  String get scanCalories => 'Scan Calories';
+
+  @override
+  String get takePhoto => 'Take Photo';
+
+  @override
+  String get chooseFromGallery => 'Choose from Gallery';
+
+  @override
+  String get analyzeCalories => 'Analyze Calories';
+
+  @override
+  String get caloriesPerServing => 'cal/serving';
+
+  @override
+  String get totalCalories => 'cal total';
+
+  @override
+  String get creatorProfile => 'Creator Profile';
+
+  @override
+  String get follow => 'Follow';
+
+  @override
+  String get following => 'Following';
+
+  @override
+  String get nutritionTracker => 'Nutrition Tracker';
+
+  @override
+  String get reels => 'Reels';
+
+  @override
+  String get community => 'Community';
+
+  @override
+  String get hasRecipe => 'Has Recipe';
+
+  @override
+  String get noReelsYet => 'No reels yet';
+
+  @override
+  String get settings => 'Settings';
 }

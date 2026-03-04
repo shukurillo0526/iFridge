@@ -104,4 +104,55 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get planMeal => 'Спланировать...';
+
+  @override
+  String get tabExplore => 'Обзор';
+
+  @override
+  String get scanFood => 'Сканировать еду';
+
+  @override
+  String get scanCalories => 'Сканировать калории';
+
+  @override
+  String get takePhoto => 'Сделать фото';
+
+  @override
+  String get chooseFromGallery => 'Выбрать из галереи';
+
+  @override
+  String get analyzeCalories => 'Анализ калорий';
+
+  @override
+  String get caloriesPerServing => 'ккал/порция';
+
+  @override
+  String get totalCalories => 'ккал всего';
+
+  @override
+  String get creatorProfile => 'Профиль автора';
+
+  @override
+  String get follow => 'Подписаться';
+
+  @override
+  String get following => 'Подписан';
+
+  @override
+  String get nutritionTracker => 'Трекер питания';
+
+  @override
+  String get reels => 'Рилсы';
+
+  @override
+  String get community => 'Сообщество';
+
+  @override
+  String get hasRecipe => 'Есть рецепт';
+
+  @override
+  String get noReelsYet => 'Рилсов пока нет';
+
+  @override
+  String get settings => 'Настройки';
 }

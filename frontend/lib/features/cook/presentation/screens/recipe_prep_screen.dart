@@ -22,6 +22,7 @@ class RecipePrepScreen extends StatefulWidget {
   final Set<String> ownedIngredientIds;
   final double matchPct;
   final Color tierColor;
+  final int? caloriesPerServing;
 
   const RecipePrepScreen({
     super.key,
@@ -34,6 +35,7 @@ class RecipePrepScreen extends StatefulWidget {
     required this.ownedIngredientIds,
     required this.matchPct,
     required this.tierColor,
+    this.caloriesPerServing,
   });
 
   @override
@@ -203,6 +205,35 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                       ],
                     ),
                   ),
+
+                  // Scaled calorie info
+                  if (widget.caloriesPerServing != null && widget.caloriesPerServing! > 0)
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.orange.withValues(alpha: 0.12), AppTheme.surface],
+                          begin: Alignment.topLeft, end: Alignment.bottomRight),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: Colors.orange.withValues(alpha: 0.2)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.local_fire_department, color: Colors.orange, size: 22),
+                          const SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('${widget.caloriesPerServing! * _servings} cal total',
+                                style: const TextStyle(color: Colors.orange, fontSize: 18, fontWeight: FontWeight.w800)),
+                              Text('${widget.caloriesPerServing} cal × $_servings servings',
+                                style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
 
                   // ── Ingredient Status Summary ────────────────
                   Row(

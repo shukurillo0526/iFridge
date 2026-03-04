@@ -706,6 +706,8 @@ class _CookScreenState extends State<CookScreen>
   }
 
   /// All unique cuisines across all loaded recipes.
+  /// Uzbek is always pinned as the first option.
+  static const _pinnedCuisines = ['Uzbek', 'Korean', 'Japanese', 'Italian', 'Mexican', 'Indian', 'Chinese'];
   List<String> get _allCuisines {
     final c = <String>{};
     for (final tier in _tiers.values) {
@@ -714,8 +716,11 @@ class _CookScreenState extends State<CookScreen>
         if (cuisine.isNotEmpty) c.add(cuisine);
       }
     }
-    final list = c.toList()..sort();
-    return list;
+    // Ensure pinned cuisines are always present
+    c.addAll(_pinnedCuisines);
+    final pinned = _pinnedCuisines.where((p) => c.contains(p)).toList();
+    final rest = (c.toList()..sort()).where((e) => !_pinnedCuisines.contains(e)).toList();
+    return [...pinned, ...rest];
   }
 
   Widget _buildTierList(String tierKey, String tierLabel) {
@@ -910,6 +915,7 @@ class _RecipeCard extends StatelessWidget {
               matchPct: recipe['match_pct'] as double? ?? 0.0,
               tierColor: _tierColor,
               ownedIngredientIds: ownedIngredientIds,
+              caloriesPerServing: recipe['calories_per_serving'] as int?,
             ),
           ),
         );
@@ -1091,6 +1097,7 @@ class _RecipeCard extends StatelessWidget {
   /// Maps cuisine names to category image URLs for the hero header.
   String _cuisineImageUrl(String cuisine) {
     const cuisineImages = <String, String>{
+      'uzbek': 'https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?w=600&q=80',
       'korean': 'https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=600&q=80',
       'japanese': 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=600&q=80',
       'chinese': 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=600&q=80',
@@ -1260,6 +1267,7 @@ class _RecipeSearchDelegate extends SearchDelegate<void> {
                   matchPct: (r['match_pct'] ?? 0.0).toDouble(),
                   tierColor: IFridgeTheme.primary,
                   ownedIngredientIds: ownedIngredientIds,
+                  caloriesPerServing: r['calories_per_serving'] as int?,
                 ),
               ));
             },

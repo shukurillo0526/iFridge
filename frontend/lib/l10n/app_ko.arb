@@ -34,5 +34,23 @@
     "mealPlannerEmpty": "예정된 식사가 없습니다",
     "planToday": "오늘 식사 계획하기",
     "today": "오늘",
-    "planMeal": "식사 계획..."
+    "planMeal": "식사 계획...",
+
+    "tabExplore": "탐색",
+    "scanFood": "음식 스캔",
+    "scanCalories": "칼로리 스캔",
+    "takePhoto": "사진 찍기",
+    "chooseFromGallery": "갤러리에서 선택",
+    "analyzeCalories": "칼로리 분석",
+    "caloriesPerServing": "kcal/인분",
+    "totalCalories": "kcal 합계",
+    "creatorProfile": "크리에이터 프로필",
+    "follow": "팔로우",
+    "following": "팔로잉",
+    "nutritionTracker": "영양 추적기",
+    "reels": "릴스",
+    "community": "커뮤니티",
+    "hasRecipe": "레시피 있음",
+    "noReelsYet": "아직 릴스가 없습니다",
+    "settings": "설정"
 }

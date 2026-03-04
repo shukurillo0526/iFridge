@@ -36,5 +36,23 @@
     "mealPlannerEmpty": "Rejalashtirilgan taomlar yo'q",
     "planToday": "Bugungi reja",
     "today": "Bugun",
-    "planMeal": "Taom rejalashtirish..."
+    "planMeal": "Taom rejalashtirish...",
+
+    "tabExplore": "Kashfiyot",
+    "scanFood": "Taom skanerlash",
+    "scanCalories": "Kaloriya skanerlash",
+    "takePhoto": "Rasm olish",
+    "chooseFromGallery": "Galereyadan tanlash",
+    "analyzeCalories": "Kaloriyalarni tahlil qilish",
+    "caloriesPerServing": "kal/porsiya",
+    "totalCalories": "jami kal",
+    "creatorProfile": "Muallif profili",
+    "follow": "Kuzatish",
+    "following": "Kuzatilmoqda",
+    "nutritionTracker": "Ovqatlanish kuzatuvi",
+    "reels": "Rillar",
+    "community": "Jamoa",
+    "hasRecipe": "Retsept bor",
+    "noReelsYet": "Hozircha rillar yo'q",
+    "settings": "Sozlamalar"
 }
