@@ -2,13 +2,14 @@
 I-Fridge — Local AI Service Layer (Ollama)
 ==========================================
 Manages all interactions with the local Ollama server.
-Supports vision+text (gemma3:12b multimodal), text generation (qwen3:8b),
+Supports vision (qwen2.5vl:7b), text generation (qwen3:8b),
 and embeddings (nomic-embed-text).
 
 Architecture:
   - 16GB VRAM budget (RTX 5070 Ti)
-  - gemma3:12b (8.1GB) handles BOTH vision and text in a single pass
-  - qwen3:8b (5.2GB) available for text-only tasks
+  - qwen2.5vl:7b (6.0GB) primary vision model — purpose-built for structured JSON from images
+  - qwen3:8b (5.2GB) primary text model — recipe generation, parsing, tips
+  - gemma3:12b (8.1GB) available as multimodal fallback
   - Embeddings model runs on CPU (~270MB) alongside GPU models
   - Automatic fallback to cloud Gemini if Ollama is unavailable
 """
@@ -25,9 +26,9 @@ OLLAMA_BASE_URL = "http://localhost:11434"
 
 # Model registry — maps task types to preferred models
 # Dynamically resolved at runtime based on what's available
-# RTX 5070 Ti (16GB VRAM) — gemma3:12b is multimodal (vision+text in one pass)
+# RTX 5070 Ti (16GB VRAM) — qwen2.5vl is purpose-built for vision+JSON
 MODEL_REGISTRY = {
-    "vision": ["gemma3:12b", "gemma3:4b", "moondream"],
+    "vision": ["qwen2.5vl:7b", "gemma3:12b", "gemma3:4b", "moondream"],
     "text": ["qwen3:8b", "gemma3:12b", "qwen2.5:3b"],
     "embedding": ["nomic-embed-text"],           # embedding models (CPU-safe)
 }

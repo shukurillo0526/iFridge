@@ -45,7 +45,7 @@ async def ai_status():
         "models_loaded": models,
         "gpu": "RTX 5070 Ti (16GB VRAM)",
         "recommended": {
-            "vision": "gemma3:12b",
+            "vision": "qwen2.5vl:7b",
             "text": "qwen3:8b",
             "embedding": "nomic-embed-text",
         }
