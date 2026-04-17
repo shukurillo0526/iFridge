@@ -215,6 +215,12 @@ Following the initial 16 phases, a comprehensive gap analysis was conducted to r
 - **Frontend Import UI**: Created the `RecipeImportScreen` (accessed via a floating action button in the Cook tab). Users can paste any recipe text, and the AI immediately structures it into prep time, ingredients, and steps.
 - **Auto-Timers Capability**: The dynamic regex step-parser inherently processes these AI-generated steps, successfully creating single-tap automated timers (e.g., "bake for 10 minutes") without requiring backend schema migrations.
 
+### Phase F: Hyperlocal Food Discovery & Native Video Feeds
+- **Native Inline Video Feeds**: Migrated from clunky webviews to high-performance `dart:ui_web` Platform View Factories for inline YouTube playback without app freezes. 
+- **TikTok-Style UI Architecture**: Revamped the `ExploreScreen` (Reels Tab) and `OrderFeedsScreen` using vertical `PageView` builders with robust full-screen video overlays.
+- **Context-Aware Interactions**: Added "Close" overlays that properly unmount iframes and return scroll control to the user. Implemented interactive "Cook This Recipe" sidebars for cooking context, and "Order/Reserve" localized actions for restaurant context.
+- **Content Bootstrapping via Supabase**: Hand-seeded over 40+ high-quality multi-language (English, Korean, Russian, Uzbek) video shorts directly into a new `video_feeds` schema, completely managed by Supabase, enabling zero-code content pushes.
+
 ---
 
 ## 🚀 The Future

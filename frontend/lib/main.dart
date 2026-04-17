@@ -1,19 +1,34 @@
 // I-Fridge — Application Entry Point
 // "Zero-Waste, Maximum Taste."
+//
+// Dual-mode app: ORDER (eat out) and COOK (cook at home).
+// The bottom navigation changes dynamically based on the active mode.
 
-import 'dart:ui';
+import 'package:ifridge_app/core/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
+import 'package:ifridge_app/core/services/app_settings.dart';
+import 'package:ifridge_app/core/widgets/mode_switch.dart';
+import 'package:ifridge_app/core/widgets/dual_mode_nav_bar.dart';
+
+// ── Screens ──────────────────────────────────────────────
+// Cook mode screens (existing)
 import 'package:ifridge_app/features/shelf/presentation/screens/living_shelf_screen.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/cook_screen.dart';
 import 'package:ifridge_app/features/scan/presentation/screens/scan_screen.dart';
 import 'package:ifridge_app/features/explore/presentation/screens/explore_screen.dart';
 import 'package:ifridge_app/features/profile/presentation/screens/profile_screen.dart';
+
+// Order mode screens (new)
+import 'package:ifridge_app/features/order/presentation/screens/order_screen.dart';
+import 'package:ifridge_app/features/order/presentation/screens/order_feeds_screen.dart';
+
+// Auth
 import 'package:ifridge_app/features/auth/presentation/screens/auth_screen.dart';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ifridge_app/l10n/app_localizations.dart';
-import 'package:ifridge_app/core/services/app_settings.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +37,7 @@ void main() async {
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxdXlvZHdzeXBwd2JwdmthdW5uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1NzEzOTAsImV4cCI6MjA4NzE0NzM5MH0.1o6RYfeL_7YlIeUkl4jFsCm2JCQ2mB2F9o5wLv30xWU',
   );
   await AppSettings().init();
+  await LocationService().init();
   runApp(const IFridgeApp());
 }
 
@@ -94,7 +110,10 @@ class _AuthGate extends StatelessWidget {
   }
 }
 
-/// Bottom navigation shell — glassmorphic animated bottom bar.
+// ═══════════════════════════════════════════════════════════════════
+//  APP SHELL — Dual-Mode Navigation
+// ═══════════════════════════════════════════════════════════════════
+
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
 
@@ -103,173 +122,192 @@ class AppShell extends StatefulWidget {
 }
 
 class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
+  final AppSettings _settings = AppSettings();
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    LivingShelfScreen(),
-    CookScreen(),
-    ExploreScreen(),
-    ScanScreen(),
-    ProfileScreen(),
+  // ── Cook mode screens ──────────────────────────────
+  static const List<Widget> _cookScreens = [
+    LivingShelfScreen(),   // Inventory
+    CookScreen(),          // Recipe
+    ScanScreen(),          // Scan (center)
+    ExploreScreen(),       // Feeds
+    ProfileScreen(),       // Management
   ];
+
+  // ── Order mode screens ─────────────────────────────
+  static const List<Widget> _orderScreens = [
+    OrderScreen(),         // Order
+    OrderFeedsScreen(),    // Feeds (center)
+    ProfileScreen(),       // Management
+  ];
+
+  // ── Cook mode nav items ────────────────────────────
+  List<NavItem> _cookNavItems(AppLocalizations? l10n) => [
+    NavItem(
+      icon: Icons.kitchen_outlined,
+      activeIcon: Icons.kitchen,
+      label: l10n?.tabShelf ?? 'Inventory',
+    ),
+    NavItem(
+      icon: Icons.restaurant_menu_outlined,
+      activeIcon: Icons.restaurant_menu,
+      label: l10n?.tabCook ?? 'Recipe',
+    ),
+    NavItem(
+      icon: Icons.center_focus_strong_outlined,
+      activeIcon: Icons.center_focus_strong,
+      label: l10n?.tabScan ?? 'Scan',
+      isCenter: true,
+    ),
+    NavItem(
+      icon: Icons.play_circle_outline,
+      activeIcon: Icons.play_circle_filled,
+      label: 'Feeds',
+    ),
+    NavItem(
+      icon: Icons.grid_view_outlined,
+      activeIcon: Icons.grid_view,
+      label: 'Manage',
+    ),
+  ];
+
+  // ── Order mode nav items ───────────────────────────
+  List<NavItem> _orderNavItems(AppLocalizations? l10n) => [
+    NavItem(
+      icon: Icons.storefront_outlined,
+      activeIcon: Icons.storefront,
+      label: 'Order',
+    ),
+    NavItem(
+      icon: Icons.play_circle_outline,
+      activeIcon: Icons.play_circle_filled,
+      label: 'Feeds',
+      isCenter: true,
+    ),
+    NavItem(
+      icon: Icons.grid_view_outlined,
+      activeIcon: Icons.grid_view,
+      label: 'Manage',
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _settings.addListener(_onSettingsChanged);
+  }
+
+  @override
+  void dispose() {
+    _settings.removeListener(_onSettingsChanged);
+    super.dispose();
+  }
+
+  void _onSettingsChanged() {
+    // Reset tab index if mode changed and index is out of bounds
+    final maxIndex = _settings.appMode == AppMode.cook
+        ? _cookScreens.length - 1
+        : _orderScreens.length - 1;
+    if (_currentIndex > maxIndex) {
+      _currentIndex = 0;
+    }
+    setState(() {});
+  }
+
+  void _switchMode(AppMode mode) {
+    if (_settings.appMode == mode) return;
+    _currentIndex = 0; // Reset to first tab on mode switch
+    _settings.setAppMode(mode);
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final _navItems = [
-      _NavItem(icon: Icons.kitchen_outlined, activeIcon: Icons.kitchen, label: l10n?.tabShelf ?? 'Shelf'),
-      _NavItem(icon: Icons.restaurant_menu_outlined, activeIcon: Icons.restaurant_menu, label: l10n?.tabCook ?? 'Cook'),
-      _NavItem(icon: Icons.explore_outlined, activeIcon: Icons.explore, label: 'Explore'),
-      _NavItem(icon: Icons.camera_alt_outlined, activeIcon: Icons.camera_alt, label: l10n?.tabScan ?? 'Scan'),
-      _NavItem(icon: Icons.person_outline, activeIcon: Icons.person, label: l10n?.tabProfile ?? 'Profile'),
-    ];
+    final isCook = _settings.appMode == AppMode.cook;
+    final screens = isCook ? _cookScreens : _orderScreens;
+    final navItems = isCook ? _cookNavItems(l10n) : _orderNavItems(l10n);
 
     return Scaffold(
-      extendBody: true, // content goes behind the nav bar
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        switchInCurve: Curves.easeOut,
-        switchOutCurve: Curves.easeIn,
-        transitionBuilder: (child, animation) => FadeTransition(
-          opacity: animation,
-          child: child,
-        ),
-        child: KeyedSubtree(
-          key: ValueKey(_currentIndex),
-          child: _screens[_currentIndex],
-        ),
+      extendBody: true,
+      body: Column(
+        children: [
+          // ── Mode Switch Bar ─────────────────────────
+          _ModeSwitchBar(
+            currentMode: _settings.appMode,
+            onModeChanged: _switchMode,
+          ),
+
+          // ── Screen Content ──────────────────────────
+          Expanded(
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              switchInCurve: Curves.easeOut,
+              switchOutCurve: Curves.easeIn,
+              transitionBuilder: (child, animation) => FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+              child: KeyedSubtree(
+                key: ValueKey('${_settings.appMode}_$_currentIndex'),
+                child: screens[_currentIndex],
+              ),
+            ),
+          ),
+        ],
       ),
-      bottomNavigationBar: _GlassNavBar(
+      bottomNavigationBar: DualModeNavBar(
         currentIndex: _currentIndex,
-        items: _navItems,
+        items: navItems,
+        mode: _settings.appMode,
         onTap: (i) => setState(() => _currentIndex = i),
       ),
     );
   }
 }
 
-// ── Glassmorphic Bottom Navigation Bar ─────────────────────────────
+// ── Mode Switch Bar (sits below status bar) ─────────────────────────
 
-class _NavItem {
-  final IconData icon;
-  final IconData activeIcon;
-  final String label;
-  const _NavItem({required this.icon, required this.activeIcon, required this.label});
-}
+class _ModeSwitchBar extends StatelessWidget {
+  final AppMode currentMode;
+  final ValueChanged<AppMode> onModeChanged;
 
-class _GlassNavBar extends StatelessWidget {
-  final int currentIndex;
-  final List<_NavItem> items;
-  final ValueChanged<int> onTap;
-
-  const _GlassNavBar({
-    required this.currentIndex,
-    required this.items,
-    required this.onTap,
+  const _ModeSwitchBar({
+    required this.currentMode,
+    required this.onModeChanged,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final topPadding = MediaQuery.of(context).padding.top;
+
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      padding: EdgeInsets.fromLTRB(20, topPadding + 8, 20, 8),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+        color: isDark ? IFridgeTheme.bgDark : const Color(0xFFF6F8FA),
+      ),
+      child: Row(
+        children: [
+          // App name
+          Text(
+            'iFridge',
+            style: TextStyle(
+              color: isDark ? Colors.white : Colors.black87,
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.5,
+            ),
+          ),
+          const Spacer(),
+          // Mode toggle
+          SizedBox(
+            width: 164,
+            child: ModeSwitch(
+              currentMode: currentMode,
+              onModeChanged: onModeChanged,
+            ),
           ),
         ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-          child: Container(
-            height: 72,
-            decoration: BoxDecoration(
-              color: IFridgeTheme.bgCard.withValues(alpha: 0.85),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.08),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: List.generate(items.length, (i) {
-                final isActive = i == currentIndex;
-                final item = items[i];
-                return _NavBarButton(
-                  icon: isActive ? item.activeIcon : item.icon,
-                  label: item.label,
-                  isActive: isActive,
-                  onTap: () => onTap(i),
-                );
-              }),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _NavBarButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool isActive;
-  final VoidCallback onTap;
-
-  const _NavBarButton({
-    required this.icon,
-    required this.label,
-    required this.isActive,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeOutCubic,
-        padding: EdgeInsets.symmetric(
-          horizontal: isActive ? 16 : 12,
-          vertical: 8,
-        ),
-        decoration: BoxDecoration(
-          color: isActive
-              ? IFridgeTheme.primary.withValues(alpha: 0.12)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedScale(
-              scale: isActive ? 1.1 : 1.0,
-              duration: const Duration(milliseconds: 200),
-              child: Icon(
-                icon,
-                size: 24,
-                color: isActive ? IFridgeTheme.primary : IFridgeTheme.textMuted,
-              ),
-            ),
-            const SizedBox(height: 4),
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 200),
-              style: TextStyle(
-                fontSize: isActive ? 11 : 10,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-                color: isActive ? IFridgeTheme.primary : IFridgeTheme.textMuted,
-              ),
-              child: Text(label),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -6,10 +6,13 @@
 // Features: likes, bookmarks, external video links, tags.
 
 import 'dart:ui';
+import 'dart:html' as html;
+import 'dart:ui_web' as ui_web;
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
+import 'package:ifridge_app/core/services/video_feed_service.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/features/explore/presentation/screens/creator_page.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/recipe_detail_screen.dart';
@@ -119,7 +122,7 @@ class _ExploreScreenState extends State<ExploreScreen> with SingleTickerProvider
   }
 }
 
-// ── Reels / Tips Feed ─────────────────────────────────────────────
+// ── YouTube-Backed Reels Feed ──────────────────────────────────────────
 
 class _ReelsFeed extends StatefulWidget {
   const _ReelsFeed();
@@ -128,61 +131,244 @@ class _ReelsFeed extends StatefulWidget {
 }
 
 class _ReelsFeedState extends State<_ReelsFeed> {
-  List<Map<String, dynamic>> _posts = [];
+  final PageController _pgCtrl = PageController();
+  List<VideoFeed> _videos = [];
+  int _current = 0;
   bool _loading = true;
+  final Set<String> _registered = {};
 
   @override
-  void initState() {
-    super.initState();
-    _loadPosts();
+  void initState() { super.initState(); _load(); }
+
+  @override
+  void dispose() { _pgCtrl.dispose(); super.dispose(); }
+
+  Future<void> _load() async {
+    final v = await VideoFeedService.getCookFeeds();
+    if (mounted) setState(() { _videos = v; _loading = false; });
   }
 
-  Future<void> _loadPosts() async {
+  void _reg(String ytId) {
+    final k = 'yt-reel-$ytId';
+    if (_registered.contains(k)) return;
+    _registered.add(k);
     try {
-      final data = await Supabase.instance.client
-          .from('posts')
-          .select('*, users!posts_author_id_fkey(display_name, avatar_url)')
-          .inFilter('post_type', ['reel', 'tip'])
-          .order('created_at', ascending: false)
-          .limit(30);
-      setState(() { _posts = List<Map<String, dynamic>>.from(data); _loading = false; });
-    } catch (e) {
-      setState(() => _loading = false);
-    }
+      ui_web.platformViewRegistry.registerViewFactory(k, (int id) {
+        return html.IFrameElement()
+          ..src = 'https://www.youtube.com/embed/$ytId?rel=0&modestbranding=1&playsinline=1'
+          ..style.border = 'none'
+          ..style.width = '100%'
+          ..style.height = '100%'
+          ..allow = 'autoplay; encrypted-media; gyroscope; picture-in-picture'
+          ..allowFullscreen = true;
+      });
+    } catch (_) {}
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
-      return const Center(child: CircularProgressIndicator(color: IFridgeTheme.primary));
-    }
-    if (_posts.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('🎬', style: TextStyle(fontSize: 48)),
-            const SizedBox(height: 12),
-            Text('No reels yet',
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 16)),
-            const SizedBox(height: 8),
-            Text('Cooking videos and tips will appear here',
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 13)),
-          ],
-        ),
-      );
-    }
-    return RefreshIndicator(
-      color: IFridgeTheme.primary,
-      onRefresh: _loadPosts,
-      child: PageView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: _posts.length,
-        itemBuilder: (ctx, i) => _ReelCard(post: _posts[i]),
-      ),
+    if (_loading) return const Center(child: CircularProgressIndicator(color: IFridgeTheme.primary));
+    if (_videos.isEmpty) return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
+      const Text('🎬', style: TextStyle(fontSize: 48)),
+      const SizedBox(height: 12),
+      Text('No reels yet', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 16)),
+    ]));
+
+    return PageView.builder(
+      controller: _pgCtrl,
+      scrollDirection: Axis.vertical,
+      itemCount: _videos.length,
+      onPageChanged: (i) => setState(() => _current = i),
+      itemBuilder: (ctx, i) => _YTReelCard(video: _videos[i], isActive: i == _current, reg: _reg),
     );
   }
 }
+
+class _YTReelCard extends StatefulWidget {
+  final VideoFeed video;
+  final bool isActive;
+  final void Function(String) reg;
+  const _YTReelCard({required this.video, required this.isActive, required this.reg});
+  @override
+  State<_YTReelCard> createState() => _YTReelCardState();
+}
+
+class _YTReelCardState extends State<_YTReelCard> {
+  bool _liked = false;
+  bool _playing = false;
+  bool _showRecipe = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final v = widget.video;
+    const green = Color(0xFF4CAF50);
+    final viewKey = 'yt-reel-${v.youtubeId}';
+
+    return Container(
+      color: Colors.black,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // ── Video or Thumbnail ──────────────────
+          if (_playing && widget.isActive) ...[
+            Builder(builder: (_) { widget.reg(v.youtubeId); return HtmlElementView(viewType: viewKey); }),
+            // Close button to stop video and resume scrolling
+            Positioned(top: 12, right: 12, child: GestureDetector(
+              onTap: () => setState(() => _playing = false),
+              child: Container(padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.6), shape: BoxShape.circle),
+                child: const Icon(Icons.close, color: Colors.white, size: 20)))),
+          ] else
+            GestureDetector(
+              onTap: () => setState(() => _playing = true),
+              child: Stack(fit: StackFit.expand, children: [
+                Image.network(v.thumbnailUrl, fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(color: Colors.grey.shade900)),
+                Container(decoration: BoxDecoration(gradient: LinearGradient(
+                  begin: Alignment.topCenter, end: Alignment.bottomCenter,
+                  colors: [Colors.black.withValues(alpha: 0.05), Colors.black.withValues(alpha: 0.75)]))),
+                Center(child: Container(padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(color: green.withValues(alpha: 0.25), shape: BoxShape.circle),
+                  child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 44))),
+              ]),
+            ),
+
+          // ── Recipe overlay ──────────────────────
+          if (_showRecipe && v.hasRecipe)
+            _VideoRecipeSheet(video: v, onClose: () => setState(() => _showRecipe = false)),
+
+          // ── Sidebar ──────────────────────────────
+          if (!_showRecipe && !_playing)
+            Positioned(right: 12, bottom: 80, child: Column(children: [
+              _FeedSideBtn(icon: _liked ? Icons.favorite : Icons.favorite_border,
+                label: v.likesLabel, color: _liked ? Colors.red : Colors.white,
+                onTap: () => setState(() => _liked = !_liked)),
+              const SizedBox(height: 16),
+              if (v.hasRecipe)
+                _FeedSideBtn(icon: Icons.restaurant_menu, label: 'Cook', color: green,
+                  highlighted: true, onTap: () => setState(() => _showRecipe = true)),
+              if (v.hasRecipe) const SizedBox(height: 16),
+              _FeedSideBtn(icon: Icons.reply_outlined, label: 'Share', color: Colors.white, onTap: () {}),
+              const SizedBox(height: 16),
+              _FeedSideBtn(icon: Icons.bookmark_outline, label: 'Save', color: Colors.white, onTap: () {}),
+              const SizedBox(height: 16),
+              Container(width: 38, height: 38, decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(colors: [Color(0xFF4CAF50), Color(0xFF81C784)]),
+                border: Border.all(color: Colors.white, width: 2)),
+                child: Center(child: Text(v.authorName.isNotEmpty ? v.authorName[0] : '?',
+                  style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w800)))),
+            ])),
+
+          // ── Bottom info ──────────────────────────
+          if (!_showRecipe && !_playing)
+            Positioned(left: 16, right: 70, bottom: 12, child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text('@${v.authorName.replaceAll(' ', '_').toLowerCase()}',
+                  style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 4),
+                Text(v.title, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+                  maxLines: 2, overflow: TextOverflow.ellipsis),
+                const SizedBox(height: 4),
+                if (v.hasRecipe) Row(children: [
+                  if (v.recipePrepTime.isNotEmpty) _pill('⏱ ${v.recipePrepTime}', green),
+                  if (v.recipeCookTime.isNotEmpty) ...[const SizedBox(width: 5), _pill('🔥 ${v.recipeCookTime}', Colors.orange)],
+                ]),
+                const SizedBox(height: 4),
+                if (v.tags.isNotEmpty) Wrap(spacing: 5, children: v.tags.take(3).map((t) =>
+                  Text('#$t', style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 10, fontWeight: FontWeight.w600))).toList()),
+              ])),
+        ],
+      ),
+    );
+  }
+
+  Widget _pill(String t, Color c) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+    decoration: BoxDecoration(color: c.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(6)),
+    child: Text(t, style: TextStyle(color: c, fontSize: 9, fontWeight: FontWeight.w700)));
+}
+
+class _FeedSideBtn extends StatelessWidget {
+  final IconData icon; final String label; final Color color;
+  final bool highlighted; final VoidCallback onTap;
+  const _FeedSideBtn({required this.icon, required this.label, required this.color, this.highlighted = false, required this.onTap});
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+    onTap: onTap, behavior: HitTestBehavior.opaque,
+    child: Column(children: [
+      Container(width: 40, height: 40,
+        decoration: BoxDecoration(shape: BoxShape.circle,
+          color: highlighted ? color.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.08),
+          border: highlighted ? Border.all(color: color.withValues(alpha: 0.5), width: 1.5) : null),
+        child: Icon(icon, size: 20, color: color)),
+      const SizedBox(height: 2),
+      Text(label, style: TextStyle(color: color.withValues(alpha: 0.9), fontSize: 9, fontWeight: FontWeight.w600)),
+    ]));
+}
+
+class _VideoRecipeSheet extends StatelessWidget {
+  final VideoFeed video;
+  final VoidCallback onClose;
+  const _VideoRecipeSheet({required this.video, required this.onClose});
+  @override
+  Widget build(BuildContext context) {
+    const green = Color(0xFF4CAF50);
+    return Container(
+      color: Colors.black.withValues(alpha: 0.92),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Expanded(child: Text(video.recipeTitle,
+            style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w800))),
+          GestureDetector(onTap: onClose, child: Container(padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), shape: BoxShape.circle),
+            child: const Icon(Icons.close, color: Colors.white, size: 16))),
+        ]),
+        const SizedBox(height: 8),
+        Expanded(child: ListView(children: [
+          const Text('Ingredients', style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 4),
+          ...video.recipeIngredients.map((i) => Padding(padding: const EdgeInsets.only(bottom: 2),
+            child: Row(children: [
+              Container(width: 4, height: 4, decoration: const BoxDecoration(color: green, shape: BoxShape.circle)),
+              const SizedBox(width: 8),
+              Expanded(child: Text(i, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 12))),
+            ]))),
+          const SizedBox(height: 10),
+          const Text('Steps', style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 4),
+          ...video.recipeSteps.asMap().entries.map((e) => Padding(padding: const EdgeInsets.only(bottom: 6),
+            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Container(width: 20, height: 20,
+                decoration: BoxDecoration(color: green.withValues(alpha: 0.2), shape: BoxShape.circle),
+                child: Center(child: Text('${e.key + 1}', style: TextStyle(color: green, fontSize: 10, fontWeight: FontWeight.w700)))),
+              const SizedBox(width: 8),
+              Expanded(child: Text(e.value, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 12, height: 1.3))),
+            ]))),
+        ])),
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: () { ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('✅ "${video.recipeTitle}" saved!'),
+            backgroundColor: green, behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)))); onClose(); },
+          child: Container(width: double.infinity, padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(colors: [Color(0xFF4CAF50), Color(0xFF81C784)]),
+              borderRadius: BorderRadius.circular(12)),
+            child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Icon(Icons.restaurant_menu, color: Colors.white, size: 16),
+              SizedBox(width: 6),
+              Text('Cook This Recipe', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700)),
+            ])),
+        ),
+      ]),
+    );
+  }
+}
+
+
 
 class _ReelCard extends StatefulWidget {
   final Map<String, dynamic> post;

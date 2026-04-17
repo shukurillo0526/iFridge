@@ -12,6 +12,7 @@ import 'package:ifridge_app/core/widgets/slide_in_item.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/recipe_detail_screen.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/recipe_import_screen.dart';
+import 'package:ifridge_app/core/services/video_feed_service.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 
 class CookScreen extends StatefulWidget {
@@ -1286,3 +1287,4 @@ class _RecipeSearchDelegate extends SearchDelegate<void> {
     );
   }
 }
+

@@ -1,20 +1,36 @@
 // I-Fridge — API Service
 // ======================
-// Shared HTTP client for all Flutter ↔ Railway backend communication.
-// Wraps the http package with typed methods for each endpoint.
+// Shared HTTP client for all Flutter ↔ backend communication.
+// Auto-detects environment: localhost → local backend, GitHub Pages → Railway.
 
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 class ApiConfig {
-  // Local Ollama-powered backend
-  static const String baseUrl = 'http://localhost:8000';
+  static const String _localUrl = 'http://localhost:8000';
+  static const String _productionUrl =
+      'https://merry-motivation-production-3529.up.railway.app';
 
-  // Railway production URL:
-  // static const String baseUrl =
-  //     'https://merry-motivation-production-3529.up.railway.app';
+  /// Automatically picks the right backend URL based on where the app is running.
+  /// - `flutter run -d Chrome` → localhost:8000 (local Ollama AI)
+  /// - GitHub Pages (*.github.io) → Railway production backend
+  static String get baseUrl {
+    if (kIsWeb) {
+      final host = Uri.base.host;
+      // Running on GitHub Pages or any non-localhost domain → production
+      if (host != 'localhost' && host != '127.0.0.1') {
+        return _productionUrl;
+      }
+    }
+    // Local development (flutter run, desktop, emulator)
+    return _localUrl;
+  }
+
+  /// True when connecting to the local backend (Ollama AI available).
+  static bool get isLocal => baseUrl == _localUrl;
 }
 
 class ApiService {

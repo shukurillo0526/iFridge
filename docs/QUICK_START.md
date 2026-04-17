@@ -1,11 +1,42 @@
 # iFridge — Quick Start Checklist
 
-> Run these commands **every time** before `flutter run -d Chrome`.
-> Open **3 separate terminals** and run each section in order.
+> Run these steps to get iFridge running locally with full AI support.
+> The app **auto-detects** its environment — no URL switching needed:
+> - `flutter run -d Chrome` → uses **localhost:8000** (local Ollama AI)
+> - GitHub Pages → uses **Railway production backend**
 
 ---
 
-## Terminal 1: Ollama (AI Server)
+## 🔧 One-Time Setup (First Time Only)
+
+### 1. Install Python Dependencies
+
+```powershell
+cd d:\dev\projects\iFridge\backend
+pip install -r requirements.txt
+```
+
+### 2. Pull AI Models
+
+```powershell
+ollama pull qwen2.5vl:7b
+ollama pull qwen3:8b
+ollama pull nomic-embed-text
+ollama pull gemma3:12b
+```
+
+### 3. Install Flutter Dependencies
+
+```powershell
+cd d:\dev\projects\iFridge\frontend
+flutter pub get
+```
+
+---
+
+## 🚀 Running Locally (3 Terminals)
+
+### Terminal 1: Ollama (AI Server)
 
 ```powershell
 ollama serve
@@ -15,10 +46,10 @@ ollama serve
 
 ---
 
-## Terminal 2: Backend (FastAPI)
+### Terminal 2: Backend (FastAPI)
 
 ```powershell
-cd c:\Codes\iFridge\backend
+cd d:\dev\projects\iFridge\backend
 python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
@@ -26,10 +57,10 @@ python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 ---
 
-## Terminal 3: Frontend (Flutter)
+### Terminal 3: Frontend (Flutter)
 
 ```powershell
-cd c:\Codes\iFridge\frontend
+cd d:\dev\projects\iFridge\frontend
 flutter run -d Chrome
 ```
 
@@ -45,18 +76,30 @@ After all 3 are running, open Chrome and check:
 
 ---
 
-## ⚠️ Before Running: API URL Check
+## 🌐 How Environment Auto-Detection Works
 
-Make sure `frontend/lib/core/services/api_service.dart` points to **localhost** (not Railway):
+The API URL is **automatic** — you never need to edit `api_service.dart`:
+
+| Running From | Browser Host | Backend Used | AI Available |
+|-------------|-------------|-------------|-------------|
+| `flutter run -d Chrome` | `localhost` | `http://localhost:8000` | ✅ Local Ollama |
+| GitHub Pages | `*.github.io` | Railway production URL | ⚠️ Railway (no local Ollama) |
+
+The logic lives in `frontend/lib/core/services/api_service.dart`:
 
 ```dart
-class ApiConfig {
-  static const String baseUrl = 'http://localhost:8000';  // ← this one
-  // static const String baseUrl = 'https://merry-motivation-production-3529.up.railway.app';
+static String get baseUrl {
+  if (kIsWeb) {
+    final host = Uri.base.host;
+    if (host != 'localhost' && host != '127.0.0.1') {
+      return _productionUrl;  // GitHub Pages → Railway
+    }
+  }
+  return _localUrl;  // Local dev → localhost:8000
 }
 ```
 
-> **Note:** If you recently pushed to GitHub, the file may still point to the Railway URL. Switch it back to localhost for local development.
+> **No more commenting/uncommenting URLs before pushing to GitHub!**
 
 ---
 
@@ -71,22 +114,16 @@ The backend uses these local AI models via Ollama:
 | `nomic-embed-text` | 274 MB | Embeddings — semantic search (runs on CPU) |
 | `gemma3:12b` | 8.1 GB | Fallback — multimodal backup if qwen2.5vl unavailable |
 
-If any model is missing, pull it:
-```powershell
-ollama pull qwen2.5vl:7b
-ollama pull qwen3:8b
-ollama pull nomic-embed-text
-ollama pull gemma3:12b
-```
-
 ---
 
 ## 🔄 If Things Break
 
 | Problem | Fix |
 |---------|-----|
-| Backend won't start | Make sure Python deps are installed: `pip install -r requirements.txt` |
+| `No module named uvicorn` | Run `pip install -r requirements.txt` in the `backend` folder |
+| Backend won't start | Make sure Python deps are installed (see above) |
 | AI returns mock data | Check `ollama serve` is running in Terminal 1 |
-| "Couldn't load inventory" | Backend not running or API URL is wrong |
+| "Couldn't load inventory" | Backend not running, or check Terminal 2 for errors |
 | Hot reload not working | Press `R` (capital) in Terminal 3 for hot restart |
 | Flutter `pub get` fails | Enable Developer Mode: `start ms-settings:developers` |
+| Wrong backend URL | Should be automatic now — check `ApiConfig` in `api_service.dart` |

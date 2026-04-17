@@ -47,6 +47,8 @@ dependencies:
   google_sign_in_web: ^1.1.2
   url_launcher: ^6.3.2
   shared_preferences: ^2.5.4
+  geolocator: ^13.0.2
+  geocoding: ^3.0.0
 
 dev_dependencies:
   flutter_test:

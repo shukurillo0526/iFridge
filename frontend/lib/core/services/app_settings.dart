@@ -1,10 +1,13 @@
 // I-Fridge — App Settings Provider
 // ==================================
-// Manages language and theme preferences with persistence
+// Manages language, theme, and app mode preferences with persistence
 // using SharedPreferences. Notifies the widget tree of changes.
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+/// The two main modes of the app.
+enum AppMode { order, cook }
 
 class AppSettings extends ChangeNotifier {
   static final AppSettings _instance = AppSettings._internal();
@@ -13,12 +16,15 @@ class AppSettings extends ChangeNotifier {
 
   static const String _keyLocale = 'app_locale';
   static const String _keyThemeMode = 'app_theme_mode';
+  static const String _keyAppMode = 'app_mode';
 
   Locale _locale = const Locale('en');
   ThemeMode _themeMode = ThemeMode.dark;
+  AppMode _appMode = AppMode.cook; // Default to Cook (existing experience)
 
   Locale get locale => _locale;
   ThemeMode get themeMode => _themeMode;
+  AppMode get appMode => _appMode;
 
   /// Supported languages with display names and flags
   static const Map<String, Map<String, String>> supportedLanguages = {
@@ -36,6 +42,10 @@ class AppSettings extends ChangeNotifier {
 
     final themeName = prefs.getString(_keyThemeMode) ?? 'dark';
     _themeMode = _themeModeFromString(themeName);
+
+    final modeName = prefs.getString(_keyAppMode) ?? 'cook';
+    _appMode = modeName == 'order' ? AppMode.order : AppMode.cook;
+
     notifyListeners();
   }
 
@@ -54,6 +64,15 @@ class AppSettings extends ChangeNotifier {
     _themeMode = mode;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyThemeMode, _themeModeToString(mode));
+    notifyListeners();
+  }
+
+  /// Switch between Order and Cook modes
+  Future<void> setAppMode(AppMode mode) async {
+    if (_appMode == mode) return;
+    _appMode = mode;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyAppMode, mode == AppMode.order ? 'order' : 'cook');
     notifyListeners();
   }
 
