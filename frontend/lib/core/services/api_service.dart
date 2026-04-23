@@ -593,6 +593,73 @@ class ApiService {
     return _handleResponse(response);
   }
 
+  /// Record that the user cooked a recipe (triggers flavor profile learning)
+  Future<Map<String, dynamic>> recordCook({
+    required String userId,
+    required String recipeId,
+  }) async {
+    final response = await _client.post(
+      Uri.parse('${ApiConfig.baseUrl}/api/v1/user/cook'),
+      headers: _headers,
+      body: jsonEncode({'user_id': userId, 'recipe_id': recipeId}),
+    );
+    return _handleResponse(response);
+  }
+
+  /// Track video engagement (like, save, view)
+  Future<Map<String, dynamic>> trackEngagement({
+    required String userId,
+    required String videoId,
+    required String action,
+  }) async {
+    final response = await _client.post(
+      Uri.parse('${ApiConfig.baseUrl}/api/v1/user/engagement'),
+      headers: _headers,
+      body: jsonEncode({
+        'user_id': userId,
+        'video_id': videoId,
+        'action': action,
+      }),
+    );
+    return _handleResponse(response);
+  }
+
+  /// Extract recipe from YouTube video metadata
+  Future<Map<String, dynamic>> extractYouTubeRecipe({
+    required String videoTitle,
+    String videoDescription = '',
+    String channelName = '',
+    String? youtubeId,
+  }) async {
+    final response = await _client.post(
+      Uri.parse('${ApiConfig.baseUrl}/api/v1/ai/youtube-recipe'),
+      headers: _headers,
+      body: jsonEncode({
+        'video_title': videoTitle,
+        'video_description': videoDescription,
+        'channel_name': channelName,
+        'youtube_id': youtubeId,
+      }),
+    );
+    return _handleResponse(response);
+  }
+
+  /// Generate smart shopping list from missing ingredients
+  Future<Map<String, dynamic>> generateShoppingList({
+    required String userId,
+    required List<String> recipeIds,
+  }) async {
+    final response = await _client.post(
+      Uri.parse('${ApiConfig.baseUrl}/api/v1/ai/shopping-list'),
+      headers: _headers,
+      body: jsonEncode({
+        'user_id': userId,
+        'recipe_ids': recipeIds,
+      }),
+    );
+    return _handleResponse(response);
+  }
+
   void dispose() => _client.close();
 }
 

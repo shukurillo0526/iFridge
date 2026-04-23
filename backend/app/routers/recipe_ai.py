@@ -12,6 +12,8 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 from app.services.ollama_service import get_ollama_service
+from app.services.youtube_intelligence import extract_recipe_from_youtube
+from app.db.supabase_client import get_supabase
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
@@ -39,6 +41,16 @@ class SubstituteRequest(BaseModel):
 class CookingTipRequest(BaseModel):
     step_text: str
     question: Optional[str] = None
+
+class YouTubeRecipeRequest(BaseModel):
+    video_title: str
+    video_description: str = ""
+    channel_name: str = ""
+    youtube_id: Optional[str] = None
+
+class ShoppingListRequest(BaseModel):
+    user_id: str
+    recipe_ids: List[str]  # recipes the user wants to cook
 
 
 # ── Endpoints ────────────────────────────────────────────────────
@@ -239,4 +251,122 @@ Return JSON only in this exact format:
         "source": "ollama-local",
         "data": result,
     }
+
+
+@router.post("/api/v1/ai/youtube-recipe")
+@limiter.limit("10/minute")
+async def extract_youtube_recipe(request: Request, req: YouTubeRecipeRequest):
+    """
+    Extract a structured recipe from YouTube video metadata.
+    Uses the local LLM to parse titles + descriptions into ingredients/steps.
+    """
+    try:
+        result = await extract_recipe_from_youtube(
+            video_title=req.video_title,
+            video_description=req.video_description,
+            channel_name=req.channel_name,
+        )
+
+        if "error" in result:
+            raise HTTPException(status_code=503, detail=result["error"])
+
+        return {
+            "status": "success",
+            "source": "ollama-local",
+            "data": result,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"[YouTubeRecipe] Extraction failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/api/v1/ai/shopping-list")
+async def generate_shopping_list(req: ShoppingListRequest):
+    """
+    Generate a consolidated shopping list from missing ingredients
+    across multiple recipes the user wants to cook.
+    
+    Groups items by category and deduplicates shared ingredients.
+    """
+    db = get_supabase()
+    try:
+        # 1. Get user's current inventory
+        inv = (
+            db.table("inventory_items")
+            .select("ingredient_id, quantity, unit")
+            .eq("user_id", req.user_id)
+            .gt("quantity", 0)
+            .execute()
+        )
+        owned_ids = {row["ingredient_id"] for row in (inv.data or [])}
+
+        # 2. Get required ingredients for all requested recipes
+        shopping: dict[str, dict] = {}
+
+        for recipe_id in req.recipe_ids:
+            ings = (
+                db.table("recipe_ingredients")
+                .select("ingredient_id, quantity, unit, is_optional, ingredients(display_name_en, category)")
+                .eq("recipe_id", recipe_id)
+                .eq("is_optional", False)
+                .execute()
+            )
+            recipe_meta = (
+                db.table("recipes")
+                .select("title")
+                .eq("id", recipe_id)
+                .maybe_single()
+                .execute()
+            )
+            recipe_title = recipe_meta.data["title"] if recipe_meta.data else recipe_id
+
+            for ing in (ings.data or []):
+                iid = ing["ingredient_id"]
+                if iid in owned_ids:
+                    continue
+
+                ing_data = ing.get("ingredients") or {}
+                name = ing_data.get("display_name_en", "Unknown")
+                category = ing_data.get("category", "other")
+                qty = float(ing.get("quantity", 1))
+                unit = ing.get("unit", "")
+
+                if iid in shopping:
+                    shopping[iid]["qty_needed"] += qty
+                    shopping[iid]["recipes"].append(recipe_title)
+                else:
+                    shopping[iid] = {
+                        "ingredient_id": iid,
+                        "name": name,
+                        "category": category,
+                        "qty_needed": qty,
+                        "unit": unit,
+                        "recipes": [recipe_title],
+                    }
+
+        # 3. Group by category
+        by_category: dict[str, list] = {}
+        for item in shopping.values():
+            cat = item["category"]
+            by_category.setdefault(cat, []).append(item)
+
+        result = []
+        for cat in sorted(by_category.keys()):
+            items = sorted(by_category[cat], key=lambda x: x["name"])
+            result.append({"category": cat, "items": items})
+
+        return {
+            "status": "success",
+            "data": {
+                "categories": result,
+                "total_items": len(shopping),
+                "recipe_count": len(req.recipe_ids),
+            },
+        }
+
+    except Exception as e:
+        logger.error(f"[ShoppingList] Generation failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 

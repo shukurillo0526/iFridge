@@ -283,3 +283,105 @@ async def delete_meal_plan(meal_id: str):
     except Exception as e:
         logger.error(f"[MealPlan] Delete failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── Cook Tracking (with flavor auto-learning) ─────────────────
+
+class RecordCookRequest(BaseModel):
+    user_id: str
+    recipe_id: str
+
+
+@router.post("/cook")
+async def record_cook(req: RecordCookRequest):
+    """
+    Record that the user cooked a recipe.
+    
+    This triggers two things:
+    1. Adds an entry to user_recipe_history (for recency signal)
+    2. Updates the user's flavor profile via EMA blending (for better recommendations)
+    
+    The flavor profile shifts by 15% toward the recipe's flavor vector each time.
+    """
+    from app.services.flavor_learning import record_cook_event
+    
+    result = await record_cook_event(req.user_id, req.recipe_id)
+    return result
+
+
+# ── Video Engagement Tracking ─────────────────────────────────
+
+class VideoEngagementRequest(BaseModel):
+    user_id: str
+    video_id: str
+    action: str  # "like", "unlike", "save", "unsave", "view"
+
+
+@router.post("/engagement")
+async def track_engagement(req: VideoEngagementRequest):
+    """
+    Persist video engagement actions (likes, saves, views).
+    
+    - like/unlike: toggles the liked state in user_video_engagement
+    - save/unsave: toggles the saved state
+    - view: increments view count (no toggle)
+    """
+    db = get_supabase()
+    
+    try:
+        if req.action == "view":
+            # Upsert view count
+            db.table("user_video_engagement").upsert(
+                {
+                    "user_id": req.user_id,
+                    "video_id": req.video_id,
+                    "view_count": 1,
+                },
+                on_conflict="user_id,video_id",
+            ).execute()
+            
+            # Also try incrementing via RPC if available
+            try:
+                db.rpc("increment_video_views", {
+                    "p_video_id": req.video_id,
+                }).execute()
+            except Exception:
+                pass  # RPC not set up yet
+                
+            return {"status": "success"}
+        
+        # Like / Save toggles
+        update_field = None
+        update_value = None
+        
+        if req.action == "like":
+            update_field = "is_liked"
+            update_value = True
+        elif req.action == "unlike":
+            update_field = "is_liked"
+            update_value = False
+        elif req.action == "save":
+            update_field = "is_saved"
+            update_value = True
+        elif req.action == "unsave":
+            update_field = "is_saved"
+            update_value = False
+        else:
+            raise HTTPException(status_code=400, detail=f"Unknown action: {req.action}")
+        
+        db.table("user_video_engagement").upsert(
+            {
+                "user_id": req.user_id,
+                "video_id": req.video_id,
+                update_field: update_value,
+            },
+            on_conflict="user_id,video_id",
+        ).execute()
+        
+        return {"status": "success", "action": req.action}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"[Engagement] Track failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))

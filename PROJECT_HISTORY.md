@@ -245,6 +245,14 @@ Following the initial 16 phases, a comprehensive gap analysis was conducted to r
 - **Image Caching**: Added `cached_network_image` package. Recipe card hero images now use `CachedNetworkImageProvider` instead of raw `NetworkImage`, preventing redundant downloads during scroll.
 - **iframe Memory Management**: Fixed memory leak in both `ExploreScreen` (Reels) and `OrderFeedsScreen` — added `didUpdateWidget` to auto-stop video playback when cards scroll off-screen. Previously, iframes stayed alive in memory after scrolling away.
 
+### Phase J: YouTube Intelligence & Advanced Features
+- **YouTube Recipe Extraction**: New `youtube_intelligence.py` service + `/api/v1/ai/youtube-recipe` endpoint. Extracts structured recipe data (ingredients, steps, cuisine, difficulty) from YouTube video titles + descriptions using the local LLM. No YouTube Data API required.
+- **Flavor Profile Auto-Learning**: New `flavor_learning.py` service. When user taps "I Cooked This", their flavor profile is updated via EMA (15% decay). Creates a feedback loop: cook → profile shifts → better recommendations.
+- **"I Cooked This" Button**: Added to `RecipeDetailScreen`. Records cook event, updates flavor profile, and shows a success snackbar. Feeds both the recency signal (for variety) and the flavor learning (for personalization).
+- **Smart Shopping List**: New `/api/v1/ai/shopping-list` endpoint generates a consolidated, category-grouped shopping list from missing ingredients across multiple selected recipes. Deduplicates shared ingredients.
+- **Video Engagement Tracking**: New `/api/v1/user/engagement` endpoint persists likes, saves, and views to `user_video_engagement` table. Supports like/unlike, save/unsave, and view actions.
+- **Frontend API Methods**: Added `recordCook`, `trackEngagement`, `extractYouTubeRecipe`, `generateShoppingList` to `ApiService`.
+
 ---
 
 ## 🚀 The Future

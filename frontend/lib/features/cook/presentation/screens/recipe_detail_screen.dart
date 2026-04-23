@@ -754,6 +754,57 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                 ),
               ),
 
+            // ── "I Cooked This" Button ────────────────────────────────
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
+                child: FilledButton.icon(
+                  onPressed: () async {
+                    try {
+                      final api = ApiService();
+                      await api.recordCook(
+                        userId: currentUserId(),
+                        recipeId: widget.recipeId,
+                      );
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Row(
+                              children: [
+                                Icon(Icons.celebration, color: Colors.white, size: 20),
+                                SizedBox(width: 8),
+                                Text('Recorded! Your taste profile is evolving 🧠'),
+                              ],
+                            ),
+                            backgroundColor: IFridgeTheme.freshGreen,
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Failed to record: $e')),
+                        );
+                      }
+                    }
+                  },
+                  icon: const Icon(Icons.restaurant, size: 20),
+                  label: const Text(
+                    'I Cooked This!',
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                  ),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: IFridgeTheme.freshGreen,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
             // ── Bottom spacing ─────────────────────────────────────
             const SliverToBoxAdapter(child: SizedBox(height: 100)),
           ],
