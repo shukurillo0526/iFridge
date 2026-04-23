@@ -261,6 +261,14 @@ Following the initial 16 phases, a comprehensive gap analysis was conducted to r
 - **Global Error Handlers**: Standardized error envelope (`{"status": "error", "code": "...", "message": "...", "request_id": "..."}`) for all HTTP exceptions, validation errors, and unhandled crashes. Tracebacks logged server-side but never exposed to clients.
 - **API Documentation**: Enriched OpenAPI spec with descriptive tags (Health, Vision, AI, Recipes, Inventory, User Data, Nutrition, Embeddings), detailed app description, and version bump to 3.4.0.
 
+### Phase L: Testing & CI Pipeline
+- **Test Suite**: Created 40 unit/integration tests across 3 test files — all passing in 0.84s:
+  - `test_scoring.py` (24 tests): Every signal in the 6-signal composite scoring engine (expiry urgency, flavor affinity, difficulty fit, recency penalty, match coverage, and composite score).
+  - `test_middleware.py` (9 tests): Request ID injection/preservation, response timing, body size limits, UUID validation, error formatting.
+  - `test_health.py` (7 tests): Root endpoint, ping liveness probe, deep health check, 404 error envelopes.
+- **GitHub Actions CI**: `.github/workflows/backend-tests.yml` — runs all tests on every push/PR to `main` with Python 3.12, pip caching, and JUnit result artifacts.
+- **Documentation Update**: Updated `QUICK_START.md` (v3.4.0 endpoints, architecture diagram, API table), rewrote `ROADMAP.md` (marked all completed sprints), created `API_REFERENCE.md` (full endpoint reference with request/response shapes, error codes, headers).
+
 ---
 
 ## 🚀 The Future

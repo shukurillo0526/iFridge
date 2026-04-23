@@ -118,9 +118,9 @@
 - Keep Ollama as dev/offline fallback.
 
 ### 4.4 CI/CD Pipeline Expansion
-- **Status:** ⏳ Pending
-- Add Flutter tests + backend pytest to GitHub Actions.
-- Auto-deploy backend to Railway on `main` push.
+- **Status:** ✅ Backend CI done — `.github/workflows/backend-tests.yml`
+- 40 unit tests run on every push/PR to `main` (scoring, middleware, health)
+- Flutter tests and Railway auto-deploy still pending.
 
 ### 4.5 Analytics & Monitoring
 - **Status:** Partial — structured logging and health checks are done.
@@ -138,8 +138,20 @@
 | Security | ✅ | 95% |
 | Performance | ✅ | 85% |
 | Observability | ✅ | 80% |
-| Testing | ⏳ | 30% |
-| CI/CD | ⏳ | 20% |
+| Testing | ✅ | 60% |
+| CI/CD | ✅ | 50% |
+
+---
+
+## 🧪 Test Suite (40 tests, 0.84s)
+
+| File | Tests | Coverage |
+|------|-------|----------|
+| `test_scoring.py` | 24 | 6-signal scoring engine (expiry, flavor, difficulty, recency, coverage, composite) |
+| `test_middleware.py` | 9 | Request ID, timing, body size, UUID validation, error formatting |
+| `test_health.py` | 7 | Root endpoint, ping, deep health, 404 envelope |
+
+Run locally: `cd backend && python -m pytest tests/ -v`
 
 ---
 
@@ -148,5 +160,5 @@
 1. ⏳ Implement FCM push notifications for expiring items
 2. ⏳ Add streaming chat for the kitchen assistant
 3. ⏳ Riverpod migration for shared inventory state
-4. ⏳ GitHub Actions CI pipeline (lint + test)
+4. ⏳ Flutter widget tests in CI
 5. ⏳ Sentry crash reporting integration
