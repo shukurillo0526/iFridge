@@ -14,8 +14,10 @@ class Settings(BaseSettings):
 
     # --- App ---
     APP_NAME: str = "I-Fridge API"
-    APP_VERSION: str = "0.1.0"
+    APP_VERSION: str = "3.4.0"
     DEBUG: bool = False
+    LOG_LEVEL: str = "INFO"
+    STRUCTURED_LOGS: bool = False  # True for production JSON logs
 
     # --- Supabase ---
     SUPABASE_URL: str = ""

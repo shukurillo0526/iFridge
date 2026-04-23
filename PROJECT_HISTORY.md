@@ -253,11 +253,21 @@ Following the initial 16 phases, a comprehensive gap analysis was conducted to r
 - **Video Engagement Tracking**: New `/api/v1/user/engagement` endpoint persists likes, saves, and views to `user_video_engagement` table. Supports like/unlike, save/unsave, and view actions.
 - **Frontend API Methods**: Added `recordCook`, `trackEngagement`, `extractYouTubeRecipe`, `generateShoppingList` to `ApiService`.
 
+### Phase K: Scalability & Production Readiness
+- **Request ID Middleware**: `RequestIdMiddleware` injects/preserves `X-Request-ID` headers for end-to-end request tracing across frontend → backend → logs. Also adds `X-Response-Time` timing headers.
+- **Input Validation Middleware**: `InputValidationMiddleware` enforces 10MB body size limits, validates UUID path parameters, and rejects malformed requests before they hit business logic.
+- **Structured Logging**: New `logging_config.py` with JSON-structured logs (or readable dev-mode). Every log entry includes timestamp, level, logger, message, and `request_id` for correlation.
+- **Health Check System**: New `/api/v1/health` deep health probe tests Supabase connectivity, Ollama AI availability, and rate limiter status with latency measurements. Returns `healthy`/`degraded`/`unhealthy`. Lightweight `/api/v1/health/ping` liveness probe also added.
+- **Global Error Handlers**: Standardized error envelope (`{"status": "error", "code": "...", "message": "...", "request_id": "..."}`) for all HTTP exceptions, validation errors, and unhandled crashes. Tracebacks logged server-side but never exposed to clients.
+- **API Documentation**: Enriched OpenAPI spec with descriptive tags (Health, Vision, AI, Recipes, Inventory, User Data, Nutrition, Embeddings), detailed app description, and version bump to 3.4.0.
+
 ---
 
 ## 🚀 The Future
 
-I-Fridge is now a fully functional, AI-powered smart kitchen app with 100 recipes. Future considerations include:
+I-Fridge is now a fully functional, AI-powered smart kitchen app with 100 recipes, production-grade middleware, and comprehensive observability. Future considerations include:
 1. Scaling the database with Kaggle image datasets for visual ingredient matching.
 2. Expanding the `pgvector` similarity search based on user swipe/cook history to further personalize the "For You" feed.
 3. Live integrations with grocery delivery APIs (e.g., Instacart, Coupang) for 1-click restocking of "Missing Ingredients".
+4. End-to-end integration tests using `pytest-asyncio` + Supabase test instance.
+5. CI/CD pipeline with GitHub Actions for automated linting, testing, and deployment.
