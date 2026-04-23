@@ -13,7 +13,8 @@ supabase>=2.9.0
 asyncpg>=0.30.0
 
 # --- AI / Vision ---
-clarifai-grpc>=10.8.0
+# clarifai-grpc>=10.8.0  # Optional: heavy native dependency, install locally only
+#   Railway/Docker: skip this, vision_detect uses Ollama fallback
 
 # --- Computation ---
 numpy>=2.1.0

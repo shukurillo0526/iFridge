@@ -6,9 +6,18 @@ with confidence gating, canonical mapping, and correction logging.
 """
 
 import base64
-from clarifai_grpc.channel.clarifai_channel import ClarifaiChannel
-from clarifai_grpc.grpc.api import resources_pb2, service_pb2, service_pb2_grpc
-from clarifai_grpc.grpc.api.status import status_code_pb2
+import logging
+
+try:
+    from clarifai_grpc.channel.clarifai_channel import ClarifaiChannel
+    from clarifai_grpc.grpc.api import resources_pb2, service_pb2, service_pb2_grpc
+    from clarifai_grpc.grpc.api.status import status_code_pb2
+    CLARIFAI_AVAILABLE = True
+except ImportError:
+    CLARIFAI_AVAILABLE = False
+    logging.getLogger("ifridge.vision").warning(
+        "[Vision] clarifai-grpc not installed — Clarifai vision disabled"
+    )
 
 from app.core.config import get_settings
 from app.db.supabase_client import get_supabase
