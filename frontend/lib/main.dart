@@ -31,6 +31,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:ifridge_app/features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'package:ifridge_app/core/services/cache_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +41,13 @@ void main() async {
   );
   await AppSettings().init();
   await LocationService().init();
+  // Initialize offline cache (Hive)
+  try {
+    final cacheService = CacheService();
+    await cacheService.initialize();
+  } catch (e) {
+    debugPrint('[Main] Cache init skipped: $e');
+  }
   runApp(const IFridgeApp());
 }
 
