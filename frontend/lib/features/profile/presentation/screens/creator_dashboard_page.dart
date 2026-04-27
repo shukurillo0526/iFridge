@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
-import 'package:ifridge_app/features/profile/presentation/screens/post_upload_form.dart';
+import 'package:ifridge_app/features/profile/presentation/screens/post_upload_form.dart' show EnhancedPostUploadForm;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CreatorDashboardPage extends StatefulWidget {
@@ -101,7 +101,7 @@ class _CreatorDashboardPageState extends State<CreatorDashboardPage> {
                   // Action buttons
                   FilledButton.icon(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const PostUploadForm()));
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const EnhancedPostUploadForm()));
                     },
                     icon: const Icon(Icons.add_a_photo, size: 22),
                     label: const Text('Create New Post / Reel', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),

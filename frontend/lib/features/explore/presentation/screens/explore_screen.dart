@@ -16,6 +16,9 @@ import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/features/explore/presentation/screens/creator_page.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/recipe_detail_screen.dart';
 import 'package:ifridge_app/core/widgets/youtube_embed.dart';
+import 'package:ifridge_app/core/widgets/community_post_card.dart';
+import 'package:ifridge_app/core/services/social_service.dart';
+import 'package:ifridge_app/features/profile/presentation/screens/post_upload_form.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -781,16 +784,19 @@ class _CommunityFeedState extends State<_CommunityFeed> {
 
   Future<void> _loadPosts() async {
     try {
-      final data = await Supabase.instance.client
-          .from('posts')
-          .select('*, users!posts_author_id_fkey(display_name, avatar_url)')
-          .eq('post_type', 'recipe')
-          .order('created_at', ascending: false)
-          .limit(30);
-      setState(() { _posts = List<Map<String, dynamic>>.from(data); _loading = false; });
+      final data = await SocialService.getCommunityFeed(limit: 30);
+      if (mounted) setState(() { _posts = data; _loading = false; });
     } catch (e) {
-      setState(() => _loading = false);
+      if (mounted) setState(() => _loading = false);
     }
+  }
+
+  void _openCreatePost() async {
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (_) => const EnhancedPostUploadForm()),
+    );
+    if (result == true) _loadPosts(); // Refresh after new post
   }
 
   @override
@@ -798,90 +804,57 @@ class _CommunityFeedState extends State<_CommunityFeed> {
     if (_loading) {
       return const Center(child: CircularProgressIndicator(color: IFridgeTheme.primary));
     }
-    if (_posts.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('🍽️', style: TextStyle(fontSize: 48)),
-            const SizedBox(height: 12),
-            Text('No community recipes yet',
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 16)),
-            const SizedBox(height: 8),
-            Text('Share your recipes and discover new ones!',
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 13)),
-          ],
-        ),
-      );
-    }
-    return RefreshIndicator(
-      color: IFridgeTheme.primary,
-      onRefresh: _loadPosts,
-      child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        itemCount: _posts.length,
-        itemBuilder: (ctx, i) => _CommunityRecipeCard(post: _posts[i]),
-      ),
-    );
-  }
-}
 
-class _CommunityRecipeCard extends StatelessWidget {
-  final Map<String, dynamic> post;
-  const _CommunityRecipeCard({required this.post});
-
-  @override
-  Widget build(BuildContext context) {
-    final caption = post['caption'] ?? '';
-    final tags = List<String>.from(post['tags'] ?? []);
-    final author = post['users'] as Map<String, dynamic>?;
-    final authorName = author?['display_name'] ?? 'Chef';
-    final likes = post['like_count'] ?? 0;
-    final views = post['view_count'] ?? 0;
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppTheme.surface,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Author row
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundColor: IFridgeTheme.primary.withValues(alpha: 0.2),
-                child: Text(authorName[0].toUpperCase(),
-                  style: const TextStyle(color: IFridgeTheme.primary, fontWeight: FontWeight.w700, fontSize: 13)),
+    return Stack(
+      children: [
+        // Post list or empty state
+        _posts.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('🍽️', style: TextStyle(fontSize: 48)),
+                  const SizedBox(height: 12),
+                  Text('No community posts yet',
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Text('Be the first to share!',
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 13)),
+                  const SizedBox(height: 20),
+                  FilledButton.icon(
+                    onPressed: _openCreatePost,
+                    icon: const Icon(Icons.add_a_photo, size: 18),
+                    label: const Text('Create Post'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: IFridgeTheme.primary,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 8),
-              Text(authorName,
-                style: const TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.w600)),
-              const Spacer(),
-              Icon(Icons.favorite, size: 14, color: Colors.red.withValues(alpha: 0.6)),
-              const SizedBox(width: 4),
-              Text('$likes',
-                style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12)),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(caption,
-            style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600, height: 1.4)),
-          if (tags.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 6,
-              children: tags.map((t) => Text('#$t',
-                style: TextStyle(color: IFridgeTheme.primary.withValues(alpha: 0.7), fontSize: 12))).toList(),
+            )
+          : RefreshIndicator(
+              color: IFridgeTheme.primary,
+              onRefresh: _loadPosts,
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                itemCount: _posts.length,
+                itemBuilder: (ctx, i) => CommunityPostCard(post: _posts[i]),
+              ),
             ),
-          ],
-        ],
-      ),
+
+        // ── FAB: Create new post ──
+        Positioned(
+          bottom: 16,
+          right: 16,
+          child: FloatingActionButton(
+            heroTag: 'community_fab',
+            backgroundColor: IFridgeTheme.primary,
+            onPressed: _openCreatePost,
+            child: const Icon(Icons.add, color: Colors.white),
+          ),
+        ),
+      ],
     );
   }
 }
