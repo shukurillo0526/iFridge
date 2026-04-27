@@ -190,17 +190,6 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
                     return _buildShelfGrid(items, zone);
                   }).toList(),
                 ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const ScanScreen()),
-          );
-        },
-        backgroundColor: IFridgeTheme.primary,
-        foregroundColor: IFridgeTheme.bgDark,
-        elevation: 4,
-        child: const Icon(Icons.add, size: 28),
-      ),
     );
   }
 

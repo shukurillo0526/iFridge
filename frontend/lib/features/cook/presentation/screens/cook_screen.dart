@@ -706,13 +706,16 @@ class _CookScreenState extends State<CookScreen>
         ),
       ),
       body: _buildBody(),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: IFridgeTheme.primary,
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => const RecipeImportScreen()));
-        },
-        icon: const Icon(Icons.content_paste, color: Colors.white),
-        label: const Text('Import Recipe', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 80),
+        child: FloatingActionButton.extended(
+          backgroundColor: IFridgeTheme.primary,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const RecipeImportScreen()));
+          },
+          icon: const Icon(Icons.content_paste, color: Colors.white),
+          label: const Text('Import Recipe', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        ),
       ),
     );
   }
