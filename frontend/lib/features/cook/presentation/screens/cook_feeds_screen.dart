@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:ifridge_app/core/services/video_feed_service.dart';
 
 class CookFeedsScreen extends StatefulWidget {
@@ -247,7 +248,10 @@ class _CookVideoCardState extends State<_CookVideoCard> {
                   _SideBtn(icon: Icons.restaurant_menu, label: 'Cook', color: green,
                     highlighted: true, onTap: () => setState(() => _showRecipe = true)),
                   const SizedBox(height: 18),
-                  _SideBtn(icon: Icons.reply_outlined, label: 'Share', color: Colors.white, onTap: () {}),
+                  _SideBtn(icon: Icons.reply_outlined, label: 'Share', color: Colors.white,
+                    onTap: () => SharePlus.instance.share(ShareParams(
+                      text: '${v.title}\nhttps://youtube.com/watch?v=${v.youtubeId}',
+                    ))),
                   const SizedBox(height: 18),
                   _SideBtn(icon: _saved ? Icons.bookmark : Icons.bookmark_border,
                     label: _saved ? 'Saved' : 'Save', color: _saved ? green : Colors.white,

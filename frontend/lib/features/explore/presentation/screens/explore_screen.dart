@@ -21,6 +21,7 @@ import 'package:ifridge_app/core/services/social_service.dart';
 import 'package:ifridge_app/features/profile/presentation/screens/post_upload_form.dart';
 import 'package:ifridge_app/core/widgets/story_ring.dart';
 import 'package:ifridge_app/features/explore/presentation/screens/social_search_page.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -202,6 +203,7 @@ class _YTReelCardState extends State<_YTReelCard> {
   bool _liked = false;
   bool _playing = false;
   bool _showRecipe = false;
+  bool _saved = false;
 
   @override
   void didUpdateWidget(covariant _YTReelCard oldWidget) {
@@ -262,9 +264,15 @@ class _YTReelCardState extends State<_YTReelCard> {
                 _FeedSideBtn(icon: Icons.restaurant_menu, label: 'Cook', color: green,
                   highlighted: true, onTap: () => setState(() => _showRecipe = true)),
               if (v.hasRecipe) const SizedBox(height: 16),
-              _FeedSideBtn(icon: Icons.reply_outlined, label: 'Share', color: Colors.white, onTap: () {}),
+              _FeedSideBtn(icon: Icons.reply_outlined, label: 'Share', color: Colors.white,
+                onTap: () => SharePlus.instance.share(ShareParams(
+                  text: '${v.title}\nhttps://youtube.com/watch?v=${v.youtubeId}',
+                ))),
               const SizedBox(height: 16),
-              _FeedSideBtn(icon: Icons.bookmark_outline, label: 'Save', color: Colors.white, onTap: () {}),
+              _FeedSideBtn(icon: _saved ? Icons.bookmark : Icons.bookmark_outline,
+                label: _saved ? 'Saved' : 'Save',
+                color: _saved ? green : Colors.white,
+                onTap: () => setState(() => _saved = !_saved)),
               const SizedBox(height: 16),
               Container(width: 38, height: 38, decoration: BoxDecoration(
                 shape: BoxShape.circle,

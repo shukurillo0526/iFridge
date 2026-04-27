@@ -11,6 +11,7 @@ import 'package:ifridge_app/core/services/location_service.dart';
 import 'package:ifridge_app/core/services/restaurant_service.dart';
 import 'package:ifridge_app/features/order/presentation/screens/restaurant_detail_page.dart';
 import 'package:ifridge_app/core/widgets/youtube_embed.dart';
+import 'package:share_plus/share_plus.dart';
 
 class OrderFeedsScreen extends StatefulWidget {
   const OrderFeedsScreen({super.key});
@@ -284,7 +285,10 @@ class _OrderVideoCardState extends State<_OrderVideoCard> {
                 ],
 
                 // Share
-                _SideBtn(icon: Icons.reply_outlined, label: 'Share', color: Colors.white, onTap: () {}),
+                _SideBtn(icon: Icons.reply_outlined, label: 'Share', color: Colors.white,
+                  onTap: () => SharePlus.instance.share(ShareParams(
+                    text: '${v.title}\nhttps://youtube.com/watch?v=${v.youtubeId}',
+                  ))),
                 const SizedBox(height: 18),
 
                 // Save

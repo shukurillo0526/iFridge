@@ -8,6 +8,7 @@
 // - Category filtering, search, and deals section
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/location_service.dart';
 import 'package:ifridge_app/core/services/restaurant_service.dart';
@@ -1230,19 +1231,22 @@ class _SmartActionBar extends StatelessWidget {
     );
   }
 
-  void _handleNavigate(BuildContext context, Restaurant r) {
+  Future<void> _handleNavigate(BuildContext context, Restaurant r) async {
     // Open in external maps app
     final url = r.mapsUrl;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('🧭 Opening navigation to ${r.name}...\n$url'),
+        content: Text('🧭 Opening navigation to ${r.name}...'),
         backgroundColor: const Color(0xFF455A64),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 2),
       ),
     );
-    // TODO: use url_launcher to actually open the URL
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 }
 
