@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/business_service.dart';
 import 'package:ifridge_app/core/services/social_service.dart';
+import 'package:ifridge_app/features/profile/presentation/screens/post_upload_form.dart';
 
 class RestaurantDashboardPage extends StatefulWidget {
   const RestaurantDashboardPage({super.key});
@@ -289,10 +290,9 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
             subtitle: 'Upload a short video to promote your dishes',
             color: accent,
             onTap: () {
-              // TODO: Navigate to video upload specific to business
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('🎬 Business video upload coming soon!'), backgroundColor: Color(0xFFFF6D00)),
-              );
+              Navigator.push(context, MaterialPageRoute(
+                builder: (_) => const EnhancedPostUploadForm(),
+              ));
             },
           ),
           const SizedBox(height: 10),
@@ -301,11 +301,7 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
             title: 'Update Menu',
             subtitle: 'Add or edit menu items for your restaurant',
             color: IFridgeTheme.primary,
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('📋 Menu editor coming soon!'), backgroundColor: Color(0xFF4CAF50)),
-              );
-            },
+            onTap: () => _showMenuEditor(),
           ),
           const SizedBox(height: 10),
           _ActionCard(
@@ -313,16 +309,111 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
             title: 'View Analytics',
             subtitle: 'Track engagement and reach insights',
             color: Colors.blueAccent,
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('📊 Detailed analytics coming soon!'), backgroundColor: Colors.blueAccent),
-              );
-            },
+            onTap: () => _showAnalytics(),
           ),
 
           const SizedBox(height: 30),
         ],
       ),
+    );
+  }
+
+  void _showMenuEditor() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: IFridgeTheme.bgElevated,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.fromLTRB(20, 16, 20, MediaQuery.of(ctx).viewInsets.bottom + 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(width: 40, height: 4,
+                decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2))),
+            const SizedBox(height: 16),
+            const Text('Menu Editor', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 8),
+            Text('Add items your customers can browse. Menu items will appear on your restaurant page.',
+                style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 13), textAlign: TextAlign.center),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.03),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+              ),
+              child: Column(
+                children: [
+                  Icon(Icons.restaurant_menu, size: 40, color: IFridgeTheme.primary.withValues(alpha: 0.3)),
+                  const SizedBox(height: 12),
+                  Text('Menu items are managed through the Supabase dashboard for now.\nFull in-app editor is being built.',
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12, height: 1.5),
+                      textAlign: TextAlign.center),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showAnalytics() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: IFridgeTheme.bgElevated,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        final posts = _stats['posts'] ?? 0;
+        final views = _stats['views'] ?? 0;
+        final likes = _stats['likes'] ?? 0;
+        final engRate = views > 0 ? ((likes / views) * 100).toStringAsFixed(1) : '0.0';
+
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(width: 40, height: 4,
+                  decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2))),
+              const SizedBox(height: 16),
+              const Text('📊 Analytics Overview', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(child: _AnalyticTile(label: 'Total Posts', value: '$posts', icon: Icons.article)),
+                  const SizedBox(width: 10),
+                  Expanded(child: _AnalyticTile(label: 'Total Views', value: '$views', icon: Icons.visibility)),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: _AnalyticTile(label: 'Total Likes', value: '$likes', icon: Icons.favorite)),
+                  const SizedBox(width: 10),
+                  Expanded(child: _AnalyticTile(label: 'Engagement', value: '$engRate%', icon: Icons.trending_up)),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: _AnalyticTile(label: 'Followers', value: '$_followers', icon: Icons.people)),
+                  const SizedBox(width: 10),
+                  Expanded(child: _AnalyticTile(label: 'Avg Likes', value: posts > 0 ? '${(likes / posts).toStringAsFixed(1)}' : '0', icon: Icons.thumb_up)),
+                ],
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -430,6 +521,35 @@ class _ActionCard extends StatelessWidget {
             Icon(Icons.chevron_right, color: Colors.white.withValues(alpha: 0.3), size: 20),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _AnalyticTile extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+  const _AnalyticTile({required this.label, required this.value, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.04),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: Colors.white38, size: 18),
+          const SizedBox(height: 8),
+          Text(value, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 2),
+          Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11)),
+        ],
       ),
     );
   }
