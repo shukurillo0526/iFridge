@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/social_service.dart';
+import 'package:ifridge_app/core/widgets/recipe_attachment_widget.dart';
+import 'package:ifridge_app/core/services/recipe_monetization_service.dart';
 
 class EnhancedPostUploadForm extends StatefulWidget {
   const EnhancedPostUploadForm({super.key});
@@ -31,6 +33,7 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
   String _visibility = 'public';
   bool _uploading = false;
   double _uploadProgress = 0;
+  RecipeAttachmentResult? _recipeAttachment;
 
   final _postTypes = [
     ('photo', '📸', 'Photo', 'Share what you cooked'),
@@ -101,6 +104,36 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
         locationName: _postType == 'restaurant_visit' ? _locationController.text.trim() : null,
         visibility: _visibility,
       );
+
+      // Handle recipe attachment if enabled
+      if (result != null && _recipeAttachment != null) {
+        final postId = result['id'] as String;
+        final att = _recipeAttachment!;
+
+        if (att.existingRecipeId != null) {
+          // Link existing recipe to this post
+          await RecipeMonetizationService.linkRecipeToPost(att.existingRecipeId!, postId);
+        } else if (att.newRecipe != null) {
+          // Create new recipe and link it
+          final nr = att.newRecipe!;
+          final recipe = await RecipeMonetizationService.createRecipe(
+            title: nr.title,
+            description: nr.description,
+            cuisine: nr.cuisine,
+            difficulty: nr.difficulty,
+            prepTime: nr.prepTime,
+            cookTime: nr.cookTime,
+            servings: nr.servings,
+            isPremium: att.isPremium,
+            priceCents: att.priceCents,
+            linkedPostId: postId,
+            steps: nr.stepLines.map((s) => {'text': s}).toList(),
+          );
+          if (recipe != null) {
+            await RecipeMonetizationService.linkRecipeToPost(recipe.id, postId);
+          }
+        }
+      }
 
       setState(() => _uploadProgress = 1.0);
 
@@ -370,6 +403,13 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
             ),
             const SizedBox(height: 14),
           ],
+
+          // ── Recipe Attachment ──
+          RecipeAttachmentWidget(
+            onChanged: (result) => _recipeAttachment = result,
+          ),
+
+          const SizedBox(height: 14),
 
           // ── Visibility ──
           Container(
