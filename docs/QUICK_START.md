@@ -1,78 +1,250 @@
-# iFridge — Quick Start Checklist
+# iFridge v4.0.0 — Quick Start Guide
 
-> Run these steps to get iFridge running locally with full AI support.
-> The app **auto-detects** its environment — no URL switching needed:
-> - `flutter run -d Chrome` → uses **localhost:8000** (local Ollama AI)
-> - GitHub Pages → uses **Railway production backend**
+> **The Intelligent Fridge Ecosystem** — AI-powered kitchen management, recipe recommendations,
+> community cooking feeds, and restaurant ordering.
 
 ---
 
-## 🔧 One-Time Setup (First Time Only)
+## 📋 Prerequisites
 
-### 1. Install Python Dependencies
+| Tool | Version | Check |
+|------|---------|-------|
+| **Flutter** | 3.27+ | `flutter --version` |
+| **Dart** | 3.10+ | included with Flutter |
+| **Python** | 3.12+ | `python --version` |
+| **Ollama** | latest | `ollama --version` |
+| **Android Studio** | latest | for emulator & SDK tools |
+| **Chrome** | latest | for web debugging |
+| **Git** | latest | `git --version` |
+
+---
+
+## 🔧 One-Time Setup
+
+### 1. Clone the Repository
 
 ```powershell
-cd d:\dev\projects\iFridge\backend
+git clone https://github.com/shukurillo0526/iFridge.git
+cd iFridge
+```
+
+### 2. Backend Dependencies
+
+```powershell
+cd backend
 pip install -r requirements.txt
 ```
 
-### 2. Pull AI Models
+### 3. Pull AI Models (requires ~20 GB disk, ~16 GB VRAM)
 
 ```powershell
-ollama pull qwen2.5vl:7b
-ollama pull qwen3:8b
-ollama pull nomic-embed-text
-ollama pull gemma3:12b
+ollama pull qwen2.5vl:7b       # Vision model — receipt/ingredient scanning
+ollama pull qwen3:8b            # Text LLM — recipes, tips, chat
+ollama pull nomic-embed-text    # Embeddings — semantic search (CPU)
+ollama pull gemma3:12b          # Fallback multimodal
 ```
 
-### 3. Install Flutter Dependencies
+### 4. Flutter Dependencies
 
 ```powershell
-cd d:\dev\projects\iFridge\frontend
+cd frontend
 flutter pub get
 ```
+
+### 5. Enable Developer Mode (Windows only, first time)
+
+```powershell
+start ms-settings:developers
+```
+
+> Toggle **Developer Mode** ON — required for Flutter symlinks.
 
 ---
 
 ## 🚀 Running Locally (3 Terminals)
 
-### Terminal 1: Ollama (AI Server)
+### Terminal 1 — Ollama AI Server
 
 ```powershell
 ollama serve
 ```
 
-> Leave this running. If it says "already running", that's fine — skip to Terminal 2.
+> If it says "already running", skip to Terminal 2.
 
----
-
-### Terminal 2: Backend (FastAPI)
+### Terminal 2 — Backend (FastAPI)
 
 ```powershell
 cd d:\dev\projects\iFridge\backend
 python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-> Wait until you see `Uvicorn running on http://0.0.0.0:8000`. Leave it running.
+> Wait for `Uvicorn running on http://0.0.0.0:8000`. Leave running.
 
----
+### Terminal 3 — Frontend (Flutter)
 
-### Terminal 3: Frontend (Flutter)
+Pick your target platform:
 
 ```powershell
 cd d:\dev\projects\iFridge\frontend
-flutter run -d Chrome
 
-or
+# ── Web (Chrome) ─────────────────────────────
+flutter run -d chrome
 
-flutter build apk --debug 2>&1 | Select-Object -Last 12
+# ── Android Emulator ─────────────────────────
+flutter run                          # auto-picks connected device
+flutter run -d emulator-5554         # specific emulator
+
+# ── Windows Desktop ──────────────────────────
+flutter run -d windows
+
+# ── Physical Android Phone (USB) ─────────────
+flutter run -d <device-id>           # get id from: flutter devices
 ```
 
 ---
 
-## ✅ Quick Verify
+## 🧪 Testing Guide
 
-After all 3 are running, open Chrome and check:
+### A. Backend Unit Tests (Python / pytest)
+
+The backend has a test suite covering scoring, middleware, health checks, and expiry prediction.
+
+```powershell
+cd d:\dev\projects\iFridge\backend
+
+# Run all tests
+python -m pytest tests/ -v
+
+# Run a specific test file
+python -m pytest tests/test_scoring.py -v
+python -m pytest tests/test_middleware.py -v
+python -m pytest tests/test_health.py -v
+python -m pytest tests/test_expiry.py -v
+
+# Run with short traceback + JUnit XML output
+python -m pytest tests/ -v --tb=short --junitxml=test-results.xml
+```
+
+**Test files:**
+
+| File | Covers |
+|------|--------|
+| `test_scoring.py` | Recipe recommendation engine (6-signal composite scoring) |
+| `test_middleware.py` | Request ID injection, input validation, body size limits |
+| `test_health.py` | Health check endpoints, dependency status |
+| `test_expiry.py` | Smart expiry prediction (storage, packaging factors) |
+
+> These tests also run automatically on every push to `main` via GitHub Actions (`.github/workflows/backend-tests.yml`).
+
+---
+
+### B. Frontend Widget Tests (Flutter)
+
+```powershell
+cd d:\dev\projects\iFridge\frontend
+
+# Run all widget tests
+flutter test
+
+# Run a specific test file
+flutter test test/widget_test.dart
+
+# Run with verbose output
+flutter test --reporter expanded
+```
+
+---
+
+### C. Manual Testing on Each Platform
+
+#### 🌐 Web (Chrome)
+
+```powershell
+flutter run -d chrome
+```
+
+- **Best for:** Rapid iteration, DevTools inspection, testing responsive layouts
+- **Hot reload:** Press `r` in terminal
+- **Hot restart:** Press `R` (capital)
+- **DevTools:** Press `d` to detach, open `chrome://inspect`
+
+#### 📱 Android Emulator
+
+```powershell
+# List available emulators
+flutter emulators
+
+# Launch an emulator
+flutter emulators --launch <emulator-name>
+
+# Run on it
+flutter run
+```
+
+- **Best for:** Testing native features (camera, GPS, haptics, push notifications)
+- **If `adb` fails:** Restart emulator or run `adb kill-server && adb start-server`
+- **Process error (exit code 255):** Cold-boot the emulator from Android Studio
+
+#### 📱 Physical Android Device (USB)
+
+```powershell
+# 1. Enable USB Debugging on your phone (Settings → Developer Options)
+# 2. Connect via USB
+# 3. Check connection
+flutter devices
+
+# 4. Run
+flutter run -d <device-id>
+```
+
+- **Best for:** Real-world performance, actual camera/GPS testing, haptic feedback
+
+#### 🖥️ Windows Desktop
+
+```powershell
+flutter run -d windows
+```
+
+- **Best for:** Large-screen layout testing, keyboard navigation
+- **Note:** Some mobile-only plugins (camera, GPS) will show permission dialogs or stubs
+
+---
+
+### D. API Testing (Backend Endpoints)
+
+#### Using the built-in Swagger UI
+
+Start the backend, then open in browser:
+
+```
+http://localhost:8000/docs
+```
+
+> Interactive API docs — try any endpoint directly from the browser.
+
+#### Using curl / PowerShell
+
+```powershell
+# Health check
+Invoke-RestMethod http://localhost:8000/api/v1/health/ping
+
+# Full health report
+Invoke-RestMethod http://localhost:8000/api/v1/health
+
+# AI model status
+Invoke-RestMethod http://localhost:8000/api/v1/ai/status
+
+# Generate a recipe
+Invoke-RestMethod -Method POST -Uri http://localhost:8000/api/v1/ai/generate-recipe `
+  -ContentType "application/json" `
+  -Body '{"ingredients": ["chicken", "rice", "soy sauce"], "user_id": "test"}'
+```
+
+---
+
+## ✅ Quick Verification Checklist
+
+After all 3 terminals are running:
 
 | URL | Expected |
 |-----|----------|
@@ -81,51 +253,85 @@ After all 3 are running, open Chrome and check:
 | `http://localhost:8000/api/v1/health` | Full dependency health report (Supabase, Ollama) |
 | `http://localhost:8000/api/v1/ai/status` | Shows which AI models are loaded |
 | `http://localhost:8000/docs` | Interactive Swagger API docs |
-| Flutter app | Should load the Living Shelf after login |
+| Flutter app (any platform) | Onboarding → Living Shelf after login |
 
 ---
 
-## 🌐 How Environment Auto-Detection Works
+## 🏗️ Building for Production
 
-The API URL is **automatic** — you never need to edit `api_service.dart`:
+### Debug APK (fast, for testing)
+
+```powershell
+cd d:\dev\projects\iFridge\frontend
+flutter build apk --debug
+```
+
+> Output: `build/app/outputs/flutter-apk/app-debug.apk`
+
+### Release APK (optimized, minified)
+
+```powershell
+flutter build apk --release
+```
+
+> Uses ProGuard/R8 minification. Requires signing key for Play Store.
+
+### Release App Bundle (Play Store upload)
+
+```powershell
+flutter build appbundle \
+  --dart-define=SUPABASE_URL=https://your-project.supabase.co \
+  --dart-define=SUPABASE_ANON_KEY=your-anon-key
+```
+
+### Web Build (GitHub Pages)
+
+```powershell
+flutter build web --base-href /iFridge/
+```
+
+> Auto-deployed on push to `main` via GitHub Actions.
+
+### Windows Desktop Build
+
+```powershell
+flutter build windows --release
+```
+
+---
+
+## 🌐 Environment Auto-Detection
+
+The app detects its environment automatically — **no URL switching needed:**
 
 | Running From | Browser Host | Backend Used | AI Available |
 |-------------|-------------|-------------|-------------|
-| `flutter run -d Chrome` | `localhost` | `http://localhost:8000` | ✅ Local Ollama |
-| GitHub Pages | `*.github.io` | Railway production URL | ⚠️ Railway (no local Ollama) |
+| `flutter run -d chrome` | `localhost` | `http://localhost:8000` | ✅ Local Ollama |
+| `flutter run -d windows` | N/A (desktop) | `http://localhost:8000` | ✅ Local Ollama |
+| `flutter run` (Android) | N/A (mobile) | `http://localhost:8000` | ✅ Local Ollama |
+| GitHub Pages | `*.github.io` | Railway production | ⚠️ Railway only |
 
-The logic lives in `frontend/lib/core/services/api_service.dart`:
+The logic lives in `frontend/lib/core/services/api_service.dart` → `ApiConfig.baseUrl`.
 
-```dart
-static String get baseUrl {
-  if (kIsWeb) {
-    final host = Uri.base.host;
-    if (host != 'localhost' && host != '127.0.0.1') {
-      return _productionUrl;  // GitHub Pages → Railway
-    }
-  }
-  return _localUrl;  // Local dev → localhost:8000
-}
-```
-
-> **No more commenting/uncommenting URLs before pushing to GitHub!**
+> **Supabase keys** are loaded via `--dart-define` with development fallbacks.  
+> For production: pass `--dart-define=SUPABASE_URL=... --dart-define=SUPABASE_ANON_KEY=...`
 
 ---
 
 ## 🧠 AI Models (RTX 5070 Ti — 16GB VRAM)
 
-The backend uses these local AI models via Ollama:
-
 | Model | Size | Role |
 |-------|------|------|
-| `qwen2.5vl:7b` | 6.0 GB | Vision (multimodal) — scans receipts, detects ingredients, calorie photos |
+| `qwen2.5vl:7b` | 6.0 GB | Vision — scans receipts, detects ingredients, calorie photos |
 | `qwen3:8b` | 5.2 GB | Text LLM — recipe generation, tips, ingredient subs, YouTube extraction |
 | `nomic-embed-text` | 274 MB | Embeddings — semantic search (runs on CPU) |
 | `gemma3:12b` | 8.1 GB | Fallback — multimodal backup if qwen2.5vl unavailable |
 
 ---
 
-## 🏗️ Backend Architecture (v3.4.0)
+## 🏛️ Architecture Overview
+
+### Backend (FastAPI v3.4.0)
 
 ```
 Request → CORS → RequestIdMiddleware → InputValidationMiddleware → Router → Response
@@ -136,7 +342,8 @@ Request → CORS → RequestIdMiddleware → InputValidationMiddleware → Route
          Structured JSON logs with request_id correlation
 ```
 
-### Middleware Stack
+**Middleware Stack:**
+
 | Layer | Purpose |
 |-------|---------|
 | `CORSMiddleware` | Allows Flutter origins |
@@ -144,7 +351,8 @@ Request → CORS → RequestIdMiddleware → InputValidationMiddleware → Route
 | `InputValidationMiddleware` | 10MB body limit, UUID format validation |
 | `register_error_handlers` | Standardized error envelopes with request IDs |
 
-### Key Services
+**Key Services:**
+
 | Service | Purpose |
 |---------|---------|
 | `recommendation_engine.py` | 6-signal composite scoring (expiry, flavor, familiarity, difficulty, recency, coverage) |
@@ -153,9 +361,31 @@ Request → CORS → RequestIdMiddleware → InputValidationMiddleware → Route
 | `expiry_prediction.py` | Smart expiry with storage/packaging factors + visual freshness |
 | `ollama_service.py` | Local LLM interface (text, vision, embeddings, streaming) |
 
+### Frontend (Flutter v4.0.0)
+
+```
+main.dart → AppShell
+              ├── _ModeSwitchBar (ORDER / COOK toggle)
+              ├── DualModeNavBar (5 Cook tabs, 3 Order tabs)
+              └── Screens
+                   ├── Cook Mode: Shelf → Cook → Scan → Feeds → Manage
+                   └── Order Mode: Order → Feeds → Manage
+```
+
+**Key Packages:**
+
+| Package | Purpose |
+|---------|---------|
+| `supabase_flutter` | Auth, Realtime DB, Storage |
+| `flutter_riverpod` | State management |
+| `hive_flutter` | Offline cache + sync queue |
+| `mobile_scanner` | Barcode/receipt scanning |
+| `speech_to_text` | Voice commands |
+| `share_plus` | Social sharing |
+
 ---
 
-## 📡 API Endpoints Overview
+## 📡 API Endpoints
 
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
@@ -169,14 +399,14 @@ Request → CORS → RequestIdMiddleware → InputValidationMiddleware → Route
 | POST | `/api/v1/ai/shopping-list` | Smart shopping list generation |
 | POST | `/api/v1/ai/parse-raw` | Parse raw recipe text |
 | POST | `/api/v1/ai/normalize-recipe` | Convert terse steps to detailed steps |
+| POST | `/api/v1/ai/chat` | Multi-turn kitchen assistant (SSE streaming) |
 | GET | `/api/v1/recommendations/{user_id}` | Server-side scored recommendations |
 | POST | `/api/v1/user/init` | Initialize new user |
 | GET | `/api/v1/user/{user_id}/dashboard` | Full user profile data |
 | POST | `/api/v1/user/cook` | Record cook event (triggers flavor learning) |
 | POST | `/api/v1/user/engagement` | Track video likes/saves/views |
-| POST | `/api/v1/ai/chat` | Multi-turn kitchen assistant (SSE streaming) |
-| POST | `/api/v1/inventory/predict-expiry` | Smart expiry prediction (category + storage + packaging) |
-| POST | `/api/v1/inventory/assess-freshness` | Visual freshness score from ingredient photo |
+| POST | `/api/v1/inventory/predict-expiry` | Smart expiry prediction |
+| POST | `/api/v1/inventory/assess-freshness` | Visual freshness score from photo |
 | POST | `/api/v1/calories/analyze-image` | Analyze food photo for calories |
 | POST | `/api/v1/calories/analyze` | Estimate calories for food items |
 | GET | `/api/v1/calories/daily/{user_id}` | Daily nutrition summary |
@@ -185,16 +415,31 @@ Request → CORS → RequestIdMiddleware → InputValidationMiddleware → Route
 
 ---
 
-## 🔄 If Things Break
+## 🔄 CI/CD Pipelines
+
+| Workflow | Trigger | What it does |
+|----------|---------|--------------|
+| `backend-tests.yml` | Push/PR to `main` (backend changes) | Runs `pytest` on Python tests |
+| `flutter_web_deploy.yml` | Push to `main` | Builds Flutter web → deploys to GitHub Pages |
+
+---
+
+## 🐛 Troubleshooting
 
 | Problem | Fix |
 |---------|-----|
-| `No module named uvicorn` | Run `pip install -r requirements.txt` in the `backend` folder |
-| Backend won't start | Make sure Python deps are installed (see above) |
+| `No module named uvicorn` | Run `pip install -r requirements.txt` in `backend/` |
+| Backend won't start | Check Python 3.12+ installed, deps installed |
 | AI returns mock data | Check `ollama serve` is running in Terminal 1 |
 | "Couldn't load inventory" | Backend not running, or check Terminal 2 for errors |
-| Hot reload not working | Press `R` (capital) in Terminal 3 for hot restart |
-| Flutter `pub get` fails | Enable Developer Mode: `start ms-settings:developers` |
-| Wrong backend URL | Should be automatic now — check `ApiConfig` in `api_service.dart` |
+| Hot reload not working | Press `R` (capital) for full hot restart |
+| `flutter pub get` fails | Enable Developer Mode: `start ms-settings:developers` |
+| Wrong backend URL | Automatic via `ApiConfig` — check `api_service.dart` |
 | Health check returns 503 | Supabase connection issue — check `.env` credentials |
 | `X-Request-ID` missing | Ensure `RequestIdMiddleware` is registered in `main.py` |
+| Emulator process error 255 | Cold-boot emulator from Android Studio, or `adb kill-server` |
+| Chrome CORS error | Ensure backend is running on port 8000 with CORS enabled |
+| `flutter run` no devices | Run `flutter devices` — start emulator or connect phone |
+| Windows build fails | Run `flutter config --enable-windows-desktop` first |
+| APK install fails on phone | Enable "Install from unknown sources" in phone settings |
+| Release build crashes | Check ProGuard rules in `android/app/proguard-rules.pro` |
