@@ -9,6 +9,7 @@ import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/business_service.dart';
 import 'package:ifridge_app/core/services/social_service.dart';
 import 'package:ifridge_app/features/profile/presentation/screens/post_upload_form.dart';
+import 'package:ifridge_app/features/order/presentation/screens/incoming_orders_page.dart';
 
 class RestaurantDashboardPage extends StatefulWidget {
   const RestaurantDashboardPage({super.key});
@@ -276,6 +277,25 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
                 ],
               ),
             ),
+
+          const SizedBox(height: 20),
+
+          // ── Incoming Orders ──
+          const Text('Incoming Orders',
+              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 12),
+
+          _ActionCard(
+            icon: Icons.receipt_long,
+            title: 'Manage Orders',
+            subtitle: 'View and update incoming customer orders',
+            color: Colors.green,
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (_) => IncomingOrdersPage(restaurantId: account.userId),
+              ));
+            },
+          ),
 
           const SizedBox(height: 20),
 
