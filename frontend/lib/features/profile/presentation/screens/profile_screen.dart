@@ -23,6 +23,7 @@ import 'package:ifridge_app/features/profile/presentation/screens/shopping_list_
 import 'package:ifridge_app/features/profile/presentation/screens/creator_dashboard_page.dart';
 import 'package:ifridge_app/features/profile/presentation/screens/restaurant_dashboard_page.dart';
 import 'package:ifridge_app/core/services/social_service.dart';
+import 'package:ifridge_app/features/order/presentation/screens/order_history_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -823,10 +824,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 12),
+
+                // ── Order History Section ──────────────────────────────────
+                SlideInItem(
+                  delay: 345,
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const OrderHistoryScreen())),
+                    child: _SectionCard(
+                      title: 'My Orders',
+                      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 16),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFF6D00).withValues(alpha: 0.15),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.receipt_long, color: Color(0xFFFF6D00), size: 28),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text('Order History & Tracking', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+                                    const SizedBox(height: 4),
+                                    Text('View past orders, track active orders, and reorder', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 13)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
 
                 const SizedBox(height: 12),
 
-                // ── Account Section ────────────────────────────────────
+
                 SlideInItem(
                   delay: 350,
                   child: _SectionCard(

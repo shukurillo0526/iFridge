@@ -7,8 +7,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/cart_service.dart';
+import 'package:ifridge_app/core/services/order_service.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -32,14 +32,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     try {
       final userId = currentUserId();
-      final pickupCode = _generatePickupCode();
-      final orderData = _cart.toOrderJson(userId);
-      orderData['pickup_code'] = pickupCode;
-      orderData['status'] = 'confirmed';
-      orderData['created_at'] = DateTime.now().toIso8601String();
+      final orderData = await OrderService.placeOrder(
+        userId: userId,
+        restaurantId: _cart.restaurant!.id,
+        type: _cart.orderType == OrderType.pickup ? 'pickup' : 'delivery',
+        items: _cart.items.map((ci) => {
+          'menu_item_id': ci.menuItem.id,
+          'name': ci.menuItem.name,
+          'price': ci.menuItem.price,
+          'quantity': ci.quantity,
+          'special_instructions': ci.specialInstructions,
+          'subtotal': ci.subtotal,
+        }).toList(),
+      );
 
-      // Insert order into Supabase
-      await Supabase.instance.client.from('orders').insert(orderData);
+      final pickupCode = orderData['pickup_code'] as String? ?? _generatePickupCode();
 
       if (!mounted) return;
 

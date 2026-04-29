@@ -17,7 +17,7 @@ from fastapi.responses import JSONResponse
 from app.routers import (
     ocr_parser, barcode_lookup, vision_detect, recipe_ai,
     embeddings, inventory, user_data, calorie_analysis,
-    recommendations, health, chat, notifications,
+    recommendations, health, chat, notifications, orders,
 )
 from app.services.ollama_service import get_ollama_service
 from app.middleware.request_middleware import RequestIdMiddleware, InputValidationMiddleware
@@ -82,6 +82,7 @@ app = FastAPI(
         {"name": "User Data", "description": "User profiles, shopping lists, meal plans"},
         {"name": "Nutrition", "description": "Calorie analysis and tracking"},
         {"name": "Embeddings", "description": "Vector search and similarity"},
+        {"name": "Orders", "description": "Mobile ordering — pickup and delivery"},
     ],
 )
 
@@ -127,6 +128,7 @@ app.include_router(calorie_analysis.router)
 app.include_router(recommendations.router)
 app.include_router(chat.router)
 app.include_router(notifications.router)
+app.include_router(orders.router)
 
 
 # ── Root ─────────────────────────────────────────────────────────
