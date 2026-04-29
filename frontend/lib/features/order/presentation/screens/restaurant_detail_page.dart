@@ -11,6 +11,8 @@
 import 'package:flutter/material.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/restaurant_service.dart';
+import 'package:ifridge_app/core/services/cart_service.dart';
+import 'package:ifridge_app/features/order/presentation/screens/checkout_screen.dart';
 
 /// Which section to auto-scroll to when opening
 enum RestaurantSection { menu, reserve, location, reviews }
@@ -295,6 +297,17 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage>
           }).toList(),
         ),
       ),
+      // ── Floating Cart Bar ────────────────────────────
+      bottomNavigationBar: ListenableBuilder(
+        listenable: CartService(),
+        builder: (context, _) {
+          final cart = CartService();
+          if (cart.isEmpty || cart.restaurant?.id != r.id) {
+            return const SizedBox.shrink();
+          }
+          return _CartBar(isDark: isDark);
+        },
+      ),
     );
   }
 
@@ -451,6 +464,7 @@ class _MenuTab extends StatelessWidget {
               isDark: isDark,
               isHighlighted: isHighlighted,
               hasDelivery: restaurant.hasDelivery,
+              restaurant: restaurant,
             );
           }),
         ]),
@@ -464,12 +478,14 @@ class _MenuItemCard extends StatelessWidget {
   final bool isDark;
   final bool isHighlighted;
   final bool hasDelivery;
+  final Restaurant? restaurant;
 
   const _MenuItemCard({
     required this.item,
     required this.isDark,
     this.isHighlighted = false,
     required this.hasDelivery,
+    this.restaurant,
   });
 
   @override
@@ -552,26 +568,60 @@ class _MenuItemCard extends StatelessWidget {
               ],
             ),
           ),
-          if (hasDelivery) ...[
+          if (hasDelivery && restaurant != null) ...[
             const SizedBox(width: 10),
-            GestureDetector(
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('➕ Added ${item.name} to cart'),
-                  backgroundColor: accent,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  duration: const Duration(seconds: 1),
-                ));
+            ListenableBuilder(
+              listenable: CartService(),
+              builder: (context, _) {
+                final cart = CartService();
+                final qty = cart.getQuantity(item.id);
+                if (qty > 0) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: accent.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        GestureDetector(
+                          onTap: () => cart.decrementItem(item.id),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Icon(Icons.remove, color: accent, size: 16),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Text('$qty',
+                              style: TextStyle(
+                                  color: accent,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700)),
+                        ),
+                        GestureDetector(
+                          onTap: () => cart.addItem(item, restaurant!),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Icon(Icons.add, color: accent, size: 16),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                return GestureDetector(
+                  onTap: () => cart.addItem(item, restaurant!),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: accent.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(Icons.add, color: accent, size: 18),
+                  ),
+                );
               },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: accent.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(Icons.add, color: accent, size: 18),
-              ),
             ),
           ],
         ],
@@ -1150,6 +1200,94 @@ class _ReviewsTab extends StatelessWidget {
           ),
         )),
       ],
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  FLOATING CART BAR
+// ═══════════════════════════════════════════════════════════════════
+
+class _CartBar extends StatelessWidget {
+  final bool isDark;
+  const _CartBar({required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    const accent = Color(0xFFFF6D00);
+    final cart = CartService();
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+      decoration: BoxDecoration(
+        color: isDark ? IFridgeTheme.bgCard : Colors.white,
+        border: Border(
+          top: BorderSide(
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.06)
+                  : Colors.black.withValues(alpha: 0.06)),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 12,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const CheckoutScreen()),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            decoration: BoxDecoration(
+              color: accent,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: accent.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text('${cart.itemCount}',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800)),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Text('View Cart',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700)),
+                ),
+                Text('${cart.total.round()} UZS',
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700)),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
