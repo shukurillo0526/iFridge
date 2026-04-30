@@ -300,9 +300,9 @@ class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final isCook = _settings.appMode == AppMode.cook;
-    final screens = isCook ? _cookScreens : _orderScreens;
-    final navItems = isCook ? _cookNavItems(l10n) : _orderNavItems(l10n);
+    const isCook = true; // MVP: Always force Cook mode
+    final screens = _cookScreens;
+    final navItems = _cookNavItems(l10n);
 
     return Scaffold(
       body: Column(
@@ -324,7 +324,7 @@ class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
                 child: child,
               ),
               child: KeyedSubtree(
-                key: ValueKey('${_settings.appMode}_$_currentIndex'),
+                key: ValueKey('${AppMode.cook}_$_currentIndex'),
                 child: screens[_currentIndex],
               ),
             ),
@@ -334,7 +334,7 @@ class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
       bottomNavigationBar: DualModeNavBar(
         currentIndex: _currentIndex,
         items: navItems,
-        mode: _settings.appMode,
+        mode: AppMode.cook,
         onTap: (i) => setState(() => _currentIndex = i),
       ),
     );
