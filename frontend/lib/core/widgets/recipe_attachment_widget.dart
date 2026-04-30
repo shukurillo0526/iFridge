@@ -8,7 +8,6 @@
 // Pricing: Free or Premium (creator sets price)
 
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/recipe_monetization_service.dart';
 
 class RecipeAttachmentWidget extends StatefulWidget {
@@ -152,13 +151,13 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
         color: _enabled
-            ? IFridgeTheme.primary.withValues(alpha: 0.06)
-            : IFridgeTheme.bgElevated,
+            ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.06)
+            : Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: _enabled
-              ? IFridgeTheme.primary.withValues(alpha: 0.3)
-              : Colors.white.withValues(alpha: 0.06),
+              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)
+              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
         ),
       ),
       child: Column(
@@ -175,24 +174,24 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
               _notifyParent();
             },
             child: Padding(
-              padding: const EdgeInsets.all(14),
+              padding: EdgeInsets.all(14),
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: _enabled
-                          ? IFridgeTheme.primary.withValues(alpha: 0.15)
-                          : Colors.white.withValues(alpha: 0.06),
+                          ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.15)
+                          : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
                       Icons.menu_book,
-                      color: _enabled ? IFridgeTheme.primary : Colors.white38,
+                      color: _enabled ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                       size: 22,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,7 +199,7 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
                         Text(
                           'Attach Recipe',
                           style: TextStyle(
-                            color: _enabled ? Colors.white : Colors.white70,
+                            color: _enabled ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
                           ),
@@ -208,7 +207,7 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
                         Text(
                           _enabled ? 'Viewers can save or buy your recipe' : 'Let viewers cook what they see',
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.35),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.35),
                             fontSize: 11,
                           ),
                         ),
@@ -220,7 +219,7 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
                     duration: const Duration(milliseconds: 200),
                     child: Icon(
                       Icons.expand_more,
-                      color: _enabled ? IFridgeTheme.primary : Colors.white38,
+                      color: _enabled ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                     ),
                   ),
                 ],
@@ -230,23 +229,23 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
 
           // ── Expanded Content ──
           if (_enabled) ...[
-            Divider(color: Colors.white.withValues(alpha: 0.06), height: 1),
+            Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06), height: 1),
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+              padding: EdgeInsets.fromLTRB(14, 12, 14, 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ── Mode selector ──
                   _buildModeSelector(),
 
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
 
                   // ── Mode content ──
                   if (_mode == 'existing') _buildExistingPicker(),
                   if (_mode == 'new') _buildNewRecipeForm(),
                   if (_mode == 'ai') _buildAiSection(),
 
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
 
                   // ── Pricing Toggle ──
                   _buildPricingSection(),
@@ -279,26 +278,26 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
             },
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
-              margin: const EdgeInsets.symmetric(horizontal: 3),
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              margin: EdgeInsets.symmetric(horizontal: 3),
+              padding: EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? IFridgeTheme.primary.withValues(alpha: 0.12)
-                    : Colors.white.withValues(alpha: 0.03),
+                    ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.12)
+                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.03),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: isSelected
-                      ? IFridgeTheme.primary.withValues(alpha: 0.4)
-                      : Colors.white.withValues(alpha: 0.06),
+                      ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.4)
+                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
                 ),
               ),
               child: Column(
                 children: [
-                  Text(m.$2, style: const TextStyle(fontSize: 18)),
-                  const SizedBox(height: 2),
+                  Text(m.$2, style: TextStyle(fontSize: 18)),
+                  SizedBox(height: 2),
                   Text(m.$3,
                       style: TextStyle(
-                        color: isSelected ? IFridgeTheme.primary : Colors.white54,
+                        color: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                         fontSize: 10,
                         fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                       )),
@@ -314,30 +313,30 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
   // ── Existing Recipe Picker ──
   Widget _buildExistingPicker() {
     if (_loadingRecipes) {
-      return const Center(
+      return Center(
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: CircularProgressIndicator(color: IFridgeTheme.primary, strokeWidth: 2),
+          child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary, strokeWidth: 2),
         ),
       );
     }
 
     if (_myRecipes.isEmpty) {
       return Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20),
         child: Center(
           child: Column(
             children: [
-              Icon(Icons.restaurant_menu, size: 36, color: Colors.white.withValues(alpha: 0.15)),
-              const SizedBox(height: 8),
+              Icon(Icons.restaurant_menu, size: 36, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15)),
+              SizedBox(height: 8),
               Text("You haven't created any recipes yet",
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 13)),
-              const SizedBox(height: 8),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 13)),
+              SizedBox(height: 8),
               TextButton.icon(
                 onPressed: () => setState(() => _mode = 'new'),
-                icon: const Icon(Icons.add, size: 16),
-                label: const Text('Create one now'),
-                style: TextButton.styleFrom(foregroundColor: IFridgeTheme.primary),
+                icon: Icon(Icons.add, size: 16),
+                label: Text('Create one now'),
+                style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.primary),
               ),
             ],
           ),
@@ -349,8 +348,8 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Select a recipe',
-            style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12)),
-        const SizedBox(height: 8),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
+        SizedBox(height: 8),
         ...(_myRecipes.take(5).map((r) => _RecipeTile(
           recipe: r,
           isSelected: _selectedRecipe?.id == r.id,
@@ -361,9 +360,9 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
         ))),
         if (_myRecipes.length > 5)
           Padding(
-            padding: const EdgeInsets.only(top: 6),
+            padding: EdgeInsets.only(top: 6),
             child: Text('+ ${_myRecipes.length - 5} more recipes',
-                style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 11)),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 11)),
           ),
       ],
     );
@@ -376,13 +375,13 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
       children: [
         _FormField(controller: _titleCtrl, label: 'Recipe Title *', icon: Icons.restaurant_menu,
             onChanged: (_) => _notifyParent()),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         _FormField(controller: _descCtrl, label: 'Description', icon: Icons.notes, maxLines: 2,
             onChanged: (_) => _notifyParent()),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         _FormField(controller: _cuisineCtrl, label: 'Cuisine (Italian, Korean...)', icon: Icons.public,
             onChanged: (_) => _notifyParent()),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         // Quick settings row
         Row(
@@ -391,12 +390,12 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
               label: '⏱️ Prep', value: _prepTime, unit: 'min',
               onChanged: (v) { setState(() => _prepTime = v); _notifyParent(); },
             )),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(child: _NumberPicker(
               label: '🍳 Cook', value: _cookTime, unit: 'min',
               onChanged: (v) { setState(() => _cookTime = v); _notifyParent(); },
             )),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(child: _NumberPicker(
               label: '🍽️ Serves', value: _servings, unit: '',
               onChanged: (v) { setState(() => _servings = v); _notifyParent(); },
@@ -404,27 +403,27 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
           ],
         ),
 
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
 
         // Difficulty
         Row(
           children: [
-            Text('Difficulty: ', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12)),
+            Text('Difficulty: ', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
             ...List.generate(5, (i) => GestureDetector(
               onTap: () { setState(() => _difficulty = i + 1); _notifyParent(); },
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
+                padding: EdgeInsets.symmetric(horizontal: 2),
                 child: Icon(
                   i < _difficulty ? Icons.star : Icons.star_border,
                   size: 20,
-                  color: i < _difficulty ? Colors.amber : Colors.white24,
+                  color: i < _difficulty ? Colors.amber : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24),
                 ),
               ),
             )),
           ],
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
 
         _FormField(
           controller: _ingredientsCtrl,
@@ -434,7 +433,7 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
           hint: '2 cups flour\n3 eggs\n1 cup milk\n...',
           onChanged: (_) => _notifyParent(),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: 10),
         _FormField(
           controller: _stepsCtrl,
           label: 'Steps (one per line)',
@@ -450,40 +449,40 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
   // ── AI Generate Section ──
   Widget _buildAiSection() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.03),
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.03),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
       ),
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(14),
+            padding: EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: IFridgeTheme.secondary.withValues(alpha: 0.12),
+              color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.auto_awesome, color: IFridgeTheme.secondary, size: 28),
+            child: Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.secondary, size: 28),
           ),
-          const SizedBox(height: 12),
-          const Text('AI Recipe Generation',
-              style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 6),
+          SizedBox(height: 12),
+          Text('AI Recipe Generation',
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15, fontWeight: FontWeight.w700)),
+          SizedBox(height: 6),
           Text(
             'After uploading, our AI will analyze your video and automatically generate a recipe with ingredients and steps.',
-            style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12, height: 1.5),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 12, height: 1.5),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: IFridgeTheme.secondary.withValues(alpha: 0.1),
+              color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Text('✨ Will generate after posting',
-                style: TextStyle(color: IFridgeTheme.secondary, fontSize: 11, fontWeight: FontWeight.w600)),
+            child: Text('✨ Will generate after posting',
+                style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 11, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -493,16 +492,16 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
   // ── Pricing Section ──
   Widget _buildPricingSection() {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: _isPremium
             ? Colors.amber.withValues(alpha: 0.06)
-            : Colors.white.withValues(alpha: 0.02),
+            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.02),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: _isPremium
               ? Colors.amber.withValues(alpha: 0.3)
-              : Colors.white.withValues(alpha: 0.06),
+              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
         ),
       ),
       child: Column(
@@ -511,23 +510,23 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
             children: [
               Icon(
                 _isPremium ? Icons.monetization_on : Icons.volunteer_activism,
-                color: _isPremium ? Colors.amber : IFridgeTheme.primary,
+                color: _isPremium ? Colors.amber : Theme.of(context).colorScheme.primary,
                 size: 22,
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       _isPremium ? 'Premium Recipe 💰' : 'Free Recipe 🎁',
-                      style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700),
                     ),
                     Text(
                       _isPremium
                           ? 'Viewers pay to copy this recipe'
                           : 'Anyone can copy this recipe for free',
-                      style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 11),
                     ),
                   ],
                 ),
@@ -538,18 +537,18 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
                   setState(() => _isPremium = v);
                   _notifyParent();
                 },
-                activeColor: Colors.amber,
+                activeThumbColor: Colors.amber,
               ),
             ],
           ),
 
           // Price picker (only if premium)
           if (_isPremium) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Row(
               children: [
-                Text('Price: ', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 13)),
-                const SizedBox(width: 8),
+                Text('Price: ', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13)),
+                SizedBox(width: 8),
                 ...[99, 199, 299, 499, 999].map((cents) {
                   final isSelected = _priceCents == cents;
                   final label = '\$${(cents / 100).toStringAsFixed(2)}';
@@ -559,22 +558,22 @@ class _RecipeAttachmentWidgetState extends State<RecipeAttachmentWidget> {
                       _notifyParent();
                     },
                     child: Container(
-                      margin: const EdgeInsets.only(right: 6),
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      margin: EdgeInsets.only(right: 6),
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
                         color: isSelected
                             ? Colors.amber.withValues(alpha: 0.2)
-                            : Colors.white.withValues(alpha: 0.04),
+                            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.04),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: isSelected
                               ? Colors.amber.withValues(alpha: 0.5)
-                              : Colors.white.withValues(alpha: 0.08),
+                              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
                         ),
                       ),
                       child: Text(label,
                           style: TextStyle(
-                            color: isSelected ? Colors.amber : Colors.white54,
+                            color: isSelected ? Colors.amber : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                             fontSize: 12,
                             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                           )),
@@ -604,48 +603,48 @@ class _RecipeTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 6),
-        padding: const EdgeInsets.all(10),
+        margin: EdgeInsets.only(bottom: 6),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: isSelected
-              ? IFridgeTheme.primary.withValues(alpha: 0.1)
-              : Colors.white.withValues(alpha: 0.03),
+              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
+              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.03),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isSelected
-                ? IFridgeTheme.primary.withValues(alpha: 0.4)
-                : Colors.white.withValues(alpha: 0.06),
+                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.4)
+                : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
           ),
         ),
         child: Row(
           children: [
             Icon(
               isSelected ? Icons.check_circle : Icons.circle_outlined,
-              color: isSelected ? IFridgeTheme.primary : Colors.white24,
+              color: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24),
               size: 20,
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(recipe.title,
-                      style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w600)),
                   if (recipe.cuisine != null)
                     Text(recipe.cuisine!,
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.35), fontSize: 11)),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.35), fontSize: 11)),
                 ],
               ),
             ),
             if (recipe.isPremium)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: Colors.amber.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(recipe.priceDisplay,
-                    style: const TextStyle(color: Colors.amber, fontSize: 10, fontWeight: FontWeight.w700)),
+                    style: TextStyle(color: Colors.amber, fontSize: 10, fontWeight: FontWeight.w700)),
               ),
           ],
         ),
@@ -673,20 +672,20 @@ class _FormField extends StatelessWidget {
       controller: controller,
       maxLines: maxLines,
       onChanged: onChanged,
-      style: const TextStyle(color: Colors.white, fontSize: 13),
+      style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13),
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12),
-        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.2), fontSize: 12),
+        labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 12),
+        hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), fontSize: 12),
         prefixIcon: Padding(
           padding: EdgeInsets.only(bottom: maxLines > 1 ? 60 : 0),
-          child: Icon(icon, color: IFridgeTheme.primary.withValues(alpha: 0.5), size: 18),
+          child: Icon(icon, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5), size: 18),
         ),
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.03),
+        fillColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.03),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         isDense: true,
       ),
     );
@@ -704,31 +703,31 @@ class _NumberPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.03),
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.03),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
       ),
       child: Column(
         children: [
-          Text(label, style: const TextStyle(fontSize: 12)),
-          const SizedBox(height: 4),
+          Text(label, style: TextStyle(fontSize: 12)),
+          SizedBox(height: 4),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               GestureDetector(
                 onTap: () => onChanged((value - (unit == 'min' ? 5 : 1)).clamp(1, 999)),
-                child: Icon(Icons.remove_circle_outline, size: 18, color: Colors.white.withValues(alpha: 0.4)),
+                child: Icon(Icons.remove_circle_outline, size: 18, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6),
+                padding: EdgeInsets.symmetric(horizontal: 6),
                 child: Text('$value${unit.isNotEmpty ? ' $unit' : ''}',
-                    style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w700)),
               ),
               GestureDetector(
                 onTap: () => onChanged(value + (unit == 'min' ? 5 : 1)),
-                child: Icon(Icons.add_circle_outline, size: 18, color: IFridgeTheme.primary.withValues(alpha: 0.7)),
+                child: Icon(Icons.add_circle_outline, size: 18, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7)),
               ),
             ],
           ),

@@ -8,7 +8,6 @@
 // - Social counts (followers, following, likes)
 
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -192,7 +191,7 @@ class SocialService {
         'post_id': postId,
         'author_id': uid,
         'body': body,
-        if (parentCommentId != null) 'parent_comment_id': parentCommentId,
+        'parent_comment_id': ?parentCommentId,
       }).select('*, users!post_comments_author_id_fkey(display_name, avatar_url)').single();
       // Increment comment count
       await _client.rpc('increment_field', params: {

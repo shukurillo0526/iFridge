@@ -4,7 +4,6 @@
 
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
@@ -39,28 +38,28 @@ class _NutritionTrackerPageState extends State<NutritionTrackerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
-      appBar: AppBar(title: const Text('Nutrition Tracker', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(title: Text('Nutrition Tracker', style: TextStyle(fontWeight: FontWeight.w700))),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: IFridgeTheme.primary))
+          ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary))
           : RefreshIndicator(
-              color: IFridgeTheme.primary,
+              color: Theme.of(context).colorScheme.primary,
               onRefresh: _load,
               child: ListView(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(20),
                 children: [
                   // Calorie Ring
                   _buildCalorieRing(),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
 
                   // Macro Bars
                   _buildMacroBars(),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
 
                   // Meal Log
-                  const Text('Today\'s Meals',
-                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 12),
+                  Text('Today\'s Meals',
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
+                  SizedBox(height: 12),
                   _buildMealLog(),
                 ],
               ),
@@ -75,10 +74,10 @@ class _NutritionTrackerPageState extends State<NutritionTrackerPage> {
     final pct = (consumed / goal).clamp(0.0, 1.5);
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppTheme.surface, borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06))),
+        color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06))),
       child: Column(
         children: [
           SizedBox(
@@ -90,18 +89,18 @@ class _NutritionTrackerPageState extends State<NutritionTrackerPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text('${consumed.toInt()}',
-                      style: const TextStyle(color: Colors.orange, fontSize: 36, fontWeight: FontWeight.w800)),
+                      style: TextStyle(color: Colors.orange, fontSize: 36, fontWeight: FontWeight.w800)),
                     Text('/ ${goal.toInt()} cal',
-                      style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 13)),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 13)),
                   ],
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(pct > 1.0 ? '⚠️ Over goal!' : '${((1.0 - pct) * goal).toInt()} cal remaining',
             style: TextStyle(
-              color: pct > 1.0 ? Colors.red : Colors.white.withValues(alpha: 0.5),
+              color: pct > 1.0 ? Colors.red : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
               fontSize: 14, fontWeight: FontWeight.w600)),
         ],
       ),
@@ -117,29 +116,29 @@ class _NutritionTrackerPageState extends State<NutritionTrackerPage> {
     ];
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.surface, borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06))),
+        color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06))),
       child: Column(
         children: macros.map((m) {
           final pct = ((m['value'] as int) / (m['goal'] as int)).clamp(0.0, 1.0);
           return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: EdgeInsets.only(bottom: 12),
             child: Row(
               children: [
                 SizedBox(width: 60, child: Text(m['label'] as String,
-                  style: const TextStyle(color: Colors.white70, fontSize: 13))),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13))),
                 Expanded(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4),
                     child: LinearProgressIndicator(
                       value: pct, minHeight: 8,
-                      backgroundColor: Colors.white.withValues(alpha: 0.08),
+                      backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
                       valueColor: AlwaysStoppedAnimation(m['color'] as Color)),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 SizedBox(width: 70, child: Text('${m['value']}/${m['goal']}g',
                   textAlign: TextAlign.end,
                   style: TextStyle(color: (m['color'] as Color), fontSize: 12, fontWeight: FontWeight.w600))),
@@ -155,11 +154,11 @@ class _NutritionTrackerPageState extends State<NutritionTrackerPage> {
     final meals = (_daily?['meals'] as List?) ?? [];
     if (meals.isEmpty) {
       return Container(
-        padding: const EdgeInsets.all(32),
-        decoration: BoxDecoration(color: AppTheme.surface, borderRadius: BorderRadius.circular(16)),
+        padding: EdgeInsets.all(32),
+        decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(16)),
         child: Center(child: Text('No meals logged today.\nUse Scan Calories to log your food!',
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white.withValues(alpha: 0.4)))),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)))),
       );
     }
     return Column(
@@ -168,18 +167,18 @@ class _NutritionTrackerPageState extends State<NutritionTrackerPage> {
         final cal = meal['total_calories'] ?? 0;
         final emoji = {'breakfast': '🌅', 'lunch': '☀️', 'dinner': '🌙', 'snack': '🍿'}[type] ?? '🍽️';
         return Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.all(14),
+          margin: EdgeInsets.only(bottom: 8),
+          padding: EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: AppTheme.surface, borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.06))),
+            color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06))),
           child: Row(
             children: [
-              Text(emoji, style: const TextStyle(fontSize: 24)),
-              const SizedBox(width: 12),
+              Text(emoji, style: TextStyle(fontSize: 24)),
+              SizedBox(width: 12),
               Expanded(child: Text('${type[0].toUpperCase()}${type.substring(1)}',
-                style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600))),
-              Text('$cal cal', style: const TextStyle(color: Colors.orange, fontSize: 15, fontWeight: FontWeight.w700)),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15, fontWeight: FontWeight.w600))),
+              Text('$cal cal', style: TextStyle(color: Colors.orange, fontSize: 15, fontWeight: FontWeight.w700)),
             ],
           ),
         );

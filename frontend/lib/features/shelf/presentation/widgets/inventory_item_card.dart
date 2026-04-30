@@ -3,7 +3,6 @@
 // expiry badge, and swipe-to-action gestures.
 
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/utils/ingredient_icons.dart';
 import 'package:ifridge_app/features/shelf/domain/inventory_item.dart';
 import 'package:ifridge_app/features/shelf/presentation/widgets/freshness_overlay.dart';
@@ -42,8 +41,8 @@ class InventoryItemCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(14),
             ),
             alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.only(left: 20),
-            child: const Icon(Icons.fastfood, color: Colors.white, size: 30),
+            padding: EdgeInsets.only(left: 20),
+            child: Icon(Icons.fastfood, color: Theme.of(context).colorScheme.onSurface, size: 30),
           ),
           secondaryBackground: Container(
             decoration: BoxDecoration(
@@ -51,8 +50,8 @@ class InventoryItemCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(14),
             ),
             alignment: Alignment.centerRight,
-            padding: const EdgeInsets.only(right: 20),
-            child: const Icon(Icons.delete, color: Colors.white, size: 30),
+            padding: EdgeInsets.only(right: 20),
+            child: Icon(Icons.delete, color: Theme.of(context).colorScheme.onSurface, size: 30),
           ),
           confirmDismiss: (direction) async {
             if (direction == DismissDirection.startToEnd) {
@@ -89,10 +88,10 @@ class InventoryItemCard extends StatelessWidget {
               // --- Card Body ---
               Container(
                 decoration: BoxDecoration(
-                  color: IFridgeTheme.bgCard,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.06),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
                   ),
                 ),
                 child: Column(
@@ -104,8 +103,8 @@ class InventoryItemCard extends StatelessWidget {
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: IFridgeTheme.bgElevated,
-                          borderRadius: const BorderRadius.vertical(
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.vertical(
                             top: Radius.circular(14),
                           ),
                         ),
@@ -130,7 +129,7 @@ class InventoryItemCard extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                             horizontal: 8, vertical: 6),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -140,8 +139,8 @@ class InventoryItemCard extends StatelessWidget {
                               item.name,
                               style: TextStyle(
                                 color: isExpired
-                                    ? IFridgeTheme.textMuted
-                                    : IFridgeTheme.textPrimary,
+                                    ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)
+                                    : Theme.of(context).colorScheme.onSurface,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 decoration: isExpired
@@ -152,11 +151,11 @@ class InventoryItemCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                             ),
-                            const SizedBox(height: 3),
+                            SizedBox(height: 3),
                             Text(
                               _expiryLabel,
                               style: TextStyle(
-                                color: _expiryLabelColor,
+                                color: _expiryLabelColor(context),
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -181,15 +180,15 @@ class InventoryItemCard extends StatelessWidget {
                   left: 6,
                   child: Container(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: IFridgeTheme.bgDark.withValues(alpha: 0.8),
+                      color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.8),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
                       '${item.quantity.toStringAsFixed(item.quantity == item.quantity.roundToDouble() ? 0 : 1)} ${item.unit}',
-                      style: const TextStyle(
-                        color: IFridgeTheme.textPrimary,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
                       ),
@@ -204,15 +203,15 @@ class InventoryItemCard extends StatelessWidget {
                   right: 6,
                   child: Container(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                        EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                     decoration: BoxDecoration(
-                      color: _stateBadgeColor.withValues(alpha: 0.9),
+                      color: _stateBadgeColor(context).withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       _stateBadgeLabel,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 8,
                         fontWeight: FontWeight.w700,
                       ),
@@ -235,18 +234,18 @@ class InventoryItemCard extends StatelessWidget {
     return '${(days / 7).floor()}w left';
   }
 
-  Color get _expiryLabelColor {
+  Color _expiryLabelColor(BuildContext context) {
     switch (item.freshnessState) {
       case FreshnessState.fresh:
-        return IFridgeTheme.freshGreen;
+        return Theme.of(context).colorScheme.tertiary;
       case FreshnessState.aging:
-        return IFridgeTheme.agingAmber;
+        return Theme.of(context).colorScheme.secondary;
       case FreshnessState.urgent:
-        return IFridgeTheme.urgentOrange;
+        return Theme.of(context).colorScheme.primary;
       case FreshnessState.critical:
-        return IFridgeTheme.criticalRed;
+        return Theme.of(context).colorScheme.error;
       case FreshnessState.expired:
-        return IFridgeTheme.expiredGrey;
+        return Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7);
     }
   }
 
@@ -265,16 +264,16 @@ class InventoryItemCard extends StatelessWidget {
     }
   }
 
-  Color get _stateBadgeColor {
+  Color _stateBadgeColor(BuildContext context) {
     switch (item.itemState) {
       case 'opened':
-        return IFridgeTheme.agingAmber;
+        return Theme.of(context).colorScheme.secondary;
       case 'frozen':
-        return IFridgeTheme.secondary;
+        return Theme.of(context).colorScheme.secondary;
       case 'thawed':
-        return IFridgeTheme.urgentOrange;
+        return Theme.of(context).colorScheme.primary;
       default:
-        return IFridgeTheme.textMuted;
+        return Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4);
     }
   }
 

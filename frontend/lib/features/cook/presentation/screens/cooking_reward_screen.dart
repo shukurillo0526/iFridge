@@ -5,7 +5,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/features/gamification/data/gamification_repository.dart';
 
 class CookingRewardScreen extends StatefulWidget {
@@ -105,22 +104,22 @@ class _CookingRewardScreenState extends State<CookingRewardScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
         decoration: BoxDecoration(
           gradient: RadialGradient(
             center: Alignment.center,
             radius: 1.2,
             colors: [
-              IFridgeTheme.primary.withValues(alpha: 0.2),
-              AppTheme.background,
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+              Theme.of(context).scaffoldBackgroundColor,
             ],
           ),
         ),
         child: SafeArea(
           child: Center(
             child: _isSaving
-                ? const CircularProgressIndicator(color: IFridgeTheme.primary)
+                ? CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)
                 : FadeTransition(
                     opacity: _fadeAnimation,
                     child: ScaleTransition(
@@ -137,18 +136,18 @@ class _CookingRewardScreenState extends State<CookingRewardScreen>
                                 height: 120,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: IFridgeTheme.primary.withValues(
+                                  color: Theme.of(context).colorScheme.primary.withValues(
                                     alpha: 0.1,
                                   ),
                                   border: Border.all(
-                                    color: IFridgeTheme.primary.withValues(
+                                    color: Theme.of(context).colorScheme.primary.withValues(
                                       alpha: 0.3,
                                     ),
                                     width: 2,
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: IFridgeTheme.primary.withValues(
+                                      color: Theme.of(context).colorScheme.primary.withValues(
                                         alpha: 0.3,
                                       ),
                                       blurRadius: 30,
@@ -157,39 +156,39 @@ class _CookingRewardScreenState extends State<CookingRewardScreen>
                                   ],
                                 ),
                               ),
-                              const Icon(
+                              Icon(
                                 Icons.workspace_premium,
                                 size: 60,
-                                color: IFridgeTheme.primary,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                             ],
                           ),
-                          const SizedBox(height: 32),
+                          SizedBox(height: 32),
 
                           // ── Title ────────────────────────────────
-                          const Text(
+                          Text(
                             'Meal Completed!',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontSize: 32,
                               fontWeight: FontWeight.w800,
                               letterSpacing: 1.2,
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            padding: EdgeInsets.symmetric(horizontal: 32),
                             child: Text(
                               'You cooked "${widget.title}" based on your inventory.',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.7),
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                                 fontSize: 16,
                                 height: 1.4,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 48),
+                          SizedBox(height: 48),
 
                           // ── Stats Cards ──────────────────────────
                           Row(
@@ -201,36 +200,36 @@ class _CookingRewardScreenState extends State<CookingRewardScreen>
                                 label: 'XP Earned',
                                 color: Colors.amber,
                               ),
-                              const SizedBox(width: 16),
+                              SizedBox(width: 16),
                               _StatCard(
                                 icon: Icons.eco,
                                 value: '${widget.matchedIngredientsCount}',
                                 label: 'Items Used',
-                                color: IFridgeTheme.freshGreen,
+                                color: Theme.of(context).colorScheme.tertiary,
                               ),
                             ],
                           ),
 
                           if (_error != null) ...[
-                            const SizedBox(height: 32),
+                            SizedBox(height: 32),
                             Text(
                               _error!,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.redAccent,
                                 fontSize: 12,
                               ),
                             ),
                           ],
 
-                          const SizedBox(height: 48),
+                          SizedBox(height: 48),
 
                           // ── Done Button ──────────────────────────
                           FilledButton(
                             onPressed: _finish,
                             style: FilledButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: AppTheme.background,
-                              padding: const EdgeInsets.symmetric(
+                              backgroundColor: Theme.of(context).colorScheme.onSurface,
+                              foregroundColor: Theme.of(context).scaffoldBackgroundColor,
+                              padding: EdgeInsets.symmetric(
                                 horizontal: 48,
                                 vertical: 18,
                               ),
@@ -238,7 +237,7 @@ class _CookingRewardScreenState extends State<CookingRewardScreen>
                                 borderRadius: BorderRadius.circular(16),
                               ),
                             ),
-                            child: const Text(
+                            child: Text(
                               'Back to Shelf',
                               style: TextStyle(
                                 fontSize: 16,
@@ -274,9 +273,9 @@ class _StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 120,
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: color.withValues(alpha: 0.2)),
         boxShadow: [
@@ -290,20 +289,20 @@ class _StatCard extends StatelessWidget {
       child: Column(
         children: [
           Icon(icon, size: 28, color: color),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             value,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.5),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),

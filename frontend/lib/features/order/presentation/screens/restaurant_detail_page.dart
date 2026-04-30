@@ -9,7 +9,6 @@
 // Navigation: from feeds (with menuItemId) or from order screen.
 
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/restaurant_service.dart';
 import 'package:ifridge_app/core/services/cart_service.dart';
 import 'package:ifridge_app/features/order/presentation/screens/checkout_screen.dart';
@@ -119,28 +118,28 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    const accent = Color(0xFFFF6D00);
+    final accent = Theme.of(context).colorScheme.primary;
     final r = widget.restaurant;
     final tabs = _buildTabList();
 
     return Scaffold(
-      backgroundColor: isDark ? IFridgeTheme.bgDark : const Color(0xFFF6F8FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: NestedScrollView(
         headerSliverBuilder: (ctx, innerBoxScrolled) => [
           // ── App Bar ────────────────────────────────
           SliverAppBar(
             expandedHeight: 200,
             pinned: true,
-            backgroundColor: isDark ? IFridgeTheme.bgDark : Colors.white,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             leading: GestureDetector(
               onTap: () => Navigator.pop(context),
               child: Container(
-                margin: const EdgeInsets.all(8),
+                margin: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.3),
+                  color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
+                child: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface, size: 20),
               ),
             ),
             flexibleSpace: FlexibleSpaceBar(
@@ -151,7 +150,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage>
                     end: Alignment.bottomCenter,
                     colors: [
                       accent.withValues(alpha: 0.6),
-                      isDark ? IFridgeTheme.bgDark : const Color(0xFFF6F8FA),
+                      Theme.of(context).scaffoldBackgroundColor,
                     ],
                   ),
                 ),
@@ -159,14 +158,14 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(height: 40),
-                      Text(_getEmoji(r), style: const TextStyle(fontSize: 56)),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 40),
+                      Text(_getEmoji(r), style: TextStyle(fontSize: 56)),
+                      SizedBox(height: 8),
                       Text(r.name,
-                        style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w800),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 24, fontWeight: FontWeight.w800),
                       ),
                       Text(r.cuisineLabel,
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14),
                       ),
                     ],
                   ),
@@ -178,7 +177,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage>
           // ── Info Header ────────────────────────────
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+              padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -192,48 +191,48 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage>
                       if (r.hasDineIn) _badge('📍 Dine-in', Colors.teal, isDark),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
 
                   // Stats row
                   Row(
                     children: [
                       Icon(Icons.star, size: 16, color: Colors.amber.shade600),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4),
                       Text('${r.rating}', style: TextStyle(
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 15, fontWeight: FontWeight.w700,
                       )),
                       Text(' (${r.reviewCount})', style: TextStyle(
-                        color: isDark ? Colors.white38 : Colors.black26, fontSize: 13,
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 13,
                       )),
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16),
                       if (r.hasDelivery) ...[
-                        Icon(Icons.schedule, size: 14, color: isDark ? Colors.white38 : Colors.black26),
-                        const SizedBox(width: 4),
+                        Icon(Icons.schedule, size: 14, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)),
+                        SizedBox(width: 4),
                         Text('${r.estimatedDeliveryMinutes} min', style: TextStyle(
-                          color: isDark ? Colors.white54 : Colors.black45, fontSize: 13,
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), fontSize: 13,
                         )),
-                        const SizedBox(width: 16),
+                        SizedBox(width: 16),
                       ],
                       if (r.distMeters > 0) ...[
-                        Icon(Icons.near_me, size: 14, color: isDark ? Colors.white38 : Colors.black26),
-                        const SizedBox(width: 4),
+                        Icon(Icons.near_me, size: 14, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)),
+                        SizedBox(width: 4),
                         Text(r.distanceLabel, style: TextStyle(
-                          color: isDark ? Colors.white54 : Colors.black45, fontSize: 13,
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), fontSize: 13,
                         )),
                       ],
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
 
                   if (r.address != null)
                     Row(
                       children: [
-                        Icon(Icons.location_on_outlined, size: 14, color: isDark ? Colors.white24 : Colors.black26),
-                        const SizedBox(width: 4),
+                        Icon(Icons.location_on_outlined, size: 14, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24)),
+                        SizedBox(width: 4),
                         Expanded(
                           child: Text(r.address!, style: TextStyle(
-                            color: isDark ? Colors.white38 : Colors.black38, fontSize: 12,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 12,
                           )),
                         ),
                       ],
@@ -251,16 +250,16 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage>
                 controller: _tabController,
                 isScrollable: tabs.length > 3,
                 labelColor: accent,
-                unselectedLabelColor: isDark ? Colors.white38 : Colors.black38,
+                unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                 indicatorColor: accent,
                 indicatorWeight: 3,
-                labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                labelStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
                 tabs: tabs.map((t) => Tab(
                   icon: Icon(t.icon, size: 18),
                   text: t.label,
                 )).toList(),
               ),
-              isDark ? IFridgeTheme.bgDark : const Color(0xFFF6F8FA),
+              Theme.of(context).scaffoldBackgroundColor,
             ),
           ),
         ],
@@ -292,7 +291,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage>
               case 'reviews':
                 return _ReviewsTab(reviews: _reviews, restaurant: r, isDark: isDark);
               default:
-                return const SizedBox.shrink();
+                return SizedBox.shrink();
             }
           }).toList(),
         ),
@@ -303,7 +302,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage>
         builder: (context, _) {
           final cart = CartService();
           if (cart.isEmpty || cart.restaurant?.id != r.id) {
-            return const SizedBox.shrink();
+            return SizedBox.shrink();
           }
           return _CartBar(isDark: isDark);
         },
@@ -313,7 +312,7 @@ class _RestaurantDetailPageState extends State<RestaurantDetailPage>
 
   Widget _badge(String text, Color color, bool isDark) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10),
@@ -387,10 +386,10 @@ class _MenuTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const accent = Color(0xFFFF6D00);
+    final accent = Theme.of(context).colorScheme.primary;
 
     if (loading) {
-      return const Center(child: CircularProgressIndicator(color: accent));
+      return Center(child: CircularProgressIndicator(color: accent));
     }
 
     if (menuItems.isEmpty) {
@@ -398,14 +397,14 @@ class _MenuTab extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.restaurant_menu, size: 48, color: isDark ? Colors.white12 : Colors.black12),
-            const SizedBox(height: 12),
+            Icon(Icons.restaurant_menu, size: 48, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12)),
+            SizedBox(height: 12),
             Text('Menu coming soon',
-              style: TextStyle(color: isDark ? Colors.white38 : Colors.black26, fontSize: 16),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 16),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text('This restaurant hasn\'t added their menu yet.',
-              style: TextStyle(color: isDark ? Colors.white24 : Colors.black12, fontSize: 12),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), fontSize: 12),
             ),
           ],
         ),
@@ -420,13 +419,13 @@ class _MenuTab extends StatelessWidget {
     }
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+      padding: EdgeInsets.fromLTRB(16, 8, 16, 80),
       children: [
         // Delivery fee info
         if (restaurant.hasDelivery)
           Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            margin: EdgeInsets.only(bottom: 12),
+            padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
               color: accent.withValues(alpha: 0.06),
               borderRadius: BorderRadius.circular(12),
@@ -435,7 +434,7 @@ class _MenuTab extends StatelessWidget {
             child: Row(
               children: [
                 Icon(Icons.delivery_dining, size: 16, color: accent),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   restaurant.deliveryFee > 0
                       ? 'Delivery: ${restaurant.deliveryFee.round()} UZS · ~${restaurant.estimatedDeliveryMinutes} min'
@@ -449,10 +448,10 @@ class _MenuTab extends StatelessWidget {
         // Menu items by category
         ...categories.entries.expand((entry) => [
           Padding(
-            padding: const EdgeInsets.fromLTRB(4, 8, 0, 8),
+            padding: EdgeInsets.fromLTRB(4, 8, 0, 8),
             child: Text(entry.key,
               style: TextStyle(
-                color: isDark ? Colors.white70 : Colors.black54,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 fontSize: 16, fontWeight: FontWeight.w700,
               ),
             ),
@@ -490,20 +489,20 @@ class _MenuItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const accent = Color(0xFFFF6D00);
+    final accent = Theme.of(context).colorScheme.primary;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(14),
+      margin: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: isHighlighted
             ? accent.withValues(alpha: 0.08)
-            : isDark ? IFridgeTheme.bgCard : Colors.white,
+            : Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isHighlighted
               ? accent
-              : isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.05),
+              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
           width: isHighlighted ? 1.5 : 1,
         ),
         boxShadow: isHighlighted ? [
@@ -521,14 +520,14 @@ class _MenuItemCard extends StatelessWidget {
                     Expanded(
                       child: Text(item.name,
                         style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 15, fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                     if (isHighlighted)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: accent.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(6),
@@ -537,7 +536,7 @@ class _MenuItemCard extends StatelessWidget {
                       ),
                     if (item.tags.contains('bestseller') && !isHighlighted)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: accent.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(6),
@@ -547,21 +546,21 @@ class _MenuItemCard extends StatelessWidget {
                   ],
                 ),
                 if (item.description != null) ...[
-                  const SizedBox(height: 3),
+                  SizedBox(height: 3),
                   Text(item.description!,
-                    style: TextStyle(color: isDark ? Colors.white30 : Colors.black26, fontSize: 12),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 12),
                     maxLines: 2, overflow: TextOverflow.ellipsis,
                   ),
                 ],
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 Row(
                   children: [
                     Text('${item.price.round()} UZS',
                       style: TextStyle(color: accent, fontSize: 14, fontWeight: FontWeight.w700)),
                     if (item.calories != null) ...[
-                      const SizedBox(width: 10),
+                      SizedBox(width: 10),
                       Text('${item.calories} cal',
-                        style: TextStyle(color: isDark ? Colors.white24 : Colors.black26, fontSize: 11)),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), fontSize: 11)),
                     ],
                   ],
                 ),
@@ -569,7 +568,7 @@ class _MenuItemCard extends StatelessWidget {
             ),
           ),
           if (hasDelivery && restaurant != null) ...[
-            const SizedBox(width: 10),
+            SizedBox(width: 10),
             ListenableBuilder(
               listenable: CartService(),
               builder: (context, _) {
@@ -587,12 +586,12 @@ class _MenuItemCard extends StatelessWidget {
                         GestureDetector(
                           onTap: () => cart.decrementItem(item.id),
                           child: Padding(
-                            padding: const EdgeInsets.all(8),
+                            padding: EdgeInsets.all(8),
                             child: Icon(Icons.remove, color: accent, size: 16),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          padding: EdgeInsets.symmetric(horizontal: 4),
                           child: Text('$qty',
                               style: TextStyle(
                                   color: accent,
@@ -602,7 +601,7 @@ class _MenuItemCard extends StatelessWidget {
                         GestureDetector(
                           onTap: () => cart.addItem(item, restaurant!),
                           child: Padding(
-                            padding: const EdgeInsets.all(8),
+                            padding: EdgeInsets.all(8),
                             child: Icon(Icons.add, color: accent, size: 16),
                           ),
                         ),
@@ -613,7 +612,7 @@ class _MenuItemCard extends StatelessWidget {
                 return GestureDetector(
                   onTap: () => cart.addItem(item, restaurant!),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: accent.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
@@ -657,26 +656,27 @@ class _ReserveTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const accent = Color(0xFF2962FF);
+    final accent = Colors.blue.shade700;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 80),
+      padding: EdgeInsets.fromLTRB(20, 16, 20, 80),
       children: [
         // Header
         Text('Book a Table',
           style: TextStyle(
-            color: isDark ? Colors.white : Colors.black87,
+            color: Theme.of(context).colorScheme.onSurface,
             fontSize: 22, fontWeight: FontWeight.w800,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text('Reserve your spot at ${restaurant.name}',
-          style: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 13),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 13),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
 
         // ── Date ─────────────────────────────────
         _reserveSection(
+          context,
           icon: Icons.calendar_today,
           title: 'Date',
           isDark: isDark,
@@ -691,30 +691,31 @@ class _ReserveTab extends StatelessWidget {
               if (picked != null) onDateChanged(picked);
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              decoration: _fieldDecor(isDark),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: _fieldDecor(isDark, context),
               child: Row(
                 children: [
                   Icon(Icons.calendar_today, size: 16, color: accent),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Text(
                     '${date.day}/${date.month}/${date.year}',
                     style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 15, fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const Spacer(),
-                  Icon(Icons.chevron_right, size: 18, color: isDark ? Colors.white24 : Colors.black26),
+                  Spacer(),
+                  Icon(Icons.chevron_right, size: 18, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24)),
                 ],
               ),
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         // ── Time ─────────────────────────────────
         _reserveSection(
+          context,
           icon: Icons.schedule,
           title: 'Time',
           isDark: isDark,
@@ -727,59 +728,60 @@ class _ReserveTab extends StatelessWidget {
               if (picked != null) onTimeChanged(picked);
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              decoration: _fieldDecor(isDark),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: _fieldDecor(isDark, context),
               child: Row(
                 children: [
                   Icon(Icons.schedule, size: 16, color: accent),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Text(
                     time.format(context),
                     style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 15, fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const Spacer(),
-                  Icon(Icons.chevron_right, size: 18, color: isDark ? Colors.white24 : Colors.black26),
+                  Spacer(),
+                  Icon(Icons.chevron_right, size: 18, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24)),
                 ],
               ),
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         // ── Guests ───────────────────────────────
         _reserveSection(
+          context,
           icon: Icons.people_outline,
           title: 'Number of Guests',
           isDark: isDark,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: _fieldDecor(isDark),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: _fieldDecor(isDark, context),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _guestBtn(Icons.remove, () {
+                _guestBtn(context, Icons.remove, () {
                   if (guests > 1) onGuestsChanged(guests - 1);
                 }, isDark),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 24),
                   child: Text('$guests',
                     style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 24, fontWeight: FontWeight.w800,
                     ),
                   ),
                 ),
-                _guestBtn(Icons.add, () {
+                _guestBtn(context, Icons.add, () {
                   if (guests < 20) onGuestsChanged(guests + 1);
                 }, isDark),
               ],
             ),
           ),
         ),
-        const SizedBox(height: 32),
+        SizedBox(height: 32),
 
         // ── Confirm Button ───────────────────────
         GestureDetector(
@@ -793,18 +795,18 @@ class _ReserveTab extends StatelessWidget {
             ));
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(colors: [Color(0xFF2962FF), Color(0xFF448AFF)]),
+              gradient: LinearGradient(colors: [Colors.blue.shade700, Colors.blue.shade400]),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [BoxShadow(color: accent.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.event_seat, color: Colors.white, size: 20),
+                Icon(Icons.event_seat, color: Theme.of(context).colorScheme.onSurface, size: 20),
                 SizedBox(width: 8),
-                Text('Confirm Reservation', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
+                Text('Confirm Reservation', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700)),
               ],
             ),
           ),
@@ -813,44 +815,44 @@ class _ReserveTab extends StatelessWidget {
     );
   }
 
-  Widget _reserveSection({required IconData icon, required String title, required bool isDark, required Widget child}) {
+  Widget _reserveSection(BuildContext context, {required IconData icon, required String title, required bool isDark, required Widget child}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Icon(icon, size: 14, color: isDark ? Colors.white38 : Colors.black38),
-            const SizedBox(width: 6),
+            Icon(icon, size: 14, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)),
+            SizedBox(width: 6),
             Text(title, style: TextStyle(
-              color: isDark ? Colors.white54 : Colors.black45,
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
               fontSize: 12, fontWeight: FontWeight.w600,
             )),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         child,
       ],
     );
   }
 
-  BoxDecoration _fieldDecor(bool isDark) {
+  BoxDecoration _fieldDecor(bool isDark, BuildContext context) {
     return BoxDecoration(
-      color: isDark ? IFridgeTheme.bgCard : Colors.white,
+      color: Theme.of(context).colorScheme.surface,
       borderRadius: BorderRadius.circular(14),
-      border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.06)),
+      border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
     );
   }
 
-  Widget _guestBtn(IconData icon, VoidCallback onTap, bool isDark) {
+  Widget _guestBtn(BuildContext context, IconData icon, VoidCallback onTap, bool isDark) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.04),
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.04),
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, size: 18, color: isDark ? Colors.white54 : Colors.black38),
+        child: Icon(icon, size: 18, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54)),
       ),
     );
   }
@@ -868,28 +870,28 @@ class _LocationTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const accent = Color(0xFF00897B);
+    final accent = Colors.teal.shade600;
     final r = restaurant;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 80),
+      padding: EdgeInsets.fromLTRB(20, 16, 20, 80),
       children: [
         // Header
         Text('Location & Directions',
           style: TextStyle(
-            color: isDark ? Colors.white : Colors.black87,
+            color: Theme.of(context).colorScheme.onSurface,
             fontSize: 22, fontWeight: FontWeight.w800,
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         // Address card
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDark ? IFridgeTheme.bgCard : Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.05)),
+            border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -897,46 +899,46 @@ class _LocationTab extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: accent.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(Icons.location_on, color: accent, size: 22),
                   ),
-                  const SizedBox(width: 14),
+                  SizedBox(width: 14),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(r.name, style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 16, fontWeight: FontWeight.w700,
                         )),
                         if (r.address != null)
                           Text(r.address!, style: TextStyle(
-                            color: isDark ? Colors.white38 : Colors.black38, fontSize: 13,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 13,
                           )),
                       ],
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Row(
                 children: [
                   if (r.distMeters > 0) ...[
-                    Icon(Icons.near_me, size: 14, color: isDark ? Colors.white38 : Colors.black26),
-                    const SizedBox(width: 4),
+                    Icon(Icons.near_me, size: 14, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)),
+                    SizedBox(width: 4),
                     Text(r.distanceLabel, style: TextStyle(
-                      color: isDark ? Colors.white54 : Colors.black45, fontSize: 13,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), fontSize: 13,
                     )),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                   ],
                   Text(
                     '${r.latitude.toStringAsFixed(4)}°N, ${r.longitude.toStringAsFixed(4)}°E',
                     style: TextStyle(
-                      color: isDark ? Colors.white24 : Colors.black26,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24),
                       fontSize: 11, fontFamily: 'monospace',
                     ),
                   ),
@@ -946,7 +948,7 @@ class _LocationTab extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
 
         // Map placeholder with gradient
         Container(
@@ -963,7 +965,7 @@ class _LocationTab extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.map, size: 48, color: accent.withValues(alpha: 0.4)),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text('Map View', style: TextStyle(
                   color: accent.withValues(alpha: 0.6), fontSize: 14, fontWeight: FontWeight.w600,
                 )),
@@ -975,7 +977,7 @@ class _LocationTab extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
 
         // Navigate button
         GestureDetector(
@@ -989,18 +991,18 @@ class _LocationTab extends StatelessWidget {
             ));
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(colors: [Color(0xFF00897B), Color(0xFF26A69A)]),
+              gradient: LinearGradient(colors: [Colors.teal.shade600, Colors.teal.shade400]),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [BoxShadow(color: accent.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.navigation, color: Colors.white, size: 20),
+                Icon(Icons.navigation, color: Theme.of(context).colorScheme.onSurface, size: 20),
                 SizedBox(width: 8),
-                Text('Open in Google Maps', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
+                Text('Open in Google Maps', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700)),
               ],
             ),
           ),
@@ -1031,18 +1033,18 @@ class _ReviewsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const accent = Color(0xFFFF6D00);
+    final accent = Theme.of(context).colorScheme.primary;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 80),
+      padding: EdgeInsets.fromLTRB(20, 16, 20, 80),
       children: [
         // Rating summary
         Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: isDark ? IFridgeTheme.bgCard : Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.05)),
+            border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
           ),
           child: Row(
             children: [
@@ -1050,7 +1052,7 @@ class _ReviewsTab extends StatelessWidget {
                 children: [
                   Text('${restaurant.rating}',
                     style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 40, fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -1060,31 +1062,31 @@ class _ReviewsTab extends StatelessWidget {
                       size: 16, color: Colors.amber.shade600,
                     )),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text('${restaurant.reviewCount} reviews',
-                    style: TextStyle(color: isDark ? Colors.white38 : Colors.black26, fontSize: 12),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 12),
                   ),
                 ],
               ),
-              const SizedBox(width: 24),
+              SizedBox(width: 24),
               Expanded(
                 child: Column(
                   children: [5, 4, 3, 2, 1].map((star) {
                     // Mock distribution
                     final pct = star == 5 ? 0.55 : star == 4 ? 0.25 : star == 3 ? 0.12 : star == 2 ? 0.05 : 0.03;
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
+                      padding: EdgeInsets.only(bottom: 4),
                       child: Row(
                         children: [
-                          Text('$star', style: TextStyle(color: isDark ? Colors.white38 : Colors.black26, fontSize: 11)),
-                          const SizedBox(width: 6),
+                          Text('$star', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 11)),
+                          SizedBox(width: 6),
                           Icon(Icons.star, size: 10, color: Colors.amber.shade600),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           Expanded(
                             child: Container(
                               height: 6,
                               decoration: BoxDecoration(
-                                color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.04),
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.04),
                                 borderRadius: BorderRadius.circular(3),
                               ),
                               child: FractionallySizedBox(
@@ -1109,7 +1111,7 @@ class _ReviewsTab extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
 
         // Write review button
         GestureDetector(
@@ -1122,7 +1124,7 @@ class _ReviewsTab extends StatelessWidget {
             ));
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 14),
+            padding: EdgeInsets.symmetric(vertical: 14),
             decoration: BoxDecoration(
               color: accent.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(14),
@@ -1132,23 +1134,23 @@ class _ReviewsTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.edit, size: 16, color: accent),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text('Write a Review', style: TextStyle(color: accent, fontSize: 14, fontWeight: FontWeight.w700)),
               ],
             ),
           ),
         ),
 
-        const SizedBox(height: 20),
+        SizedBox(height: 20),
 
         // Reviews list
         ...reviews.map((review) => Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.all(16),
+          margin: EdgeInsets.only(bottom: 10),
+          padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDark ? IFridgeTheme.bgCard : Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.05)),
+            border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1167,22 +1169,22 @@ class _ReviewsTab extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(review.author, style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 14, fontWeight: FontWeight.w600,
                         )),
                         Row(
                           children: [
                             ...List.generate(review.stars, (_) =>
                               Icon(Icons.star, size: 12, color: Colors.amber.shade600)),
-                            const SizedBox(width: 6),
+                            SizedBox(width: 6),
                             Text(review.timeAgo, style: TextStyle(
-                              color: isDark ? Colors.white24 : Colors.black26, fontSize: 11,
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), fontSize: 11,
                             )),
                           ],
                         ),
@@ -1191,9 +1193,9 @@ class _ReviewsTab extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(review.text, style: TextStyle(
-                color: isDark ? Colors.white54 : Colors.black54,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                 fontSize: 13, height: 1.4,
               )),
             ],
@@ -1214,22 +1216,20 @@ class _CartBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const accent = Color(0xFFFF6D00);
+    final accent = Theme.of(context).colorScheme.primary;
     final cart = CartService();
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
       decoration: BoxDecoration(
-        color: isDark ? IFridgeTheme.bgCard : Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         border: Border(
           top: BorderSide(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.06)
-                  : Colors.black.withValues(alpha: 0.06)),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.1),
             blurRadius: 12,
             offset: const Offset(0, -4),
           ),
@@ -1244,7 +1244,7 @@ class _CartBar extends StatelessWidget {
             );
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             decoration: BoxDecoration(
               color: accent,
               borderRadius: BorderRadius.circular(16),
@@ -1259,28 +1259,28 @@ class _CartBar extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text('${cart.itemCount}',
-                      style: const TextStyle(
-                          color: Colors.white,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 14,
                           fontWeight: FontWeight.w800)),
                 ),
-                const SizedBox(width: 12),
-                const Expanded(
+                SizedBox(width: 12),
+                Expanded(
                   child: Text('View Cart',
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 16,
                           fontWeight: FontWeight.w700)),
                 ),
                 Text('${cart.total.round()} UZS',
-                    style: const TextStyle(
-                        color: Colors.white,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 16,
                         fontWeight: FontWeight.w700)),
               ],

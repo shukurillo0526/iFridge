@@ -5,7 +5,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/features/explore/presentation/screens/creator_page.dart';
 
@@ -137,32 +136,32 @@ class _SocialSearchPageState extends State<SocialSearchPage> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         titleSpacing: 0,
         title: Container(
-          margin: const EdgeInsets.only(right: 16),
+          margin: EdgeInsets.only(right: 16),
           child: TextField(
             controller: _searchController,
             autofocus: true,
-            style: const TextStyle(color: Colors.white, fontSize: 15),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15),
             onChanged: (v) => _search(v),
             decoration: InputDecoration(
               hintText: 'Search users, posts, #hashtags...',
-              hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+              hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
               filled: true,
-              fillColor: IFridgeTheme.bgElevated,
+              fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              prefixIcon: const Icon(Icons.search, color: IFridgeTheme.primary, size: 20),
+              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.primary, size: 20),
               suffixIcon: _searchController.text.isNotEmpty
                   ? IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white38, size: 18),
+                      icon: Icon(Icons.close, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), size: 18),
                       onPressed: () {
                         _searchController.clear();
                         _search('');
@@ -176,10 +175,10 @@ class _SocialSearchPageState extends State<SocialSearchPage> with SingleTickerPr
         ),
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: IFridgeTheme.primary,
-          labelColor: IFridgeTheme.primary,
-          unselectedLabelColor: Colors.white54,
-          labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+          indicatorColor: Theme.of(context).colorScheme.primary,
+          labelColor: Theme.of(context).colorScheme.primary,
+          unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
+          labelStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
           tabs: [
             Tab(text: 'Users${_users.isNotEmpty ? ' (${_users.length})' : ''}'),
             Tab(text: 'Posts${_posts.isNotEmpty ? ' (${_posts.length})' : ''}'),
@@ -188,7 +187,7 @@ class _SocialSearchPageState extends State<SocialSearchPage> with SingleTickerPr
         ),
       ),
       body: _searching
-          ? const Center(child: CircularProgressIndicator(color: IFridgeTheme.primary))
+          ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary))
           : TabBarView(
               controller: _tabController,
               children: [
@@ -210,7 +209,7 @@ class _SocialSearchPageState extends State<SocialSearchPage> with SingleTickerPr
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: 8),
       itemCount: _users.length,
       itemBuilder: (_, i) {
         final user = _users[i];
@@ -222,22 +221,22 @@ class _SocialSearchPageState extends State<SocialSearchPage> with SingleTickerPr
         return ListTile(
           leading: CircleAvatar(
             radius: 22,
-            backgroundColor: IFridgeTheme.primary.withValues(alpha: 0.2),
+            backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
             child: Text(name.isNotEmpty ? name[0].toUpperCase() : '?',
-                style: const TextStyle(color: IFridgeTheme.primary, fontWeight: FontWeight.w800)),
+                style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w800)),
           ),
-          title: Text(name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+          title: Text(name, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600)),
           subtitle: email != null
-              ? Text(email, style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 12))
+              ? Text(email, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 12))
               : null,
           trailing: isMe
               ? Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: IFridgeTheme.primary.withValues(alpha: 0.1),
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Text('You', style: TextStyle(color: IFridgeTheme.primary, fontSize: 11, fontWeight: FontWeight.w600)),
+                  child: Text('You', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 11, fontWeight: FontWeight.w600)),
                 )
               : null,
           onTap: () {
@@ -260,7 +259,7 @@ class _SocialSearchPageState extends State<SocialSearchPage> with SingleTickerPr
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(12),
       itemCount: _posts.length,
       itemBuilder: (_, i) {
         final post = _posts[i];
@@ -272,12 +271,12 @@ class _SocialSearchPageState extends State<SocialSearchPage> with SingleTickerPr
         final mediaUrls = List<String>.from(post['media_urls'] ?? []);
 
         return Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.all(14),
+          margin: EdgeInsets.only(bottom: 10),
+          padding: EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: AppTheme.surface,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+            border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,37 +286,37 @@ class _SocialSearchPageState extends State<SocialSearchPage> with SingleTickerPr
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(mediaUrls.first, width: 56, height: 56, fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(width: 56, height: 56, color: IFridgeTheme.bgElevated,
-                          child: const Icon(Icons.image, color: Colors.white24))),
+                      errorBuilder: (_, _, _) => Container(width: 56, height: 56, color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          child: Icon(Icons.image, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24)))),
                 )
               else
                 Container(
                   width: 56, height: 56,
                   decoration: BoxDecoration(
-                    color: IFridgeTheme.bgElevated,
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     postType == 'restaurant_visit' ? Icons.restaurant : Icons.article,
-                    color: Colors.white24,
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24),
                   ),
                 ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(authorName, style: const TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 3),
-                    Text(caption, style: const TextStyle(color: Colors.white, fontSize: 13, height: 1.3),
+                    Text(authorName, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w600)),
+                    SizedBox(height: 3),
+                    Text(caption, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, height: 1.3),
                         maxLines: 2, overflow: TextOverflow.ellipsis),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Row(
                       children: [
                         Icon(Icons.favorite, size: 12, color: Colors.red.withValues(alpha: 0.5)),
-                        const SizedBox(width: 3),
-                        Text('$likes', style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11)),
-                        const SizedBox(width: 10),
+                        SizedBox(width: 3),
+                        Text('$likes', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 11)),
+                        SizedBox(width: 10),
                         _typeBadge(postType),
                       ],
                     ),
@@ -343,34 +342,34 @@ class _SocialSearchPageState extends State<SocialSearchPage> with SingleTickerPr
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+          padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
           child: Text('🔥 $title',
-              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700)),
         ),
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16),
             itemCount: _tags.length,
             itemBuilder: (_, i) {
               final tag = _tags[i];
               return Container(
-                margin: const EdgeInsets.only(bottom: 6),
+                margin: EdgeInsets.only(bottom: 6),
                 child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  tileColor: AppTheme.surface,
+                  tileColor: Theme.of(context).colorScheme.surface,
                   leading: Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: IFridgeTheme.primary.withValues(alpha: 0.1),
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.tag, color: IFridgeTheme.primary, size: 20),
+                    child: Icon(Icons.tag, color: Theme.of(context).colorScheme.primary, size: 20),
                   ),
                   title: Text('#${tag.tag}',
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600)),
                   trailing: Text('${tag.count} posts',
-                      style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12)),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 12)),
                   onTap: () {
                     _searchController.text = tag.tag;
                     _search(tag.tag);
@@ -390,9 +389,9 @@ class _SocialSearchPageState extends State<SocialSearchPage> with SingleTickerPr
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 48, color: Colors.white.withValues(alpha: 0.1)),
-          const SizedBox(height: 12),
-          Text(text, style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 14)),
+          Icon(icon, size: 48, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)),
+          SizedBox(height: 12),
+          Text(text, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 14)),
         ],
       ),
     );
@@ -400,19 +399,19 @@ class _SocialSearchPageState extends State<SocialSearchPage> with SingleTickerPr
 
   Widget _typeBadge(String type) {
     final config = switch (type) {
-      'restaurant_visit' => ('🍽️', const Color(0xFFFF6D00)),
+      'restaurant_visit' => ('🍽️', Theme.of(context).colorScheme.primary),
       'food_tip' => ('💡', Colors.amber),
-      'recipe' => ('📖', IFridgeTheme.primary),
-      _ => ('📸', IFridgeTheme.secondary),
+      'recipe' => ('📖', Theme.of(context).colorScheme.primary),
+      _ => ('📸', Theme.of(context).colorScheme.secondary),
     };
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
       decoration: BoxDecoration(
         color: config.$2.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Text(config.$1, style: const TextStyle(fontSize: 10)),
+      child: Text(config.$1, style: TextStyle(fontSize: 10)),
     );
   }
 }

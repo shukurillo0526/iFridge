@@ -3,10 +3,8 @@
 // A premium pill-shaped toggle for switching between Order and Cook modes.
 // Features glassmorphic styling, sliding animation, and mode icons.
 
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/app_settings.dart';
 
 class ModeSwitch extends StatelessWidget {
@@ -28,13 +26,9 @@ class ModeSwitch extends StatelessWidget {
       height: 40,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.06)
-            : Colors.black.withValues(alpha: 0.06),
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
         border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.08)
-              : Colors.black.withValues(alpha: 0.08),
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
         ),
       ),
       child: Stack(
@@ -47,19 +41,19 @@ class ModeSwitch extends StatelessWidget {
             child: Container(
               width: 80,
               height: 36,
-              margin: const EdgeInsets.all(2),
+              margin: EdgeInsets.all(2),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18),
                 gradient: LinearGradient(
                   colors: isOrder
-                      ? [const Color(0xFFFF6D00), const Color(0xFFFF9100)]
-                      : [IFridgeTheme.primary, IFridgeTheme.secondary],
+                      ? [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.tertiary]
+                      : [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: (isOrder
-                            ? const Color(0xFFFF6D00)
-                            : IFridgeTheme.primary)
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.primary)
                         .withValues(alpha: 0.4),
                     blurRadius: 12,
                     offset: const Offset(0, 2),
@@ -120,10 +114,10 @@ class _ModeTab extends StatelessWidget {
               fontSize: 12,
               fontWeight: isActive ? FontWeight.w800 : FontWeight.w500,
               color: isActive
-                  ? Colors.white
+                  ? Theme.of(context).colorScheme.onSurface
                   : Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white54
-                      : Colors.black45,
+                      ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54)
+                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45),
               letterSpacing: 1.2,
             ),
             child: Row(
@@ -136,13 +130,13 @@ class _ModeTab extends StatelessWidget {
                     icon,
                     size: 15,
                     color: isActive
-                        ? Colors.white
+                        ? Theme.of(context).colorScheme.onSurface
                         : Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white54
-                            : Colors.black45,
+                            ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54)
+                            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45),
                   ),
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 Text(label),
               ],
             ),

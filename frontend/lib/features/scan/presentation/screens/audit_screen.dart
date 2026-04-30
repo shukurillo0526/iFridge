@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
 import 'package:ifridge_app/core/utils/category_images.dart';
@@ -108,8 +107,8 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
             content: Text('$actionMsg: ${removed.title}'),
             duration: const Duration(milliseconds: 800),
             backgroundColor: actionMsg == 'Accepted'
-                ? IFridgeTheme.freshGreen
-                : AppTheme.surface,
+                ? Theme.of(context).colorScheme.tertiary
+                : Theme.of(context).colorScheme.surface,
           ),
         );
       }
@@ -123,9 +122,9 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Visual Audit', style: TextStyle(fontWeight: FontWeight.w700)),
+        title: Text('Visual Audit', style: TextStyle(fontWeight: FontWeight.w700)),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -133,12 +132,12 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               child: Text(
                 'Review AI Detections\nSwipe Right to Accept, Left to Reject',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.7),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   fontSize: 16,
                   height: 1.4,
                 ),
@@ -146,7 +145,7 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
             ),
             // Undo + counter row
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: EdgeInsets.symmetric(horizontal: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -157,17 +156,17 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
                           _items.add(_undoStack.removeLast());
                         });
                       },
-                      icon: const Icon(Icons.undo, size: 16),
-                      label: const Text('Undo'),
+                      icon: Icon(Icons.undo, size: 16),
+                      label: Text('Undo'),
                       style: TextButton.styleFrom(
-                        foregroundColor: IFridgeTheme.primary,
+                        foregroundColor: Theme.of(context).colorScheme.primary,
                       ),
                     ),
-                  const Spacer(),
+                  Spacer(),
                   Text(
                     '${_items.length} remaining',
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.5),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                       fontSize: 13,
                     ),
                   ),
@@ -180,13 +179,13 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.done_all, size: 80, color: AppTheme.freshGreen.withValues(alpha: 0.5)),
-                          const SizedBox(height: 16),
-                          const Text('Audit Complete!', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
-                          const SizedBox(height: 32),
+                          Icon(Icons.done_all, size: 80, color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.5)),
+                          SizedBox(height: 16),
+                          Text('Audit Complete!', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
+                          SizedBox(height: 32),
                           FilledButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text('Back to Shelf'),
+                            child: Text('Back to Shelf'),
                           )
                         ],
                       )
@@ -202,7 +201,7 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
                       ),
               ),
             ),
-            const SizedBox(height: 40),
+            SizedBox(height: 40),
             if (_items.isNotEmpty)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -210,22 +209,22 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
                   FloatingActionButton.large(
                     heroTag: 'reject_btn',
                     onPressed: _swipeLeft,
-                    backgroundColor: AppTheme.surface,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
                     foregroundColor: Colors.red,
                     elevation: 8,
-                    child: const Icon(Icons.close, size: 36),
+                    child: Icon(Icons.close, size: 36),
                   ),
                   FloatingActionButton.large(
                     heroTag: 'accept_btn',
                     onPressed: _swipeRight,
-                    backgroundColor: AppTheme.surface,
-                    foregroundColor: AppTheme.freshGreen,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    foregroundColor: Theme.of(context).colorScheme.tertiary,
                     elevation: 8,
-                    child: const Icon(Icons.favorite, size: 36),
+                    child: Icon(Icons.favorite, size: 36),
                   ),
                 ],
               ),
-            const SizedBox(height: 48),
+            SizedBox(height: 48),
           ],
         ),
       ),
@@ -237,12 +236,12 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
       width: MediaQuery.of(context).size.width * 0.85,
       height: MediaQuery.of(context).size.height * 0.55,
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
+            color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           )
@@ -254,7 +253,7 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
             flex: 3,
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
                 image: DecorationImage(
                   image: NetworkImage(categoryImageUrl(item.category)),
                   fit: BoxFit.cover,
@@ -263,25 +262,25 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.black.withValues(alpha: 0.5),
+                      Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                     ],
                   ),
                 ),
                 alignment: Alignment.bottomLeft,
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(16),
                 child: Row(children: [
                   Text(categoryEmoji(item.category),
-                      style: const TextStyle(fontSize: 28)),
-                  const SizedBox(width: 8),
+                      style: TextStyle(fontSize: 28)),
+                  SizedBox(width: 8),
                   Text(item.category,
-                      style: const TextStyle(
-                          color: Colors.white70,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                           fontSize: 14,
                           fontWeight: FontWeight.w600)),
                 ]),
@@ -291,7 +290,7 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
           Expanded(
             flex: 2,
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -301,8 +300,8 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
                       Expanded(
                         child: Text(
                           item.title,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontSize: 28,
                             fontWeight: FontWeight.w800,
                           ),
@@ -311,33 +310,33 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: AppTheme.accent.withValues(alpha: 0.2),
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
                           item.category,
-                          style: const TextStyle(color: AppTheme.accent, fontWeight: FontWeight.bold, fontSize: 12),
+                          style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold, fontSize: 12),
                         ),
                       )
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     item.description,
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.6),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                       fontSize: 16,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const Spacer(),
+                  Spacer(),
                   Text(
                     'Raw OCR: "${item.rawDetect}"',
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.3),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                       fontSize: 12,
                       fontStyle: FontStyle.italic,
                     ),
@@ -376,12 +375,12 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
                   child: Transform.rotate(
                     angle: -0.2,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppTheme.freshGreen, width: 4),
+                        border: Border.all(color: Theme.of(context).colorScheme.tertiary, width: 4),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Text('KEEP', style: TextStyle(color: AppTheme.freshGreen, fontSize: 32, fontWeight: FontWeight.w900, letterSpacing: 2)),
+                      child: Text('KEEP', style: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 32, fontWeight: FontWeight.w900, letterSpacing: 2)),
                     ),
                   ),
                 ),
@@ -392,12 +391,12 @@ class _AuditScreenState extends State<AuditScreen> with TickerProviderStateMixin
                   child: Transform.rotate(
                     angle: 0.2,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.red, width: 4),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Text('DISCARD', style: TextStyle(color: Colors.red, fontSize: 32, fontWeight: FontWeight.w900, letterSpacing: 2)),
+                      child: Text('DISCARD', style: TextStyle(color: Colors.red, fontSize: 32, fontWeight: FontWeight.w900, letterSpacing: 2)),
                     ),
                   ),
                 ),

@@ -1,27 +1,31 @@
 /// I-Fridge — Design System & Theme
 /// ==================================
-/// Premium dark theme with glassmorphic accents and freshness-aware colors.
+/// Premium dual-mode theme with Terracotta Orange and Gold accents.
+library;
 
 import 'package:flutter/material.dart';
 
-class IFridgeTheme {
-  // --- Core Palette ---
-  static const Color primary = Color(0xFF00E676);       // Vibrant green — freshness
-  static const Color primaryDark = Color(0xFF00C853);
-  static const Color secondary = Color(0xFF00BCD4);     // Teal — coolness
-  static const Color accent = Color(0xFFFF6D00);         // Orange — urgency
-  static const Color error = Color(0xFFFF1744);           // Red — expired/critical
-  
-  // --- Background ---
-  static const Color bgDark = Color(0xFF0D1117);
-  static const Color bgCard = Color(0xFF161B22);
-  static const Color bgElevated = Color(0xFF21262D);
-  static const Color bgGlass = Color(0x1AFFFFFF);        // 10% white for glass
-  
-  // --- Text ---
-  static const Color textPrimary = Color(0xFFF0F6FC);
-  static const Color textSecondary = Color(0xFF8B949E);
-  static const Color textMuted = Color(0xFF484F58);
+class AppTheme {
+  // ── Dark Mode Colors ──
+  static const Color darkBg = Color(0xFF0F1218);
+  static const Color darkSurface = Color(0xFF1C212E);
+  static const Color darkPrimary = Color(0xFFE07A00);
+  static const Color darkSecondary = Color(0xFFF4B942); // Accent / Gold
+  static const Color darkTertiary = Color(0xFF00C48C);  // Success
+  static const Color darkTextPrimary = Color(0xFFF8F9FA);
+  static const Color darkTextSecondary = Color(0xFFA1A8B8);
+
+  // ── Light Mode Colors ──
+  static const Color lightBg = Color(0xFFF8F6F2);
+  static const Color lightSurface = Color(0xFFFFFFFF);
+  static const Color lightPrimary = Color(0xFFD96B00);
+  static const Color lightSecondary = Color(0xFFC89A2F); // Accent / Gold
+  static const Color lightTertiary = Color(0xFF00A36C);  // Success
+  static const Color lightTextPrimary = Color(0xFF1F252C);
+  static const Color lightTextSecondary = Color(0xFF5B6370);
+
+  // ── Shared Colors ──
+  static const Color error = Color(0xFFFF1744); // Critical / Error
   
   // --- Freshness States ---
   static const Color freshGreen = Color(0xFF2EA043);
@@ -37,183 +41,201 @@ class IFridgeTheme {
   static const Color tier4 = Color(0xFFBC8CFF);          // Minor shop discovery
   static const Color tier5 = Color(0xFF8B949E);          // Global search
 
+  // ── Theme Definitions ──
+
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: bgDark,
+      scaffoldBackgroundColor: darkBg,
       fontFamily: 'Inter',
       
-      colorScheme: ColorScheme.dark(
-        primary: primary,
-        secondary: secondary,
+      colorScheme: const ColorScheme.dark(
+        primary: darkPrimary,
+        secondary: darkSecondary,
+        tertiary: darkTertiary,
         error: error,
-        surface: bgCard,
-        onPrimary: bgDark,
-        onSecondary: textPrimary,
-        onSurface: textPrimary,
-        onError: textPrimary,
+        surface: darkSurface,
+        onPrimary: Colors.white,
+        onSecondary: darkTextPrimary,
+        onSurface: darkTextPrimary,
+        onError: Colors.white,
+        surfaceContainerHighest: Color(0xFF21262D),
       ),
 
       appBarTheme: const AppBarTheme(
-        backgroundColor: bgDark,
-        foregroundColor: textPrimary,
+        backgroundColor: darkBg,
+        foregroundColor: darkTextPrimary,
         elevation: 0,
         centerTitle: false,
         titleTextStyle: TextStyle(
           fontFamily: 'Inter',
           fontSize: 24,
           fontWeight: FontWeight.w700,
-          color: textPrimary,
+          color: darkTextPrimary,
           letterSpacing: -0.5,
         ),
       ),
 
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: bgCard,
-        selectedItemColor: primary,
-        unselectedItemColor: textMuted,
+        backgroundColor: darkSurface,
+        selectedItemColor: darkPrimary,
+        unselectedItemColor: darkTextSecondary,
         type: BottomNavigationBarType.fixed,
         elevation: 8,
       ),
 
       cardTheme: CardThemeData(
-        color: bgCard,
+        color: darkSurface,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: Colors.white.withValues(alpha: 0.06)),
+          side: BorderSide(color: Colors.white24),
         ),
       ),
 
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primary,
-          foregroundColor: bgDark,
+          backgroundColor: darkPrimary,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
         ),
       ),
 
-      chipTheme: ChipThemeData(
-        backgroundColor: bgElevated,
-        labelStyle: const TextStyle(color: textPrimary, fontSize: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        side: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: darkPrimary,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
       ),
 
-      dividerTheme: DividerThemeData(
-        color: Colors.white.withValues(alpha: 0.06),
-        thickness: 1,
+      chipTheme: const ChipThemeData(
+        backgroundColor: Color(0xFF21262D),
+        labelStyle: TextStyle(color: darkTextPrimary, fontWeight: FontWeight.w500),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        side: BorderSide.none,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
       ),
 
-      scrollbarTheme: ScrollbarThemeData(
-        thumbColor: WidgetStateProperty.all(Colors.white.withValues(alpha: 0.15)),
-        thickness: WidgetStateProperty.all(4),
-        radius: const Radius.circular(4),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: darkSurface,
+        hintStyle: TextStyle(color: darkTextSecondary),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.white24),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.white24),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: darkPrimary, width: 2),
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
     );
   }
-
-  // --- Light Theme ---
-  static const Color _bgLight = Color(0xFFF6F8FA);
-  static const Color _bgCardLight = Color(0xFFFFFFFF);
-  static const Color _bgElevatedLight = Color(0xFFEEF1F5);
-  static const Color _textDark = Color(0xFF1B1F23);
-  static const Color _textSecondaryLight = Color(0xFF57606A);
 
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
-      scaffoldBackgroundColor: _bgLight,
+      scaffoldBackgroundColor: lightBg,
       fontFamily: 'Inter',
-
-      colorScheme: ColorScheme.light(
-        primary: primary,
-        secondary: secondary,
+      
+      colorScheme: const ColorScheme.light(
+        primary: lightPrimary,
+        secondary: lightSecondary,
+        tertiary: lightTertiary,
         error: error,
-        surface: _bgCardLight,
+        surface: lightSurface,
         onPrimary: Colors.white,
-        onSecondary: _textDark,
-        onSurface: _textDark,
+        onSecondary: lightTextPrimary,
+        onSurface: lightTextPrimary,
         onError: Colors.white,
+        surfaceContainerHighest: Color(0xFFE5E7EB),
       ),
 
       appBarTheme: const AppBarTheme(
-        backgroundColor: _bgLight,
-        foregroundColor: _textDark,
+        backgroundColor: lightBg,
+        foregroundColor: lightTextPrimary,
         elevation: 0,
         centerTitle: false,
         titleTextStyle: TextStyle(
           fontFamily: 'Inter',
           fontSize: 24,
           fontWeight: FontWeight.w700,
-          color: _textDark,
+          color: lightTextPrimary,
           letterSpacing: -0.5,
         ),
       ),
 
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: _bgCardLight,
-        selectedItemColor: primary,
-        unselectedItemColor: _textSecondaryLight,
+        backgroundColor: lightSurface,
+        selectedItemColor: lightPrimary,
+        unselectedItemColor: lightTextSecondary,
         type: BottomNavigationBarType.fixed,
         elevation: 8,
       ),
 
       cardTheme: CardThemeData(
-        color: _bgCardLight,
-        elevation: 1,
+        color: lightSurface,
+        elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: Colors.black.withValues(alpha: 0.06)),
+          side: BorderSide(color: Colors.black12),
         ),
       ),
 
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: primary,
+          backgroundColor: lightPrimary,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          textStyle: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
         ),
       ),
 
-      chipTheme: ChipThemeData(
-        backgroundColor: _bgElevatedLight,
-        labelStyle: const TextStyle(color: _textDark, fontSize: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        side: BorderSide(color: Colors.black.withValues(alpha: 0.08)),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: lightPrimary,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
       ),
 
-      dividerTheme: DividerThemeData(
-        color: Colors.black.withValues(alpha: 0.08),
-        thickness: 1,
+      chipTheme: const ChipThemeData(
+        backgroundColor: Color(0xFFE5E7EB),
+        labelStyle: TextStyle(color: lightTextPrimary, fontWeight: FontWeight.w500),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        side: BorderSide.none,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
       ),
 
-      scrollbarTheme: ScrollbarThemeData(
-        thumbColor: WidgetStateProperty.all(Colors.black.withValues(alpha: 0.15)),
-        thickness: WidgetStateProperty.all(4),
-        radius: const Radius.circular(4),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: lightSurface,
+        hintStyle: TextStyle(color: lightTextSecondary),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.black12),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.black12),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: lightPrimary, width: 2),
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       ),
     );
   }
 }
-
-/// Convenience alias used by feature screens.
-/// Maps semantic names to [IFridgeTheme] constants.
-class AppTheme {
-  static const Color background = IFridgeTheme.bgDark;
-  static const Color surface = IFridgeTheme.bgCard;
-  static const Color accent = IFridgeTheme.primary;
-  static const Color freshGreen = IFridgeTheme.freshGreen;
-
-  // Tier badge colors
-  static const Color tierGold = Color(0xFFFFD700);
-  static const Color tierSilver = Color(0xFFC0C0C0);
-  static const Color tierBronze = Color(0xFFCD7F32);
-}
-

@@ -3,7 +3,6 @@
 // Items glow green when fresh, darken when aging, and pulse red when critical.
 
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 
 class FreshnessOverlay extends StatelessWidget {
   final double freshnessRatio;
@@ -21,18 +20,18 @@ class FreshnessOverlay extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            _overlayColor.withOpacity(0.0),
-            _overlayColor.withOpacity(_overlayOpacity),
+            _overlayColor(context).withOpacity(0.0),
+            _overlayColor(context).withOpacity(_overlayOpacity),
           ],
         ),
         border: Border.all(
-          color: _borderColor,
+          color: _borderColor(context),
           width: freshnessRatio < 0.1 ? 2.5 : 1.0,
         ),
         boxShadow: freshnessRatio > 0.6
             ? [
                 BoxShadow(
-                  color: IFridgeTheme.freshGreen.withOpacity(0.25),
+                  color: Theme.of(context).colorScheme.tertiary.withOpacity(0.25),
                   blurRadius: 12,
                   spreadRadius: 1,
                 ),
@@ -42,12 +41,12 @@ class FreshnessOverlay extends StatelessWidget {
     );
   }
 
-  Color get _overlayColor {
+  Color _overlayColor(BuildContext context) {
     if (freshnessRatio > 0.6) return Colors.transparent;
-    if (freshnessRatio > 0.3) return IFridgeTheme.agingAmber;
-    if (freshnessRatio > 0.1) return IFridgeTheme.urgentOrange;
-    if (freshnessRatio > 0.0) return IFridgeTheme.criticalRed;
-    return IFridgeTheme.expiredGrey;
+    if (freshnessRatio > 0.3) return Theme.of(context).colorScheme.secondary;
+    if (freshnessRatio > 0.1) return Theme.of(context).colorScheme.primary;
+    if (freshnessRatio > 0.0) return Theme.of(context).colorScheme.error;
+    return Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7);
   }
 
   double get _overlayOpacity {
@@ -55,11 +54,11 @@ class FreshnessOverlay extends StatelessWidget {
     return (1.0 - freshnessRatio) * 0.4;
   }
 
-  Color get _borderColor {
-    if (freshnessRatio > 0.6) return IFridgeTheme.freshGreen.withOpacity(0.5);
-    if (freshnessRatio > 0.3) return IFridgeTheme.agingAmber;
-    if (freshnessRatio > 0.1) return IFridgeTheme.urgentOrange;
-    return IFridgeTheme.criticalRed;
+  Color _borderColor(BuildContext context) {
+    if (freshnessRatio > 0.6) return Theme.of(context).colorScheme.tertiary.withOpacity(0.5);
+    if (freshnessRatio > 0.3) return Theme.of(context).colorScheme.secondary;
+    if (freshnessRatio > 0.1) return Theme.of(context).colorScheme.primary;
+    return Theme.of(context).colorScheme.error;
   }
 }
 

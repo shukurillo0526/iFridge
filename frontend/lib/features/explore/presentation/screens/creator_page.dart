@@ -5,7 +5,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 
 class CreatorPage extends StatefulWidget {
@@ -78,14 +77,14 @@ class _CreatorPageState extends State<CreatorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text(widget.creatorName, style: const TextStyle(fontWeight: FontWeight.w700)),
+        title: Text(widget.creatorName, style: TextStyle(fontWeight: FontWeight.w700)),
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: IFridgeTheme.primary))
+          ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary))
           : ListView(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               children: [
                 // Profile header
                 Center(
@@ -93,27 +92,27 @@ class _CreatorPageState extends State<CreatorPage> {
                     children: [
                       CircleAvatar(
                         radius: 48,
-                        backgroundColor: IFridgeTheme.primary.withValues(alpha: 0.2),
+                        backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                         backgroundImage: _profile?['avatar_url'] != null
                             ? NetworkImage(_profile!['avatar_url']) : null,
                         child: _profile?['avatar_url'] == null
                             ? Text(widget.creatorName[0].toUpperCase(),
-                                style: const TextStyle(color: IFridgeTheme.primary, fontSize: 32, fontWeight: FontWeight.w700))
+                                style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 32, fontWeight: FontWeight.w700))
                             : null,
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
                       Text(_profile?['display_name'] ?? widget.creatorName,
-                        style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800)),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 22, fontWeight: FontWeight.w800)),
                       if (_profile?['bio'] != null) ...[
-                        const SizedBox(height: 6),
+                        SizedBox(height: 6),
                         Text(_profile!['bio'],
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 14)),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 14)),
                       ],
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
 
                 // Stats row
                 Row(
@@ -127,7 +126,7 @@ class _CreatorPageState extends State<CreatorPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // Follow button
                 if (widget.creatorId != currentUserId())
@@ -138,26 +137,26 @@ class _CreatorPageState extends State<CreatorPage> {
                         ? OutlinedButton(
                             onPressed: _toggleFollow,
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: IFridgeTheme.primary),
+                              side: BorderSide(color: Theme.of(context).colorScheme.primary),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
-                            child: const Text('Following', style: TextStyle(color: IFridgeTheme.primary, fontWeight: FontWeight.w700)),
+                            child: Text('Following', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w700)),
                           )
                         : FilledButton(
                             onPressed: _toggleFollow,
                             style: FilledButton.styleFrom(
-                              backgroundColor: IFridgeTheme.primary,
+                              backgroundColor: Theme.of(context).colorScheme.primary,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
-                            child: const Text('Follow', style: TextStyle(fontWeight: FontWeight.w700)),
+                            child: Text('Follow', style: TextStyle(fontWeight: FontWeight.w700)),
                           ),
                   ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // Posts grid
-                Text('Posts', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
-                const SizedBox(height: 12),
+                Text('Posts', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
+                SizedBox(height: 12),
                 if (_posts.isEmpty)
                   Center(child: Text('No posts yet',
-                    style: TextStyle(color: Colors.white.withValues(alpha: 0.4))))
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4))))
                 else
                   GridView.builder(
                     shrinkWrap: true,
@@ -175,37 +174,37 @@ class _CreatorPageState extends State<CreatorPage> {
                           gradient: LinearGradient(
                             begin: Alignment.topLeft, end: Alignment.bottomRight,
                             colors: [
-                              isReel ? Colors.deepPurple.withValues(alpha: 0.15) : IFridgeTheme.primary.withValues(alpha: 0.08),
-                              AppTheme.surface,
+                              isReel ? Colors.deepPurple.withValues(alpha: 0.15) : Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
+                              Theme.of(context).colorScheme.surface,
                             ]),
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.white.withValues(alpha: 0.06))),
+                          border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06))),
                         child: Padding(
-                          padding: const EdgeInsets.all(12),
+                          padding: EdgeInsets.all(12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 children: [
                                   Icon(isReel ? Icons.play_circle_fill : Icons.lightbulb,
-                                    color: isReel ? Colors.red : IFridgeTheme.primary, size: 18),
-                                  const SizedBox(width: 6),
+                                    color: isReel ? Colors.red : Theme.of(context).colorScheme.primary, size: 18),
+                                  SizedBox(width: 6),
                                   Text(isReel ? 'Reel' : type == 'recipe' ? 'Recipe' : 'Tip',
                                     style: TextStyle(
-                                      color: isReel ? Colors.red : IFridgeTheme.primary,
+                                      color: isReel ? Colors.red : Theme.of(context).colorScheme.primary,
                                       fontSize: 11, fontWeight: FontWeight.w700)),
                                 ],
                               ),
-                              const Spacer(),
+                              Spacer(),
                               Text(caption, maxLines: 3, overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
-                              const Spacer(),
+                                style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w600)),
+                              Spacer(),
                               Row(
                                 children: [
                                   Icon(Icons.favorite, size: 14, color: Colors.red.withValues(alpha: 0.6)),
-                                  const SizedBox(width: 4),
+                                  SizedBox(width: 4),
                                   Text('${post['like_count'] ?? 0}',
-                                    style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11)),
+                                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 11)),
                                 ],
                               ),
                             ],
@@ -228,8 +227,8 @@ class _StatCol extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800)),
-        Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12)),
+        Text(value, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w800)),
+        Text(label, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 12)),
       ],
     );
   }

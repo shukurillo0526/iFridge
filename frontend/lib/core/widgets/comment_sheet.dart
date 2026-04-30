@@ -4,7 +4,6 @@
 // Shows threaded comments with real-time feel.
 
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/social_service.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 
@@ -101,67 +100,67 @@ class _CommentSheetState extends State<CommentSheet> {
         maxHeight: MediaQuery.of(context).size.height * 0.7,
       ),
       padding: EdgeInsets.only(bottom: bottomInset),
-      decoration: const BoxDecoration(
-        color: IFridgeTheme.bgCard,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
           // ── Handle bar ──
           Container(
-            margin: const EdgeInsets.symmetric(vertical: 10),
+            margin: EdgeInsets.symmetric(vertical: 10),
             width: 40, height: 4,
             decoration: BoxDecoration(
-              color: Colors.white24,
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
 
           // ── Header ──
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
             child: Row(
               children: [
-                const Icon(Icons.chat_bubble_outline, color: IFridgeTheme.primary, size: 20),
-                const SizedBox(width: 8),
+                Icon(Icons.chat_bubble_outline, color: Theme.of(context).colorScheme.primary, size: 20),
+                SizedBox(width: 8),
                 Text(
                   'Comments${_comments.isNotEmpty ? ' (${_comments.length})' : ''}',
-                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700),
                 ),
-                const Spacer(),
+                Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white54, size: 20),
+                  icon: Icon(Icons.close, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), size: 20),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
           ),
 
-          const Divider(color: Colors.white12, height: 1),
+          const Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12), height: 1),
 
           // ── Comment list ──
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator(color: IFridgeTheme.primary))
+                ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary))
                 : _comments.isEmpty
                     ? Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.chat_bubble_outline, size: 48,
-                                color: Colors.white.withValues(alpha: 0.15)),
-                            const SizedBox(height: 12),
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15)),
+                            SizedBox(height: 12),
                             Text('No comments yet',
-                                style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 14)),
-                            const SizedBox(height: 4),
+                                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 14)),
+                            SizedBox(height: 4),
                             Text('Be the first to comment!',
-                                style: TextStyle(color: Colors.white.withValues(alpha: 0.25), fontSize: 12)),
+                                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.25), fontSize: 12)),
                           ],
                         ),
                       )
                     : ListView.builder(
                         controller: _scrollController,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         itemCount: _comments.length,
                         itemBuilder: (ctx, i) => _CommentTile(
                           comment: _comments[i],
@@ -178,16 +177,16 @@ class _CommentSheetState extends State<CommentSheet> {
           // ── Reply indicator ──
           if (_replyTo != null)
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              color: IFridgeTheme.primary.withValues(alpha: 0.1),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
               child: Row(
                 children: [
                   Text('Replying to @$_replyToName',
-                      style: const TextStyle(color: IFridgeTheme.primary, fontSize: 12, fontWeight: FontWeight.w600)),
-                  const Spacer(),
+                      style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12, fontWeight: FontWeight.w600)),
+                  Spacer(),
                   GestureDetector(
                     onTap: () => setState(() { _replyTo = null; _replyToName = null; }),
-                    child: const Icon(Icons.close, size: 16, color: IFridgeTheme.primary),
+                    child: Icon(Icons.close, size: 16, color: Theme.of(context).colorScheme.primary),
                   ),
                 ],
               ),
@@ -195,48 +194,48 @@ class _CommentSheetState extends State<CommentSheet> {
 
           // ── Input bar ──
           Container(
-            padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+            padding: EdgeInsets.fromLTRB(16, 8, 8, 8),
             decoration: BoxDecoration(
-              color: IFridgeTheme.bgElevated,
-              border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.08))),
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              border: Border(top: BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08))),
             ),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14),
                     decoration: InputDecoration(
                       hintText: _replyTo != null ? 'Reply...' : 'Add a comment...',
-                      hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+                      hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24),
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
-                      fillColor: Colors.white.withValues(alpha: 0.06),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      fillColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       isDense: true,
                     ),
                     textInputAction: TextInputAction.send,
                     onSubmitted: (_) => _send(),
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 GestureDetector(
                   onTap: _send,
                   child: Container(
                     width: 40, height: 40,
                     decoration: BoxDecoration(
                       color: _sending
-                          ? Colors.white12
-                          : IFridgeTheme.primary,
+                          ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12)
+                          : Theme.of(context).colorScheme.primary,
                       shape: BoxShape.circle,
                     ),
                     child: _sending
-                        ? const SizedBox(width: 18, height: 18,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                        : const Icon(Icons.send, color: Colors.white, size: 18),
+                        ? SizedBox(width: 18, height: 18,
+                            child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurface, strokeWidth: 2))
+                        : Icon(Icons.send, color: Theme.of(context).colorScheme.onSurface, size: 18),
                   ),
                 ),
               ],
@@ -281,13 +280,13 @@ class _CommentTile extends StatelessWidget {
           // Avatar
           CircleAvatar(
             radius: 14,
-            backgroundColor: IFridgeTheme.primary.withValues(alpha: 0.2),
+            backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
             child: Text(
               name.isNotEmpty ? name[0].toUpperCase() : '?',
-              style: const TextStyle(color: IFridgeTheme.primary, fontSize: 11, fontWeight: FontWeight.w700),
+              style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 11, fontWeight: FontWeight.w700),
             ),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,25 +294,25 @@ class _CommentTile extends StatelessWidget {
                 Row(
                   children: [
                     Text(name,
-                        style: const TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w700)),
-                    const SizedBox(width: 8),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w700)),
+                    SizedBox(width: 8),
                     Text(_timeAgo(createdAt),
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 10)),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 10)),
                   ],
                 ),
-                const SizedBox(height: 3),
+                SizedBox(height: 3),
                 Text(body,
-                    style: const TextStyle(color: Colors.white, fontSize: 13, height: 1.4)),
-                const SizedBox(height: 4),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, height: 1.4)),
+                SizedBox(height: 4),
                 Row(
                   children: [
                     GestureDetector(
                       onTap: () => onReply(comment['id'], name),
                       child: Text('Reply',
-                          style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11, fontWeight: FontWeight.w600)),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 11, fontWeight: FontWeight.w600)),
                     ),
                     if (isOwn) ...[
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16),
                       GestureDetector(
                         onTap: () => onDelete(comment['id']),
                         child: Text('Delete',

@@ -9,7 +9,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/location_service.dart';
 import 'package:ifridge_app/core/services/restaurant_service.dart';
 import 'package:ifridge_app/core/widgets/region_picker_sheet.dart';
@@ -129,10 +128,10 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    const accent = Color(0xFFFF6D00);
+    final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
-      backgroundColor: isDark ? IFridgeTheme.bgDark : const Color(0xFFF6F8FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: RefreshIndicator(
           color: accent,
@@ -159,36 +158,34 @@ class _OrderScreenState extends State<OrderScreen> {
               // ── Search Bar ─────────────────────────────
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 12),
                   child: Container(
                     height: 48,
                     decoration: BoxDecoration(
-                      color: isDark ? IFridgeTheme.bgCard : Colors.white,
+                      color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.06)
-                            : Colors.black.withValues(alpha: 0.08),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
                       ),
                     ),
                     child: TextField(
                       controller: _searchController,
                       onChanged: (v) => setState(() => _searchQuery = v),
                       style: TextStyle(
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 15,
                       ),
                       decoration: InputDecoration(
                         hintText: 'Search restaurants, dishes...',
                         hintStyle: TextStyle(
-                          color: isDark ? Colors.white30 : Colors.black26,
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                         ),
                         prefixIcon: Icon(Icons.search,
-                            color: isDark ? Colors.white30 : Colors.black26),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
                         suffixIcon: _searchQuery?.isNotEmpty == true
                             ? IconButton(
                                 icon: Icon(Icons.clear,
-                                    color: isDark ? Colors.white30 : Colors.black26, size: 18),
+                                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), size: 18),
                                 onPressed: () {
                                   _searchController.clear();
                                   setState(() => _searchQuery = null);
@@ -196,7 +193,7 @@ class _OrderScreenState extends State<OrderScreen> {
                               )
                             : null,
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                        contentPadding: EdgeInsets.symmetric(vertical: 14),
                       ),
                     ),
                   ),
@@ -209,9 +206,9 @@ class _OrderScreenState extends State<OrderScreen> {
                   height: 42,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
                     itemCount: _categories.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    separatorBuilder: (_, _) => SizedBox(width: 8),
                     itemBuilder: (ctx, i) {
                       final cat = _categories[i];
                       final isSelected = _selectedCategory == cat['label'];
@@ -222,24 +219,24 @@ class _OrderScreenState extends State<OrderScreen> {
                         },
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                           decoration: BoxDecoration(
-                            color: isSelected ? accent : isDark ? IFridgeTheme.bgCard : Colors.white,
+                            color: isSelected ? accent : Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                               color: isSelected ? accent :
-                                  isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.08),
+                                  Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
                             ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(cat['icon'] as String, style: const TextStyle(fontSize: 14)),
-                              const SizedBox(width: 6),
+                              Text(cat['icon'] as String, style: TextStyle(fontSize: 14)),
+                              SizedBox(width: 6),
                               Text(
                                 cat['label'] as String,
                                 style: TextStyle(
-                                  color: isSelected ? Colors.white : isDark ? Colors.white70 : Colors.black54,
+                                  color: isSelected ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                                   fontSize: 13,
                                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                                 ),
@@ -257,10 +254,10 @@ class _OrderScreenState extends State<OrderScreen> {
 
               // ── Loading / Error / Empty States ─────────
               if (_loading)
-                const SliverToBoxAdapter(
+                SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.all(60),
-                    child: Center(child: CircularProgressIndicator(color: Color(0xFFFF6D00))),
+                    child: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
                   ),
                 )
               else if (!_location.hasLocation && _restaurants.isEmpty)
@@ -298,9 +295,9 @@ class _OrderScreenState extends State<OrderScreen> {
                       height: 165,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20),
                         itemCount: _dealRestaurants.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 12),
+                        separatorBuilder: (_, _) => SizedBox(width: 12),
                         itemBuilder: (ctx, i) => _DealCard(
                           restaurant: _dealRestaurants[i],
                           isDark: isDark,
@@ -387,19 +384,19 @@ class _LocationHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+      padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
       child: Row(
         children: [
           // Location icon with pulse
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: accent.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             child: Icon(Icons.location_on, color: accent, size: 20),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           // Region name + subtitle
           Expanded(
             child: Column(
@@ -411,16 +408,16 @@ class _LocationHeader extends StatelessWidget {
                       child: Text(
                         location.regionName,
                         style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(width: 6),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: accent.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(8),
@@ -440,7 +437,7 @@ class _LocationHeader extends StatelessWidget {
                   Text(
                     location.locality,
                     style: TextStyle(
-                      color: isDark ? Colors.white38 : Colors.black38,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                       fontSize: 12,
                     ),
                   ),
@@ -451,7 +448,7 @@ class _LocationHeader extends StatelessWidget {
           GestureDetector(
             onTap: () => _showRegionPicker(context),
             child: Container(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: accent.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
@@ -462,20 +459,20 @@ class _LocationHeader extends StatelessWidget {
               child: Icon(Icons.map_outlined, color: accent, size: 20),
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           // Radius settings button
           GestureDetector(
             onTap: () => _showRadiusPicker(context),
             child: Container(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: isDark ? IFridgeTheme.bgCard : Colors.white,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.08),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
                 ),
               ),
-              child: Icon(Icons.tune, color: isDark ? Colors.white54 : Colors.black38, size: 20),
+              child: Icon(Icons.tune, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), size: 20),
             ),
           ),
         ],
@@ -490,12 +487,12 @@ class _LocationHeader extends StatelessWidget {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: isDark ? IFridgeTheme.bgCard : Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -505,35 +502,35 @@ class _LocationHeader extends StatelessWidget {
               child: Container(
                 width: 40, height: 4,
                 decoration: BoxDecoration(
-                  color: isDark ? Colors.white24 : Colors.black12,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Row(
               children: [
                 Icon(Icons.radar, color: accent, size: 22),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   'Search Radius',
                   style: TextStyle(
-                    color: isDark ? Colors.white : Colors.black87,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 6),
+            SizedBox(height: 6),
             Text(
               'Show restaurants within this distance',
               style: TextStyle(
-                color: isDark ? Colors.white38 : Colors.black38,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                 fontSize: 13,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             ...List.generate(radiusOptions.length, (i) {
               final isSelected = location.radiusMeters == radiusOptions[i];
               return GestureDetector(
@@ -542,32 +539,32 @@ class _LocationHeader extends StatelessWidget {
                   Navigator.pop(ctx);
                 },
                 child: Container(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  margin: EdgeInsets.only(bottom: 8),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
                     color: isSelected ? accent.withValues(alpha: 0.12) : Colors.transparent,
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
-                      color: isSelected ? accent : (isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.06)),
+                      color: isSelected ? accent : (Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
                     ),
                   ),
                   child: Row(
                     children: [
                       Icon(
                         isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
-                        color: isSelected ? accent : (isDark ? Colors.white30 : Colors.black26),
+                        color: isSelected ? accent : (Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
                         size: 20,
                       ),
-                      const SizedBox(width: 14),
+                      SizedBox(width: 14),
                       Text(
                         labels[i],
                         style: TextStyle(
-                          color: isSelected ? accent : (isDark ? Colors.white : Colors.black87),
+                          color: isSelected ? accent : (Theme.of(context).colorScheme.onSurface),
                           fontSize: 16,
                           fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                         ),
                       ),
-                      const Spacer(),
+                      Spacer(),
                       if (isSelected)
                         Icon(Icons.check_circle, color: accent, size: 20),
                     ],
@@ -575,7 +572,7 @@ class _LocationHeader extends StatelessWidget {
                 ),
               );
             }),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
           ],
         ),
       ),
@@ -613,25 +610,25 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             '$emoji $title',
             style: TextStyle(
-              color: isDark ? Colors.white : Colors.black87,
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 18,
               fontWeight: FontWeight.w700,
             ),
           ),
           if (subtitle != null)
             Padding(
-              padding: const EdgeInsets.only(top: 2),
+              padding: EdgeInsets.only(top: 2),
               child: Text(
                 subtitle!,
                 style: TextStyle(
-                  color: isDark ? Colors.white30 : Colors.black26,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                   fontSize: 12,
                 ),
               ),
@@ -678,14 +675,14 @@ class _DealCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 200,
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(14),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
             accent.withValues(alpha: 0.15),
-            isDark ? IFridgeTheme.bgCard : Colors.white,
+            Theme.of(context).colorScheme.surface,
           ],
         ),
         borderRadius: BorderRadius.circular(18),
@@ -698,10 +695,10 @@ class _DealCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(_emoji, style: const TextStyle(fontSize: 28)),
-              const Spacer(),
+              Text(_emoji, style: TextStyle(fontSize: 28)),
+              Spacer(),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: accent.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
@@ -713,41 +710,41 @@ class _DealCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           Text(
             restaurant.name,
             style: TextStyle(
-              color: isDark ? Colors.white : Colors.black87,
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 15,
               fontWeight: FontWeight.w700,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 2),
+          SizedBox(height: 2),
           Text(
             restaurant.cuisineLabel,
             style: TextStyle(
-              color: isDark ? Colors.white38 : Colors.black38,
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
               fontSize: 12,
             ),
             maxLines: 1,
           ),
-          const Spacer(),
+          Spacer(),
           Row(
             children: [
               Icon(Icons.star, size: 13, color: Colors.amber.shade600),
-              const SizedBox(width: 3),
+              SizedBox(width: 3),
               Text('${restaurant.rating}',
-                  style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 12, fontWeight: FontWeight.w600)),
-              const SizedBox(width: 8),
-              Icon(Icons.schedule, size: 12, color: isDark ? Colors.white30 : Colors.black26),
-              const SizedBox(width: 3),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w600)),
+              SizedBox(width: 8),
+              Icon(Icons.schedule, size: 12, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
+              SizedBox(width: 3),
               Text('${restaurant.estimatedDeliveryMinutes}min',
-                  style: TextStyle(color: isDark ? Colors.white30 : Colors.black26, fontSize: 11)),
-              const Spacer(),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 11)),
+              Spacer(),
               Text(restaurant.distMeters > 0 ? restaurant.distanceLabel : '',
-                  style: TextStyle(color: isDark ? Colors.white30 : Colors.black26, fontSize: 11)),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 11)),
             ],
           ),
         ],
@@ -780,13 +777,13 @@ class _RestaurantTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-        padding: const EdgeInsets.all(14),
+        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        padding: EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: isDark ? IFridgeTheme.bgCard : Colors.white,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.05),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
           ),
         ),
         child: Row(
@@ -799,9 +796,9 @@ class _RestaurantTile extends StatelessWidget {
                 color: accent.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: Center(child: Text(_emoji, style: const TextStyle(fontSize: 26))),
+              child: Center(child: Text(_emoji, style: TextStyle(fontSize: 26))),
             ),
-            const SizedBox(width: 14),
+            SizedBox(width: 14),
             // Info
             Expanded(
               child: Column(
@@ -813,7 +810,7 @@ class _RestaurantTile extends StatelessWidget {
                         child: Text(
                           restaurant.name,
                           style: TextStyle(
-                            color: isDark ? Colors.white : Colors.black87,
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
                           ),
@@ -823,36 +820,36 @@ class _RestaurantTile extends StatelessWidget {
                       ),
                       if (!restaurant.isOpen)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: Colors.red.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: const Text('Closed', style: TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.w600)),
+                          child: Text('Closed', style: TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.w600)),
                         ),
                     ],
                   ),
-                  const SizedBox(height: 3),
+                  SizedBox(height: 3),
                   Text(
                     restaurant.cuisineLabel,
-                    style: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 12),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 12),
                   ),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   // Stats row
                   Row(
                     children: [
                       Icon(Icons.star, size: 13, color: Colors.amber.shade600),
-                      const SizedBox(width: 2),
+                      SizedBox(width: 2),
                       Text('${restaurant.rating}',
-                          style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 12, fontWeight: FontWeight.w600)),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w600)),
                       Text(' (${restaurant.reviewCount})',
-                          style: TextStyle(color: isDark ? Colors.white24 : Colors.black26, fontSize: 11)),
-                      const SizedBox(width: 10),
-                      Icon(Icons.schedule, size: 12, color: isDark ? Colors.white30 : Colors.black26),
-                      const SizedBox(width: 3),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), fontSize: 11)),
+                      SizedBox(width: 10),
+                      Icon(Icons.schedule, size: 12, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
+                      SizedBox(width: 3),
                       Text('${restaurant.estimatedDeliveryMinutes} min',
-                          style: TextStyle(color: isDark ? Colors.white54 : Colors.black45, fontSize: 11)),
-                      const SizedBox(width: 10),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), fontSize: 11)),
+                      SizedBox(width: 10),
                       Text(restaurant.priceLabel,
                           style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.w700)),
                     ],
@@ -860,7 +857,7 @@ class _RestaurantTile extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             // Distance + arrow
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -868,10 +865,10 @@ class _RestaurantTile extends StatelessWidget {
                 if (restaurant.distMeters > 0)
                   Text(
                     restaurant.distanceLabel,
-                    style: TextStyle(color: isDark ? Colors.white38 : Colors.black26, fontSize: 12, fontWeight: FontWeight.w600),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 12, fontWeight: FontWeight.w600),
                   ),
-                const SizedBox(height: 4),
-                Icon(Icons.chevron_right, color: isDark ? Colors.white24 : Colors.black12, size: 20),
+                SizedBox(height: 4),
+                Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), size: 20),
               ],
             ),
           ],
@@ -914,7 +911,7 @@ class _RestaurantMenuSheetState extends State<_RestaurantMenuSheet> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    const accent = Color(0xFFFF6D00);
+    final accent = Theme.of(context).colorScheme.primary;
     final r = widget.restaurant;
 
     return DraggableScrollableSheet(
@@ -924,29 +921,29 @@ class _RestaurantMenuSheetState extends State<_RestaurantMenuSheet> {
       builder: (_, scrollController) {
         return Container(
           decoration: BoxDecoration(
-            color: isDark ? IFridgeTheme.bgDark : const Color(0xFFF6F8FA),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: ListView(
             controller: scrollController,
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(20),
             children: [
               // Handle
               Center(
                 child: Container(
                   width: 40, height: 4,
                   decoration: BoxDecoration(
-                    color: isDark ? Colors.white24 : Colors.black12,
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               // Restaurant header
-              Text(r.name, style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 22, fontWeight: FontWeight.w800)),
-              const SizedBox(height: 4),
-              Text(r.cuisineLabel, style: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 14)),
-              const SizedBox(height: 8),
+              Text(r.name, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 22, fontWeight: FontWeight.w800)),
+              SizedBox(height: 4),
+              Text(r.cuisineLabel, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 14)),
+              SizedBox(height: 8),
 
               // ── Service badges ─────────────────────
               Wrap(
@@ -962,55 +959,55 @@ class _RestaurantMenuSheetState extends State<_RestaurantMenuSheet> {
                 ],
               ),
 
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               // Stats row
               Row(
                 children: [
                   _StatChip(icon: Icons.star, label: '${r.rating}', color: Colors.amber.shade600),
-                  const SizedBox(width: 8),
-                  _StatChip(icon: Icons.schedule, label: '${r.estimatedDeliveryMinutes} min', color: isDark ? Colors.white54 : Colors.black45),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
+                  _StatChip(icon: Icons.schedule, label: '${r.estimatedDeliveryMinutes} min', color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54)),
+                  SizedBox(width: 8),
                   if (r.hasDelivery)
                     _StatChip(icon: Icons.delivery_dining, label: r.deliveryFee > 0 ? '${r.deliveryFee.round()} UZS' : 'Free', color: accent),
                   if (r.distMeters > 0) ...[
-                    const SizedBox(width: 8),
-                    _StatChip(icon: Icons.near_me, label: r.distanceLabel, color: isDark ? Colors.white38 : Colors.black26),
+                    SizedBox(width: 8),
+                    _StatChip(icon: Icons.near_me, label: r.distanceLabel, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)),
                   ],
                 ],
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               if (r.address != null) ...[
                 Row(
                   children: [
-                    Icon(Icons.location_on_outlined, size: 16, color: isDark ? Colors.white30 : Colors.black26),
-                    const SizedBox(width: 6),
+                    Icon(Icons.location_on_outlined, size: 16, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
+                    SizedBox(width: 6),
                     Expanded(
-                      child: Text(r.address!, style: TextStyle(color: isDark ? Colors.white38 : Colors.black38, fontSize: 13)),
+                      child: Text(r.address!, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 13)),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
               ],
               // Menu
-              Divider(color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.06)),
-              const SizedBox(height: 12),
-              Text('Menu', style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 18, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 12),
+              Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
+              SizedBox(height: 12),
+              Text('Menu', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
+              SizedBox(height: 12),
               if (_loading)
-                const Center(child: Padding(
+                Center(child: Padding(
                   padding: EdgeInsets.all(24),
                   child: CircularProgressIndicator(color: accent),
                 ))
               else if (_menuItems.isEmpty)
                 Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Text('Menu coming soon', style: TextStyle(color: isDark ? Colors.white38 : Colors.black26)),
+                    padding: EdgeInsets.all(24),
+                    child: Text('Menu coming soon', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38))),
                   ),
                 )
               else
                 ..._menuItems.map((item) => _MenuItemTile(item: item, isDark: isDark, accent: accent)),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
               // ── Smart Action Buttons ───────────────
               _SmartActionBar(restaurant: r, isDark: isDark, accent: accent),
@@ -1033,7 +1030,7 @@ class _ServiceBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
@@ -1043,7 +1040,7 @@ class _ServiceBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 12, color: color),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(label, style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w600)),
         ],
       ),
@@ -1070,7 +1067,7 @@ class _SmartActionBar extends StatelessWidget {
         context: context,
         icon: Icons.shopping_bag_outlined,
         label: 'Order',
-        gradient: const [Color(0xFFFF6D00), Color(0xFFFF9100)],
+        gradient: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.tertiary],
         onTap: () => _handleOrder(context, r),
         isPrimary: true,
       ));
@@ -1082,7 +1079,7 @@ class _SmartActionBar extends StatelessWidget {
         context: context,
         icon: Icons.event_seat_outlined,
         label: 'Reserve',
-        gradient: const [Color(0xFF2962FF), Color(0xFF448AFF)],
+        gradient: [Colors.blue.shade700, Colors.blue.shade400],
         onTap: () => _handleReserve(context, r),
         isPrimary: !r.hasDelivery,
       ));
@@ -1094,7 +1091,7 @@ class _SmartActionBar extends StatelessWidget {
         context: context,
         icon: Icons.map_outlined,
         label: 'Map',
-        gradient: const [Color(0xFF00897B), Color(0xFF26A69A)],
+        gradient: [Colors.teal.shade600, Colors.teal.shade400],
         onTap: () => _handleMap(context, r),
         isPrimary: !r.hasDelivery && !r.hasReservation,
       ));
@@ -1113,7 +1110,7 @@ class _SmartActionBar extends StatelessWidget {
     }
 
     if (actions.isEmpty) {
-      return const SizedBox.shrink();
+      return SizedBox.shrink();
     }
 
     return Column(
@@ -1130,11 +1127,11 @@ class _SmartActionBar extends StatelessWidget {
         else ...[
           Row(
             children: [
-              Expanded(child: Padding(padding: const EdgeInsets.only(right: 4), child: actions[0])),
-              Expanded(child: Padding(padding: const EdgeInsets.only(left: 4), child: actions[1])),
+              Expanded(child: Padding(padding: EdgeInsets.only(right: 4), child: actions[0])),
+              Expanded(child: Padding(padding: EdgeInsets.only(left: 4), child: actions[1])),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             children: actions.skip(2).map((a) => Expanded(child: Padding(
               padding: EdgeInsets.only(right: a != actions.last ? 4 : 0, left: a != actions[2] ? 4 : 0),
@@ -1159,19 +1156,19 @@ class _SmartActionBar extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
           gradient: gradient != null && isPrimary ? LinearGradient(colors: gradient) : null,
           color: gradient != null && !isPrimary
               ? gradient[0].withValues(alpha: 0.1)
               : gradient == null
-                  ? (isDark ? IFridgeTheme.bgCard : Colors.white)
+                  ? (Theme.of(context).colorScheme.surface)
                   : null,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: gradient != null
                 ? gradient[0].withValues(alpha: isPrimary ? 0 : 0.3)
-                : (isDark ? Colors.white.withValues(alpha: 0.06) : Colors.black.withValues(alpha: 0.08)),
+                : (Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08)),
           ),
           boxShadow: isPrimary && gradient != null ? [
             BoxShadow(color: gradient[0].withValues(alpha: 0.25), blurRadius: 10, offset: const Offset(0, 4)),
@@ -1181,13 +1178,13 @@ class _SmartActionBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon,
-              color: isPrimary ? Colors.white : (gradient?[0] ?? (isDark ? Colors.white54 : Colors.black38)),
+              color: isPrimary ? Theme.of(context).colorScheme.onSurface : (gradient?[0] ?? (Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))),
               size: 18,
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             Text(label,
               style: TextStyle(
-                color: isPrimary ? Colors.white : (gradient?[0] ?? (isDark ? Colors.white54 : Colors.black38)),
+                color: isPrimary ? Theme.of(context).colorScheme.onSurface : (gradient?[0] ?? (Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))),
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
               ),
@@ -1202,7 +1199,7 @@ class _SmartActionBar extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('🛒 Starting order from ${r.name}...'),
-        backgroundColor: const Color(0xFFFF6D00),
+        backgroundColor: Theme.of(context).colorScheme.primary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -1213,7 +1210,7 @@ class _SmartActionBar extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('🪑 Booking a seat at ${r.name}...'),
-        backgroundColor: const Color(0xFF2962FF),
+        backgroundColor: Colors.blue.shade700,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -1224,7 +1221,7 @@ class _SmartActionBar extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('📍 Showing ${r.name} on map...'),
-        backgroundColor: const Color(0xFF00897B),
+        backgroundColor: Colors.teal.shade600,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -1237,7 +1234,7 @@ class _SmartActionBar extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('🧭 Opening navigation to ${r.name}...'),
-        backgroundColor: const Color(0xFF455A64),
+        backgroundColor: Colors.blueGrey.shade700,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         duration: const Duration(seconds: 2),
@@ -1262,7 +1259,7 @@ class _StatChip extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: 14, color: color),
-        const SizedBox(width: 3),
+        SizedBox(width: 3),
         Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600)),
       ],
     );
@@ -1278,12 +1275,12 @@ class _MenuItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(14),
+      margin: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: isDark ? IFridgeTheme.bgCard : Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.05)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
       ),
       child: Row(
         children: [
@@ -1295,11 +1292,11 @@ class _MenuItemTile extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(item.name,
-                          style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 15, fontWeight: FontWeight.w600)),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15, fontWeight: FontWeight.w600)),
                     ),
                     if (item.tags.contains('bestseller'))
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: accent.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(6),
@@ -1309,29 +1306,29 @@ class _MenuItemTile extends StatelessWidget {
                   ],
                 ),
                 if (item.description != null) ...[
-                  const SizedBox(height: 2),
+                  SizedBox(height: 2),
                   Text(item.description!,
-                      style: TextStyle(color: isDark ? Colors.white30 : Colors.black26, fontSize: 12),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 12),
                       maxLines: 2, overflow: TextOverflow.ellipsis),
                 ],
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 Row(
                   children: [
                     Text('${item.price.round()} UZS',
                         style: TextStyle(color: accent, fontSize: 14, fontWeight: FontWeight.w700)),
                     if (item.calories != null) ...[
-                      const SizedBox(width: 10),
+                      SizedBox(width: 10),
                       Text('${item.calories} cal',
-                          style: TextStyle(color: isDark ? Colors.white24 : Colors.black26, fontSize: 11)),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), fontSize: 11)),
                     ],
                   ],
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: accent.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
@@ -1416,24 +1413,24 @@ class _PopularItemsSectionState extends State<_PopularItemsSection> {
       );
     }
 
-    if (_items.isEmpty) return const SizedBox.shrink();
+    if (_items.isEmpty) return SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 8),
           child: Row(
             children: [
               Text('🍽️ Popular Dishes',
                 style: TextStyle(
-                  color: widget.isDark ? Colors.white70 : Colors.black54,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   fontSize: 15, fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: widget.accent.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
@@ -1449,9 +1446,9 @@ class _PopularItemsSectionState extends State<_PopularItemsSection> {
           height: 155,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20),
             itemCount: _items.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 10),
+            separatorBuilder: (_, _) => SizedBox(width: 10),
             itemBuilder: (ctx, i) => _PopularItemCard(
               item: _items[i],
               isDark: widget.isDark,
@@ -1493,12 +1490,12 @@ class _PopularItemCard extends StatelessWidget {
       },
       child: Container(
         width: 140,
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isDark ? IFridgeTheme.bgCard : Colors.white,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.05),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
           ),
         ),
         child: Column(
@@ -1507,11 +1504,11 @@ class _PopularItemCard extends StatelessWidget {
             // Food emoji + bestseller
             Row(
               children: [
-                Text(_foodEmoji(menuItem), style: const TextStyle(fontSize: 28)),
-                const Spacer(),
+                Text(_foodEmoji(menuItem), style: TextStyle(fontSize: 28)),
+                Spacer(),
                 if (menuItem.tags.contains('bestseller'))
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                    padding: EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                     decoration: BoxDecoration(
                       color: accent.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(4),
@@ -1520,30 +1517,30 @@ class _PopularItemCard extends StatelessWidget {
                   ),
               ],
             ),
-            const SizedBox(height: 6),
+            SizedBox(height: 6),
             // Item name
             Text(menuItem.name,
               style: TextStyle(
-                color: isDark ? Colors.white : Colors.black87,
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 13, fontWeight: FontWeight.w600,
               ),
               maxLines: 2, overflow: TextOverflow.ellipsis,
             ),
-            const Spacer(),
+            Spacer(),
             // Restaurant + price
             Text(restaurant.name,
-              style: TextStyle(color: isDark ? Colors.white24 : Colors.black26, fontSize: 10),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), fontSize: 10),
               maxLines: 1, overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Row(
               children: [
                 Text('${menuItem.price.round()} UZS',
                   style: TextStyle(color: accent, fontSize: 12, fontWeight: FontWeight.w700),
                 ),
-                const Spacer(),
+                Spacer(),
                 Container(
-                  padding: const EdgeInsets.all(4),
+                  padding: EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     color: accent.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
@@ -1599,20 +1596,20 @@ class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(40),
+      padding: EdgeInsets.all(40),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 56, color: isDark ? Colors.white.withValues(alpha: 0.15) : Colors.black12),
-          const SizedBox(height: 16),
-          Text(title, style: TextStyle(color: isDark ? Colors.white70 : Colors.black54, fontSize: 17, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 6),
-          Text(subtitle, style: TextStyle(color: isDark ? Colors.white30 : Colors.black26, fontSize: 13), textAlign: TextAlign.center),
+          Icon(icon, size: 56, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15)),
+          SizedBox(height: 16),
+          Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 17, fontWeight: FontWeight.w600)),
+          SizedBox(height: 6),
+          Text(subtitle, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 13), textAlign: TextAlign.center),
           if (action != null) ...[
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: onAction,
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF6D00)),
+              style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
               child: Text(action!),
             ),
           ],

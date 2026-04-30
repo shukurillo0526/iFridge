@@ -9,7 +9,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/app_settings.dart';
 
 /// Describes a single navigation item.
@@ -44,8 +43,7 @@ class DualModeNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isOrder = mode == AppMode.order;
-    final accentColor = isOrder ? const Color(0xFFFF6D00) : IFridgeTheme.primary;
+    final accentColor = Theme.of(context).colorScheme.primary;
 
     final bottomPad = MediaQuery.of(context).padding.bottom;
     final totalHeight = 88.0 + bottomPad;
@@ -62,7 +60,7 @@ class DualModeNavBar extends StatelessWidget {
             bottom: 0,
             child: Container(
               height: 68 + bottomPad,
-              margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+              margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Column(
                 children: [
                   // Thin line across the top
@@ -88,9 +86,7 @@ class DualModeNavBar extends StatelessWidget {
                         filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: isDark
-                                ? IFridgeTheme.bgCard.withValues(alpha: 0.92)
-                                : Colors.white.withValues(alpha: 0.92),
+                            color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.92),
                           ),
                         ),
                       ),
@@ -231,12 +227,12 @@ class _CenterButtonState extends State<_CenterButton>
                   child: Icon(
                     widget.icon,
                     size: 26,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 );
               },
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               widget.label,
               style: TextStyle(
@@ -245,11 +241,11 @@ class _CenterButtonState extends State<_CenterButton>
                 color: widget.isActive
                     ? widget.accentColor
                     : Theme.of(context).brightness == Brightness.dark
-                        ? IFridgeTheme.textMuted
-                        : Colors.black45,
+                        ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)
+                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45),
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
           ],
         ),
       ),
@@ -284,7 +280,7 @@ class _NavButton extends StatelessWidget {
       },
       behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 8, top: 18),
+        padding: EdgeInsets.only(bottom: 8, top: 18),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -296,12 +292,10 @@ class _NavButton extends StatelessWidget {
                 size: 24,
                 color: isActive
                     ? accentColor
-                    : isDark
-                        ? IFridgeTheme.textMuted
-                        : Colors.black38,
+                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             // Active indicator dot
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
@@ -312,7 +306,7 @@ class _NavButton extends StatelessWidget {
                 color: accentColor,
               ),
             ),
-            const SizedBox(height: 2),
+            SizedBox(height: 2),
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 200),
               style: TextStyle(
@@ -320,9 +314,7 @@ class _NavButton extends StatelessWidget {
                 fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
                 color: isActive
                     ? accentColor
-                    : isDark
-                        ? IFridgeTheme.textMuted
-                        : Colors.black38,
+                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
               ),
               child: Text(label),
             ),

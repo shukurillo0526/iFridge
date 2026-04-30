@@ -6,7 +6,6 @@
 // and serving size scaler with proper math.
 
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
 import 'package:ifridge_app/core/utils/unit_converter.dart';
 import 'package:ifridge_app/core/utils/ingredient_icons.dart';
@@ -85,50 +84,50 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
     final result = await showDialog<Map<String, dynamic>>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surface,
-        title: const Text('Edit Ingredient', style: TextStyle(color: Colors.white)),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text('Edit Ingredient', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: nameC, autofocus: true,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
               decoration: InputDecoration(
-                labelText: 'Name', labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
-                filled: true, fillColor: AppTheme.background,
+                labelText: 'Name', labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+                filled: true, fillColor: Theme.of(context).scaffoldBackgroundColor,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Row(
               children: [
                 Expanded(child: TextField(
                   controller: qtyC, keyboardType: TextInputType.number,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Qty', labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
-                    filled: true, fillColor: AppTheme.background,
+                    labelText: 'Qty', labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+                    filled: true, fillColor: Theme.of(context).scaffoldBackgroundColor,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)))),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(child: TextField(
                   controller: unitC,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Unit', labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
-                    filled: true, fillColor: AppTheme.background,
+                    labelText: 'Unit', labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+                    filled: true, fillColor: Theme.of(context).scaffoldBackgroundColor,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)))),
               ],
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel')),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, {
               'name': nameC.text.trim(),
               'qty': double.tryParse(qtyC.text) ?? ing['quantity'],
               'unit': unitC.text.trim(),
             }),
-            style: FilledButton.styleFrom(backgroundColor: IFridgeTheme.primary),
-            child: const Text('Save')),
+            style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
+            child: Text('Save')),
         ],
       ),
     );
@@ -226,11 +225,11 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
     final missingCount = widget.ingredients.length - haveCount;
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent, elevation: 0,
         title: Text(widget.title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -238,33 +237,33 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
           children: [
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 children: [
                   // ── Serving Scaler ───────────────────────────
                   Container(
-                    margin: const EdgeInsets.only(top: 8, bottom: 16),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                    margin: EdgeInsets.only(top: 8, bottom: 16),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                     decoration: BoxDecoration(
-                      color: AppTheme.surface,
+                      color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+                      border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.people, color: IFridgeTheme.primary, size: 20),
-                        const SizedBox(width: 12),
-                        const Text('Servings', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
-                        const Spacer(),
+                        Icon(Icons.people, color: Theme.of(context).colorScheme.primary, size: 20),
+                        SizedBox(width: 12),
+                        Text('Servings', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w600)),
+                        Spacer(),
                         IconButton(
                           onPressed: _decrementServings,
-                          icon: const Icon(Icons.remove_circle_outline, color: Colors.white54),
+                          icon: Icon(Icons.remove_circle_outline, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54)),
                           iconSize: 28,
                         ),
                         Text('$_servings',
-                          style: const TextStyle(color: IFridgeTheme.primary, fontSize: 22, fontWeight: FontWeight.w800)),
+                          style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 22, fontWeight: FontWeight.w800)),
                         IconButton(
                           onPressed: _incrementServings,
-                          icon: const Icon(Icons.add_circle_outline, color: Colors.white54),
+                          icon: Icon(Icons.add_circle_outline, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54)),
                           iconSize: 28,
                         ),
                       ],
@@ -274,26 +273,26 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                   // Scaled calorie info
                   if (widget.caloriesPerServing != null && widget.caloriesPerServing! > 0)
                     Container(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      margin: EdgeInsets.only(bottom: 16),
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [Colors.orange.withValues(alpha: 0.12), AppTheme.surface],
+                          colors: [Colors.orange.withValues(alpha: 0.12), Theme.of(context).colorScheme.surface],
                           begin: Alignment.topLeft, end: Alignment.bottomRight),
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(color: Colors.orange.withValues(alpha: 0.2)),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.local_fire_department, color: Colors.orange, size: 22),
-                          const SizedBox(width: 10),
+                          Icon(Icons.local_fire_department, color: Colors.orange, size: 22),
+                          SizedBox(width: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('${widget.caloriesPerServing! * _servings} cal total',
-                                style: const TextStyle(color: Colors.orange, fontSize: 18, fontWeight: FontWeight.w800)),
+                                style: TextStyle(color: Colors.orange, fontSize: 18, fontWeight: FontWeight.w800)),
                               Text('${widget.caloriesPerServing} cal × $_servings servings',
-                                style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12)),
+                                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 12)),
                             ],
                           ),
                         ],
@@ -304,21 +303,21 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                   Row(
                     children: [
                       _StatusChip(
-                        icon: Icons.check_circle, color: IFridgeTheme.freshGreen,
+                        icon: Icons.check_circle, color: Theme.of(context).colorScheme.tertiary,
                         label: '$haveCount have'),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       if (missingCount > 0)
                         _StatusChip(
                           icon: Icons.warning_amber, color: Colors.orange,
                           label: '$missingCount missing'),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
 
                   // ── Ingredients List ──────────────────────────
                   Text('📋 Ingredients',
-                    style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 8),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w700)),
+                  SizedBox(height: 8),
 
                   ...List.generate(widget.ingredients.length, (i) {
                     final ing = widget.ingredients[i];
@@ -334,47 +333,47 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                     return Column(
                       children: [
                         Container(
-                          margin: const EdgeInsets.only(bottom: 6),
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                          margin: EdgeInsets.only(bottom: 6),
+                          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                           decoration: BoxDecoration(
-                            color: AppTheme.surface,
+                            color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: isOwned
-                                  ? IFridgeTheme.freshGreen.withValues(alpha: 0.2)
+                                  ? Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.2)
                                   : Colors.orange.withValues(alpha: 0.15)),
                           ),
                           child: GestureDetector(
                             onTap: () => _editIngredient(i),
                             child: Row(
                             children: [
-                              Text(emoji, style: const TextStyle(fontSize: 22)),
-                              const SizedBox(width: 10),
+                              Text(emoji, style: TextStyle(fontSize: 22)),
+                              SizedBox(width: 10),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(name, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+                                    Text(name, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w600)),
                                     Text(UnitConverter.simplifyMetric(scaledQty, unit),
-                                      style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12)),
+                                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
                                   ],
                                 ),
                               ),
                               if (isOwned)
-                                const Icon(Icons.check_circle, color: IFridgeTheme.freshGreen, size: 20)
+                                Icon(Icons.check_circle, color: Theme.of(context).colorScheme.tertiary, size: 20)
                               else
                                 GestureDetector(
                                   onTap: () => _askSubstitute(i),
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                     decoration: BoxDecoration(
                                       color: Colors.orange.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: _loadingSub[i] == true
-                                        ? const SizedBox(width: 14, height: 14,
+                                        ? SizedBox(width: 14, height: 14,
                                             child: CircularProgressIndicator(strokeWidth: 2, color: Colors.orange))
-                                        : const Text('Swap →',
+                                        : Text('Swap →',
                                             style: TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.w700)),
                                   ),
                                 ),
@@ -385,21 +384,21 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                         // Substitution suggestions
                         if (_substitutions[i] != null)
                           Container(
-                            margin: const EdgeInsets.only(bottom: 8, left: 12),
-                            padding: const EdgeInsets.all(12),
+                            margin: EdgeInsets.only(bottom: 8, left: 12),
+                            padding: EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: IFridgeTheme.primary.withValues(alpha: 0.06),
+                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.06),
                               borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: IFridgeTheme.primary.withValues(alpha: 0.15)),
+                              border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15)),
                             ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Icon(Icons.auto_awesome, size: 16, color: IFridgeTheme.primary),
-                                const SizedBox(width: 8),
+                                Icon(Icons.auto_awesome, size: 16, color: Theme.of(context).colorScheme.primary),
+                                SizedBox(width: 8),
                                 Expanded(
                                   child: Text(_substitutions[i]!,
-                                    style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 13, height: 1.5)),
+                                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8), fontSize: 13, height: 1.5)),
                                 ),
                               ],
                             ),
@@ -409,73 +408,73 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                   }),
 
                   // ── AI Assistant ─────────────────────────────
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: IFridgeTheme.primary.withValues(alpha: 0.06),
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.06),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: IFridgeTheme.primary.withValues(alpha: 0.15)),
+                      border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Row(
+                        Row(
                           children: [
-                            Icon(Icons.auto_awesome, color: IFridgeTheme.primary, size: 18),
+                            Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.primary, size: 18),
                             SizedBox(width: 8),
                             Text('🤖 AI Assistant',
-                              style: TextStyle(color: IFridgeTheme.primary, fontSize: 14, fontWeight: FontWeight.w700)),
+                              style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 14, fontWeight: FontWeight.w700)),
                           ],
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10),
                         TextField(
                           onChanged: (v) => _aiQuestion = v,
-                          style: const TextStyle(color: Colors.white, fontSize: 14),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14),
                           decoration: InputDecoration(
                             hintText: 'e.g. "I don\'t have lamb, suggest alternatives"',
-                            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 13),
+                            hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 13),
                             filled: true,
-                            fillColor: AppTheme.surface,
+                            fillColor: Theme.of(context).colorScheme.surface,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide.none),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                             suffixIcon: _aiLoading
-                                ? const Padding(padding: EdgeInsets.all(12),
+                                ? Padding(padding: EdgeInsets.all(12),
                                     child: SizedBox(width: 18, height: 18,
-                                      child: CircularProgressIndicator(strokeWidth: 2, color: IFridgeTheme.primary)))
+                                      child: CircularProgressIndicator(strokeWidth: 2, color: Theme.of(context).colorScheme.primary)))
                                 : IconButton(
                                     onPressed: _askAiChat,
-                                    icon: const Icon(Icons.send, color: IFridgeTheme.primary, size: 20)),
+                                    icon: Icon(Icons.send, color: Theme.of(context).colorScheme.primary, size: 20)),
                           ),
                         ),
                         if (_aiResponse != null) ...[
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10),
                           Text(_aiResponse!,
-                            style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 13, height: 1.5)),
+                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85), fontSize: 13, height: 1.5)),
                         ],
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                 ],
               ),
             ),
 
             // ── Start Cooking Button ─────────────────────────
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+              padding: EdgeInsets.fromLTRB(20, 8, 20, 20),
               child: SizedBox(
                 width: double.infinity,
                 child: FilledButton.icon(
                   onPressed: _startCooking,
-                  icon: const Icon(Icons.restaurant, size: 22),
-                  label: const Text('🍳 Start Cooking',
+                  icon: Icon(Icons.restaurant, size: 22),
+                  label: Text('🍳 Start Cooking',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                   style: FilledButton.styleFrom(
-                    backgroundColor: IFridgeTheme.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    padding: EdgeInsets.symmetric(vertical: 18),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
                 ),
@@ -497,7 +496,7 @@ class _StatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10),
@@ -506,7 +505,7 @@ class _StatusChip extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 14, color: color),
-          const SizedBox(width: 6),
+          SizedBox(width: 6),
           Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600)),
         ],
       ),

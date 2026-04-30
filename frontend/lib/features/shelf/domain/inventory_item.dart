@@ -1,5 +1,6 @@
 /// I-Fridge — Inventory Item Domain Model
 /// ========================================
+library;
 
 class InventoryItem {
   final String id;

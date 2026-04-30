@@ -11,7 +11,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/social_service.dart';
 import 'package:ifridge_app/core/widgets/recipe_attachment_widget.dart';
 import 'package:ifridge_app/core/services/recipe_monetization_service.dart';
@@ -28,7 +27,7 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
   final _locationController = TextEditingController();
   final _tagsController = TextEditingController();
 
-  List<XFile> _selectedImages = [];
+  final List<XFile> _selectedImages = [];
   String _postType = 'photo';
   String _visibility = 'public';
   bool _uploading = false;
@@ -71,7 +70,7 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
     final caption = _captionController.text.trim();
     if (caption.isEmpty && _selectedImages.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Add a photo or write something!'), backgroundColor: Colors.orange),
+        SnackBar(content: Text('Add a photo or write something!'), backgroundColor: Colors.orange),
       );
       return;
     }
@@ -142,8 +141,8 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
       if (result != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('✅ Posted successfully!'),
-            backgroundColor: IFridgeTheme.primary,
+            content: Text('✅ Posted successfully!'),
+            backgroundColor: Theme.of(context).colorScheme.primary,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
@@ -152,7 +151,7 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
       } else {
         setState(() => _uploading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('❌ Failed to post. Try again.'), backgroundColor: Colors.redAccent),
+          SnackBar(content: Text('❌ Failed to post. Try again.'), backgroundColor: Colors.redAccent),
         );
       }
     } catch (e) {
@@ -166,14 +165,14 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('New Post', style: TextStyle(fontWeight: FontWeight.w700)),
+        title: Text('New Post', style: TextStyle(fontWeight: FontWeight.w700)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: Icon(Icons.close),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
@@ -181,12 +180,12 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
             TextButton(
               onPressed: _submit,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 decoration: BoxDecoration(
-                  color: IFridgeTheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: const Text('Post', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 14)),
+                child: Text('Post', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w700, fontSize: 14)),
               ),
             ),
         ],
@@ -204,20 +203,20 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
             width: 80, height: 80,
             child: CircularProgressIndicator(
               value: _uploadProgress > 0 ? _uploadProgress : null,
-              color: IFridgeTheme.primary,
+              color: Theme.of(context).colorScheme.primary,
               strokeWidth: 3,
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           Text(
             _uploadProgress < 0.9 ? 'Uploading photos...' : 'Publishing...',
-            style: const TextStyle(color: Colors.white70, fontSize: 16),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 16),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           if (_uploadProgress > 0)
             Text(
               '${(_uploadProgress * 100).toInt()}%',
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 14),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 14),
             ),
         ],
       ),
@@ -226,14 +225,14 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
 
   Widget _buildForm() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // ── Post Type Selector ──
-          const Text('What are you sharing?',
-              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 10),
+          Text('What are you sharing?',
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700)),
+          SizedBox(height: 10),
           Row(
             children: _postTypes.map((type) {
               final isSelected = _postType == type.$1;
@@ -242,27 +241,27 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
                   onTap: () => setState(() => _postType = type.$1),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    margin: const EdgeInsets.symmetric(horizontal: 3),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    margin: EdgeInsets.symmetric(horizontal: 3),
+                    padding: EdgeInsets.symmetric(vertical: 12),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? IFridgeTheme.primary.withValues(alpha: 0.15)
-                          : Colors.white.withValues(alpha: 0.04),
+                          ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.15)
+                          : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.04),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
                         color: isSelected
-                            ? IFridgeTheme.primary.withValues(alpha: 0.5)
-                            : Colors.white.withValues(alpha: 0.08),
+                            ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)
+                            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
                         width: isSelected ? 1.5 : 1,
                       ),
                     ),
                     child: Column(
                       children: [
-                        Text(type.$2, style: const TextStyle(fontSize: 22)),
-                        const SizedBox(height: 4),
+                        Text(type.$2, style: TextStyle(fontSize: 22)),
+                        SizedBox(height: 4),
                         Text(type.$3,
                             style: TextStyle(
-                              color: isSelected ? IFridgeTheme.primary : Colors.white54,
+                              color: isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                               fontSize: 12,
                               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                             )),
@@ -274,12 +273,12 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
             }).toList(),
           ),
 
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // ── Image Picker ──
-          const Text('Photos',
-              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 8),
+          Text('Photos',
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700)),
+          SizedBox(height: 8),
 
           SizedBox(
             height: 110,
@@ -288,14 +287,14 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
               children: [
                 // Add buttons
                 _addImageButton(Icons.photo_library, 'Gallery', _pickFromGallery),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 _addImageButton(Icons.camera_alt, 'Camera', _pickFromCamera),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
 
                 // Selected image previews
                 ..._selectedImages.asMap().entries.map((entry) {
                   return Padding(
-                    padding: const EdgeInsets.only(right: 8),
+                    padding: EdgeInsets.only(right: 8),
                     child: Stack(
                       children: [
                         ClipRRect(
@@ -304,7 +303,7 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
                             future: entry.value.readAsBytes(),
                             builder: (_, snap) {
                               if (!snap.hasData) {
-                                return Container(width: 100, height: 100, color: IFridgeTheme.bgElevated);
+                                return Container(width: 100, height: 100, color: Theme.of(context).colorScheme.surfaceContainerHighest);
                               }
                               return Image.memory(snap.data!, width: 100, height: 100, fit: BoxFit.cover);
                             },
@@ -315,12 +314,12 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
                           child: GestureDetector(
                             onTap: () => _removeImage(entry.key),
                             child: Container(
-                              padding: const EdgeInsets.all(3),
-                              decoration: const BoxDecoration(
-                                color: Colors.black54,
+                              padding: EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.54),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(Icons.close, color: Colors.white, size: 14),
+                              child: Icon(Icons.close, color: Theme.of(context).colorScheme.onSurface, size: 14),
                             ),
                           ),
                         ),
@@ -334,74 +333,74 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
 
           if (_selectedImages.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(top: 6),
+              padding: EdgeInsets.only(top: 6),
               child: Text(
                 '${_selectedImages.length}/10 photos selected',
-                style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 12),
               ),
             ),
 
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // ── Caption ──
           TextField(
             controller: _captionController,
-            style: const TextStyle(color: Colors.white, fontSize: 15),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15),
             maxLines: 4,
             decoration: InputDecoration(
               hintText: 'Write a caption...',
-              hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+              hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
               filled: true,
-              fillColor: IFridgeTheme.bgElevated,
+              fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: const EdgeInsets.all(16),
+              contentPadding: EdgeInsets.all(16),
             ),
           ),
 
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
 
           // ── Tags ──
           TextField(
             controller: _tagsController,
-            style: const TextStyle(color: Colors.white, fontSize: 14),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14),
             decoration: InputDecoration(
               hintText: 'Tags (comma separated): pasta, italian, dinner',
-              hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.25)),
+              hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.25)),
               filled: true,
-              fillColor: IFridgeTheme.bgElevated,
+              fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide.none,
               ),
-              prefixIcon: Icon(Icons.tag, color: IFridgeTheme.primary.withValues(alpha: 0.5)),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              prefixIcon: Icon(Icons.tag, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)),
+              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             ),
           ),
 
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
 
           // ── Location (for restaurant visits) ──
           if (_postType == 'restaurant_visit') ...[
             TextField(
               controller: _locationController,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14),
               decoration: InputDecoration(
                 hintText: 'Restaurant name & location',
-                hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.25)),
+                hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.25)),
                 filled: true,
-                fillColor: IFridgeTheme.bgElevated,
+                fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                   borderSide: BorderSide.none,
                 ),
-                prefixIcon: Icon(Icons.location_on, color: const Color(0xFFFF6D00).withValues(alpha: 0.7)),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                prefixIcon: Icon(Icons.location_on, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7)),
+                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               ),
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
           ],
 
           // ── Recipe Attachment ──
@@ -409,31 +408,31 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
             onChanged: (result) => _recipeAttachment = result,
           ),
 
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
 
           // ── Visibility ──
           Container(
-            padding: const EdgeInsets.all(14),
+            padding: EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: IFridgeTheme.bgElevated,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
               children: [
                 Icon(
                   _visibility == 'public' ? Icons.public : Icons.people,
-                  color: IFridgeTheme.primary.withValues(alpha: 0.7),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
                   size: 20,
                 ),
-                const SizedBox(width: 10),
+                SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Visibility', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+                      Text('Visibility', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w600)),
                       Text(
                         _visibility == 'public' ? 'Everyone can see this' : 'Only your followers',
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 11),
                       ),
                     ],
                   ),
@@ -448,15 +447,15 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.resolveWith((states) {
                       return states.contains(WidgetState.selected)
-                          ? IFridgeTheme.primary.withValues(alpha: 0.2)
+                          ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
                           : Colors.transparent;
                     }),
                     foregroundColor: WidgetStateProperty.resolveWith((states) {
                       return states.contains(WidgetState.selected)
-                          ? IFridgeTheme.primary
-                          : Colors.white38;
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38);
                     }),
-                    side: WidgetStateProperty.all(BorderSide(color: Colors.white.withValues(alpha: 0.1))),
+                    side: WidgetStateProperty.all(BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1))),
                     visualDensity: VisualDensity.compact,
                   ),
                 ),
@@ -464,7 +463,7 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
             ),
           ),
 
-          const SizedBox(height: 40),
+          SizedBox(height: 40),
         ],
       ),
     );
@@ -476,20 +475,20 @@ class _EnhancedPostUploadFormState extends State<EnhancedPostUploadForm> {
       child: Container(
         width: 100, height: 100,
         decoration: BoxDecoration(
-          color: IFridgeTheme.bgElevated,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: IFridgeTheme.primary.withValues(alpha: 0.3),
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
             style: BorderStyle.solid,
           ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: IFridgeTheme.primary.withValues(alpha: 0.6), size: 28),
-            const SizedBox(height: 4),
+            Icon(icon, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6), size: 28),
+            SizedBox(height: 4),
             Text(label,
-                style: TextStyle(color: IFridgeTheme.primary.withValues(alpha: 0.6), fontSize: 11, fontWeight: FontWeight.w600)),
+                style: TextStyle(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6), fontSize: 11, fontWeight: FontWeight.w600)),
           ],
         ),
       ),

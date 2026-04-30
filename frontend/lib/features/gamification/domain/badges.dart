@@ -1,5 +1,6 @@
 /// I-Fridge — Gamification Badges Domain
 /// =======================================
+library;
 
 enum WasteBadge {
   firstMeal('🍳', 'First Meal', 'Cook your first recipe', 0),

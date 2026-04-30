@@ -5,11 +5,9 @@
 // attention flags, wakelock, swipeable step cards, and AI tips.
 
 import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/cooking_reward_screen.dart';
 
@@ -93,7 +91,7 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('⏱ Timer done! Step $stepNum complete'),
-        backgroundColor: IFridgeTheme.freshGreen,
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 4),
       ),
@@ -142,11 +140,11 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
   Widget build(BuildContext context) {
     if (widget.steps.isEmpty) {
       return Scaffold(
-        backgroundColor: AppTheme.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
-        body: const Center(
+        body: Center(
           child: Text('No steps available for this recipe.',
-            style: TextStyle(color: Colors.white)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
         ),
       );
     }
@@ -160,12 +158,12 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
     final progress = (_currentIndex + 1) / totalSteps;
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(widget.title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -174,24 +172,24 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
             // ── Persistent Timer Bar ──────────────────────────
             if (_activeTimers.isNotEmpty)
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
-                  color: IFridgeTheme.primary.withValues(alpha: 0.12),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: IFridgeTheme.primary.withValues(alpha: 0.3)),
+                  border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.timer, color: IFridgeTheme.primary, size: 18),
-                    const SizedBox(width: 8),
+                    Icon(Icons.timer, color: Theme.of(context).colorScheme.primary, size: 18),
+                    SizedBox(width: 8),
                     Expanded(
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: _activeTimers.entries.map((e) {
                             return Padding(
-                              padding: const EdgeInsets.only(right: 14),
+                              padding: EdgeInsets.only(right: 14),
                               child: GestureDetector(
                                 onTap: () {
                                   // Jump to that step
@@ -204,7 +202,7 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
                                   style: TextStyle(
                                     color: e.value < 30
                                         ? Colors.orange
-                                        : IFridgeTheme.primary,
+                                        : Theme.of(context).colorScheme.primary,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w700,
                                     fontFeatures: const [FontFeature.tabularFigures()],
@@ -222,7 +220,7 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
 
             // ── Progress Bar ──────────────────────────────────
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: TweenAnimationBuilder<double>(
@@ -231,18 +229,18 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
                   builder: (context, value, _) => LinearProgressIndicator(
                     value: value,
                     minHeight: 6,
-                    backgroundColor: Colors.white.withValues(alpha: 0.1),
-                    valueColor: const AlwaysStoppedAnimation<Color>(IFridgeTheme.primary),
+                    backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
                   ),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: EdgeInsets.symmetric(horizontal: 24),
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text('Step ${_currentIndex + 1} of $totalSteps',
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 13)),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13)),
               ),
             ),
 
@@ -266,37 +264,37 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
 
             // ── Navigation Controls ───────────────────────────
             Padding(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _currentIndex > 0
                       ? TextButton.icon(
                           onPressed: _prevStep,
-                          icon: const Icon(Icons.arrow_back_ios, size: 16, color: Colors.white),
-                          label: const Text('Back', style: TextStyle(color: Colors.white)),
+                          icon: Icon(Icons.arrow_back_ios, size: 16, color: Theme.of(context).colorScheme.onSurface),
+                          label: Text('Back', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
                           style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12)),
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12)),
                         )
-                      : const SizedBox(width: 80),
+                      : SizedBox(width: 80),
                   _currentIndex < totalSteps - 1
                       ? FilledButton.icon(
                           onPressed: _nextStep,
-                          icon: const Icon(Icons.arrow_forward_ios, size: 16),
-                          label: const Text('Next Step', style: TextStyle(fontSize: 16)),
+                          icon: Icon(Icons.arrow_forward_ios, size: 16),
+                          label: Text('Next Step', style: TextStyle(fontSize: 16)),
                           style: FilledButton.styleFrom(
-                            backgroundColor: IFridgeTheme.primary,
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
                         )
                       : FilledButton.icon(
                           onPressed: _finishCooking,
-                          icon: const Icon(Icons.check_circle, size: 20),
-                          label: const Text('Finish Cooking',
+                          icon: Icon(Icons.check_circle, size: 20),
+                          label: Text('Finish Cooking',
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           style: FilledButton.styleFrom(
-                            backgroundColor: IFridgeTheme.freshGreen,
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                            backgroundColor: Theme.of(context).colorScheme.tertiary,
+                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
                         ),
                 ],
@@ -310,27 +308,27 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
 
   Widget _buildPrepNotesScreen() {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent, elevation: 0,
-        title: Text(widget.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        title: Text(widget.title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         centerTitle: true,
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Title
               Container(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.orange.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: Colors.orange.withValues(alpha: 0.2)),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
                     Text('🔪', style: TextStyle(fontSize: 28)),
                     SizedBox(width: 16),
@@ -342,62 +340,62 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
                             style: TextStyle(color: Colors.orange, fontSize: 20, fontWeight: FontWeight.w700)),
                           SizedBox(height: 4),
                           Text('Mise en place — prepare everything first!',
-                            style: TextStyle(color: Colors.white54, fontSize: 13)),
+                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), fontSize: 13)),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
 
               // Ingredients overview
               if (widget.ingredients != null && widget.ingredients!.isNotEmpty) ...[
                 Text('📋 Ingredients needed:',
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 8),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
+                SizedBox(height: 8),
                 ...widget.ingredients!.take(8).map((ing) {
                   final name = ing['display_name_en'] ?? ing['ingredient_name'] ?? '';
                   final qty = ing['quantity']?.toString() ?? '';
                   final unit = ing['unit'] ?? '';
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
+                    padding: EdgeInsets.only(bottom: 4),
                     child: Text('  • $qty $unit $name',
-                      style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 13)),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 13)),
                   );
                 }),
                 if (widget.ingredients!.length > 8)
                   Text('  ... and ${widget.ingredients!.length - 8} more',
-                    style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 13)),
-                const SizedBox(height: 16),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 13)),
+                SizedBox(height: 16),
               ],
 
               // Prep notes
               if (widget.prepNotes != null)
                 ...widget.prepNotes!.map((note) => Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: EdgeInsets.only(bottom: 10),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('✓ ', style: TextStyle(color: Colors.orange, fontSize: 16)),
+                      Text('✓ ', style: TextStyle(color: Colors.orange, fontSize: 16)),
                       Expanded(
                         child: Text(note,
-                          style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 15, height: 1.5)),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85), fontSize: 15, height: 1.5)),
                       ),
                     ],
                   ),
                 )),
 
-              const Spacer(),
+              Spacer(),
 
               // Start button
               FilledButton.icon(
                 onPressed: () => setState(() => _showPrepNotes = false),
-                icon: const Icon(Icons.restaurant, size: 20),
-                label: const Text('Start Cooking →', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                icon: Icon(Icons.restaurant, size: 20),
+                label: Text('Start Cooking →', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                 style: FilledButton.styleFrom(
-                  backgroundColor: IFridgeTheme.primary,
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  padding: EdgeInsets.symmetric(vertical: 18),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
               ),
@@ -542,7 +540,7 @@ class _CookingStepCardState extends State<_CookingStepCard> {
     final isTimerRunning = widget.timerRemaining != null;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 12),
+      padding: EdgeInsets.fromLTRB(24, 16, 24, 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -551,39 +549,39 @@ class _CookingStepCardState extends State<_CookingStepCard> {
             flex: 2,
             child: Container(
               decoration: BoxDecoration(
-                color: AppTheme.surface,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
               ),
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(icon, size: 72,
-                      color: (requiresAttention ? Colors.orange : IFridgeTheme.primary)
+                      color: (requiresAttention ? Colors.orange : Theme.of(context).colorScheme.primary)
                           .withValues(alpha: 0.3)),
                     if (requiresAttention) ...[
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: Colors.orange.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Text('👀 Needs Your Attention',
+                        child: Text('👀 Needs Your Attention',
                           style: TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.w700)),
                       ),
                     ],
                     if (tempC != null && tempC is int) ...[
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: Colors.red.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text('🌡️ $tempC°C',
-                          style: const TextStyle(color: Colors.redAccent, fontSize: 14, fontWeight: FontWeight.w700)),
+                          style: TextStyle(color: Colors.redAccent, fontSize: 14, fontWeight: FontWeight.w700)),
                       ),
                     ],
                   ],
@@ -591,12 +589,12 @@ class _CookingStepCardState extends State<_CookingStepCard> {
               ),
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // Core Instruction
           Text(humanText,
-            style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700, height: 1.5)),
-          const SizedBox(height: 16),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w700, height: 1.5)),
+          SizedBox(height: 16),
 
           // Interactive Timer Button
           if (timerSec != null && timerSec > 0)
@@ -604,37 +602,37 @@ class _CookingStepCardState extends State<_CookingStepCard> {
               onTap: isTimerRunning ? null : () => widget.onStartTimer(timerSec),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                 decoration: BoxDecoration(
                   color: isTimerRunning
-                      ? IFridgeTheme.primary.withValues(alpha: 0.15)
-                      : Colors.white.withValues(alpha: 0.05),
+                      ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.15)
+                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: isTimerRunning
-                        ? IFridgeTheme.primary.withValues(alpha: 0.4)
-                        : Colors.white.withValues(alpha: 0.1)),
+                        ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.4)
+                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       isTimerRunning ? Icons.timer : Icons.play_circle_fill,
-                      color: isTimerRunning ? IFridgeTheme.primary : Colors.white70,
+                      color: isTimerRunning ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       size: 24),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Text(
                       isTimerRunning
                           ? _formatTime(widget.timerRemaining!)
                           : '${_isAutoStart ? '⚡ Auto' : 'Start'} Timer • ${_formatTime(timerSec)}',
                       style: TextStyle(
-                        color: isTimerRunning ? IFridgeTheme.primary : Colors.white70,
+                        color: isTimerRunning ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         fontSize: 18, fontWeight: FontWeight.w700,
                         fontFeatures: const [FontFeature.tabularFigures()]),
                     ),
                     if (widget.timerRemaining != null && widget.timerRemaining! <= 0) ...[
-                      const SizedBox(width: 12),
-                      const Icon(Icons.check_circle, color: IFridgeTheme.freshGreen, size: 22),
+                      SizedBox(width: 12),
+                      Icon(Icons.check_circle, color: Theme.of(context).colorScheme.tertiary, size: 22),
                     ],
                   ],
                 ),
@@ -642,23 +640,23 @@ class _CookingStepCardState extends State<_CookingStepCard> {
             ),
 
           // AI Tip Section
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           if (_aiTip != null)
             Container(
-              padding: const EdgeInsets.all(14),
+              padding: EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: IFridgeTheme.primary.withValues(alpha: 0.08),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: IFridgeTheme.primary.withValues(alpha: 0.2)),
+                border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.auto_awesome, color: IFridgeTheme.primary, size: 18),
-                  const SizedBox(width: 10),
+                  Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.primary, size: 18),
+                  SizedBox(width: 10),
                   Expanded(
                     child: Text(_aiTip!,
-                      style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 14, height: 1.5)),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85), fontSize: 14, height: 1.5)),
                   ),
                 ],
               ),
@@ -668,38 +666,38 @@ class _CookingStepCardState extends State<_CookingStepCard> {
               onTap: _askAi,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   color: _aiLoading
-                      ? IFridgeTheme.primary.withValues(alpha: 0.1)
-                      : Colors.white.withValues(alpha: 0.04),
+                      ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
+                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.04),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                     color: _aiLoading
-                        ? IFridgeTheme.primary.withValues(alpha: 0.3)
-                        : Colors.white.withValues(alpha: 0.08)),
+                        ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)
+                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     if (_aiLoading) ...[
-                      const SizedBox(width: 16, height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: IFridgeTheme.primary)),
-                      const SizedBox(width: 10),
+                      SizedBox(width: 16, height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Theme.of(context).colorScheme.primary)),
+                      SizedBox(width: 10),
                       Text('Thinking...',
-                        style: TextStyle(color: IFridgeTheme.primary.withValues(alpha: 0.8), fontSize: 14, fontWeight: FontWeight.w600)),
+                        style: TextStyle(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.8), fontSize: 14, fontWeight: FontWeight.w600)),
                     ] else ...[
-                      Icon(Icons.auto_awesome, color: Colors.white.withValues(alpha: 0.5), size: 18),
-                      const SizedBox(width: 8),
+                      Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), size: 18),
+                      SizedBox(width: 8),
                       Text('💡 Ask AI for a tip',
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 14, fontWeight: FontWeight.w600)),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 14, fontWeight: FontWeight.w600)),
                     ],
                   ],
                 ),
               ),
             ),
 
-          const Spacer(),
+          Spacer(),
         ],
       ),
     );

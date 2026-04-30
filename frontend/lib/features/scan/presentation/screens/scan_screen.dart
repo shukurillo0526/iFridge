@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/core/utils/category_images.dart';
 import 'package:ifridge_app/features/scan/presentation/screens/audit_screen.dart';
@@ -171,17 +170,17 @@ class _ScanScreenState extends State<ScanScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Scan', style: TextStyle(fontWeight: FontWeight.w700)),
+        title: Text('Scan', style: TextStyle(fontWeight: FontWeight.w700)),
         centerTitle: true,
         bottom: TabBar(
           controller: _topTabController,
-          indicatorColor: IFridgeTheme.primary,
+          indicatorColor: Theme.of(context).colorScheme.primary,
           indicatorWeight: 3,
-          labelColor: IFridgeTheme.primary,
-          unselectedLabelColor: Colors.white54,
-          labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+          labelColor: Theme.of(context).colorScheme.primary,
+          unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
+          labelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
           tabs: const [
             Tab(icon: Icon(Icons.fastfood, size: 20), text: 'Scan Food'),
             Tab(icon: Icon(Icons.local_fire_department, size: 20), text: 'Scan Calories'),
@@ -208,7 +207,7 @@ class _ScanScreenState extends State<ScanScreen>
 
   Widget _buildCaptureState() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(32),
+      padding: EdgeInsets.fromLTRB(32, 32, 32, 120),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -226,50 +225,50 @@ class _ScanScreenState extends State<ScanScreen>
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          AppTheme.accent.withValues(alpha: 0.3),
-                          AppTheme.accent.withValues(alpha: 0.05),
+                          Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                          Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
                         ],
                       ),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.document_scanner_outlined,
                       size: 56,
-                      color: AppTheme.accent,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 );
               },
             ),
 
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
-            const Text(
+            Text(
               'Scan Your Ingredients',
               style: TextStyle(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               'Take a photo of food items to add them\nto your shelf automatically',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.5),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                 fontSize: 14,
                 height: 1.5,
               ),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // ── Mode Toggle ──────────────────────────
             Container(
               decoration: BoxDecoration(
-                color: AppTheme.surface,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)),
               ),
               child: Row(
                 children: [
@@ -277,28 +276,28 @@ class _ScanScreenState extends State<ScanScreen>
                     icon: Icons.receipt_long,
                     label: 'Receipt',
                     isActive: _scanMode == 0,
-                    activeColor: AppTheme.accent,
+                    activeColor: Theme.of(context).colorScheme.primary,
                     onTap: () => setState(() => _scanMode = 0),
                   ),
                   _ModeTab(
                     icon: Icons.photo_camera,
                     label: 'Photo',
                     isActive: _scanMode == 1,
-                    activeColor: IFridgeTheme.primary,
+                    activeColor: Theme.of(context).colorScheme.primary,
                     onTap: () => setState(() => _scanMode = 1),
                   ),
                   _ModeTab(
                     icon: Icons.qr_code_scanner,
                     label: 'Barcode',
                     isActive: _scanMode == 2,
-                    activeColor: IFridgeTheme.secondary,
+                    activeColor: Theme.of(context).colorScheme.secondary,
                     onTap: () => setState(() => _scanMode = 2),
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Camera button
             if (_scanMode != 2 && _scanMode != 3) ...[
@@ -309,13 +308,13 @@ class _ScanScreenState extends State<ScanScreen>
                   onPressed: () => _scanMode == 0
                       ? _captureImage(ImageSource.camera)
                       : _capturePhoto(ImageSource.camera),
-                  icon: const Icon(Icons.camera_alt, size: 22),
-                  label: const Text(
+                  icon: Icon(Icons.camera_alt, size: 22),
+                  label: Text(
                     'Take Photo',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   style: FilledButton.styleFrom(
-                    backgroundColor: AppTheme.accent,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -331,13 +330,13 @@ class _ScanScreenState extends State<ScanScreen>
                 height: 56,
                 child: FilledButton.icon(
                   onPressed: _openBarcodeScanner,
-                  icon: const Icon(Icons.qr_code_scanner, size: 22),
-                  label: const Text(
+                  icon: Icon(Icons.qr_code_scanner, size: 22),
+                  label: Text(
                     'Scan Barcode',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   style: FilledButton.styleFrom(
-                    backgroundColor: IFridgeTheme.secondary,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -346,7 +345,7 @@ class _ScanScreenState extends State<ScanScreen>
               ),
             ],
 
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Gallery button
             if (_scanMode != 2 && _scanMode != 3) ...[
@@ -358,17 +357,17 @@ class _ScanScreenState extends State<ScanScreen>
                       ? _captureImage(ImageSource.gallery)
                       : _capturePhoto(ImageSource.gallery),
                   icon: Icon(Icons.photo_library,
-                      size: 22, color: Colors.white.withValues(alpha: 0.7)),
+                      size: 22, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
                   label: Text(
                     'Choose from Gallery',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white.withValues(alpha: 0.7),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
+                    side: BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -377,7 +376,7 @@ class _ScanScreenState extends State<ScanScreen>
               ),
             ],
             
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
 
             
@@ -388,13 +387,13 @@ class _ScanScreenState extends State<ScanScreen>
               height: 56,
               child: TextButton.icon(
                 onPressed: _showManualEntryForm,
-                icon: const Icon(Icons.edit_note, size: 22, color: IFridgeTheme.primary),
-                label: const Text(
+                icon: Icon(Icons.edit_note, size: 22, color: Theme.of(context).colorScheme.primary),
+                label: Text(
                   'Add Manually',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: IFridgeTheme.primary,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ),
@@ -402,17 +401,17 @@ class _ScanScreenState extends State<ScanScreen>
 
             // Error message
             if (_error != null) ...[
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.error_outline, color: Colors.red, size: 18),
-                    const SizedBox(width: 8),
+                    Icon(Icons.error_outline, color: Colors.red, size: 18),
+                    SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         'Recognition failed. Try again.',
@@ -442,25 +441,25 @@ class _ScanScreenState extends State<ScanScreen>
             width: 80,
             height: 80,
             child: CircularProgressIndicator(
-              color: AppTheme.accent,
+              color: Theme.of(context).colorScheme.primary,
               strokeWidth: 3,
-              backgroundColor: AppTheme.accent.withValues(alpha: 0.1),
+              backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
             ),
           ),
-          const SizedBox(height: 24),
-          const Text(
+          SizedBox(height: 24),
+          Text(
             'Analyzing your food...',
             style: TextStyle(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             'AI is identifying ingredients',
             style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.5), fontSize: 14),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 14),
           ),
         ],
       ),
@@ -478,7 +477,7 @@ class _ScanScreenState extends State<ScanScreen>
     final items = (data['items'] as List?) ?? [];
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 120),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -486,53 +485,53 @@ class _ScanScreenState extends State<ScanScreen>
           if (_scanMode == 0)
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppTheme.accent.withValues(alpha: 0.15),
-                    AppTheme.surface,
+                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                    Theme.of(context).colorScheme.surface,
                   ],
                 ),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppTheme.accent.withValues(alpha: 0.3)),
+                border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
               ),
               child: Column(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.receipt_long,
-                    color: AppTheme.accent,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 40,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   Text(
                     store,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     date,
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.6),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                       fontSize: 14,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppTheme.freshGreen.withValues(alpha: 0.2),
+                      color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       '${items.length} Items Detected',
-                      style: const TextStyle(
-                        color: AppTheme.freshGreen,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -543,45 +542,45 @@ class _ScanScreenState extends State<ScanScreen>
           else
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    IFridgeTheme.primary.withValues(alpha: 0.15),
-                    AppTheme.surface,
+                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                    Theme.of(context).colorScheme.surface,
                   ],
                 ),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: IFridgeTheme.primary.withValues(alpha: 0.3)),
+                border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
               ),
               child: Column(
                 children: [
-                   const Icon(
+                   Icon(
                     Icons.image_search,
-                    color: IFridgeTheme.primary,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 40,
                   ),
-                  const SizedBox(height: 12),
-                  const Text(
+                  SizedBox(height: 12),
+                  Text(
                     'Photo Analysis Selected',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppTheme.freshGreen.withValues(alpha: 0.2),
+                      color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       '${items.length} Ingredients Detected',
-                      style: const TextStyle(
-                        color: AppTheme.freshGreen,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.tertiary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -590,61 +589,61 @@ class _ScanScreenState extends State<ScanScreen>
               ),
             ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // ── Summary counter + Add All ──
           if (items.isNotEmpty) ...[
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: IFridgeTheme.bgElevated,
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
                     '${_addedIndices.length} / ${items.length} added',
-                    style: const TextStyle(
-                        color: IFridgeTheme.textSecondary,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         fontSize: 13,
                         fontWeight: FontWeight.w600),
                   ),
                 ),
-                const Spacer(),
+                Spacer(),
                 if (_addedIndices.length < items.length)
                   FilledButton.icon(
                     onPressed: () => _addAllToShelf(items),
-                    icon: const Icon(Icons.playlist_add_check, size: 18),
-                    label: const Text('Add All'),
+                    icon: Icon(Icons.playlist_add_check, size: 18),
+                    label: Text('Add All'),
                     style: FilledButton.styleFrom(
-                      backgroundColor: AppTheme.freshGreen,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
+                      foregroundColor: Theme.of(context).colorScheme.onSurface,
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
                   )
                 else
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: AppTheme.freshGreen.withValues(alpha: 0.15),
+                      color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Row(mainAxisSize: MainAxisSize.min, children: [
-                      Icon(Icons.check_circle, size: 16, color: AppTheme.freshGreen),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(Icons.check_circle, size: 16, color: Theme.of(context).colorScheme.tertiary),
                       SizedBox(width: 6),
                       Text('All Added',
                           style: TextStyle(
-                              color: AppTheme.freshGreen,
+                              color: Theme.of(context).colorScheme.tertiary,
                               fontSize: 13,
                               fontWeight: FontWeight.w600)),
                     ]),
                   ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
           ],
 
           // Parsed Items List
@@ -652,7 +651,7 @@ class _ScanScreenState extends State<ScanScreen>
             _sectionHeader(
               '📦 Parsed Ingredients',
               'Review and add to shelf',
-              Colors.white,
+              Theme.of(context).colorScheme.onSurface,
             ),
             ...items.asMap().entries.map((entry) {
               final idx = entry.key;
@@ -672,11 +671,11 @@ class _ScanScreenState extends State<ScanScreen>
                   icon: isAdded ? Icons.check_circle : Icons.check_circle_outline,
                   title: canonicalName,
                   subtitle: '$qty $unit • $category\nExp: $expiry',
-                  color: isAdded ? IFridgeTheme.textMuted : AppTheme.freshGreen,
+                  color: isAdded ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4) : Theme.of(context).colorScheme.tertiary,
                   trailing: isAdded
-                      ? const Icon(Icons.done, color: AppTheme.freshGreen)
+                      ? Icon(Icons.done, color: Theme.of(context).colorScheme.tertiary)
                       : IconButton(
-                          icon: const Icon(Icons.add_shopping_cart, color: AppTheme.accent),
+                          icon: Icon(Icons.add_shopping_cart, color: Theme.of(context).colorScheme.primary),
                           onPressed: () => _addSingleItem(i, idx),
                         ),
                 ),
@@ -684,7 +683,7 @@ class _ScanScreenState extends State<ScanScreen>
             }),
           ],
 
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
 
           // Scan again button
           SizedBox(
@@ -696,10 +695,10 @@ class _ScanScreenState extends State<ScanScreen>
                 _error = null;
                 _addedIndices.clear();
               }),
-              icon: Icon(Icons.refresh, color: Colors.white.withValues(alpha: 0.7)),
-              label: Text('Scan Another', style: TextStyle(color: Colors.white.withValues(alpha: 0.7))),
+              icon: Icon(Icons.refresh, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
+              label: Text('Scan Another', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
               style: OutlinedButton.styleFrom(
-                side: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
+                side: BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -707,7 +706,7 @@ class _ScanScreenState extends State<ScanScreen>
             ),
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // Audit Items Button
           SizedBox(
@@ -734,10 +733,10 @@ class _ScanScreenState extends State<ScanScreen>
                   MaterialPageRoute(builder: (_) => AuditScreen(initialItems: auditItems)),
                 );
               },
-              icon: const Icon(Icons.style),
-              label: const Text('Start Visual Audit', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              icon: Icon(Icons.style),
+              label: Text('Start Visual Audit', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               style: FilledButton.styleFrom(
-                backgroundColor: AppTheme.accent,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -772,7 +771,7 @@ class _ScanScreenState extends State<ScanScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Added $canonicalName!'),
-          backgroundColor: AppTheme.freshGreen,
+          backgroundColor: Theme.of(context).colorScheme.tertiary,
           duration: const Duration(seconds: 1),
         ),
       );
@@ -822,20 +821,20 @@ class _ScanScreenState extends State<ScanScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Added $added items to shelf!'),
-        backgroundColor: AppTheme.freshGreen,
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
       ),
     );
   }
 
   Widget _sectionHeader(String title, String subtitle, Color color) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
           Text(title,
               style: TextStyle(
                   color: color, fontSize: 15, fontWeight: FontWeight.w700)),
-          const Spacer(),
+          Spacer(),
           Text(subtitle,
               style: TextStyle(
                   color: color.withValues(alpha: 0.6), fontSize: 12)),
@@ -853,22 +852,22 @@ class _ScanScreenState extends State<ScanScreen>
     Widget? trailing,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: ListTile(
         leading: Icon(icon, color: color),
         title: Text(title,
-            style: const TextStyle(color: Colors.white, fontSize: 14)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14)),
         subtitle: Text(subtitle,
             style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.5), fontSize: 12)),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
         trailing: trailing ?? (onConfirm != null
             ? IconButton(
-                icon: const Icon(Icons.check, color: AppTheme.freshGreen),
+                icon: Icon(Icons.check, color: Theme.of(context).colorScheme.tertiary),
                 onPressed: onConfirm,
               )
             : null),
@@ -898,18 +897,18 @@ class _ScanScreenState extends State<ScanScreen>
       builder: (ctx) {
         final controller = TextEditingController();
         return AlertDialog(
-          backgroundColor: AppTheme.surface,
-          title: const Text('Enter Barcode',
-              style: TextStyle(color: Colors.white)),
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          title: Text('Enter Barcode',
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
           content: TextField(
             controller: controller,
             keyboardType: TextInputType.number,
-            style: const TextStyle(color: Colors.white),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
             decoration: InputDecoration(
               hintText: 'e.g., 8801234567890',
-              hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+              hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
               filled: true,
-              fillColor: AppTheme.background,
+              fillColor: Theme.of(context).scaffoldBackgroundColor,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -919,14 +918,14 @@ class _ScanScreenState extends State<ScanScreen>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel'),
+              child: Text('Cancel'),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, controller.text.trim()),
               style: FilledButton.styleFrom(
-                backgroundColor: IFridgeTheme.secondary,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
               ),
-              child: const Text('Look Up'),
+              child: Text('Look Up'),
             ),
           ],
         );
@@ -1086,7 +1085,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Added $_ingredientName to shelf!'),
-            backgroundColor: IFridgeTheme.freshGreen,
+            backgroundColor: Theme.of(context).colorScheme.tertiary,
           ),
         );
       } catch (e) {
@@ -1114,9 +1113,9 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
         bottom: bottomInset > 0 ? bottomInset + 24 : 48,
       ),
       decoration: BoxDecoration(
-        color: IFridgeTheme.bgElevated,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)),
       ),
       child: Form(
         key: _formKey,
@@ -1129,23 +1128,23 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
               child: Container(
                 width: 40,
                 height: 4,
-                margin: const EdgeInsets.only(bottom: 24),
+                margin: EdgeInsets.only(bottom: 24),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
             
-            const Text(
+            Text(
               'Add Ingredient',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // Location picker
             SegmentedButton<String>(
@@ -1159,22 +1158,22 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.resolveWith((states) {
                   if (states.contains(WidgetState.selected)) {
-                    return IFridgeTheme.primary.withValues(alpha: 0.15);
+                    return Theme.of(context).colorScheme.primary.withValues(alpha: 0.15);
                   }
-                  return IFridgeTheme.bgElevated;
+                  return Theme.of(context).colorScheme.surfaceContainerHighest;
                 }),
                 foregroundColor: WidgetStateProperty.resolveWith((states) {
                   if (states.contains(WidgetState.selected)) {
-                    return IFridgeTheme.primary;
+                    return Theme.of(context).colorScheme.primary;
                   }
-                  return IFridgeTheme.textMuted;
+                  return Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4);
                 }),
                 side: WidgetStateProperty.all(
-                  BorderSide(color: Colors.white.withValues(alpha: 0.08)),
+                  BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08)),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Autocomplete Field
             LayoutBuilder(
@@ -1213,8 +1212,9 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                     }
                     // Auto-set location from storage zone
                     final zone = selection['storage_zone']?.toString().toLowerCase() ?? '';
-                    if (zone == 'fridge') _location = 'Fridge';
-                    else if (zone == 'freezer') _location = 'Freezer';
+                    if (zone == 'fridge') {
+                      _location = 'Fridge';
+                    } else if (zone == 'freezer') _location = 'Freezer';
                     else if (zone == 'pantry') _location = 'Pantry';
                   });
                 },
@@ -1232,7 +1232,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      prefixIcon: const Icon(Icons.search),
+                      prefixIcon: Icon(Icons.search),
                     ),
                     validator: (v) => v == null || v.isEmpty ? 'Required' : null,
                   );
@@ -1243,7 +1243,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                     child: Material(
                       elevation: 8,
                       borderRadius: BorderRadius.circular(12),
-                      color: AppTheme.surface,
+                      color: Theme.of(context).colorScheme.surface,
                       child: Container(
                         width: constraints.maxWidth,
                         constraints: const BoxConstraints(maxHeight: 240),
@@ -1264,13 +1264,13 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                                   fit: BoxFit.cover,
                                   errorBuilder: (_, _, _) => Container(
                                     width: 40, height: 40,
-                                    color: IFridgeTheme.bgElevated,
-                                    child: Center(child: Text(categoryEmoji(cat), style: const TextStyle(fontSize: 20))),
+                                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                    child: Center(child: Text(categoryEmoji(cat), style: TextStyle(fontSize: 20))),
                                   ),
                                 ),
                               ),
-                              title: Text(option['display_name_en'] ?? '', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
-                              subtitle: Text(cat, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12)),
+                              title: Text(option['display_name_en'] ?? '', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600)),
+                              subtitle: Text(cat, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
                               onTap: () => onSelected(option),
                             );
                           },
@@ -1281,7 +1281,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                 },
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Category Dropdown
             DropdownButtonFormField<String>(
@@ -1291,7 +1291,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                prefixIcon: const Icon(Icons.category),
+                prefixIcon: Icon(Icons.category),
               ),
               items: _categories.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
               onChanged: (v) {
@@ -1303,7 +1303,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                 }
               },
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Quantity & Unit Row
             Row(
@@ -1322,7 +1322,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                     onSaved: (v) => _quantity = double.tryParse(v!) ?? 1.0,
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Expanded(
                   flex: 3,
                   child: DropdownButtonFormField<String>(
@@ -1339,7 +1339,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Expiry Date Picker (Mocked Action)
             InkWell(
@@ -1358,26 +1358,26 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  prefixIcon: const Icon(Icons.calendar_today),
+                  prefixIcon: Icon(Icons.calendar_today),
                 ),
                 child: Text(
                   '${_expiryDate.month}/${_expiryDate.day}/${_expiryDate.year}',
-                  style: const TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 16),
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
             // Submit
             FilledButton(
               onPressed: _submit,
               style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: IFridgeTheme.primary,
-                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onSurface,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: const Text('Add to Shelf', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              child: Text('Add to Shelf', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -1409,7 +1409,7 @@ class _ModeTab extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: isActive
                 ? activeColor.withValues(alpha: 0.15)
@@ -1420,11 +1420,11 @@ class _ModeTab extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon,
-                  color: isActive ? activeColor : Colors.white38, size: 20),
-              const SizedBox(height: 4),
+                  color: isActive ? activeColor : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), size: 20),
+              SizedBox(height: 4),
               Text(label,
                   style: TextStyle(
-                      color: isActive ? activeColor : Colors.white38,
+                      color: isActive ? activeColor : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                       fontSize: 12,
                       fontWeight: FontWeight.w600)),
             ],
@@ -1492,7 +1492,7 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
         userId: userId, mealType: _mealType, foodItems: items);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('✅ Meal logged!'), backgroundColor: IFridgeTheme.freshGreen));
+          SnackBar(content: Text('✅ Meal logged!'), backgroundColor: Theme.of(context).colorScheme.tertiary));
         setState(() { _result = null; _imageBytes = null; });
       }
     } catch (e) {
@@ -1509,7 +1509,7 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.fromLTRB(24, 24, 24, 120),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -1517,7 +1517,7 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
           Container(
             height: 220,
             decoration: BoxDecoration(
-              color: AppTheme.surface,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Colors.orange.withValues(alpha: 0.2)),
               image: _imageBytes != null
@@ -1528,34 +1528,34 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.local_fire_department, size: 56, color: Colors.orange),
-                      const SizedBox(height: 12),
-                      const Text('Snap Your Meal',
-                        style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700)),
-                      const SizedBox(height: 6),
+                      Icon(Icons.local_fire_department, size: 56, color: Colors.orange),
+                      SizedBox(height: 12),
+                      Text('Snap Your Meal',
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w700)),
+                      SizedBox(height: 6),
                       Text('Take a photo and AI will estimate calories',
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 13)),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 13)),
                     ],
                   )
                 : _analyzing
                     ? Center(
                         child: Container(
-                          padding: const EdgeInsets.all(20),
+                          padding: EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            color: Colors.black54, borderRadius: BorderRadius.circular(16)),
-                          child: const Column(
+                            color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.54), borderRadius: BorderRadius.circular(16)),
+                          child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               CircularProgressIndicator(color: Colors.orange),
                               SizedBox(height: 12),
-                              Text('Analyzing food...', style: TextStyle(color: Colors.white, fontSize: 14)),
+                              Text('Analyzing food...', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14)),
                             ],
                           ),
                         ),
                       )
                     : null,
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // Camera / Gallery buttons
           Row(
@@ -1565,24 +1565,24 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
                   height: 52,
                   child: FilledButton.icon(
                     onPressed: _analyzing ? null : () => _captureAndAnalyze(ImageSource.camera),
-                    icon: const Icon(Icons.camera_alt, size: 20),
-                    label: const Text('Camera', style: TextStyle(fontWeight: FontWeight.w600)),
+                    icon: Icon(Icons.camera_alt, size: 20),
+                    label: Text('Camera', style: TextStyle(fontWeight: FontWeight.w600)),
                     style: FilledButton.styleFrom(
                       backgroundColor: Colors.orange,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: SizedBox(
                   height: 52,
                   child: OutlinedButton.icon(
                     onPressed: _analyzing ? null : () => _captureAndAnalyze(ImageSource.gallery),
-                    icon: const Icon(Icons.photo_library, size: 20, color: Colors.orange),
-                    label: const Text('Gallery', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600)),
+                    icon: Icon(Icons.photo_library, size: 20, color: Colors.orange),
+                    label: Text('Gallery', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600)),
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.orange),
+                      side: BorderSide(color: Colors.orange),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
                   ),
                 ),
@@ -1592,32 +1592,32 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
 
           // Results
           if (_result != null) ...[
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // Detected items
             if (_result!['detected_items'] != null)
               Padding(
-                padding: const EdgeInsets.only(bottom: 12),
+                padding: EdgeInsets.only(bottom: 12),
                 child: Wrap(
                   spacing: 6,
                   runSpacing: 4,
                   children: ((_result!['detected_items'] as List?) ?? []).map((item) => Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.orange.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8)),
                     child: Text('🔍 $item',
-                      style: const TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.w600)),
+                      style: TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.w600)),
                   )).toList(),
                 ),
               ),
 
             // Total calories
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.orange.withValues(alpha: 0.15), AppTheme.surface],
+                  colors: [Colors.orange.withValues(alpha: 0.15), Theme.of(context).colorScheme.surface],
                   begin: Alignment.topLeft, end: Alignment.bottomRight),
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(color: Colors.orange.withValues(alpha: 0.2)),
@@ -1625,25 +1625,25 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
               child: Column(
                 children: [
                   Text('🔥 ${_result!['total_estimated_calories'] ?? 0}',
-                    style: const TextStyle(color: Colors.orange, fontSize: 36, fontWeight: FontWeight.w800)),
-                  const Text('estimated calories',
-                    style: TextStyle(color: Colors.white54, fontSize: 13)),
-                  const SizedBox(height: 8),
+                    style: TextStyle(color: Colors.orange, fontSize: 36, fontWeight: FontWeight.w800)),
+                  Text('estimated calories',
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), fontSize: 13)),
+                  SizedBox(height: 8),
                   Text('${(_result!['items'] as List?)?.length ?? 0} items identified',
-                    style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12)),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 12)),
                 ],
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
 
             // Per-item breakdown
             ...((_result!['items'] as List?) ?? []).map((item) => Container(
-              margin: const EdgeInsets.only(bottom: 6),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              margin: EdgeInsets.only(bottom: 6),
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               decoration: BoxDecoration(
-                color: AppTheme.surface,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+                border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
               ),
               child: Row(
                 children: [
@@ -1652,33 +1652,33 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(item['name'] ?? '',
-                          style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w600)),
                         Text('${item['calories_per_100g'] ?? '?'} cal/100g • ~${item['estimated_serving_g'] ?? item['serving_g'] ?? '?'}g',
-                          style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11)),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 11)),
                       ],
                     ),
                   ),
                   Text('${item['estimated_calories'] ?? '?'}',
-                    style: const TextStyle(color: Colors.orange, fontSize: 18, fontWeight: FontWeight.w800)),
-                  const Text(' cal', style: TextStyle(color: Colors.white38, fontSize: 11)),
-                  const SizedBox(width: 6),
+                    style: TextStyle(color: Colors.orange, fontSize: 18, fontWeight: FontWeight.w800)),
+                  Text(' cal', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 11)),
+                  SizedBox(width: 6),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: (item['source'] == 'database' ? IFridgeTheme.freshGreen : IFridgeTheme.primary)
+                      color: (item['source'] == 'database' ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.primary)
                           .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(6)),
                     child: Text(
                       item['source'] == 'database' ? 'DB' : 'AI',
                       style: TextStyle(
-                        color: item['source'] == 'database' ? IFridgeTheme.freshGreen : IFridgeTheme.primary,
+                        color: item['source'] == 'database' ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.primary,
                         fontSize: 9, fontWeight: FontWeight.w700)),
                   ),
                 ],
               ),
             )),
 
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Meal type selector
             Row(
@@ -1687,20 +1687,20 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
                   child: GestureDetector(
                     onTap: () => setState(() => _mealType = type),
                     child: Container(
-                      margin: const EdgeInsets.only(right: 4),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      margin: EdgeInsets.only(right: 4),
+                      padding: EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
-                        color: _mealType == type ? Colors.orange.withValues(alpha: 0.15) : AppTheme.surface,
+                        color: _mealType == type ? Colors.orange.withValues(alpha: 0.15) : Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: _mealType == type ? Colors.orange.withValues(alpha: 0.4) : Colors.white.withValues(alpha: 0.06)),
+                          color: _mealType == type ? Colors.orange.withValues(alpha: 0.4) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
                       ),
                       child: Column(
                         children: [
-                          Text(_mealEmoji[type] ?? '🍽️', style: const TextStyle(fontSize: 16)),
+                          Text(_mealEmoji[type] ?? '🍽️', style: TextStyle(fontSize: 16)),
                           Text(type[0].toUpperCase() + type.substring(1),
                             style: TextStyle(
-                              color: _mealType == type ? Colors.orange : Colors.white38,
+                              color: _mealType == type ? Colors.orange : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                               fontSize: 10, fontWeight: FontWeight.w600)),
                         ],
                       ),
@@ -1710,16 +1710,16 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
               ],
             ),
 
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             SizedBox(
               width: double.infinity,
               height: 52,
               child: FilledButton.icon(
                 onPressed: _logMeal,
-                icon: const Icon(Icons.add_task, size: 20),
-                label: const Text('Log Meal', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                icon: Icon(Icons.add_task, size: 20),
+                label: Text('Log Meal', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                 style: FilledButton.styleFrom(
-                  backgroundColor: IFridgeTheme.freshGreen,
+                  backgroundColor: Theme.of(context).colorScheme.tertiary,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
               ),
             ),

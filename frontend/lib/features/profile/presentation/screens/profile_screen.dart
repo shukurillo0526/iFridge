@@ -245,7 +245,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     if (_loading) {
       return Scaffold(
-        backgroundColor: AppTheme.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: const ProfileSkeleton(),
       );
     }
@@ -254,23 +254,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (_error != null) {
       return Scaffold(
-        backgroundColor: AppTheme.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Center(
           child: Padding(
-            padding: const EdgeInsets.all(32),
+            padding: EdgeInsets.all(32),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.cloud_off, size: 64, color: Colors.white.withValues(alpha: 0.3)),
-                const SizedBox(height: 16),
+                Icon(Icons.cloud_off, size: 64, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
+                SizedBox(height: 16),
                 Text(l10n?.profileLoadError ?? 'Couldn\'t load profile',
-                    style: const TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 24),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 16, fontWeight: FontWeight.w600)),
+                SizedBox(height: 24),
                 FilledButton.icon(
                   onPressed: _loadProfile,
-                  icon: const Icon(Icons.refresh),
+                  icon: Icon(Icons.refresh),
                   label: Text(l10n?.retry ?? 'Retry'),
-                  style: FilledButton.styleFrom(backgroundColor: AppTheme.accent),
+                  style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.secondary),
                 ),
               ],
             ),
@@ -286,7 +286,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final allBadges = _buildBadgeList();
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: CustomScrollView(
         slivers: [
           // ── Header ─────────────────────────────────────────────
@@ -300,9 +300,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      IFridgeTheme.primary.withValues(alpha: 0.3),
-                      IFridgeTheme.secondary.withValues(alpha: 0.2),
-                      AppTheme.background,
+                      Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                      Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2),
+                      Theme.of(context).scaffoldBackgroundColor,
                     ],
                     stops: const [0.0, 0.5, 1.0],
                   ),
@@ -319,34 +319,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 80,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            gradient: const SweepGradient(
+                            gradient: SweepGradient(
                               colors: [
-                                IFridgeTheme.primary,
-                                IFridgeTheme.secondary,
-                                IFridgeTheme.primary,
+                                Theme.of(context).colorScheme.primary,
+                                Theme.of(context).colorScheme.secondary,
+                                Theme.of(context).colorScheme.primary,
                               ],
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: IFridgeTheme.primary.withValues(alpha: 0.4),
+                                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
                                 blurRadius: 24,
                                 spreadRadius: 2,
                               ),
                             ],
                           ),
-                          padding: const EdgeInsets.all(3),
+                          padding: EdgeInsets.all(3),
                           child: Container(
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: AppTheme.background,
+                              color: Theme.of(context).scaffoldBackgroundColor,
                             ),
-                            child: const Center(
+                            child: Center(
                               child: Text('👨‍🍳', style: TextStyle(fontSize: 36)),
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
                       // Name (tappable to edit)
                       GestureDetector(
                         onTap: _editDisplayName,
@@ -355,48 +355,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             Text(
                               _userName,
-                              style: const TextStyle(
-                                color: Colors.white,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
                                 fontSize: 22,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            const SizedBox(width: 6),
+                            SizedBox(width: 6),
                             Icon(Icons.edit, size: 14,
-                                color: Colors.white.withValues(alpha: 0.4)),
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       if (_userEmail.isNotEmpty)
                         Text(
                           _userEmail,
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.4),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
                             fontSize: 12,
                           ),
                         ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
-                          color: IFridgeTheme.primary.withValues(alpha: 0.15),
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: IFridgeTheme.primary.withValues(alpha: 0.3),
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                           ),
                         ),
                         child: Text(
                           '${l10n?.profileGamificationLevel(_level) ?? 'Level $_level'} • $_totalXp XP',
                           style: TextStyle(
-                            color: IFridgeTheme.primary.withValues(alpha: 0.9),
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.9),
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
 
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
 
                       // ── Social Stats Row ──
                       Row(
@@ -405,14 +405,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           _SocialStat(value: '$_postCount', label: 'Posts'),
                           Container(
                             width: 1, height: 24,
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
-                            color: Colors.white.withValues(alpha: 0.12),
+                            margin: EdgeInsets.symmetric(horizontal: 16),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12),
                           ),
                           _SocialStat(value: '$_followerCount', label: 'Followers'),
                           Container(
                             width: 1, height: 24,
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
-                            color: Colors.white.withValues(alpha: 0.12),
+                            margin: EdgeInsets.symmetric(horizontal: 16),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12),
                           ),
                           _SocialStat(value: '$_followingCount', label: 'Following'),
                         ],
@@ -424,7 +424,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.refresh),
+                icon: Icon(Icons.refresh),
                 onPressed: _loadProfile,
                 tooltip: l10n?.refresh ?? 'Refresh',
               ),
@@ -433,7 +433,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           // ── Body ───────────────────────────────────────────────
           SliverPadding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 // XP Progress
@@ -448,33 +448,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             Text(
                               l10n?.profileLevel(_level) ?? 'Level $_level',
-                              style: const TextStyle(
-                                color: IFridgeTheme.primary,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
                             Text(
                               '$_totalXp / $nextLevelXp XP',
                               style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.5),
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                                 fontSize: 13,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: 10),
                         TweenAnimationBuilder<double>(
                           tween: Tween(begin: 0, end: progress.clamp(0.0, 1.0)),
                           duration: const Duration(milliseconds: 800),
                           curve: Curves.easeOutCubic,
-                          builder: (_, value, __) => ClipRRect(
+                          builder: (_, value, _) => ClipRRect(
                             borderRadius: BorderRadius.circular(6),
                             child: LinearProgressIndicator(
                               value: value,
                               minHeight: 10,
-                              backgroundColor: Colors.white.withValues(alpha: 0.08),
+                              backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                Color.lerp(IFridgeTheme.primary, IFridgeTheme.secondary, value) ?? IFridgeTheme.primary,
+                                Color.lerp(Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary, value) ?? Theme.of(context).colorScheme.primary,
                               ),
                             ),
                           ),
@@ -484,7 +484,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // Stats
                 SlideInItem(
@@ -493,26 +493,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NutritionTrackerPage())),
                     child: _SectionCard(
                     title: l10n?.profileYourImpact ?? 'Your Impact',
-                    trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.white38),
+                    trailing: Icon(Icons.arrow_forward_ios, size: 14, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)),
                     child: Row(
                       children: [
                         _AnimatedStatTile(
                           icon: Icons.restaurant,
                           targetValue: _mealsCooked,
                           label: l10n?.profileMealsCooked ?? 'Meals Cooked',
-                          color: IFridgeTheme.primary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         _AnimatedStatTile(
                           icon: Icons.eco,
                           targetValue: _itemsSaved,
                           label: l10n?.profileItemsSaved ?? 'Items Saved',
-                          color: IFridgeTheme.secondary,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                         _AnimatedStatTile(
                           icon: Icons.local_fire_department,
                           targetValue: _currentStreak,
                           label: l10n?.profileDayStreak ?? 'Day Streak',
-                          color: IFridgeTheme.accent,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                       ],
                     ),
@@ -520,7 +520,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // ── Badges Section ─────────────────────────────────────
                 SlideInItem(
@@ -529,7 +529,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const GamificationPage())),
                     child: _SectionCard(
                       title: l10n?.profileBadges ?? 'Badges & Achievements',
-                      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 16),
+                      trailing: Icon(Icons.arrow_forward_ios, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), size: 16),
                       child: LayoutBuilder(
                         builder: (context, constraints) {
                           final itemWidth = (constraints.maxWidth - 24) / 4; // 4 per row
@@ -546,7 +546,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // Flavor Profile
                 SlideInItem(
@@ -555,21 +555,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FlavorProfilePage())),
                     child: _SectionCard(
                       title: l10n?.profileFlavorProfile ?? 'Flavor Profile',
-                      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white38, size: 16),
+                      trailing: Icon(Icons.arrow_forward_ios, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), size: 16),
                       child: SizedBox(
                         height: 220,
                         width: double.infinity,
                         child: CustomPaint(
                           painter: _FlavorRadarPainter(
                             values: _flavorValues,
-                            color: IFridgeTheme.primary,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 // ── Shopping List Section ─────────────────────────────────
 
@@ -586,24 +586,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ? '${l10n?.profileShoppingList ?? 'Shopping List'} ($checkedCount/$totalCount)'
                             : l10n?.profileShoppingList ?? 'Shopping List',
                         trailing: IconButton(
-                          icon: const Icon(Icons.add_circle_outline,
-                              color: IFridgeTheme.primary, size: 22),
+                          icon: Icon(Icons.add_circle_outline,
+                              color: Theme.of(context).colorScheme.primary, size: 22),
                           onPressed: _addShoppingItem,
                           tooltip: l10n?.addShoppingItem ?? 'Add Item',
                         ),
                     child: _shoppingList.isEmpty
                         ? Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              padding: EdgeInsets.symmetric(vertical: 16),
                               child: Column(
                                 children: [
                                   Icon(Icons.shopping_cart_outlined,
                                       size: 40,
-                                      color: Colors.white.withValues(alpha: 0.2)),
-                                  const SizedBox(height: 8),
+                                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2)),
+                                  SizedBox(height: 8),
                                   Text(l10n?.shoppingListEmpty ?? 'Your shopping list is empty',
                                       style: TextStyle(
-                                          color: Colors.white.withValues(alpha: 0.4),
+                                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
                                           fontSize: 13)),
                                 ],
                               ),
@@ -646,7 +646,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // ── Meal Planner Section ───────────────────────────────
                 SlideInItem(
@@ -657,22 +657,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: l10n?.profileMealPlanner ?? 'Meal Planner',
                     child: _mealPlan.every((m) => m == null)
                         ? Container(
-                            padding: const EdgeInsets.symmetric(vertical: 24),
+                            padding: EdgeInsets.symmetric(vertical: 24),
                             alignment: Alignment.center,
                             child: Column(
                               children: [
-                                Icon(Icons.calendar_today, size: 40, color: Colors.white.withValues(alpha: 0.1)),
-                                const SizedBox(height: 8),
+                                Icon(Icons.calendar_today, size: 40, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)),
+                                SizedBox(height: 8),
                                 Text(
                                   l10n?.mealPlannerEmpty ?? 'No meals planned',
-                                  style: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
+                                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
                                 ),
-                                const SizedBox(height: 12),
+                                SizedBox(height: 12),
                                 OutlinedButton(
                                   onPressed: () => _assignMeal(0),
                                   style: OutlinedButton.styleFrom(
-                                      foregroundColor: IFridgeTheme.primary,
-                                      side: const BorderSide(color: IFridgeTheme.primary)),
+                                      foregroundColor: Theme.of(context).colorScheme.primary,
+                                      side: BorderSide(color: Theme.of(context).colorScheme.primary)),
                                   child: Text(l10n?.planToday ?? 'Plan Today'),
                                 )
                               ],
@@ -687,13 +687,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 final meal = _mealPlan[i];
                                 
                                 return Container(
-                                  margin: const EdgeInsets.only(bottom: 8),
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  margin: EdgeInsets.only(bottom: 8),
+                                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                   decoration: BoxDecoration(
-                                    color: isToday ? AppTheme.accent.withValues(alpha: 0.1) : AppTheme.background,
+                                    color: isToday ? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1) : Theme.of(context).scaffoldBackgroundColor,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: isToday ? AppTheme.accent.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.05),
+                                      color: isToday ? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
                                     ),
                                   ),
                                   child: Row(
@@ -703,17 +703,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         child: Text(
                                           isToday ? (l10n?.today ?? 'Today') : dayName,
                                           style: TextStyle(
-                                            color: isToday ? AppTheme.accent : Colors.white54,
+                                            color: isToday ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                                             fontWeight: isToday ? FontWeight.bold : FontWeight.w500,
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 8),
+                                      SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
                                           meal ?? (l10n?.planMeal ?? 'Plan meal...'),
                                           style: TextStyle(
-                                            color: meal != null ? Colors.white : Colors.white38,
+                                            color: meal != null ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                                             fontStyle: meal != null ? FontStyle.normal : FontStyle.italic,
                                           ),
                                         ),
@@ -724,7 +724,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           icon: Icon(
                                             meal != null ? Icons.edit : Icons.add_circle_outline,
                                             size: 18,
-                                            color: meal != null ? Colors.white54 : AppTheme.accent,
+                                            color: meal != null ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54) : Theme.of(context).colorScheme.secondary,
                                           ),
                                           onPressed: () => _assignMeal(i),
                                           padding: EdgeInsets.zero,
@@ -740,7 +740,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
 
                 SlideInItem(
@@ -754,7 +754,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           _SettingsRow(
                             icon: Icons.email_outlined,
                             label: _userEmail,
-                            trailing: const SizedBox.shrink(),
+                            trailing: SizedBox.shrink(),
                           ),
                         // Sign Out
                         _SettingsRow(
@@ -764,20 +764,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             final confirm = await showDialog<bool>(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                backgroundColor: IFridgeTheme.bgElevated,
+                                backgroundColor: Theme.of(context).colorScheme.surface,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                title: const Text('Sign Out?', style: TextStyle(color: Colors.white)),
-                                content: const Text('You will need to sign in again.',
-                                    style: TextStyle(color: Colors.white70)),
+                                title: Text('Sign Out?', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+                                content: Text('You will need to sign in again.',
+                                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx, false),
-                                    child: const Text('Cancel'),
+                                    child: Text('Cancel'),
                                   ),
                                   FilledButton(
                                     onPressed: () => Navigator.pop(ctx, true),
                                     style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
-                                    child: const Text('Sign Out'),
+                                    child: Text('Sign Out'),
                                   ),
                                 ],
                               ),
@@ -797,30 +797,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             final confirm = await showDialog<bool>(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                backgroundColor: IFridgeTheme.bgElevated,
+                                backgroundColor: Theme.of(context).colorScheme.surface,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                title: const Text('Delete Account?',
+                                title: Text('Delete Account?',
                                     style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w700)),
-                                content: const Text(
+                                content: Text(
                                   'This action is permanent and cannot be undone. All your data will be lost.',
-                                  style: TextStyle(color: Colors.white70),
+                                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
                                 ),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx, false),
-                                    child: const Text('Cancel'),
+                                    child: Text('Cancel'),
                                   ),
                                   FilledButton(
                                     onPressed: () => Navigator.pop(ctx, true),
                                     style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
-                                    child: const Text('Delete Forever'),
+                                    child: Text('Delete Forever'),
                                   ),
                                 ],
                               ),
                             );
                             if (confirm == true && mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
+                                SnackBar(
                                   content: Text('Account deletion requested. Contact support to finalize.'),
                                   backgroundColor: Colors.redAccent,
                                 ),
@@ -833,7 +833,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // ── Settings Section ───────────────────────────────────
                 SlideInItem(
@@ -847,7 +847,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           label: 'Language',
                           trailing: Text(
                             '${AppSettings().currentLanguageFlag} ${AppSettings().currentLanguageName}',
-                            style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 13),
+                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13),
                           ),
                           onTap: () => _showLanguagePicker(),
                         ),
@@ -856,7 +856,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           label: 'Theme',
                           trailing: Text(
                             AppSettings().currentThemeName,
-                            style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 13),
+                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13),
                           ),
                           onTap: () => _showThemePicker(),
                         ),
@@ -868,19 +868,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               context: context,
                               applicationName: 'iFridge',
                               applicationVersion: '1.0.0',
-                              applicationIcon: const Text('🧊', style: TextStyle(fontSize: 48)),
+                              applicationIcon: Text('🧊', style: TextStyle(fontSize: 48)),
                               children: [
-                                const Text('Smart kitchen ecosystem powered by AI.'),
+                                Text('Smart kitchen ecosystem powered by AI.'),
                               ],
                             );
                           },
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 8),
+                          padding: EdgeInsets.only(top: 8),
                           child: Text(
                             'v1.0.0',
                             style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.2),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
                               fontSize: 11,
                             ),
                           ),
@@ -890,7 +890,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
 
               ]),
             ),
@@ -907,30 +907,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: IFridgeTheme.bgElevated,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Edit Display Name',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+        title: Text('Edit Display Name',
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w700)),
         content: TextField(
           controller: controller,
           autofocus: true,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: 'Your name',
-            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+            hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
             filled: true,
-            fillColor: AppTheme.background,
+            fillColor: Theme.of(context).scaffoldBackgroundColor,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
             ),
-            prefixIcon: const Icon(Icons.person_outline, color: IFridgeTheme.primary),
+            prefixIcon: Icon(Icons.person_outline, color: Theme.of(context).colorScheme.primary),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text('Cancel'),
           ),
           FilledButton(
             onPressed: () async {
@@ -948,8 +948,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
               if (mounted) Navigator.pop(ctx);
             },
-            style: FilledButton.styleFrom(backgroundColor: IFridgeTheme.primary),
-            child: const Text('Save'),
+            style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
+            child: Text('Save'),
           ),
         ],
       ),
@@ -984,18 +984,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: IFridgeTheme.bgElevated,
-        title: const Text('Add Shopping Item',
-            style: TextStyle(color: Colors.white)),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text('Add Shopping Item',
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
         content: TextField(
           controller: controller,
           autofocus: true,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           decoration: InputDecoration(
             hintText: 'e.g. Eggs, Milk, Rice',
-            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+            hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
             filled: true,
-            fillColor: AppTheme.background,
+            fillColor: Theme.of(context).scaffoldBackgroundColor,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
@@ -1005,7 +1005,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel'),
+              child: Text('Cancel'),
             ),
             FilledButton(
               onPressed: () async {
@@ -1029,8 +1029,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 if (mounted) Navigator.pop(ctx);
               },
               style: FilledButton.styleFrom(
-                  backgroundColor: IFridgeTheme.primary),
-              child: const Text('Add'),
+                  backgroundColor: Theme.of(context).colorScheme.primary),
+              child: Text('Add'),
             ),
         ],
       ),
@@ -1042,30 +1042,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _assignMeal(int dayIndex) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       isScrollControlled: true,
       builder: (ctx) {
         return FractionallySizedBox(
           heightFactor: 0.8,
           child: Column(
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(16.0),
-                child: Text('Select Recipe for Meal', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                child: Text('Select Recipe for Meal', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.bold)),
               ),
               Expanded(
                 child: FutureBuilder(
                   future: Supabase.instance.client.from('recipes').select('id, title, prep_time_minutes, cook_time_minutes').limit(200),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Center(child: CircularProgressIndicator());
                     }
                     if (snapshot.hasError || !snapshot.hasData) {
-                      return const Center(child: Text('Failed to load recipes', style: TextStyle(color: Colors.white54)));
+                      return Center(child: Text('Failed to load recipes', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))));
                     }
                     final recipes = snapshot.data as List;
                     if (recipes.isEmpty) {
-                      return const Center(child: Text('No recipes found', style: TextStyle(color: Colors.white54)));
+                      return Center(child: Text('No recipes found', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))));
                     }
                     return ListView.builder(
                       itemCount: recipes.length,
@@ -1074,9 +1074,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         final title = recipe['title'] as String;
                         final duration = (recipe['prep_time_minutes'] ?? 0) + (recipe['cook_time_minutes'] ?? 0);
                         return ListTile(
-                          title: Text(title, style: const TextStyle(color: Colors.white)),
-                          subtitle: Text('$duration mins', style: const TextStyle(color: Colors.white54)),
-                          trailing: const Icon(Icons.add_circle_outline, color: IFridgeTheme.primary),
+                          title: Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+                          subtitle: Text('$duration mins', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))),
+                          trailing: Icon(Icons.add_circle_outline, color: Theme.of(context).colorScheme.primary),
                           onTap: () async {
                             final targetDate = DateTime.now().add(Duration(days: dayIndex));
                             final dateStr = targetDate.toIso8601String().split('T')[0];
@@ -1121,8 +1121,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Meal cleared'),
-          backgroundColor: AppTheme.surface,
+          content: Text('Meal cleared'),
+          backgroundColor: Theme.of(context).colorScheme.surface,
           duration: const Duration(seconds: 1),
         ),
       );
@@ -1135,32 +1135,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final settings = AppSettings();
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) {
         return Padding(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('🌐 Language',
-                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 16),
+              Text('🌐 Language',
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
+              SizedBox(height: 16),
               ...AppSettings.supportedLanguages.entries.map((entry) {
                 final code = entry.key;
                 final name = entry.value['name']!;
                 final flag = entry.value['flag']!;
                 final isActive = settings.locale.languageCode == code;
                 return ListTile(
-                  leading: Text(flag, style: const TextStyle(fontSize: 24)),
-                  title: Text(name, style: const TextStyle(color: Colors.white, fontSize: 15)),
+                  leading: Text(flag, style: TextStyle(fontSize: 24)),
+                  title: Text(name, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15)),
                   trailing: isActive
-                      ? const Icon(Icons.check_circle, color: IFridgeTheme.primary)
+                      ? Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary)
                       : null,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  tileColor: isActive ? IFridgeTheme.primary.withValues(alpha: 0.1) : null,
+                  tileColor: isActive ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1) : null,
                   onTap: () {
                     settings.setLocale(Locale(code));
                     Navigator.pop(ctx);
@@ -1184,30 +1184,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ];
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) {
         return Padding(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('🎨 Theme',
-                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 16),
+              Text('🎨 Theme',
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
+              SizedBox(height: 16),
               ...options.map((opt) {
                 final isActive = settings.themeMode == opt['mode'];
                 return ListTile(
-                  leading: Text(opt['emoji'] as String, style: const TextStyle(fontSize: 24)),
+                  leading: Text(opt['emoji'] as String, style: TextStyle(fontSize: 24)),
                   title: Text(opt['label'] as String,
-                    style: const TextStyle(color: Colors.white, fontSize: 15)),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15)),
                   trailing: isActive
-                      ? const Icon(Icons.check_circle, color: IFridgeTheme.primary)
+                      ? Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary)
                       : null,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  tileColor: isActive ? IFridgeTheme.primary.withValues(alpha: 0.1) : null,
+                  tileColor: isActive ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1) : null,
                   onTap: () {
                     settings.setThemeMode(opt['mode'] as ThemeMode);
                     Navigator.pop(ctx);
@@ -1236,11 +1236,11 @@ class _SectionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1250,17 +1250,17 @@ class _SectionCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.2,
                 ),
               ),
-              if (trailing != null) trailing!,
+              ?trailing,
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           child,
         ],
       ),
@@ -1290,31 +1290,31 @@ class _AnimatedStatTile extends StatelessWidget {
         tween: Tween(begin: 0, end: targetValue.toDouble()),
         duration: const Duration(milliseconds: 1200),
         curve: Curves.easeOutCubic,
-        builder: (_, value, __) => Column(
+        builder: (_, value, _) => Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: color.withValues(alpha: 0.1),
               ),
               child: Icon(icon, color: color, size: 22),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               value.toInt().toString(),
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               label,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.5),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                 fontSize: 11,
                 height: 1.3,
               ),
@@ -1348,23 +1348,23 @@ class _BadgeTile extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: earned
-                  ? AppTheme.tierGold.withValues(alpha: 0.15)
-                  : Colors.white.withValues(alpha: 0.05),
+                  ? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.15)
+                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
               border: Border.all(
                 color: earned
-                    ? AppTheme.tierGold.withValues(alpha: 0.4)
-                    : Colors.white.withValues(alpha: 0.1),
+                    ? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.4)
+                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
               ),
             ),
             child: Center(
-              child: Text(emoji, style: const TextStyle(fontSize: 24)),
+              child: Text(emoji, style: TextStyle(fontSize: 24)),
             ),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Text(
             name,
             style: TextStyle(
-              color: Colors.white.withValues(alpha: earned ? 0.8 : 0.4),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: earned ? 0.8 : 0.4),
               fontSize: 10,
               fontWeight: FontWeight.w600,
             ),
@@ -1538,34 +1538,34 @@ class _ShoppingItemTile extends StatelessWidget {
       onDismissed: (_) => onDismiss(),
       background: Container(
         alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 16),
+        padding: EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           color: Colors.red.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Icon(Icons.delete, color: Colors.redAccent),
+        child: Icon(Icons.delete, color: Colors.redAccent),
       ),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
+        margin: EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
-          color: AppTheme.background,
+          color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+          border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
         ),
         child: ListTile(
           dense: true,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+          contentPadding: EdgeInsets.symmetric(horizontal: 12),
           leading: IconButton(
             icon: Icon(
               checked ? Icons.check_circle : Icons.radio_button_unchecked,
-              color: checked ? AppTheme.accent : Colors.white38,
+              color: checked ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
             ),
             onPressed: onToggle,
           ),
           title: Text(
             name,
             style: TextStyle(
-              color: checked ? Colors.white38 : Colors.white,
+              color: checked ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38) : Theme.of(context).colorScheme.onSurface,
               decoration: checked ? TextDecoration.lineThrough : null,
               fontWeight: FontWeight.w500,
             ),
@@ -1601,25 +1601,25 @@ class _SettingsRow extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
         child: Row(
           children: [
-            Icon(icon, size: 20, color: iconColor ?? Colors.white54),
-            const SizedBox(width: 14),
+            Icon(icon, size: 20, color: iconColor ?? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54)),
+            SizedBox(width: 14),
             Expanded(
               child: Text(
                 label,
                 style: TextStyle(
-                  color: labelColor ?? Colors.white,
+                  color: labelColor ?? Theme.of(context).colorScheme.onSurface,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
               ),
             ),
-            if (trailing != null) trailing!,
+            ?trailing,
             if (onTap != null && trailing == null)
               Icon(Icons.chevron_right, size: 18,
-                  color: Colors.white.withValues(alpha: 0.3)),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
           ],
         ),
       ),
@@ -1637,10 +1637,10 @@ class _SocialStat extends StatelessWidget {
     return Column(
       children: [
         Text(value,
-            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
-        const SizedBox(height: 2),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w800)),
+        SizedBox(height: 2),
         Text(label,
-            style: TextStyle(color: Colors.white.withValues(alpha: 0.45), fontSize: 12)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45), fontSize: 12)),
       ],
     );
   }

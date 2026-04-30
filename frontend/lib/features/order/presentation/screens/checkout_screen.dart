@@ -5,7 +5,6 @@
 
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/cart_service.dart';
 import 'package:ifridge_app/core/services/order_service.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
@@ -22,7 +21,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   bool _placing = false;
   String? _error;
 
-  static const accent = Color(0xFFFF6D00);
+  Color get accent => Theme.of(context).colorScheme.primary;
 
   Future<void> _placeOrder() async {
     setState(() {
@@ -89,9 +88,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? IFridgeTheme.bgDark : const Color(0xFFF6F8FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Checkout', style: TextStyle(fontWeight: FontWeight.w700)),
+        title: Text('Checkout', style: TextStyle(fontWeight: FontWeight.w700)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -105,11 +104,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.shopping_bag_outlined, size: 64,
-                      color: isDark ? Colors.white12 : Colors.black12),
-                  const SizedBox(height: 16),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12)),
+                  SizedBox(height: 16),
                   Text('Your cart is empty',
                       style: TextStyle(
-                          color: isDark ? Colors.white38 : Colors.black38,
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                           fontSize: 18)),
                 ],
               ),
@@ -120,38 +119,38 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // ── Restaurant Info ────────────────────
                       _buildRestaurantHeader(isDark),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
 
                       // ── Order Type Toggle ──────────────────
                       _buildOrderTypeToggle(isDark),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
 
                       // ── Cart Items ─────────────────────────
                       _buildItemsList(isDark),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
 
                       // ── Price Summary ──────────────────────
                       _buildPriceSummary(isDark),
 
                       // ── Error ──────────────────────────────
                       if (_error != null) ...[
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         Container(
-                          padding: const EdgeInsets.all(12),
+                          padding: EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: Colors.red.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
                             children: [
-                              const Icon(Icons.error_outline, color: Colors.red, size: 18),
-                              const SizedBox(width: 8),
+                              Icon(Icons.error_outline, color: Colors.red, size: 18),
+                              SizedBox(width: 8),
                               Expanded(
                                 child: Text(_error!,
                                     style: TextStyle(
@@ -178,17 +177,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _buildRestaurantHeader(bool isDark) {
     final r = _cart.restaurant;
-    if (r == null) return const SizedBox.shrink();
+    if (r == null) return SizedBox.shrink();
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? IFridgeTheme.bgCard : Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.04)
-                : Colors.black.withValues(alpha: 0.05)),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
       ),
       child: Row(
         children: [
@@ -199,22 +196,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               color: accent.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.storefront, color: accent, size: 24),
+            child: Icon(Icons.storefront, color: accent, size: 24),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(r.name,
                     style: TextStyle(
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 16,
                         fontWeight: FontWeight.w700)),
-                const SizedBox(height: 2),
+                SizedBox(height: 2),
                 Text('~${_cart.estimatedMinutes} min · ${r.distanceLabel}',
                     style: TextStyle(
-                        color: isDark ? Colors.white38 : Colors.black38,
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                         fontSize: 12)),
               ],
             ),
@@ -226,14 +223,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _buildOrderTypeToggle(bool isDark) {
     return Container(
-      padding: const EdgeInsets.all(4),
+      padding: EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: isDark ? IFridgeTheme.bgCard : Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.04)
-                : Colors.black.withValues(alpha: 0.05)),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
       ),
       child: Row(
         children: [
@@ -269,7 +264,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: isSelected ? accent : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
@@ -280,18 +275,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               Icon(icon,
                   size: 18,
                   color: isSelected
-                      ? Colors.white
-                      : isDark
-                          ? Colors.white38
-                          : Colors.black38),
-              const SizedBox(width: 6),
+                      ? Theme.of(context).colorScheme.onSurface
+                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)),
+              SizedBox(width: 6),
               Text(label,
                   style: TextStyle(
                       color: isSelected
-                          ? Colors.white
-                          : isDark
-                              ? Colors.white54
-                              : Colors.black54,
+                          ? Theme.of(context).colorScheme.onSurface
+                          : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                       fontSize: 14,
                       fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500)),
             ],
@@ -304,26 +295,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget _buildItemsList(bool isDark) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? IFridgeTheme.bgCard : Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.04)
-                : Colors.black.withValues(alpha: 0.05)),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+            padding: EdgeInsets.fromLTRB(16, 14, 16, 8),
             child: Text('Your Order',
                 style: TextStyle(
-                    color: isDark ? Colors.white70 : Colors.black54,
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     fontSize: 14,
                     fontWeight: FontWeight.w700)),
           ),
           ..._cart.items.map((ci) => _buildCartItemRow(ci, isDark)),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
         ],
       ),
     );
@@ -331,7 +320,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _buildCartItemRow(CartItem ci, bool isDark) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Row(
         children: [
           Expanded(
@@ -340,14 +329,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               children: [
                 Text(ci.menuItem.name,
                     style: TextStyle(
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 14,
                         fontWeight: FontWeight.w500)),
                 if (ci.specialInstructions != null &&
                     ci.specialInstructions!.isNotEmpty)
                   Text(ci.specialInstructions!,
                       style: TextStyle(
-                          color: isDark ? Colors.white24 : Colors.black26,
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24),
                           fontSize: 11,
                           fontStyle: FontStyle.italic)),
               ],
@@ -356,9 +345,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           // Quantity controls
           Container(
             decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.04)
-                  : Colors.black.withValues(alpha: 0.04),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.04),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -366,10 +353,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               children: [
                 _qtyButton(Icons.remove, () => _cart.decrementItem(ci.menuItem.id), isDark),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding: EdgeInsets.symmetric(horizontal: 8),
                   child: Text('${ci.quantity}',
                       style: TextStyle(
-                          color: isDark ? Colors.white : Colors.black87,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 14,
                           fontWeight: FontWeight.w600)),
                 ),
@@ -377,7 +364,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           SizedBox(
             width: 70,
             child: Text('${ci.subtotal.round()} UZS',
@@ -396,30 +383,28 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.all(6),
+        padding: EdgeInsets.all(6),
         child: Icon(icon,
             size: 16,
-            color: isDark ? Colors.white54 : Colors.black45),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54)),
       ),
     );
   }
 
   Widget _buildPriceSummary(bool isDark) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? IFridgeTheme.bgCard : Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.04)
-                : Colors.black.withValues(alpha: 0.05)),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
       ),
       child: Column(
         children: [
           _priceRow('Subtotal', '${_cart.subtotal.round()} UZS', isDark),
           if (_cart.orderType == OrderType.delivery) ...[
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             _priceRow(
                 'Delivery',
                 _cart.deliveryFee > 0
@@ -427,34 +412,34 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     : 'Free',
                 isDark),
           ],
-          const SizedBox(height: 8),
-          Divider(color: isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.06)),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
+          Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
+          SizedBox(height: 8),
           Row(
             children: [
               Text('Total',
                   style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black87,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 17,
                       fontWeight: FontWeight.w800)),
-              const Spacer(),
+              Spacer(),
               Text('${_cart.total.round()} UZS',
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: accent,
                       fontSize: 17,
                       fontWeight: FontWeight.w800)),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             children: [
               Icon(Icons.schedule, size: 14,
-                  color: isDark ? Colors.white24 : Colors.black26),
-              const SizedBox(width: 4),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24)),
+              SizedBox(width: 4),
               Text(
                   'Estimated: ~${_cart.estimatedMinutes} min',
                   style: TextStyle(
-                      color: isDark ? Colors.white38 : Colors.black38,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                       fontSize: 12)),
             ],
           ),
@@ -468,12 +453,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       children: [
         Text(label,
             style: TextStyle(
-                color: isDark ? Colors.white54 : Colors.black45,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                 fontSize: 14)),
-        const Spacer(),
+        Spacer(),
         Text(value,
             style: TextStyle(
-                color: isDark ? Colors.white70 : Colors.black54,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 fontSize: 14,
                 fontWeight: FontWeight.w500)),
       ],
@@ -482,14 +467,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _buildPlaceOrderButton(bool isDark) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 24),
       decoration: BoxDecoration(
-        color: isDark ? IFridgeTheme.bgCard : Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         border: Border(
           top: BorderSide(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.04)
-                  : Colors.black.withValues(alpha: 0.05)),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
         ),
       ),
       child: SafeArea(
@@ -505,20 +488,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   borderRadius: BorderRadius.circular(16)),
             ),
             child: _placing
-                ? const SizedBox(
+                ? SizedBox(
                     width: 24,
                     height: 24,
                     child: CircularProgressIndicator(
-                        color: Colors.white, strokeWidth: 2))
+                        color: Theme.of(context).colorScheme.onSurface, strokeWidth: 2))
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.check_circle, color: Colors.white, size: 20),
-                      const SizedBox(width: 8),
+                      Icon(Icons.check_circle, color: Theme.of(context).colorScheme.onSurface, size: 20),
+                      SizedBox(width: 8),
                       Text(
                           'Place ${_cart.orderType == OrderType.pickup ? 'Pickup' : 'Delivery'} Order · ${_cart.total.round()} UZS',
-                          style: const TextStyle(
-                              color: Colors.white,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
                               fontSize: 16,
                               fontWeight: FontWeight.w700)),
                     ],
@@ -550,14 +533,14 @@ class _OrderConfirmationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    const accent = Color(0xFFFF6D00);
+    final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
-      backgroundColor: isDark ? IFridgeTheme.bgDark : const Color(0xFFF6F8FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.all(32),
+            padding: EdgeInsets.all(32),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -574,33 +557,33 @@ class _OrderConfirmationScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  child: const Icon(Icons.check_circle, color: accent, size: 56),
+                  child: Icon(Icons.check_circle, color: accent, size: 56),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 Text('Order Confirmed!',
                     style: TextStyle(
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 26,
                         fontWeight: FontWeight.w800)),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(restaurantName,
                     style: TextStyle(
-                        color: isDark ? Colors.white54 : Colors.black45,
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                         fontSize: 16)),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
 
                 // Pickup Code
                 if (orderType == OrderType.pickup) ...[
                   Text('Your Pickup Code',
                       style: TextStyle(
-                          color: isDark ? Colors.white38 : Colors.black38,
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 1)),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                         horizontal: 32, vertical: 16),
                     decoration: BoxDecoration(
                       color: accent.withValues(alpha: 0.1),
@@ -608,61 +591,61 @@ class _OrderConfirmationScreen extends StatelessWidget {
                       border: Border.all(color: accent.withValues(alpha: 0.3)),
                     ),
                     child: Text(pickupCode,
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: accent,
                             fontSize: 36,
                             fontWeight: FontWeight.w900,
                             letterSpacing: 6)),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   Text('Show this code at the counter',
                       style: TextStyle(
-                          color: isDark ? Colors.white38 : Colors.black38,
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                           fontSize: 13)),
                 ] else ...[
                   Container(
-                    padding: const EdgeInsets.all(20),
+                    padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: accent.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
                       children: [
-                        const Icon(Icons.delivery_dining,
+                        Icon(Icons.delivery_dining,
                             color: accent, size: 32),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Text('Delivery on the way',
                             style: TextStyle(
-                                color: isDark ? Colors.white : Colors.black87,
+                                color: Theme.of(context).colorScheme.onSurface,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text('A driver will be assigned shortly',
                             style: TextStyle(
-                                color: isDark ? Colors.white38 : Colors.black38,
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                                 fontSize: 13)),
                       ],
                     ),
                   ),
                 ],
 
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // Estimated time
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.schedule, color: accent, size: 18),
-                    const SizedBox(width: 6),
+                    Icon(Icons.schedule, color: accent, size: 18),
+                    SizedBox(width: 6),
                     Text('Ready in ~$estimatedMinutes minutes',
                         style: TextStyle(
-                            color: isDark ? Colors.white54 : Colors.black54,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                             fontSize: 15,
                             fontWeight: FontWeight.w500)),
                   ],
                 ),
 
-                const SizedBox(height: 48),
+                SizedBox(height: 48),
 
                 SizedBox(
                   width: double.infinity,
@@ -676,9 +659,9 @@ class _OrderConfirmationScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14)),
                     ),
-                    child: const Text('Back to Home',
+                    child: Text('Back to Home',
                         style: TextStyle(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontSize: 16,
                             fontWeight: FontWeight.w600)),
                   ),

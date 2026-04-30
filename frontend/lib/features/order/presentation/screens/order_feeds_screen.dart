@@ -77,22 +77,22 @@ class _OrderFeedsScreenState extends State<OrderFeedsScreen> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(child: CircularProgressIndicator(color: Color(0xFFFF6D00))),
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary)),
       );
     }
 
     if (_feeds.isEmpty) {
       return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.play_circle_outline, size: 56, color: Colors.white.withValues(alpha: 0.15)),
-              const SizedBox(height: 16),
-              Text('No food videos yet', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 16)),
+              Icon(Icons.play_circle_outline, size: 56, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15)),
+              SizedBox(height: 16),
+              Text('No food videos yet', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 16)),
             ],
           ),
         ),
@@ -100,7 +100,7 @@ class _OrderFeedsScreenState extends State<OrderFeedsScreen> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           PageView.builder(
@@ -108,7 +108,7 @@ class _OrderFeedsScreenState extends State<OrderFeedsScreen> {
             scrollDirection: Axis.vertical,
             itemCount: _feeds.length,
             onPageChanged: (i) => setState(() => _currentPage = i),
-            itemBuilder: (ctx, i) => _OrderVideoCard(feed: _feeds[i]),
+            itemBuilder: (ctx, i) => _OrderVideoCard(feed: _feeds[i], isActive: i == _currentPage),
           ),
 
           // ── Top overlay ────────────────────────────
@@ -119,27 +119,27 @@ class _OrderFeedsScreenState extends State<OrderFeedsScreen> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter, end: Alignment.bottomCenter,
-                  colors: [Colors.black.withValues(alpha: 0.7), Colors.transparent],
+                  colors: [Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), Colors.transparent],
                 ),
               ),
               child: Row(
                 children: [
-                  const Text('🔥', style: TextStyle(fontSize: 20)),
-                  const SizedBox(width: 8),
+                  Text('🔥', style: TextStyle(fontSize: 20)),
+                  SizedBox(width: 8),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Food Feed', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
+                      Text('Food Feed', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w800)),
                       Text('${_location.regionName} · ${_feeds.length} videos',
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 11)),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 11)),
                     ],
                   ),
-                  const Spacer(),
+                  Spacer(),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
                     child: Text('${_currentPage + 1} / ${_feeds.length}',
-                      style: const TextStyle(color: Colors.white60, fontSize: 12, fontWeight: FontWeight.w600)),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 12, fontWeight: FontWeight.w600)),
                   ),
                 ],
               ),
@@ -166,7 +166,7 @@ class _FeedItem {
 class _OrderVideoCard extends StatefulWidget {
   final _FeedItem feed;
   final bool isActive;
-  const _OrderVideoCard({required this.feed, this.isActive = true});
+  const _OrderVideoCard({required this.feed, required this.isActive});
 
   @override
   State<_OrderVideoCard> createState() => _OrderVideoCardState();
@@ -204,12 +204,12 @@ class _OrderVideoCardState extends State<_OrderVideoCard> {
     final r = widget.feed.restaurant;
     final bottomPad = MediaQuery.of(context).padding.bottom;
     final likes = v.likes + (_liked ? 1 : 0);
-    const accent = Color(0xFFFF6D00);
+    final accent = Theme.of(context).colorScheme.primary;
 
     return Container(
       width: double.infinity,
       height: double.infinity,
-      color: Colors.black,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -219,9 +219,9 @@ class _OrderVideoCardState extends State<_OrderVideoCard> {
             // Close button to resume scrolling
             Positioned(top: 12, right: 12, child: GestureDetector(
               onTap: () => setState(() => _playing = false),
-              child: Container(padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.6), shape: BoxShape.circle),
-                child: const Icon(Icons.close, color: Colors.white, size: 20)))),
+              child: Container(padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.6), shape: BoxShape.circle),
+                child: Icon(Icons.close, color: Theme.of(context).colorScheme.onSurface, size: 20)))),
           ]
           else
             GestureDetector(
@@ -230,21 +230,21 @@ class _OrderVideoCardState extends State<_OrderVideoCard> {
                 fit: StackFit.expand,
                 children: [
                   Image.network(v.thumbnailUrl, fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(color: Colors.grey.shade900,
-                      child: const Center(child: Icon(Icons.broken_image, color: Colors.white24, size: 48)))),
+                    errorBuilder: (_, _, _) => Container(color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                      child: Center(child: Icon(Icons.broken_image, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), size: 48)))),
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter, end: Alignment.bottomCenter,
-                        colors: [Colors.black.withValues(alpha: 0.1), Colors.black.withValues(alpha: 0.75)],
+                        colors: [Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1), Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.75)],
                       ),
                     ),
                   ),
                   Center(
                     child: Container(
-                      padding: const EdgeInsets.all(18),
+                      padding: EdgeInsets.all(18),
                       decoration: BoxDecoration(color: accent.withValues(alpha: 0.2), shape: BoxShape.circle),
-                      child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 44),
+                      child: Icon(Icons.play_arrow_rounded, color: Theme.of(context).colorScheme.onSurface, size: 44),
                     ),
                   ),
                 ],
@@ -259,9 +259,9 @@ class _OrderVideoCardState extends State<_OrderVideoCard> {
               children: [
                 // Like
                 _SideBtn(icon: _liked ? Icons.favorite : Icons.favorite_border,
-                  label: _fmt(likes), color: _liked ? Colors.red : Colors.white,
+                  label: _fmt(likes), color: _liked ? Colors.red : Theme.of(context).colorScheme.onSurface,
                   onTap: () => setState(() => _liked = !_liked)),
-                const SizedBox(height: 18),
+                SizedBox(height: 18),
 
                 // Context-aware action buttons (based on restaurant services)
                 if (r != null) ...[
@@ -269,33 +269,33 @@ class _OrderVideoCardState extends State<_OrderVideoCard> {
                     _SideBtn(icon: Icons.shopping_bag_outlined, label: 'Order',
                       color: accent, highlighted: true,
                       onTap: () => _navigate(context, r, RestaurantSection.menu)),
-                  if (r.hasDelivery) const SizedBox(height: 18),
+                  if (r.hasDelivery) SizedBox(height: 18),
 
                   if (r.hasReservation)
                     _SideBtn(icon: Icons.event_seat_outlined, label: 'Reserve',
-                      color: const Color(0xFF448AFF), highlighted: true,
+                      color: Colors.blue.shade400, highlighted: true,
                       onTap: () => _navigate(context, r, RestaurantSection.reserve)),
-                  if (r.hasReservation) const SizedBox(height: 18),
+                  if (r.hasReservation) SizedBox(height: 18),
 
                   if (r.hasDineIn)
                     _SideBtn(icon: Icons.place_outlined, label: 'Go',
-                      color: const Color(0xFF26A69A), highlighted: true,
+                      color: Colors.teal.shade400, highlighted: true,
                       onTap: () => _navigate(context, r, RestaurantSection.location)),
-                  if (r.hasDineIn) const SizedBox(height: 18),
+                  if (r.hasDineIn) SizedBox(height: 18),
                 ],
 
                 // Share
-                _SideBtn(icon: Icons.reply_outlined, label: 'Share', color: Colors.white,
+                _SideBtn(icon: Icons.reply_outlined, label: 'Share', color: Theme.of(context).colorScheme.onSurface,
                   onTap: () => SharePlus.instance.share(ShareParams(
                     text: '${v.title}\nhttps://youtube.com/watch?v=${v.youtubeId}',
                   ))),
-                const SizedBox(height: 18),
+                SizedBox(height: 18),
 
                 // Save
                 _SideBtn(icon: _saved ? Icons.bookmark : Icons.bookmark_border,
-                  label: _saved ? 'Saved' : 'Save', color: _saved ? accent : Colors.white,
+                  label: _saved ? 'Saved' : 'Save', color: _saved ? accent : Theme.of(context).colorScheme.onSurface,
                   onTap: () => setState(() => _saved = !_saved)),
-                const SizedBox(height: 18),
+                SizedBox(height: 18),
 
                 // Restaurant avatar
                 if (r != null) _RestaurantAvatar(restaurant: r),
@@ -312,39 +312,39 @@ class _OrderVideoCardState extends State<_OrderVideoCard> {
                 // Restaurant name
                 if (r != null)
                   Row(children: [
-                    Text(r.name, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700)),
-                    const SizedBox(width: 4),
+                    Text(r.name, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700)),
+                    SizedBox(width: 4),
                     Icon(Icons.verified, size: 14, color: Colors.blue.shade300),
                   ]),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
 
                 // Video title
-                Text(v.title, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700, height: 1.2),
+                Text(v.title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700, height: 1.2),
                   maxLines: 2, overflow: TextOverflow.ellipsis),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
 
                 // Description
                 if (v.description != null)
-                  Text(v.description!, style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 13, height: 1.3),
+                  Text(v.description!, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 13, height: 1.3),
                     maxLines: 2, overflow: TextOverflow.ellipsis),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
 
                 // Restaurant service badges + distance
                 if (r != null)
                   Wrap(spacing: 6, runSpacing: 4, children: [
                     if (r.hasDelivery) _badge('🛵 Delivery', accent),
-                    if (r.hasReservation) _badge('🪑 Reserve', const Color(0xFF448AFF)),
-                    if (r.hasDineIn) _badge('📍 Dine-in', const Color(0xFF26A69A)),
-                    if (r.distMeters > 0) _badge('📏 ${r.distanceLabel}', Colors.white),
+                    if (r.hasReservation) _badge('🪑 Reserve', Colors.blue.shade400),
+                    if (r.hasDineIn) _badge('📍 Dine-in', Colors.teal.shade400),
+                    if (r.distMeters > 0) _badge('📏 ${r.distanceLabel}', Theme.of(context).colorScheme.onSurface),
                   ]),
 
                 // Tags
                 if (r == null && v.tags.isNotEmpty) ...[
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Wrap(spacing: 6, runSpacing: 4, children: v.tags.take(4).map((t) =>
-                    Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
-                      child: Text('#$t', style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 10, fontWeight: FontWeight.w600)))).toList()),
+                    Container(padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
+                      child: Text('#$t', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 10, fontWeight: FontWeight.w600)))).toList()),
                 ],
               ],
             ),
@@ -355,7 +355,7 @@ class _OrderVideoCardState extends State<_OrderVideoCard> {
   }
 
   Widget _badge(String text, Color c) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
     decoration: BoxDecoration(color: c.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
     child: Text(text, style: TextStyle(color: c.withValues(alpha: 0.9), fontSize: 10, fontWeight: FontWeight.w600)));
 
@@ -381,10 +381,10 @@ class _SideBtn extends StatelessWidget {
     child: Column(children: [
       Container(width: 44, height: 44,
         decoration: BoxDecoration(shape: BoxShape.circle,
-          color: highlighted ? color.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.08),
+          color: highlighted ? color.withValues(alpha: 0.2) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
           border: highlighted ? Border.all(color: color.withValues(alpha: 0.5), width: 1.5) : null),
         child: Icon(icon, size: 22, color: color)),
-      const SizedBox(height: 3),
+      SizedBox(height: 3),
       Text(label, style: TextStyle(color: color.withValues(alpha: 0.9), fontSize: 10, fontWeight: FontWeight.w600)),
     ]));
 }
@@ -402,13 +402,13 @@ class _RestaurantAvatar extends StatelessWidget {
       child: Column(children: [
         Container(width: 44, height: 44,
           decoration: BoxDecoration(shape: BoxShape.circle,
-            gradient: const LinearGradient(colors: [Color(0xFFFF6D00), Color(0xFFFF9100)]),
-            border: Border.all(color: Colors.white, width: 2)),
+            gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.tertiary]),
+            border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 2)),
           child: Center(child: Text(initial,
-            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)))),
-        const SizedBox(height: 3),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w800)))),
+        SizedBox(height: 3),
         SizedBox(width: 50, child: Text(restaurant.name,
-          style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 9, fontWeight: FontWeight.w600),
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 9, fontWeight: FontWeight.w600),
           textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis)),
       ]),
     );

@@ -125,12 +125,12 @@ class _VoiceCommandFabState extends State<VoiceCommandFab>
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        margin: const EdgeInsets.all(16),
-        padding: const EdgeInsets.all(20),
+        margin: EdgeInsets.all(16),
+        padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: const Color(0xFF1E1E2E),
+          color: Color(0xFF1E1E2E),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white12),
+          border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -138,9 +138,9 @@ class _VoiceCommandFabState extends State<VoiceCommandFab>
           children: [
             Row(
               children: [
-                const Icon(Icons.smart_toy, color: Color(0xFF4FC3F7), size: 20),
-                const SizedBox(width: 8),
-                const Text(
+                Icon(Icons.smart_toy, color: Color(0xFF4FC3F7), size: 20),
+                SizedBox(width: 8),
+                Text(
                   'iFridge AI',
                   style: TextStyle(
                     color: Color(0xFF4FC3F7),
@@ -148,28 +148,28 @@ class _VoiceCommandFabState extends State<VoiceCommandFab>
                     fontSize: 14,
                   ),
                 ),
-                const Spacer(),
+                Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white54, size: 18),
+                  icon: Icon(Icons.close, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), size: 18),
                   onPressed: () => Navigator.pop(ctx),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             if (_recognizedText.isNotEmpty) ...[
               Text(
                 '"$_recognizedText"',
-                style: const TextStyle(
-                  color: Colors.white54,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                   fontStyle: FontStyle.italic,
                   fontSize: 13,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
             ],
             Text(
               message,
-              style: const TextStyle(color: Colors.white, fontSize: 15, height: 1.5),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15, height: 1.5),
             ),
           ],
         ),
@@ -188,21 +188,21 @@ class _VoiceCommandFabState extends State<VoiceCommandFab>
             heroTag: 'voice_fab',
             onPressed: _isProcessing ? null : _toggleListening,
             backgroundColor: _isListening
-                ? const Color(0xFFEF5350)
-                : const Color(0xFF4FC3F7),
+                ? Color(0xFFEF5350)
+                : Color(0xFF4FC3F7),
             elevation: _isListening ? 12 : 6,
             child: _isProcessing
-                ? const SizedBox(
+                ? SizedBox(
                     width: 24,
                     height: 24,
                     child: CircularProgressIndicator(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurface,
                       strokeWidth: 2,
                     ),
                   )
                 : Icon(
                     _isListening ? Icons.stop : Icons.mic,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onSurface,
                     size: 28,
                   ),
           ),

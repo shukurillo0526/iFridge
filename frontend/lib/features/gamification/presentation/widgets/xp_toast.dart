@@ -1,9 +1,9 @@
 /// I-Fridge — XP Toast Widget
 /// ============================
 /// Animated floating toast that appears when the user earns XP.
+library;
 
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/features/gamification/domain/badges.dart';
 
 /// Show a floating XP reward toast.
@@ -78,18 +78,18 @@ class _XpToastAnimationState extends State<_XpToastAnimation>
           child: FadeTransition(
             opacity: _fadeIn,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    IFridgeTheme.primary.withOpacity(0.9),
-                    IFridgeTheme.secondary.withOpacity(0.9),
+                    Theme.of(context).colorScheme.primary.withOpacity(0.9),
+                    Theme.of(context).colorScheme.secondary.withOpacity(0.9),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(28),
                 boxShadow: [
                   BoxShadow(
-                    color: IFridgeTheme.primary.withOpacity(0.3),
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
                     blurRadius: 20,
                     spreadRadius: 2,
                   ),
@@ -99,8 +99,8 @@ class _XpToastAnimationState extends State<_XpToastAnimation>
                 widget.badge != null
                     ? '${widget.badge!.emoji} ${widget.badge!.title} +${widget.xp}XP!'
                     : '+${widget.xp}XP! 🌿 Waste Reduced!',
-                style: const TextStyle(
-                  color: IFridgeTheme.bgDark,
+                style: TextStyle(
+                  color: Theme.of(context).scaffoldBackgroundColor,
                   fontWeight: FontWeight.w700,
                   fontSize: 16,
                   letterSpacing: 0.3,

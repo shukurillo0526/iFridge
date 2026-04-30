@@ -8,7 +8,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/story_service.dart';
 import 'package:ifridge_app/core/widgets/story_viewer.dart';
 
@@ -39,11 +38,11 @@ class StoryRingState extends State<StoryRing> {
       context,
       PageRouteBuilder(
         opaque: false,
-        pageBuilder: (_, __, ___) => StoryViewer(
+        pageBuilder: (_, _, _) => StoryViewer(
           groups: _groups,
           initialGroupIndex: index,
         ),
-        transitionsBuilder: (_, animation, __, child) {
+        transitionsBuilder: (_, animation, _, child) {
           return FadeTransition(opacity: animation, child: child);
         },
       ),
@@ -55,26 +54,26 @@ class StoryRingState extends State<StoryRing> {
     // Show bottom sheet to pick camera or gallery
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
-      backgroundColor: IFridgeTheme.bgCard,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               width: 40, height: 4,
-              margin: const EdgeInsets.only(bottom: 16),
+              margin: EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
-                color: Colors.white24,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            const Text('Add Story',
-                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 16),
+            Text('Add Story',
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
+            SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
@@ -84,7 +83,7 @@ class StoryRingState extends State<StoryRing> {
                     onTap: () => Navigator.pop(ctx, ImageSource.camera),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: _sourceButton(
                     icon: Icons.photo_library,
@@ -94,7 +93,7 @@ class StoryRingState extends State<StoryRing> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
           ],
         ),
       ),
@@ -109,15 +108,15 @@ class StoryRingState extends State<StoryRing> {
     // Show uploading indicator
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
         content: Row(children: [
           SizedBox(width: 16, height: 16,
-            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)),
+            child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurface, strokeWidth: 2)),
           SizedBox(width: 12),
           Text('Uploading story...'),
         ]),
-        backgroundColor: IFridgeTheme.primary,
-        duration: Duration(seconds: 10),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        duration: const Duration(seconds: 10),
       ),
     );
 
@@ -127,7 +126,7 @@ class StoryRingState extends State<StoryRing> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to upload'), backgroundColor: Colors.redAccent),
+        SnackBar(content: Text('Failed to upload'), backgroundColor: Colors.redAccent),
       );
       return;
     }
@@ -140,8 +139,8 @@ class StoryRingState extends State<StoryRing> {
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('✅ Story posted!'),
-          backgroundColor: IFridgeTheme.primary,
+          content: Text('✅ Story posted!'),
+          backgroundColor: Theme.of(context).colorScheme.primary,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
@@ -154,17 +153,17 @@ class StoryRingState extends State<StoryRing> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 20),
+        padding: EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          color: IFridgeTheme.bgElevated,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+          border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08)),
         ),
         child: Column(
           children: [
-            Icon(icon, color: IFridgeTheme.primary, size: 28),
-            const SizedBox(height: 6),
-            Text(label, style: const TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.w600)),
+            Icon(icon, color: Theme.of(context).colorScheme.primary, size: 28),
+            SizedBox(height: 6),
+            Text(label, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
           ],
         ),
       ),
@@ -176,13 +175,13 @@ class StoryRingState extends State<StoryRing> {
     return SizedBox(
       height: 90,
       child: _loading
-          ? const Center(
+          ? Center(
               child: SizedBox(width: 20, height: 20,
-                child: CircularProgressIndicator(color: IFridgeTheme.primary, strokeWidth: 2)),
+                child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary, strokeWidth: 2)),
             )
           : ListView(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: EdgeInsets.symmetric(horizontal: 12),
               children: [
                 // ── Add Story Button ──
                 _AddStoryAvatar(onTap: _addStory),
@@ -216,23 +215,23 @@ class _AddStoryAvatar extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 68,
-        margin: const EdgeInsets.only(right: 8),
+        margin: EdgeInsets.only(right: 8),
         child: Column(
           children: [
             Container(
               width: 56, height: 56,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: IFridgeTheme.bgElevated,
-                border: Border.all(color: IFridgeTheme.primary.withValues(alpha: 0.4), width: 2),
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4), width: 2),
               ),
-              child: const Center(
-                child: Icon(Icons.add, color: IFridgeTheme.primary, size: 26),
+              child: Center(
+                child: Icon(Icons.add, color: Theme.of(context).colorScheme.primary, size: 26),
               ),
             ),
-            const SizedBox(height: 4),
-            const Text('Add',
-                style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w600),
+            SizedBox(height: 4),
+            Text('Add',
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 11, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center),
           ],
         ),
@@ -264,7 +263,7 @@ class _StoryAvatar extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 68,
-        margin: const EdgeInsets.only(right: 8),
+        margin: EdgeInsets.only(right: 8),
         child: Column(
           children: [
             // Avatar with gradient ring
@@ -273,30 +272,30 @@ class _StoryAvatar extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: hasUnviewed
-                    ? const SweepGradient(
+                    ? SweepGradient(
                         colors: [
-                          IFridgeTheme.primary,
-                          IFridgeTheme.secondary,
+                          Theme.of(context).colorScheme.primary,
+                          Theme.of(context).colorScheme.secondary,
                           Color(0xFF00E5FF),
-                          IFridgeTheme.primary,
+                          Theme.of(context).colorScheme.primary,
                         ],
                       )
                     : null,
                 border: hasUnviewed
                     ? null
-                    : Border.all(color: Colors.white.withValues(alpha: 0.2), width: 2),
+                    : Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), width: 2),
               ),
-              padding: const EdgeInsets.all(2.5),
+              padding: EdgeInsets.all(2.5),
               child: Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppTheme.background,
+                  color: Theme.of(context).scaffoldBackgroundColor,
                 ),
                 child: Center(
                   child: Text(
                     name.isNotEmpty ? name[0].toUpperCase() : '?',
                     style: TextStyle(
-                      color: hasUnviewed ? IFridgeTheme.primary : Colors.white54,
+                      color: hasUnviewed ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
                     ),
@@ -304,11 +303,11 @@ class _StoryAvatar extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               name.length > 8 ? '${name.substring(0, 7)}…' : name,
               style: TextStyle(
-                color: hasUnviewed ? Colors.white : Colors.white54,
+                color: hasUnviewed ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                 fontSize: 11,
                 fontWeight: hasUnviewed ? FontWeight.w700 : FontWeight.w500,
               ),

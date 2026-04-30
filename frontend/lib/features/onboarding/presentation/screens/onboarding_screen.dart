@@ -6,7 +6,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final VoidCallback onComplete;
@@ -22,7 +21,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  static const _pages = [
+  static final _pages = [
     _OnboardingPage(
       icon: Icons.kitchen,
       emoji: '🧊',
@@ -37,7 +36,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       title: 'AI-Powered Recipes',
       description:
           'Get personalized recipe recommendations based on what\'s in your fridge. Our 6-signal AI scores each recipe to match your taste and reduce waste.',
-      gradient: [Color(0xFF4a148c), Color(0xFF7b1fa2)],
+      gradient: [Color(0xFF4a148c), Colors.purple.shade700],
     ),
     _OnboardingPage(
       icon: Icons.restaurant,
@@ -45,7 +44,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       title: 'Cook or Order',
       description:
           'Switch between Cook mode for home recipes and Order mode for local restaurants. Discover new flavors through TikTok-style video feeds.',
-      gradient: [Color(0xFF1b5e20), Color(0xFF2e7d32)],
+      gradient: [Colors.green.shade900, Colors.green.shade800],
     ),
   ];
 
@@ -64,7 +63,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Page content
@@ -88,7 +87,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 child: Text(
                   'Skip',
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.6),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -110,22 +109,22 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     _pages.length,
                     (i) => AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      margin: EdgeInsets.symmetric(horizontal: 4),
                       width: _currentPage == i ? 32 : 8,
                       height: 8,
                       decoration: BoxDecoration(
                         color: _currentPage == i
-                            ? IFridgeTheme.primary
-                            : Colors.white.withValues(alpha: 0.3),
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
                 // Next / Get Started button
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  padding: EdgeInsets.symmetric(horizontal: 32),
                   child: SizedBox(
                     width: double.infinity,
                     height: 52,
@@ -141,7 +140,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         }
                       },
                       style: FilledButton.styleFrom(
-                        backgroundColor: IFridgeTheme.primary,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -150,10 +149,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                         _currentPage < _pages.length - 1
                             ? 'Next'
                             : 'Get Started 🚀',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                     ),
@@ -191,16 +190,16 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   end: Alignment.bottomRight,
                   colors: [
                     page.gradient[0].withValues(alpha: 0.3),
-                    AppTheme.background,
+                    Theme.of(context).scaffoldBackgroundColor,
                   ],
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
+                padding: EdgeInsets.symmetric(horizontal: 32),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 80),
+                    SizedBox(height: 80),
                     // Large emoji
                     TweenAnimationBuilder<double>(
                       tween: Tween(begin: 0.0, end: 1.0),
@@ -212,33 +211,33 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       ),
                       child: Text(
                         page.emoji,
-                        style: const TextStyle(fontSize: 80),
+                        style: TextStyle(fontSize: 80),
                       ),
                     ),
-                    const SizedBox(height: 40),
+                    SizedBox(height: 40),
                     // Title
                     Text(
                       page.title,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 28,
                         fontWeight: FontWeight.w800,
                         height: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     // Description
                     Text(
                       page.description,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.7),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         fontSize: 15,
                         height: 1.5,
                       ),
                     ),
-                    const SizedBox(height: 120),
+                    SizedBox(height: 120),
                   ],
                 ),
               ),

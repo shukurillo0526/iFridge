@@ -6,14 +6,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/widgets/shimmer_loading.dart';
 import 'package:ifridge_app/core/widgets/slide_in_item.dart';
-import 'package:ifridge_app/features/cook/presentation/screens/cooking_run_screen.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/recipe_prep_screen.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
-import 'dart:convert';
 
 class RecipeDetailScreen extends StatefulWidget {
   final String recipeId;
@@ -89,10 +86,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   }
 
   void _showAdjustPortionsDialog() {
-    int _newServings = widget.servings ?? 2;
+    int newServings = widget.servings ?? 2;
     showModalBottomSheet(
       context: context,
-      backgroundColor: IFridgeTheme.bgElevated,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -100,60 +97,60 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         return StatefulBuilder(
           builder: (context, setStateSB) {
             return Padding(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(24),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     'Adjust Portions',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Text(
                     'Current recipe makes ${widget.servings ?? "?"} servings.',
-                    style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
-                        onPressed: _newServings > 1 ? () => setStateSB(() => _newServings--) : null,
-                        icon: const Icon(Icons.remove_circle_outline, color: IFridgeTheme.primary, size: 32),
+                        onPressed: newServings > 1 ? () => setStateSB(() => newServings--) : null,
+                        icon: Icon(Icons.remove_circle_outline, color: Theme.of(context).colorScheme.primary, size: 32),
                       ),
-                      const SizedBox(width: 24),
+                      SizedBox(width: 24),
                       Text(
-                        '$_newServings',
-                        style: const TextStyle(
-                          color: Colors.white,
+                        '$newServings',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(width: 24),
+                      SizedBox(width: 24),
                       IconButton(
-                        onPressed: () => setStateSB(() => _newServings++),
-                        icon: const Icon(Icons.add_circle_outline, color: IFridgeTheme.primary, size: 32),
+                        onPressed: () => setStateSB(() => newServings++),
+                        icon: Icon(Icons.add_circle_outline, color: Theme.of(context).colorScheme.primary, size: 32),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
                   SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: FilledButton.icon(
                       onPressed: () {
                         Navigator.pop(context);
-                        _adjustWithAi(_newServings);
+                        _adjustWithAi(newServings);
                       },
-                      icon: const Icon(Icons.auto_awesome),
-                      label: Text('Scale to $_newServings Servings'),
+                      icon: Icon(Icons.auto_awesome),
+                      label: Text('Scale to $newServings Servings'),
                       style: FilledButton.styleFrom(
-                        backgroundColor: IFridgeTheme.primary,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
                     ),
@@ -187,7 +184,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Scaled to $newServings servings ✓'),
-          backgroundColor: IFridgeTheme.primary,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -207,11 +204,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(ctx).size.height * 0.65,
         ),
-        decoration: const BoxDecoration(
-          color: IFridgeTheme.bgCard,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24),
         child: FutureBuilder<Map<String, dynamic>>(
           future: api.getSubstitution(
             ingredient: ingredientName,
@@ -225,21 +222,21 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                   Container(
                     width: 40, height: 4,
                     decoration: BoxDecoration(
-                      color: IFridgeTheme.textMuted,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  const CircularProgressIndicator(color: IFridgeTheme.primary),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 24),
+                  CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
+                  SizedBox(height: 16),
                   Text(
                     'Finding substitutes for $ingredientName...',
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.7),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       fontSize: 14,
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                 ],
               );
             }
@@ -248,13 +245,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.error_outline, color: Colors.redAccent, size: 40),
-                  const SizedBox(height: 12),
+                  Icon(Icons.error_outline, color: Colors.redAccent, size: 40),
+                  SizedBox(height: 12),
                   Text(
                     'Could not find substitutes',
-                    style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                 ],
               );
             }
@@ -272,22 +269,22 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     child: Container(
                       width: 40, height: 4,
                       decoration: BoxDecoration(
-                        color: IFridgeTheme.textMuted,
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   // Header
                   Row(
                     children: [
-                      const Icon(Icons.swap_horiz, color: IFridgeTheme.primary, size: 22),
-                      const SizedBox(width: 8),
+                      Icon(Icons.swap_horiz, color: Theme.of(context).colorScheme.primary, size: 22),
+                      SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Substitutes for "$ingredientName"',
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontSize: 17,
                             fontWeight: FontWeight.w700,
                           ),
@@ -295,14 +292,14 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   // Substitution cards
                   if (substitutes.isEmpty)
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      padding: EdgeInsets.symmetric(vertical: 20),
                       child: Text(
                         'No substitutes found for this recipe context.',
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
                       ),
                     )
                   else
@@ -314,13 +311,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       final notes = sub['notes'] ?? sub['reason'] ?? '';
 
                       return Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        padding: const EdgeInsets.all(14),
+                        margin: EdgeInsets.only(bottom: 10),
+                        padding: EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: IFridgeTheme.bgElevated,
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
-                            color: IFridgeTheme.primary.withValues(alpha: idx == 0 ? 0.4 : 0.1),
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: idx == 0 ? 0.4 : 0.1),
                           ),
                         ),
                         child: Row(
@@ -329,29 +326,29 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                             Container(
                               width: 28, height: 28,
                               decoration: BoxDecoration(
-                                color: IFridgeTheme.primary.withValues(alpha: 0.15),
+                                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Center(
                                 child: Text(
                                   '${idx + 1}',
-                                  style: const TextStyle(
-                                    color: IFridgeTheme.primary,
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.primary,
                                     fontWeight: FontWeight.w800,
                                     fontSize: 13,
                                   ),
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: 12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     subName.toString(),
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: Theme.of(context).colorScheme.onSurface,
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -360,7 +357,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                                     Text(
                                       notes.toString(),
                                       style: TextStyle(
-                                        color: Colors.white.withValues(alpha: 0.5),
+                                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                                         fontSize: 12,
                                       ),
                                       maxLines: 2,
@@ -371,15 +368,15 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                             ),
                             // Ratio chip
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.06),
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
                                 ratio.toString(),
-                                style: const TextStyle(
-                                  color: IFridgeTheme.primary,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -389,7 +386,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         ),
                       );
                     }),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                 ],
               ),
             );
@@ -402,24 +399,24 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: CustomScrollView(
         slivers: [
           // ── Hero Header ──────────────────────────────────────────
           SliverAppBar(
             expandedHeight: 220,
             pinned: true,
-            backgroundColor: AppTheme.surface,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             leading: IconButton(
               icon: Container(
-                padding: const EdgeInsets.all(6),
+                padding: EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.3),
+                  color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.arrow_back,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onSurface,
                   size: 20,
                 ),
               ),
@@ -433,20 +430,20 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     end: Alignment.bottomRight,
                     colors: [
                       widget.tierColor.withValues(alpha: 0.4),
-                      AppTheme.background,
+                      Theme.of(context).scaffoldBackgroundColor,
                     ],
                   ),
                 ),
                 child: SafeArea(
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(60, 16, 20, 60),
+                    padding: EdgeInsets.fromLTRB(60, 16, 20, 60),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         // Match badge
                         Container(
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 5,
                           ),
@@ -466,12 +463,12 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         // Title
                         Text(
                           widget.title,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontSize: 26,
                             fontWeight: FontWeight.w800,
                             height: 1.2,
@@ -479,13 +476,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         ),
                         if (widget.description != null &&
                             widget.description!.isNotEmpty) ...[
-                          const SizedBox(height: 6),
+                          SizedBox(height: 6),
                           Text(
                             widget.description!,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.6),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                               fontSize: 14,
                             ),
                           ),
@@ -501,7 +498,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           // ── Quick Info Chips ──────────────────────────────────────
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Wrap(
                 spacing: 10,
                 runSpacing: 8,
@@ -537,31 +534,31 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             // ── Ingredients Section ────────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+                padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.checklist,
-                      color: IFridgeTheme.primary,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 20,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Text(
                       'Ingredients (${_ingredients.length})',
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const Spacer(),
+                    Spacer(),
                     TextButton.icon(
                       onPressed: _showAdjustPortionsDialog,
-                      icon: const Icon(Icons.auto_awesome, size: 16),
-                      label: const Text('Scale'),
+                      icon: Icon(Icons.auto_awesome, size: 16),
+                      label: Text('Scale'),
                       style: TextButton.styleFrom(
-                        foregroundColor: IFridgeTheme.primary,
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                        foregroundColor: Theme.of(context).colorScheme.primary,
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
@@ -572,7 +569,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             ),
 
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 16),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final ing = _ingredients[index];
@@ -610,7 +607,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             }))
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                  padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
                   child: OutlinedButton.icon(
                     onPressed: () async {
                       final missingItems = _ingredients.where((ing) {
@@ -640,9 +637,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                             
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
+                            SnackBar(
                               content: Text('Added missing items to Shopping List!'),
-                              backgroundColor: IFridgeTheme.primary,
+                              backgroundColor: Theme.of(context).colorScheme.primary,
                             ),
                           );
                         }
@@ -657,15 +654,15 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         }
                       }
                     },
-                    icon: const Icon(Icons.shopping_cart_outlined, size: 20),
-                    label: const Text(
+                    icon: Icon(Icons.shopping_cart_outlined, size: 20),
+                    label: Text(
                       'Add missing to Shopping List',
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: IFridgeTheme.primary,
-                      side: const BorderSide(color: IFridgeTheme.primary),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      foregroundColor: Theme.of(context).colorScheme.primary,
+                      side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      padding: EdgeInsets.symmetric(vertical: 12),
                     ),
                   ),
                 ),
@@ -674,7 +671,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             // ── Steps Section ──────────────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 28, 16, 8),
+                padding: EdgeInsets.fromLTRB(16, 28, 16, 8),
                 child: Row(
                   children: [
                     Icon(
@@ -682,11 +679,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       color: widget.tierColor,
                       size: 20,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Text(
                       'Cooking Steps (${_steps.length})',
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                       ),
@@ -699,17 +696,17 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             if (_steps.isEmpty)
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 20,
                   ),
                   child: Container(
-                    padding: const EdgeInsets.all(20),
+                    padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AppTheme.surface,
+                      color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.06),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
                       ),
                     ),
                     child: Column(
@@ -717,13 +714,13 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         Icon(
                           Icons.auto_fix_high,
                           size: 40,
-                          color: Colors.white.withValues(alpha: 0.3),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         Text(
                           'No steps available yet',
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.5),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                             fontSize: 14,
                           ),
                         ),
@@ -734,7 +731,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               )
             else
               SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final step = _steps[index];
@@ -757,7 +754,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             // ── "I Cooked This" Button ────────────────────────────────
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
+                padding: EdgeInsets.fromLTRB(16, 24, 16, 0),
                 child: FilledButton.icon(
                   onPressed: () async {
                     try {
@@ -768,15 +765,15 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       );
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
+                          SnackBar(
                             content: Row(
                               children: [
-                                Icon(Icons.celebration, color: Colors.white, size: 20),
+                                Icon(Icons.celebration, color: Theme.of(context).colorScheme.onSurface, size: 20),
                                 SizedBox(width: 8),
                                 Text('Recorded! Your taste profile is evolving 🧠'),
                               ],
                             ),
-                            backgroundColor: IFridgeTheme.freshGreen,
+                            backgroundColor: Theme.of(context).colorScheme.tertiary,
                           ),
                         );
                       }
@@ -788,15 +785,15 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       }
                     }
                   },
-                  icon: const Icon(Icons.restaurant, size: 20),
-                  label: const Text(
+                  icon: Icon(Icons.restaurant, size: 20),
+                  label: Text(
                     'I Cooked This!',
                     style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
                   ),
                   style: FilledButton.styleFrom(
-                    backgroundColor: IFridgeTheme.freshGreen,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
+                    foregroundColor: Theme.of(context).colorScheme.onSurface,
+                    padding: EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -815,7 +812,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           ? SlideInItem(
               delay: 300,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: 24),
                 child: SizedBox(
                   width: double.infinity,
                   child: FloatingActionButton.extended(
@@ -837,9 +834,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         ),
                       );
                     },
-                    backgroundColor: IFridgeTheme.primary,
-                    icon: const Icon(Icons.play_arrow, size: 24),
-                    label: const Text(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    icon: Icon(Icons.play_arrow, size: 24),
+                    label: Text(
                       'Start Cooking',
                       style: TextStyle(
                         fontSize: 16,
@@ -865,20 +862,20 @@ class _QuickChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: Colors.white54),
-          const SizedBox(width: 6),
+          Icon(icon, size: 16, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54)),
+          SizedBox(width: 6),
           Text(
             label,
-            style: const TextStyle(color: Colors.white70, fontSize: 13),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13),
           ),
         ],
       ),
@@ -908,14 +905,14 @@ class _IngredientRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      margin: EdgeInsets.only(bottom: 6),
+      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isOwned
-              ? IFridgeTheme.freshGreen.withValues(alpha: 0.2)
+              ? Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.2)
               : Colors.orange.withValues(alpha: 0.15),
         ),
       ),
@@ -927,17 +924,17 @@ class _IngredientRow extends StatelessWidget {
             height: 28,
             decoration: BoxDecoration(
               color: isOwned
-                  ? IFridgeTheme.freshGreen.withValues(alpha: 0.15)
+                  ? Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.15)
                   : Colors.orange.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               isOwned ? Icons.check : Icons.shopping_cart_outlined,
               size: 16,
-              color: isOwned ? IFridgeTheme.freshGreen : Colors.orange,
+              color: isOwned ? Theme.of(context).colorScheme.tertiary : Colors.orange,
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           // Name + prep note
           Expanded(
             child: Column(
@@ -948,8 +945,8 @@ class _IngredientRow extends StatelessWidget {
                     Flexible(
                       child: Text(
                         name,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),
@@ -957,19 +954,19 @@ class _IngredientRow extends StatelessWidget {
                       ),
                     ),
                     if (isOptional) ...[
-                      const SizedBox(width: 6),
+                      SizedBox(width: 6),
                       Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 5,
                           vertical: 1,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.08),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: const Text(
+                        child: Text(
                           'optional',
-                          style: TextStyle(color: Colors.white38, fontSize: 9),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 9),
                         ),
                       ),
                     ],
@@ -979,7 +976,7 @@ class _IngredientRow extends StatelessWidget {
                   Text(
                     prepNote,
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.4),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
                       fontSize: 11,
                     ),
                   ),
@@ -992,23 +989,23 @@ class _IngredientRow extends StatelessWidget {
               onTap: onSubstitute,
               borderRadius: BorderRadius.circular(8),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: IFridgeTheme.primary.withValues(alpha: 0.12),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: IFridgeTheme.primary.withValues(alpha: 0.3),
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                   ),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.swap_horiz, size: 14, color: IFridgeTheme.primary),
+                    Icon(Icons.swap_horiz, size: 14, color: Theme.of(context).colorScheme.primary),
                     SizedBox(width: 3),
                     Text(
                       'Swap',
                       style: TextStyle(
-                        color: IFridgeTheme.primary,
+                        color: Theme.of(context).colorScheme.primary,
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                       ),
@@ -1017,13 +1014,13 @@ class _IngredientRow extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
           ],
           // Quantity
           Text(
             quantity,
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.5),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
               fontSize: 13,
               fontWeight: FontWeight.w500,
             ),
@@ -1101,56 +1098,56 @@ class _StepCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           // Step content
           Expanded(
             child: Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(14),
+              margin: EdgeInsets.only(bottom: 12),
+              padding: EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: AppTheme.surface,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+                border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     humanText,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 14,
                       height: 1.5,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Row(
                     children: [
                       if (_timeLabel.isNotEmpty) ...[
                         Icon(
                           Icons.timer_outlined,
                           size: 14,
-                          color: Colors.white.withValues(alpha: 0.4),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4),
                         Text(
                           _timeLabel,
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.4),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
                             fontSize: 12,
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12),
                       ],
                       Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                           horizontal: 6,
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
                           color: requiresAttention
                               ? Colors.orange.withValues(alpha: 0.1)
-                              : IFridgeTheme.primary.withValues(alpha: 0.1),
+                              : Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Row(
@@ -1158,15 +1155,15 @@ class _StepCard extends StatelessWidget {
                           children: [
                             Text(
                               requiresAttention ? '👨‍🍳' : '🤖',
-                              style: const TextStyle(fontSize: 12),
+                              style: TextStyle(fontSize: 12),
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Text(
                               requiresAttention ? 'Hands-on' : 'Automatic',
                               style: TextStyle(
                                 color: requiresAttention
                                     ? Colors.orange
-                                    : IFridgeTheme.primary,
+                                    : Theme.of(context).colorScheme.primary,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500,
                               ),

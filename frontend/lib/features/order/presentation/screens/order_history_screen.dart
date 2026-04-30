@@ -4,7 +4,6 @@
 // Accessible from the Profile/Manage tab.
 
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/order_service.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 
@@ -20,7 +19,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   bool _loading = true;
   String? _error;
 
-  static const accent = Color(0xFFFF6D00);
+  static final accent = Theme.of(context).colorScheme.primary;
 
   @override
   void initState() {
@@ -58,16 +57,16 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? IFridgeTheme.bgDark : const Color(0xFFF6F8FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('My Orders',
+        title: Text('My Orders',
             style: TextStyle(fontWeight: FontWeight.w700)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: accent))
+          ? Center(child: CircularProgressIndicator(color: accent))
           : _error != null
               ? _buildError(isDark)
               : _orders.isEmpty
@@ -82,17 +81,17 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.error_outline, size: 48,
-              color: isDark ? Colors.white12 : Colors.black12),
-          const SizedBox(height: 12),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12)),
+          SizedBox(height: 12),
           Text(_error!,
               style: TextStyle(
-                  color: isDark ? Colors.white38 : Colors.black38,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                   fontSize: 16)),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           FilledButton.icon(
             onPressed: _loadOrders,
-            icon: const Icon(Icons.refresh, size: 18),
-            label: const Text('Retry'),
+            icon: Icon(Icons.refresh, size: 18),
+            label: Text('Retry'),
             style: FilledButton.styleFrom(backgroundColor: accent),
           ),
         ],
@@ -106,17 +105,17 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.receipt_long_outlined, size: 64,
-              color: isDark ? Colors.white12 : Colors.black12),
-          const SizedBox(height: 16),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12)),
+          SizedBox(height: 16),
           Text('No orders yet',
               style: TextStyle(
-                  color: isDark ? Colors.white38 : Colors.black38,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                   fontSize: 18,
                   fontWeight: FontWeight.w600)),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text('Your order history will appear here',
               style: TextStyle(
-                  color: isDark ? Colors.white24 : Colors.black26,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24),
                   fontSize: 14)),
         ],
       ),
@@ -132,25 +131,25 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       onRefresh: _loadOrders,
       color: accent,
       child: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         children: [
           // ── Active Orders ─────────────────────────────
           if (active.isNotEmpty) ...[
             _sectionHeader('Active Orders', '${active.length}', isDark),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             ...active.map((o) => _OrderCard(
                   order: o,
                   isDark: isDark,
                   onCancel: () => _cancelOrder(o),
                   isActive: true,
                 )),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
           ],
 
           // ── Past Orders ───────────────────────────────
           if (past.isNotEmpty) ...[
             _sectionHeader('Past Orders', '${past.length}', isDark),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             ...past.map((o) => _OrderCard(
                   order: o,
                   isDark: isDark,
@@ -167,18 +166,18 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       children: [
         Text(title,
             style: TextStyle(
-                color: isDark ? Colors.white70 : Colors.black54,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 fontSize: 16,
                 fontWeight: FontWeight.w700)),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
             color: accent.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(count,
-              style: const TextStyle(
+              style: TextStyle(
                   color: accent,
                   fontSize: 12,
                   fontWeight: FontWeight.w700)),
@@ -192,21 +191,21 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Theme.of(ctx).brightness == Brightness.dark
-            ? IFridgeTheme.bgCard
-            : Colors.white,
+            ? Theme.of(context).colorScheme.surface
+            : Theme.of(context).colorScheme.onSurface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Cancel Order?'),
+        title: Text('Cancel Order?'),
         content: Text(
             'Cancel your order from ${order.restaurantName ?? "this restaurant"}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Keep Order'),
+            child: Text('Keep Order'),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Cancel Order'),
+            child: Text('Cancel Order'),
           ),
         ],
       ),
@@ -216,7 +215,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       final success = await OrderService.cancelOrder(order.id);
       if (success && mounted) {
         _loadOrders();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Order cancelled'),
           backgroundColor: Colors.red,
         ));
@@ -242,22 +241,20 @@ class _OrderCard extends StatelessWidget {
     this.onCancel,
   });
 
-  static const accent = Color(0xFFFF6D00);
+  static final accent = Theme.of(context).colorScheme.primary;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? IFridgeTheme.bgCard : Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isActive
               ? accent.withValues(alpha: 0.2)
-              : isDark
-                  ? Colors.white.withValues(alpha: 0.04)
-                  : Colors.black.withValues(alpha: 0.05),
+              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
           width: isActive ? 1.5 : 1,
         ),
         boxShadow: isActive
@@ -289,7 +286,7 @@ class _OrderCard extends StatelessWidget {
                   size: 20,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,16 +294,16 @@ class _OrderCard extends StatelessWidget {
                     Text(
                       order.restaurantName ?? 'Restaurant',
                       style: TextStyle(
-                        color: isDark ? Colors.white : Colors.black87,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       '${order.itemCount} items · ${order.timeAgo}',
                       style: TextStyle(
-                        color: isDark ? Colors.white38 : Colors.black38,
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                         fontSize: 12,
                       ),
                     ),
@@ -319,7 +316,7 @@ class _OrderCard extends StatelessWidget {
 
           // ── Status Progress (for active orders) ─────
           if (isActive) ...[
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _StatusProgress(status: order.status, type: order.type),
           ],
 
@@ -327,10 +324,10 @@ class _OrderCard extends StatelessWidget {
           if (isActive &&
               order.type == 'pickup' &&
               order.pickupCode != null) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
                 color: accent.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(10),
@@ -340,10 +337,10 @@ class _OrderCard extends StatelessWidget {
                 children: [
                   Text('Pickup Code: ',
                       style: TextStyle(
-                          color: isDark ? Colors.white54 : Colors.black54,
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                           fontSize: 13)),
                   Text(order.pickupCode!,
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: accent,
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
@@ -353,7 +350,7 @@ class _OrderCard extends StatelessWidget {
             ),
           ],
 
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // ── Footer: Total + Cancel ──────────────────
           Row(
@@ -363,19 +360,19 @@ class _OrderCard extends StatelessWidget {
                       color: accent,
                       fontSize: 15,
                       fontWeight: FontWeight.w700)),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 order.type == 'delivery' ? '· Delivery' : '· Pickup',
                 style: TextStyle(
-                    color: isDark ? Colors.white24 : Colors.black26,
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24),
                     fontSize: 12),
               ),
-              const Spacer(),
+              Spacer(),
               if (isActive && onCancel != null)
                 GestureDetector(
                   onTap: onCancel,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                         horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.red.withValues(alpha: 0.08),
@@ -409,7 +406,7 @@ class _StatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (Color bg, Color fg) = switch (status) {
-      'confirmed' => (const Color(0xFFFF6D00).withValues(alpha: 0.12), const Color(0xFFFF6D00)),
+      'confirmed' => (Theme.of(context).colorScheme.primary.withValues(alpha: 0.12), Theme.of(context).colorScheme.primary),
       'preparing' => (Colors.blue.withValues(alpha: 0.12), Colors.blue),
       'ready' => (Colors.green.withValues(alpha: 0.12), Colors.green),
       'picked_up' || 'delivering' => (Colors.purple.withValues(alpha: 0.12), Colors.purple),
@@ -430,7 +427,7 @@ class _StatusChip extends StatelessWidget {
     };
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(8),
@@ -452,7 +449,7 @@ class _StatusProgress extends StatelessWidget {
 
   const _StatusProgress({required this.status, required this.type});
 
-  static const accent = Color(0xFFFF6D00);
+  static final accent = Theme.of(context).colorScheme.primary;
 
   @override
   Widget build(BuildContext context) {

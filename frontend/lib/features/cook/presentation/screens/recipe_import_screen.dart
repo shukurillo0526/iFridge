@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -56,45 +55,45 @@ class _RecipeImportScreenState extends State<RecipeImportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Import Recipe', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('Import Recipe', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Paste Raw Recipe', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
+            Text('Paste Raw Recipe', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 22, fontWeight: FontWeight.bold)),
+            SizedBox(height: 8),
             Text('Copy and paste instructions from a website, book, or notes app. Our AI will magically convert it into a step-by-step smart recipe.',
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14)),
-            const SizedBox(height: 24),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14)),
+            SizedBox(height: 24),
             
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: IFridgeTheme.bgElevated,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.white12),
+                  border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12)),
                 ),
                 child: TextField(
                   controller: _rawTextController,
                   maxLines: null,
                   expands: true,
-                  style: const TextStyle(color: Colors.white, height: 1.5),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface, height: 1.5),
                   decoration: InputDecoration(
                     hintText: "e.g. Grandma's Cookies\\nMix 2 cups flour with 1 cup sugar... bake at 350 for 10 mins.",
-                    hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
+                    hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.all(16),
+                    contentPadding: EdgeInsets.all(16),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             
             SizedBox(
               width: double.infinity,
@@ -102,12 +101,12 @@ class _RecipeImportScreenState extends State<RecipeImportScreen> {
               child: FilledButton.icon(
                 onPressed: _isProcessing ? null : _parseRecipe,
                 icon: _isProcessing
-                    ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                    : const Icon(Icons.auto_awesome),
-                label: Text(_isProcessing ? 'Analyzing Recipe...' : 'Parse with AI', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurface, strokeWidth: 2))
+                    : Icon(Icons.auto_awesome),
+                label: Text(_isProcessing ? 'Analyzing Recipe...' : 'Parse with AI', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 style: FilledButton.styleFrom(
-                  backgroundColor: IFridgeTheme.primary,
-                  foregroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onSurface,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
               ),
@@ -196,7 +195,7 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
       Navigator.pop(context); // Close sheet
       Navigator.pop(context); // Close import screen
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Recipe imported successfully!'), backgroundColor: IFridgeTheme.freshGreen)
+        SnackBar(content: Text('Recipe imported successfully!'), backgroundColor: Theme.of(context).colorScheme.tertiary)
       );
       
     } catch (e) {
@@ -215,46 +214,46 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
       maxChildSize: 0.95,
       builder: (_, scrollController) {
         return Container(
-          decoration: const BoxDecoration(
-            color: AppTheme.surface,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: Column(
             children: [
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 12),
+                margin: EdgeInsets.symmetric(vertical: 12),
                 width: 40, height: 4,
-                decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2)),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 16),
                 child: Row(
                   children: [
-                    Expanded(child: Text(widget.data['title'] ?? 'Parsed Recipe', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold))),
-                    IconButton(icon: const Icon(Icons.close, color: Colors.white54), onPressed: () => Navigator.pop(context)),
+                    Expanded(child: Text(widget.data['title'] ?? 'Parsed Recipe', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.bold))),
+                    IconButton(icon: Icon(Icons.close, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54)), onPressed: () => Navigator.pop(context)),
                   ],
                 ),
               ),
               Expanded(
                 child: ListView(
                   controller: scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   children: [
                     _buildSectionHeader('Ingredients'),
                     ...(widget.data['ingredients'] as List? ?? []).map((ing) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Text('• ${ing['quantity']} ${ing['unit']} ${ing['name']}', style: const TextStyle(color: Colors.white70)),
+                      padding: EdgeInsets.only(bottom: 8.0),
+                      child: Text('• ${ing['quantity']} ${ing['unit']} ${ing['name']}', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
                     )),
                     
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
                     _buildSectionHeader('Steps'),
                     ...(widget.data['steps'] as List? ?? []).map((step) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
+                      padding: EdgeInsets.only(bottom: 12.0),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${step['step']}. ', style: const TextStyle(color: IFridgeTheme.primary, fontWeight: FontWeight.bold)),
-                          Expanded(child: Text('${step['text']}', style: const TextStyle(color: Colors.white70, height: 1.4))),
+                          Text('${step['step']}. ', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold)),
+                          Expanded(child: Text('${step['text']}', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), height: 1.4))),
                         ],
                       ),
                     )),
@@ -262,19 +261,19 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(20),
                 child: SizedBox(
                   width: double.infinity,
                   height: 56,
                   child: FilledButton(
                     onPressed: _isSaving ? null : _saveToDb,
                     style: FilledButton.styleFrom(
-                      backgroundColor: IFridgeTheme.primary,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
                     child: _isSaving 
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Looks Good — Save to My Recipes', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      ? CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurface)
+                      : Text('Looks Good — Save to My Recipes', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   ),
                 ),
               )
@@ -287,8 +286,8 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
 
   Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Text(title, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+      padding: EdgeInsets.only(bottom: 12),
+      child: Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.bold)),
     );
   }
 }

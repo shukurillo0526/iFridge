@@ -103,9 +103,9 @@ class ApiService {
     final body = {
       'original_prediction': originalPrediction,
       'corrected_ingredient_id': correctedIngredientId,
-      if (clarifaiConceptId != null) 'clarifai_concept_id': clarifaiConceptId,
-      if (confidence != null) 'confidence': confidence,
-      if (imageStoragePath != null) 'image_storage_path': imageStoragePath,
+      'clarifai_concept_id': ?clarifaiConceptId,
+      'confidence': ?confidence,
+      'image_storage_path': ?imageStoragePath,
     };
 
     final response = await _client.post(
@@ -149,7 +149,7 @@ class ApiService {
     final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/ai/cooking-tip');
     final body = {
       'step_text': stepText,
-      if (question != null) 'question': question,
+      'question': ?question,
     };
     final response = await _client.post(
       uri,
@@ -171,9 +171,9 @@ class ApiService {
     final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/ai/generate-recipe');
     final body = {
       'ingredients': ingredients,
-      if (cuisine != null) 'cuisine': cuisine,
-      if (maxTimeMinutes != null) 'max_time_minutes': maxTimeMinutes,
-      if (difficulty != null) 'difficulty': difficulty,
+      'cuisine': ?cuisine,
+      'max_time_minutes': ?maxTimeMinutes,
+      'difficulty': ?difficulty,
       'servings': servings,
       'shelf_only': shelfOnly,
     };
@@ -193,7 +193,7 @@ class ApiService {
     final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/ai/substitute');
     final body = {
       'ingredient': ingredient,
-      if (recipeContext != null) 'recipe_context': recipeContext,
+      'recipe_context': ?recipeContext,
     };
     final response = await _client.post(
       uri,
@@ -246,7 +246,7 @@ class ApiService {
       'quantity': quantity,
       'unit': unit,
       'location': location,
-      if (expiryDate != null) 'expiry_date': expiryDate,
+      'expiry_date': ?expiryDate,
     };
     final response = await _client.post(
       uri,
@@ -294,7 +294,7 @@ class ApiService {
         'user_id': userId,
         'meal_type': mealType,
         'food_items': foodItems,
-        if (notes != null) 'notes': notes,
+        'notes': ?notes,
       }),
     );
     return _handleResponse(response);
@@ -424,7 +424,7 @@ class ApiService {
       body: jsonEncode({
         'user_id': userId,
         'email': email,
-        if (displayName != null) 'display_name': displayName,
+        'display_name': ?displayName,
       }),
     );
     return _handleResponse(response);

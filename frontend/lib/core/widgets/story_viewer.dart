@@ -11,7 +11,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/story_service.dart';
 
 class StoryViewer extends StatefulWidget {
@@ -127,7 +126,7 @@ class _StoryViewerState extends State<StoryViewer> with SingleTickerProviderStat
     final topPad = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: GestureDetector(
         // Tap left half = prev, right half = next
         onTapUp: (details) {
@@ -154,13 +153,13 @@ class _StoryViewerState extends State<StoryViewer> with SingleTickerProviderStat
             CachedNetworkImage(
               imageUrl: story.mediaUrl,
               fit: BoxFit.cover,
-              placeholder: (_, __) => const Center(
-                child: CircularProgressIndicator(color: IFridgeTheme.primary, strokeWidth: 2),
+              placeholder: (_, _) => Center(
+                child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary, strokeWidth: 2),
               ),
-              errorWidget: (_, __, ___) => Container(
-                color: Colors.grey.shade900,
-                child: const Center(
-                  child: Icon(Icons.broken_image, color: Colors.white24, size: 56),
+              errorWidget: (_, _, _) => Container(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                child: Center(
+                  child: Icon(Icons.broken_image, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), size: 56),
                 ),
               ),
             ),
@@ -175,7 +174,7 @@ class _StoryViewerState extends State<StoryViewer> with SingleTickerProviderStat
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.black.withValues(alpha: 0.7),
+                      Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       Colors.transparent,
                     ],
                   ),
@@ -193,7 +192,7 @@ class _StoryViewerState extends State<StoryViewer> with SingleTickerProviderStat
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [
-                      Colors.black.withValues(alpha: 0.8),
+                      Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
                       Colors.transparent,
                     ],
                   ),
@@ -209,23 +208,23 @@ class _StoryViewerState extends State<StoryViewer> with SingleTickerProviderStat
                 children: List.generate(group.stories.length, (i) {
                   return Expanded(
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 2),
+                      margin: EdgeInsets.symmetric(horizontal: 2),
                       height: 2.5,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(2),
                         child: i < _storyIndex
-                            ? Container(color: Colors.white)
+                            ? Container(color: Theme.of(context).colorScheme.onSurface)
                             : i == _storyIndex
                                 ? AnimatedBuilder(
                                     animation: _progressController,
-                                    builder: (_, __) => LinearProgressIndicator(
+                                    builder: (_, _) => LinearProgressIndicator(
                                       value: _progressController.value,
-                                      backgroundColor: Colors.white.withValues(alpha: 0.3),
-                                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                                      backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+                                      valueColor: const AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.onSurface),
                                       minHeight: 2.5,
                                     ),
                                   )
-                                : Container(color: Colors.white.withValues(alpha: 0.3)),
+                                : Container(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
                       ),
                     ),
                   );
@@ -242,35 +241,35 @@ class _StoryViewerState extends State<StoryViewer> with SingleTickerProviderStat
                   // Avatar
                   CircleAvatar(
                     radius: 16,
-                    backgroundColor: IFridgeTheme.primary.withValues(alpha: 0.3),
+                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                     child: Text(
                       group.userName.isNotEmpty ? group.userName[0].toUpperCase() : '?',
-                      style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w800),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 12, fontWeight: FontWeight.w800),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   // Name
                   Text(
                     group.userName,
-                    style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   // Time ago
                   Text(
                     _timeAgo(story.createdAt),
-                    style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 12),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 12),
                   ),
-                  const Spacer(),
+                  Spacer(),
                   // Close button
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Container(
-                      padding: const EdgeInsets.all(6),
+                      padding: EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.4),
+                        color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.4),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.close, color: Colors.white, size: 20),
+                      child: Icon(Icons.close, color: Theme.of(context).colorScheme.onSurface, size: 20),
                     ),
                   ),
                 ],
@@ -283,14 +282,14 @@ class _StoryViewerState extends State<StoryViewer> with SingleTickerProviderStat
                 bottom: 24 + MediaQuery.of(context).padding.bottom,
                 left: 16, right: 16,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.5),
+                    color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
                     story.caption!,
-                    style: const TextStyle(color: Colors.white, fontSize: 15, height: 1.4),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15, height: 1.4),
                     textAlign: TextAlign.center,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
@@ -319,12 +318,12 @@ class _StoryViewerState extends State<StoryViewer> with SingleTickerProviderStat
                     }
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(6),
+                    padding: EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.4),
+                      color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.4),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.delete_outline, color: Colors.white70, size: 18),
+                    child: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), size: 18),
                   ),
                 ),
               ),

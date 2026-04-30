@@ -4,7 +4,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/features/gamification/domain/badges.dart';
 
@@ -48,61 +47,61 @@ class _GamificationPageState extends State<GamificationPage> {
     final earnedIds = _earnedBadges.map((b) => b['badge_id']).toSet();
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
-      appBar: AppBar(title: const Text('Badges & Achievements', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(title: Text('Badges & Achievements', style: TextStyle(fontWeight: FontWeight.w700))),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: IFridgeTheme.primary))
+          ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary))
           : ListView(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               children: [
                 // Level Card
                 Container(
-                  padding: const EdgeInsets.all(24),
+                  padding: EdgeInsets.all(24),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [IFridgeTheme.primary.withValues(alpha: 0.15), AppTheme.surface],
+                      colors: [Theme.of(context).colorScheme.primary.withValues(alpha: 0.15), Theme.of(context).colorScheme.surface],
                       begin: Alignment.topLeft, end: Alignment.bottomRight),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: IFridgeTheme.primary.withValues(alpha: 0.2))),
+                    border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2))),
                   child: Column(
                     children: [
                       Text('⭐ Level $level',
-                        style: const TextStyle(color: IFridgeTheme.primary, fontSize: 28, fontWeight: FontWeight.w800)),
-                      const SizedBox(height: 8),
+                        style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 28, fontWeight: FontWeight.w800)),
+                      SizedBox(height: 8),
                       Text('$xp XP total',
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 14)),
-                      const SizedBox(height: 16),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 14)),
+                      SizedBox(height: 16),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: LinearProgressIndicator(
                           value: levelProgress, minHeight: 12,
-                          backgroundColor: Colors.white.withValues(alpha: 0.08),
-                          valueColor: const AlwaysStoppedAnimation(IFridgeTheme.primary)),
+                          backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
+                          valueColor: AlwaysStoppedAnimation(Theme.of(context).colorScheme.primary)),
                       ),
-                      const SizedBox(height: 6),
+                      SizedBox(height: 6),
                       Text('${xp % 100} / 100 XP to Level ${level + 1}',
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12)),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 12)),
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // Stats
                 Row(
                   children: [
                     _StatCard(label: 'Meals Cooked', value: '${_stats?['meals_cooked'] ?? 0}', emoji: '🍳'),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     _StatCard(label: 'Items Saved', value: '${_stats?['items_saved'] ?? 0}', emoji: '🥫'),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     _StatCard(label: 'Day Streak', value: '${_stats?['streak_days'] ?? 0}', emoji: '🔥'),
                   ],
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
 
                 // All Badges
-                const Text('All Badges',
-                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
-                const SizedBox(height: 12),
+                Text('All Badges',
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
+                SizedBox(height: 12),
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -114,23 +113,23 @@ class _GamificationPageState extends State<GamificationPage> {
                     final earned = earnedIds.contains(badge.name);
                     return Container(
                       decoration: BoxDecoration(
-                        color: earned ? IFridgeTheme.primary.withValues(alpha: 0.08) : AppTheme.surface,
+                        color: earned ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.08) : Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: earned ? IFridgeTheme.primary.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.06))),
+                          color: earned ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.3) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(badge.emoji,
-                            style: TextStyle(fontSize: 32, color: earned ? null : Colors.white.withValues(alpha: 0.2))),
-                          const SizedBox(height: 6),
+                            style: TextStyle(fontSize: 32, color: earned ? null : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
+                          SizedBox(height: 6),
                           Text(badge.title,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: earned ? Colors.white : Colors.white.withValues(alpha: 0.3),
+                              color: earned ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                               fontSize: 11, fontWeight: FontWeight.w600)),
                           if (!earned)
-                            Text('🔒', style: TextStyle(fontSize: 10, color: Colors.white.withValues(alpha: 0.2))),
+                            Text('🔒', style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
                         ],
                       ),
                     );
@@ -150,17 +149,17 @@ class _StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppTheme.surface, borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.06))),
+          color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06))),
         child: Column(
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 22)),
-            const SizedBox(height: 6),
-            Text(value, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800)),
+            Text(emoji, style: TextStyle(fontSize: 22)),
+            SizedBox(height: 6),
+            Text(value, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w800)),
             Text(label, textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 10)),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 10)),
           ],
         ),
       ),

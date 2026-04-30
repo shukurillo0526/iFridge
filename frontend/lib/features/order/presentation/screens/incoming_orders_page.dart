@@ -5,7 +5,6 @@
 // Restaurant can advance order status: confirmed → preparing → ready → completed.
 
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class IncomingOrdersPage extends StatefulWidget {
@@ -23,7 +22,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
   List<Map<String, dynamic>> _orders = [];
   bool _loading = true;
 
-  static const accent = Color(0xFFFF6D00);
+  static final accent = Theme.of(context).colorScheme.primary;
 
   @override
   void initState() {
@@ -109,16 +108,16 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
     final ready = _orders.where((o) => o['status'] == 'ready').toList();
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Incoming Orders',
+        title: Text('Incoming Orders',
             style: TextStyle(fontWeight: FontWeight.w700)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: Icon(Icons.refresh),
             onPressed: _loadOrders,
             tooltip: 'Refresh',
           ),
@@ -126,10 +125,10 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
         bottom: TabBar(
           controller: _tabController,
           labelColor: accent,
-          unselectedLabelColor: Colors.white38,
+          unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
           indicatorColor: accent,
           indicatorWeight: 3,
-          labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+          labelStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
           tabs: [
             Tab(text: 'New (${confirmed.length})'),
             Tab(text: 'Preparing (${preparing.length})'),
@@ -138,7 +137,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
         ),
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: accent))
+          ? Center(child: CircularProgressIndicator(color: accent))
           : TabBarView(
               controller: _tabController,
               children: [
@@ -157,11 +156,11 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.inbox_outlined, size: 48,
-                color: Colors.white.withValues(alpha: 0.12)),
-            const SizedBox(height: 12),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12)),
+            SizedBox(height: 12),
             Text('No ${_statusLabel(status).toLowerCase()} orders',
                 style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.38),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                     fontSize: 16)),
           ],
         ),
@@ -172,7 +171,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
       onRefresh: _loadOrders,
       color: accent,
       child: ListView.builder(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         itemCount: orders.length,
         itemBuilder: (context, index) =>
             _buildOrderCard(orders[index], status),
@@ -201,12 +200,12 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
     };
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: IFridgeTheme.bgCard,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,7 +214,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: (type == 'delivery' ? Colors.purple : accent)
                       .withValues(alpha: 0.12),
@@ -229,7 +228,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
                   size: 18,
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,46 +237,46 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
                       children: [
                         if (pickupCode != null) ...[
                           Container(
-                            padding: const EdgeInsets.symmetric(
+                            padding: EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               color: accent.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(pickupCode,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     color: accent,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 2)),
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                         ],
                         Text(
                           type == 'delivery' ? 'Delivery' : 'Pickup',
                           style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.5),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                               fontSize: 12),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(timeAgo,
                         style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.3),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                             fontSize: 11)),
                   ],
                 ),
               ),
               Text('${total.round()} UZS',
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: accent,
                       fontSize: 16,
                       fontWeight: FontWeight.w700)),
             ],
           ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
 
           // ── Items List ─────────────────────────────
           ...items.map((item) {
@@ -285,37 +284,37 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
             final qty = item['quantity'] ?? 1;
             final special = item['special_instructions'];
             return Padding(
-              padding: const EdgeInsets.only(bottom: 4),
+              padding: EdgeInsets.only(bottom: 4),
               child: Row(
                 children: [
                   Container(
                     width: 22,
                     height: 22,
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.06),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Center(
                       child: Text('$qty',
                           style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.6),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
                               fontSize: 11,
                               fontWeight: FontWeight.w700)),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('$name',
                             style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.8),
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
                                 fontSize: 13)),
                         if (special != null && special.toString().isNotEmpty)
                           Text('$special',
                               style: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.3),
+                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                                   fontSize: 11,
                                   fontStyle: FontStyle.italic)),
                       ],
@@ -328,10 +327,10 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
 
           // ── Customer Note ──────────────────────────
           if (note != null && note.isNotEmpty) ...[
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.amber.withValues(alpha: 0.06),
                 borderRadius: BorderRadius.circular(8),
@@ -342,11 +341,11 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
                 children: [
                   Icon(Icons.note, size: 14,
                       color: Colors.amber.withValues(alpha: 0.6)),
-                  const SizedBox(width: 6),
+                  SizedBox(width: 6),
                   Expanded(
                     child: Text(note,
                         style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.5),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                             fontSize: 12)),
                   ),
                 ],
@@ -356,7 +355,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
 
           // ── Action Button ──────────────────────────
           if (nextStatus != null) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             SizedBox(
               width: double.infinity,
               height: 44,
@@ -364,7 +363,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
                 onPressed: () => _updateStatus(order['id'], nextStatus),
                 icon: Icon(nextIcon, size: 18),
                 label: Text(nextLabel,
-                    style: const TextStyle(fontWeight: FontWeight.w600)),
+                    style: TextStyle(fontWeight: FontWeight.w600)),
                 style: FilledButton.styleFrom(
                   backgroundColor: nextColor,
                   shape: RoundedRectangleBorder(

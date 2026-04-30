@@ -11,9 +11,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/social_service.dart';
-import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/core/widgets/comment_sheet.dart';
 import 'package:ifridge_app/features/explore/presentation/screens/creator_page.dart';
 
@@ -116,11 +114,11 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
     final createdAt = widget.post['created_at'] as String?;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: AppTheme.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,7 +127,7 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
           //  HEADER: Avatar, Name, Time, Menu
           // ═══════════════════════════════════════════
           Padding(
-            padding: const EdgeInsets.fromLTRB(14, 12, 8, 8),
+            padding: EdgeInsets.fromLTRB(14, 12, 8, 8),
             child: Row(
               children: [
                 GestureDetector(
@@ -142,14 +140,14 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                   },
                   child: CircleAvatar(
                     radius: 18,
-                    backgroundColor: IFridgeTheme.primary.withValues(alpha: 0.2),
+                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                     child: Text(
                       authorName.isNotEmpty ? authorName[0].toUpperCase() : '?',
-                      style: const TextStyle(color: IFridgeTheme.primary, fontWeight: FontWeight.w800, fontSize: 14),
+                      style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w800, fontSize: 14),
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
+                SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,17 +161,17 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                           }
                         },
                         child: Text(authorName,
-                          style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700)),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700)),
                       ),
                       if (locationName != null) ...[
-                        const SizedBox(height: 1),
+                        SizedBox(height: 1),
                         Row(
                           children: [
-                            Icon(Icons.location_on, size: 11, color: Colors.white.withValues(alpha: 0.4)),
-                            const SizedBox(width: 2),
+                            Icon(Icons.location_on, size: 11, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)),
+                            SizedBox(width: 2),
                             Expanded(
                               child: Text(locationName,
-                                style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11),
+                                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 11),
                                 maxLines: 1, overflow: TextOverflow.ellipsis),
                             ),
                           ],
@@ -183,8 +181,8 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                   ),
                 ),
                 Text(_timeAgo(createdAt),
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 11)),
-                const SizedBox(width: 4),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 11)),
+                SizedBox(width: 4),
                 _postTypeBadge(postType),
               ],
             ),
@@ -208,16 +206,16 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                       itemBuilder: (_, i) => CachedNetworkImage(
                         imageUrl: mediaUrls[i],
                         fit: BoxFit.cover,
-                        placeholder: (_, __) => Container(
-                          color: IFridgeTheme.bgElevated,
-                          child: const Center(
-                            child: CircularProgressIndicator(color: IFridgeTheme.primary, strokeWidth: 2),
+                        placeholder: (_, _) => Container(
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          child: Center(
+                            child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary, strokeWidth: 2),
                           ),
                         ),
-                        errorWidget: (_, __, ___) => Container(
-                          color: IFridgeTheme.bgElevated,
-                          child: const Center(
-                            child: Icon(Icons.broken_image, color: Colors.white24, size: 40),
+                        errorWidget: (_, _, _) => Container(
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          child: Center(
+                            child: Icon(Icons.broken_image, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), size: 40),
                           ),
                         ),
                       ),
@@ -232,12 +230,12 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                           children: List.generate(mediaUrls.length, (i) => Container(
                             width: _currentImage == i ? 8 : 5,
                             height: _currentImage == i ? 8 : 5,
-                            margin: const EdgeInsets.symmetric(horizontal: 2),
+                            margin: EdgeInsets.symmetric(horizontal: 2),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: _currentImage == i
-                                  ? IFridgeTheme.primary
-                                  : Colors.white.withValues(alpha: 0.4),
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
                             ),
                           )),
                         ),
@@ -247,13 +245,13 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                       Positioned(
                         top: 10, right: 10,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.6),
+                            color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.6),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text('${_currentImage + 1}/${mediaUrls.length}',
-                            style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600)),
+                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 11, fontWeight: FontWeight.w600)),
                         ),
                       ),
                   ],
@@ -266,7 +264,7 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
           //  ACTION BAR: Like, Comment, Share, Bookmark
           // ═══════════════════════════════════════════
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 10, 12, 2),
+            padding: EdgeInsets.fromLTRB(12, 10, 12, 2),
             child: Row(
               children: [
                 // Like
@@ -277,30 +275,30 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                     duration: const Duration(milliseconds: 150),
                     child: Icon(
                       _liked ? Icons.favorite : Icons.favorite_border,
-                      color: _liked ? Colors.red : Colors.white70,
+                      color: _liked ? Colors.red : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       size: 26,
                     ),
                   ),
                 ),
-                const SizedBox(width: 14),
+                SizedBox(width: 14),
                 // Comment
                 GestureDetector(
                   onTap: _openComments,
-                  child: const Icon(Icons.chat_bubble_outline, color: Colors.white70, size: 23),
+                  child: Icon(Icons.chat_bubble_outline, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), size: 23),
                 ),
-                const SizedBox(width: 14),
+                SizedBox(width: 14),
                 // Share
                 GestureDetector(
                   onTap: _sharePost,
-                  child: const Icon(Icons.send_outlined, color: Colors.white70, size: 22),
+                  child: Icon(Icons.send_outlined, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), size: 22),
                 ),
-                const Spacer(),
+                Spacer(),
                 // Bookmark
                 GestureDetector(
                   onTap: _toggleBookmark,
                   child: Icon(
                     _bookmarked ? Icons.bookmark : Icons.bookmark_border,
-                    color: _bookmarked ? IFridgeTheme.primary : Colors.white70,
+                    color: _bookmarked ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     size: 25,
                   ),
                 ),
@@ -313,10 +311,10 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
           // ═══════════════════════════════════════════
           if (_likeCount > 0)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
+              padding: EdgeInsets.symmetric(horizontal: 14),
               child: Text(
                 '$_likeCount ${_likeCount == 1 ? 'like' : 'likes'}',
-                style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w700),
               ),
             ),
 
@@ -325,7 +323,7 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
           // ═══════════════════════════════════════════
           if (caption.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 4, 14, 0),
+              padding: EdgeInsets.fromLTRB(14, 4, 14, 0),
               child: RichText(
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
@@ -333,11 +331,11 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
                   children: [
                     TextSpan(
                       text: '$authorName  ',
-                      style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w700),
                     ),
                     TextSpan(
                       text: caption,
-                      style: const TextStyle(color: Colors.white, fontSize: 13, height: 1.4),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, height: 1.4),
                     ),
                   ],
                 ),
@@ -347,12 +345,12 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
           // Tags
           if (tags.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 4, 14, 0),
+              padding: EdgeInsets.fromLTRB(14, 4, 14, 0),
               child: Wrap(
                 spacing: 6,
                 children: tags.take(5).map((t) => Text(
                   '#$t',
-                  style: TextStyle(color: IFridgeTheme.primary.withValues(alpha: 0.8), fontSize: 12, fontWeight: FontWeight.w600),
+                  style: TextStyle(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.8), fontSize: 12, fontWeight: FontWeight.w600),
                 )).toList(),
               ),
             ),
@@ -362,37 +360,37 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
           // ═══════════════════════════════════════════
           if (postType == 'restaurant_visit' && locationName != null)
             Container(
-              margin: const EdgeInsets.fromLTRB(14, 8, 14, 0),
-              padding: const EdgeInsets.all(10),
+              margin: EdgeInsets.fromLTRB(14, 8, 14, 0),
+              padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.04),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.04),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08)),
               ),
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFF6D00).withValues(alpha: 0.15),
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.restaurant, color: Color(0xFFFF6D00), size: 18),
+                    child: Icon(Icons.restaurant, color: Theme.of(context).colorScheme.primary, size: 18),
                   ),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(locationName,
-                          style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 2),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w600)),
+                        SizedBox(height: 2),
                         Text('Tap to view on map',
-                          style: TextStyle(color: Colors.white.withValues(alpha: 0.35), fontSize: 11)),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.35), fontSize: 11)),
                       ],
                     ),
                   ),
-                  Icon(Icons.chevron_right, color: Colors.white.withValues(alpha: 0.3), size: 18),
+                  Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), size: 18),
                 ],
               ),
             ),
@@ -402,17 +400,17 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
           // ═══════════════════════════════════════════
           if (_commentCount > 0)
             Padding(
-              padding: const EdgeInsets.fromLTRB(14, 6, 14, 0),
+              padding: EdgeInsets.fromLTRB(14, 6, 14, 0),
               child: GestureDetector(
                 onTap: _openComments,
                 child: Text(
                   'View ${_commentCount == 1 ? '1 comment' : 'all $_commentCount comments'}',
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 12),
                 ),
               ),
             ),
 
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
         ],
       ),
     );
@@ -420,20 +418,20 @@ class _CommunityPostCardState extends State<CommunityPostCard> {
 
   Widget _postTypeBadge(String type) {
     final config = switch (type) {
-      'restaurant_visit' => (Icons.restaurant, '🍽️', const Color(0xFFFF6D00)),
+      'restaurant_visit' => (Icons.restaurant, '🍽️', Theme.of(context).colorScheme.primary),
       'food_tip' => (Icons.lightbulb_outline, '💡', Colors.amber),
-      'recipe' => (Icons.menu_book, '📖', IFridgeTheme.primary),
-      _ => (Icons.camera_alt, '📸', IFridgeTheme.secondary),
+      'recipe' => (Icons.menu_book, '📖', Theme.of(context).colorScheme.primary),
+      _ => (Icons.camera_alt, '📸', Theme.of(context).colorScheme.secondary),
     };
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
         color: config.$3.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(config.$2,
-        style: const TextStyle(fontSize: 12)),
+        style: TextStyle(fontSize: 12)),
     );
   }
 

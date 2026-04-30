@@ -49,30 +49,30 @@ class _CookFeedsScreenState extends State<CookFeedsScreen> {
   Widget build(BuildContext context) {
     if (_loading) {
       return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          leading: const BackButton(color: Colors.white),
+          leading: const BackButton(color: Theme.of(context).colorScheme.onSurface),
         ),
-        body: const Center(child: CircularProgressIndicator(color: Color(0xFF4CAF50))),
+        body: Center(child: CircularProgressIndicator(color: Color(0xFF4CAF50))),
       );
     }
 
     if (_videos.isEmpty) {
       return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          leading: const BackButton(color: Colors.white),
-          title: const Text('Cook Feed', style: TextStyle(color: Colors.white)),
+          leading: const BackButton(color: Theme.of(context).colorScheme.onSurface),
+          title: Text('Cook Feed', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
         ),
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.play_circle_outline, size: 56, color: Colors.white.withValues(alpha: 0.15)),
-              const SizedBox(height: 16),
-              Text('No cooking videos yet', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 16)),
+              Icon(Icons.play_circle_outline, size: 56, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15)),
+              SizedBox(height: 16),
+              Text('No cooking videos yet', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 16)),
             ],
           ),
         ),
@@ -80,7 +80,7 @@ class _CookFeedsScreenState extends State<CookFeedsScreen> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           PageView.builder(
@@ -100,7 +100,7 @@ class _CookFeedsScreenState extends State<CookFeedsScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Colors.black.withValues(alpha: 0.7), Colors.transparent],
+                  colors: [Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), Colors.transparent],
                 ),
               ),
               child: Row(
@@ -109,33 +109,33 @@ class _CookFeedsScreenState extends State<CookFeedsScreen> {
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
+                      child: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface, size: 20),
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  const Text('👨‍🍳', style: TextStyle(fontSize: 20)),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 12),
+                  Text('👨‍🍳', style: TextStyle(fontSize: 20)),
+                  SizedBox(width: 8),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Cook Feed', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
-                      Text('${_videos.length} recipes', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 11)),
+                      Text('Cook Feed', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w800)),
+                      Text('${_videos.length} recipes', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 11)),
                     ],
                   ),
-                  const Spacer(),
+                  Spacer(),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text('${_currentPage + 1} / ${_videos.length}',
-                      style: const TextStyle(color: Colors.white60, fontSize: 12, fontWeight: FontWeight.w600)),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 12, fontWeight: FontWeight.w600)),
                   ),
                 ],
               ),
@@ -174,7 +174,7 @@ class _CookVideoCardState extends State<_CookVideoCard> {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      color: Colors.black,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -185,23 +185,23 @@ class _CookVideoCardState extends State<_CookVideoCard> {
               fit: StackFit.expand,
               children: [
                 Image.network(v.thumbnailUrl, fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(color: Colors.grey.shade900,
-                    child: const Center(child: Icon(Icons.broken_image, color: Colors.white24, size: 48)))),
+                  errorBuilder: (_, _, _) => Container(color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    child: Center(child: Icon(Icons.broken_image, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), size: 48)))),
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.black.withValues(alpha: 0.1), Colors.black.withValues(alpha: 0.75)],
+                      colors: [Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1), Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.75)],
                     ),
                   ),
                 ),
                 // Play button
                 Center(
                   child: Container(
-                    padding: const EdgeInsets.all(18),
+                    padding: EdgeInsets.all(18),
                     decoration: BoxDecoration(color: green.withValues(alpha: 0.25), shape: BoxShape.circle),
-                    child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 44),
+                    child: Icon(Icons.play_arrow_rounded, color: Theme.of(context).colorScheme.onSurface, size: 44),
                   ),
                 ),
                 // "Tap to watch" hint
@@ -210,17 +210,17 @@ class _CookVideoCardState extends State<_CookVideoCard> {
                   left: 0, right: 0,
                   child: Center(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                       decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.4),
+                        color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.4),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.open_in_new, size: 12, color: Colors.white.withValues(alpha: 0.6)),
-                          const SizedBox(width: 4),
-                          Text('Tap to watch on YouTube', style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 11)),
+                          Icon(Icons.open_in_new, size: 12, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
+                          SizedBox(width: 4),
+                          Text('Tap to watch on YouTube', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 11)),
                         ],
                       ),
                     ),
@@ -242,21 +242,21 @@ class _CookVideoCardState extends State<_CookVideoCard> {
               child: Column(
                 children: [
                   _SideBtn(icon: _liked ? Icons.favorite : Icons.favorite_border,
-                    label: _fmt(likes), color: _liked ? Colors.red : Colors.white,
+                    label: _fmt(likes), color: _liked ? Colors.red : Theme.of(context).colorScheme.onSurface,
                     onTap: () => setState(() => _liked = !_liked)),
-                  const SizedBox(height: 18),
+                  SizedBox(height: 18),
                   _SideBtn(icon: Icons.restaurant_menu, label: 'Cook', color: green,
                     highlighted: true, onTap: () => setState(() => _showRecipe = true)),
-                  const SizedBox(height: 18),
-                  _SideBtn(icon: Icons.reply_outlined, label: 'Share', color: Colors.white,
+                  SizedBox(height: 18),
+                  _SideBtn(icon: Icons.reply_outlined, label: 'Share', color: Theme.of(context).colorScheme.onSurface,
                     onTap: () => SharePlus.instance.share(ShareParams(
                       text: '${v.title}\nhttps://youtube.com/watch?v=${v.youtubeId}',
                     ))),
-                  const SizedBox(height: 18),
+                  SizedBox(height: 18),
                   _SideBtn(icon: _saved ? Icons.bookmark : Icons.bookmark_border,
-                    label: _saved ? 'Saved' : 'Save', color: _saved ? green : Colors.white,
+                    label: _saved ? 'Saved' : 'Save', color: _saved ? green : Theme.of(context).colorScheme.onSurface,
                     onTap: () => setState(() => _saved = !_saved)),
-                  const SizedBox(height: 18),
+                  SizedBox(height: 18),
                   _ChannelAvatar(name: v.authorName, color: green),
                 ],
               ),
@@ -270,27 +270,27 @@ class _CookVideoCardState extends State<_CookVideoCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('@${v.authorName.replaceAll(' ', '_').toLowerCase()}',
-                    style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 6),
-                  Text(v.title, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700, height: 1.2),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700)),
+                  SizedBox(height: 6),
+                  Text(v.title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700, height: 1.2),
                     maxLines: 2, overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   if (v.hasRecipe)
                     Row(children: [
                       if (v.recipePrepTime.isNotEmpty) _pill('⏱ ${v.recipePrepTime}', green),
-                      if (v.recipeCookTime.isNotEmpty) ...[const SizedBox(width: 6), _pill('🔥 ${v.recipeCookTime}', Colors.orange)],
-                      if (v.recipeDifficulty.isNotEmpty) ...[const SizedBox(width: 6), _pill('📊 ${v.recipeDifficulty}', Colors.blue)],
+                      if (v.recipeCookTime.isNotEmpty) ...[SizedBox(width: 6), _pill('🔥 ${v.recipeCookTime}', Colors.orange)],
+                      if (v.recipeDifficulty.isNotEmpty) ...[SizedBox(width: 6), _pill('📊 ${v.recipeDifficulty}', Colors.blue)],
                     ]),
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   if (v.hasRecipe && v.recipeIngredients.isNotEmpty)
                     Text('🥘 ${v.recipeIngredients.take(3).join(', ')}...',
-                      style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12),
                       maxLines: 1, overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Wrap(spacing: 6, runSpacing: 4, children: v.tags.take(4).map((t) =>
-                    Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
-                      child: Text('#$t', style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 10, fontWeight: FontWeight.w600)))).toList()),
+                    Container(padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
+                      child: Text('#$t', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 10, fontWeight: FontWeight.w600)))).toList()),
                 ],
               ),
             ),
@@ -300,7 +300,7 @@ class _CookVideoCardState extends State<_CookVideoCard> {
   }
 
   Widget _pill(String text, Color c) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
     decoration: BoxDecoration(color: c.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
     child: Text(text, style: TextStyle(color: c, fontSize: 10, fontWeight: FontWeight.w700)));
 
@@ -319,51 +319,51 @@ class _RecipeOverlay extends StatelessWidget {
     const green = Color(0xFF4CAF50);
 
     return Container(
-      color: Colors.black.withValues(alpha: 0.92),
+      color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.92),
       padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 50, 20, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: [
             Expanded(child: Text(video.recipeTitle,
-              style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800))),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w800))),
             GestureDetector(onTap: onClose,
-              child: Container(padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), shape: BoxShape.circle),
-                child: const Icon(Icons.close, color: Colors.white, size: 18))),
+              child: Container(padding: EdgeInsets.all(6),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1), shape: BoxShape.circle),
+                child: Icon(Icons.close, color: Theme.of(context).colorScheme.onSurface, size: 18))),
           ]),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(children: [
             if (video.recipePrepTime.isNotEmpty) _stat('Prep', video.recipePrepTime, Icons.schedule),
             if (video.recipeCookTime.isNotEmpty) _stat('Cook', video.recipeCookTime, Icons.local_fire_department),
             _stat('Serves', '${video.recipeServings}', Icons.people),
             if (video.recipeDifficulty.isNotEmpty) _stat('Level', video.recipeDifficulty, Icons.signal_cellular_alt),
           ]),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Expanded(
             child: ListView(children: [
-              const Text('Ingredients', style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 8),
+              Text('Ingredients', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 16, fontWeight: FontWeight.w700)),
+              SizedBox(height: 8),
               ...video.recipeIngredients.map((ing) => Padding(
-                padding: const EdgeInsets.only(bottom: 4),
+                padding: EdgeInsets.only(bottom: 4),
                 child: Row(children: [
-                  Container(width: 6, height: 6, decoration: const BoxDecoration(color: green, shape: BoxShape.circle)),
-                  const SizedBox(width: 10),
-                  Expanded(child: Text(ing, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14))),
+                  Container(width: 6, height: 6, decoration: BoxDecoration(color: green, shape: BoxShape.circle)),
+                  SizedBox(width: 10),
+                  Expanded(child: Text(ing, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14))),
                 ]))),
-              const SizedBox(height: 20),
-              const Text('Steps', style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 8),
+              SizedBox(height: 20),
+              Text('Steps', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 16, fontWeight: FontWeight.w700)),
+              SizedBox(height: 8),
               ...video.recipeSteps.asMap().entries.map((entry) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
+                padding: EdgeInsets.only(bottom: 10),
                 child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Container(width: 24, height: 24,
                     decoration: BoxDecoration(color: green.withValues(alpha: 0.2), shape: BoxShape.circle),
                     child: Center(child: Text('${entry.key + 1}', style: TextStyle(color: green, fontSize: 12, fontWeight: FontWeight.w700)))),
-                  const SizedBox(width: 10),
-                  Expanded(child: Text(entry.value, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14, height: 1.4))),
+                  SizedBox(width: 10),
+                  Expanded(child: Text(entry.value, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, height: 1.4))),
                 ]))),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
             ]),
           ),
 
@@ -382,36 +382,36 @@ class _RecipeOverlay extends StatelessWidget {
             },
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [Color(0xFF4CAF50), Color(0xFF81C784)]),
+                gradient: LinearGradient(colors: [Color(0xFF4CAF50), Color(0xFF81C784)]),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [BoxShadow(color: green.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
               ),
-              child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Icon(Icons.restaurant_menu, color: Colors.white, size: 20),
+              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Icon(Icons.restaurant_menu, color: Theme.of(context).colorScheme.onSurface, size: 20),
                 SizedBox(width: 8),
-                Text('Cook This Recipe', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
+                Text('Cook This Recipe', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700)),
               ]),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
 
           // ── Watch the video button ─────────────────
           GestureDetector(
             onTap: () => launchUrl(Uri.parse(video.watchUrl), mode: LaunchMode.externalApplication),
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 14),
+              padding: EdgeInsets.symmetric(vertical: 14),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.08),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)),
               ),
-              child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Icon(Icons.play_circle_outline, color: Colors.white70, size: 18),
+              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Icon(Icons.play_circle_outline, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), size: 18),
                 SizedBox(width: 8),
-                Text('Watch Video on YouTube', style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.w600)),
+                Text('Watch Video on YouTube', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
               ]),
             ),
           ),
@@ -422,10 +422,10 @@ class _RecipeOverlay extends StatelessWidget {
 
   Widget _stat(String label, String value, IconData icon) => Expanded(
     child: Column(children: [
-      Icon(icon, size: 16, color: Colors.white38),
-      const SizedBox(height: 2),
-      Text(value, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
-      Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 10)),
+      Icon(icon, size: 16, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)),
+      SizedBox(height: 2),
+      Text(value, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w700)),
+      Text(label, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 10)),
     ]));
 }
 
@@ -442,10 +442,10 @@ class _SideBtn extends StatelessWidget {
     child: Column(children: [
       Container(width: 44, height: 44,
         decoration: BoxDecoration(shape: BoxShape.circle,
-          color: highlighted ? color.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.08),
+          color: highlighted ? color.withValues(alpha: 0.2) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
           border: highlighted ? Border.all(color: color.withValues(alpha: 0.5), width: 1.5) : null),
         child: Icon(icon, size: 22, color: color)),
-      const SizedBox(height: 3),
+      SizedBox(height: 3),
       Text(label, style: TextStyle(color: color.withValues(alpha: 0.9), fontSize: 10, fontWeight: FontWeight.w600)),
     ]));
 }
@@ -458,12 +458,12 @@ class _ChannelAvatar extends StatelessWidget {
     Container(width: 44, height: 44,
       decoration: BoxDecoration(shape: BoxShape.circle,
         gradient: LinearGradient(colors: [color, color.withValues(alpha: 0.6)]),
-        border: Border.all(color: Colors.white, width: 2)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 2)),
       child: Center(child: Text(name.isNotEmpty ? name[0] : '?',
-        style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)))),
-    const SizedBox(height: 3),
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w800)))),
+    SizedBox(height: 3),
     SizedBox(width: 50, child: Text(name,
-      style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 9, fontWeight: FontWeight.w600),
+      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 9, fontWeight: FontWeight.w600),
       textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis)),
   ]);
 }

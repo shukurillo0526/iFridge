@@ -3,6 +3,7 @@
 /// Maps ingredient canonical names and categories to emojis.
 /// Provides per-ingredient icons (preferred) with category fallback.
 /// 220+ ingredients covered.
+library;
 
 class IngredientIcons {
   IngredientIcons._();

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/features/profile/presentation/screens/post_upload_form.dart' show EnhancedPostUploadForm;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -63,90 +62,90 @@ class _CreatorDashboardPageState extends State<CreatorDashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Creator Studio', style: TextStyle(fontWeight: FontWeight.w700)),
+        title: Text('Creator Studio', style: TextStyle(fontWeight: FontWeight.w700)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: IFridgeTheme.primary))
+          ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary))
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Analytics overview
-                  const Text('Analytics Overview', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 16),
+                  Text('Analytics Overview', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 16),
                   Row(
                     children: [
-                      Expanded(child: _StatCard(title: 'Followers', value: '$_followers', icon: Icons.people, color: IFridgeTheme.primary)),
-                      const SizedBox(width: 12),
+                      Expanded(child: _StatCard(title: 'Followers', value: '$_followers', icon: Icons.people, color: Theme.of(context).colorScheme.primary)),
+                      SizedBox(width: 12),
                       Expanded(child: _StatCard(title: 'Total Views', value: '$_totalViews', icon: Icons.visibility, color: Colors.blueAccent)),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   Row(
                     children: [
                       Expanded(child: _StatCard(title: 'Total Likes', value: '$_totalLikes', icon: Icons.favorite, color: Colors.redAccent)),
-                      const SizedBox(width: 12),
-                      Expanded(child: _StatCard(title: 'Posts', value: '${_posts.length}', icon: Icons.grid_view, color: AppTheme.freshGreen)),
+                      SizedBox(width: 12),
+                      Expanded(child: _StatCard(title: 'Posts', value: '${_posts.length}', icon: Icons.grid_view, color: Theme.of(context).colorScheme.tertiary)),
                     ],
                   ),
                   
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
                   
                   // Action buttons
                   FilledButton.icon(
                     onPressed: () {
                       Navigator.push(context, MaterialPageRoute(builder: (_) => const EnhancedPostUploadForm()));
                     },
-                    icon: const Icon(Icons.add_a_photo, size: 22),
-                    label: const Text('Create New Post / Reel', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    icon: Icon(Icons.add_a_photo, size: 22),
+                    label: Text('Create New Post / Reel', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     style: FilledButton.styleFrom(
-                      backgroundColor: IFridgeTheme.primary,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       minimumSize: const Size(double.infinity, 56),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
                   ),
 
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
                   
                   // Recent posts list
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Your Content', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text('Your Content', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.bold)),
                       TextButton(onPressed: () {
                         // Already showing all posts — provide feedback
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('Showing all ${_posts.length} posts'),
-                          backgroundColor: IFridgeTheme.primary,
+                          backgroundColor: Theme.of(context).colorScheme.primary,
                           behavior: SnackBarBehavior.floating,
                           duration: const Duration(seconds: 1),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         ));
-                      }, child: const Text('View All', style: TextStyle(color: IFridgeTheme.primary))),
+                      }, child: Text('View All', style: TextStyle(color: Theme.of(context).colorScheme.primary))),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
 
                   if (_posts.isEmpty)
                     Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(32),
+                      padding: EdgeInsets.all(32),
                       decoration: BoxDecoration(
-                        color: IFridgeTheme.bgElevated,
+                        color: Theme.of(context).colorScheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)),
                       ),
                       child: Column(
                         children: [
-                          Icon(Icons.video_library, size: 48, color: Colors.white.withValues(alpha: 0.2)),
-                          const SizedBox(height: 16),
-                          Text("You haven't posted anything yet.", style: TextStyle(color: Colors.white.withValues(alpha: 0.5))),
+                          Icon(Icons.video_library, size: 48, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2)),
+                          SizedBox(height: 16),
+                          Text("You haven't posted anything yet.", style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5))),
                         ],
                       ),
                     )
@@ -158,9 +157,9 @@ class _CreatorDashboardPageState extends State<CreatorDashboardPage> {
                       itemBuilder: (context, index) {
                         final post = _posts[index];
                         return Container(
-                          margin: const EdgeInsets.only(bottom: 12),
+                          margin: EdgeInsets.only(bottom: 12),
                           decoration: BoxDecoration(
-                            color: IFridgeTheme.bgElevated,
+                            color: Theme.of(context).colorScheme.surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: ListTile(
@@ -168,16 +167,16 @@ class _CreatorDashboardPageState extends State<CreatorDashboardPage> {
                               borderRadius: BorderRadius.circular(8),
                               child: Container(
                                 width: 50, height: 50,
-                                color: Colors.grey.shade800,
+                                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                                 child: post['image_url'] != null
-                                    ? Image.network(post['image_url'], fit: BoxFit.cover, errorBuilder: (_,__,___)=>const Icon(Icons.broken_image))
-                                    : const Icon(Icons.fastfood, color: Colors.white54),
+                                    ? Image.network(post['image_url'], fit: BoxFit.cover, errorBuilder: (_,_,_)=>Icon(Icons.broken_image))
+                                    : Icon(Icons.fastfood, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54)),
                               ),
                             ),
-                            title: Text(post['title'] ?? 'Untitled', style: const TextStyle(color: Colors.white)),
+                            title: Text(post['title'] ?? 'Untitled', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
                             subtitle: Text('${post['views_count'] ?? 0} views • ${post['likes_count'] ?? 0} likes', 
-                                style: TextStyle(color: Colors.white.withValues(alpha: 0.5))),
-                            trailing: const Icon(Icons.more_vert, color: Colors.white54),
+                                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5))),
+                            trailing: Icon(Icons.more_vert, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54)),
                           ),
                         );
                       },
@@ -200,9 +199,9 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: IFridgeTheme.bgElevated,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
@@ -210,9 +209,9 @@ class _StatCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: color, size: 28),
-          const SizedBox(height: 12),
-          Text(value, style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w800)),
-          Text(title, style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 13)),
+          SizedBox(height: 12),
+          Text(value, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 24, fontWeight: FontWeight.w800)),
+          Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 13)),
         ],
       ),
     );

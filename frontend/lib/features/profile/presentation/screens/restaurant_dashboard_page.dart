@@ -5,7 +5,6 @@
 // Accessible from Manage → "Restaurant Dashboard" (only visible if business account).
 
 import 'package:flutter/material.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/business_service.dart';
 import 'package:ifridge_app/core/services/social_service.dart';
 import 'package:ifridge_app/features/profile/presentation/screens/post_upload_form.dart';
@@ -51,15 +50,15 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Restaurant Dashboard', style: TextStyle(fontWeight: FontWeight.w700)),
+        title: Text('Restaurant Dashboard', style: TextStyle(fontWeight: FontWeight.w700)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: Color(0xFFFF6D00)))
+          ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary))
           : _account == null
               ? _buildRegisterPrompt()
               : _buildDashboard(),
@@ -69,34 +68,34 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
   Widget _buildRegisterPrompt() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: const Color(0xFFFF6D00).withValues(alpha: 0.1),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.storefront, color: Color(0xFFFF6D00), size: 48),
+              child: Icon(Icons.storefront, color: Theme.of(context).colorScheme.primary, size: 48),
             ),
-            const SizedBox(height: 24),
-            const Text('Own a restaurant?',
-                style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800)),
-            const SizedBox(height: 8),
+            SizedBox(height: 24),
+            Text('Own a restaurant?',
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 22, fontWeight: FontWeight.w800)),
+            SizedBox(height: 8),
             Text('Register your business to promote your restaurant\nin the Order feed and reach local foodies.',
-                style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 14, height: 1.5),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 14, height: 1.5),
                 textAlign: TextAlign.center),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             FilledButton.icon(
               onPressed: _showRegisterDialog,
-              icon: const Icon(Icons.add_business, size: 20),
-              label: const Text('Register Business', style: TextStyle(fontWeight: FontWeight.w700)),
+              icon: Icon(Icons.add_business, size: 20),
+              label: Text('Register Business', style: TextStyle(fontWeight: FontWeight.w700)),
               style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFFFF6D00),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onSurface,
+                padding: EdgeInsets.symmetric(horizontal: 28, vertical: 14),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
             ),
@@ -114,18 +113,18 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: IFridgeTheme.bgElevated,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Register Your Restaurant',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+        title: Text('Register Your Restaurant',
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w700)),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               _DialogField(controller: nameCtrl, label: 'Restaurant Name', icon: Icons.storefront),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               _DialogField(controller: descCtrl, label: 'Description', icon: Icons.description, maxLines: 3),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               _DialogField(controller: locCtrl, label: 'Location', icon: Icons.location_on),
             ],
           ),
@@ -133,7 +132,7 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text('Cancel'),
           ),
           FilledButton(
             onPressed: () async {
@@ -147,8 +146,8 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
               );
               _load();
             },
-            style: FilledButton.styleFrom(backgroundColor: const Color(0xFFFF6D00)),
-            child: const Text('Register'),
+            style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
+            child: Text('Register'),
           ),
         ],
       ),
@@ -157,16 +156,16 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
 
   Widget _buildDashboard() {
     final account = _account!;
-    const accent = Color(0xFFFF6D00);
+    final accent = Theme.of(context).colorScheme.primary;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // ── Business Header ──
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -181,15 +180,15 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
                 Container(
                   width: 56, height: 56,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(colors: [Color(0xFFFF6D00), Color(0xFFFF9100)]),
+                    gradient: LinearGradient(colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.tertiary]),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Center(
                     child: Text(account.businessName[0].toUpperCase(),
-                        style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w800)),
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 24, fontWeight: FontWeight.w800)),
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,16 +197,16 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
                         children: [
                           Flexible(
                             child: Text(account.businessName,
-                                style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700),
+                                style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700),
                                 maxLines: 1, overflow: TextOverflow.ellipsis),
                           ),
                           if (account.isVerified) ...[
-                            const SizedBox(width: 6),
+                            SizedBox(width: 6),
                             Icon(Icons.verified, color: Colors.blue.shade300, size: 18),
                           ],
                         ],
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Text(
                         account.isVerified ? 'Verified Restaurant' : 'Pending Verification',
                         style: TextStyle(
@@ -217,9 +216,9 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
                         ),
                       ),
                       if (account.locationName != null) ...[
-                        const SizedBox(height: 2),
+                        SizedBox(height: 2),
                         Text('📍 ${account.locationName}',
-                            style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11)),
+                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 11)),
                       ],
                     ],
                   ),
@@ -228,31 +227,31 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
             ),
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
 
           // ── Stats Grid ──
           Row(
             children: [
               Expanded(child: _StatTile(icon: Icons.article, label: 'Posts', value: '${_stats['posts'] ?? 0}', color: accent)),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Expanded(child: _StatTile(icon: Icons.visibility, label: 'Views', value: '${_stats['views'] ?? 0}', color: Colors.blueAccent)),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           Row(
             children: [
               Expanded(child: _StatTile(icon: Icons.favorite, label: 'Likes', value: '${_stats['likes'] ?? 0}', color: Colors.redAccent)),
-              const SizedBox(width: 10),
-              Expanded(child: _StatTile(icon: Icons.people, label: 'Followers', value: '$_followers', color: IFridgeTheme.primary)),
+              SizedBox(width: 10),
+              Expanded(child: _StatTile(icon: Icons.people, label: 'Followers', value: '$_followers', color: Theme.of(context).colorScheme.primary)),
             ],
           ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // ── Verification Status ──
           if (!account.isVerified)
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.amber.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(14),
@@ -260,17 +259,17 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.hourglass_top, color: Colors.amber, size: 22),
-                  const SizedBox(width: 12),
+                  Icon(Icons.hourglass_top, color: Colors.amber, size: 22),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Verification Pending',
+                        Text('Verification Pending',
                             style: TextStyle(color: Colors.amber, fontSize: 14, fontWeight: FontWeight.w700)),
-                        const SizedBox(height: 2),
+                        SizedBox(height: 2),
                         Text('Your content will appear in Order feeds once verified.',
-                            style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12)),
+                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
                       ],
                     ),
                   ),
@@ -278,12 +277,12 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
               ),
             ),
 
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // ── Incoming Orders ──
-          const Text('Incoming Orders',
-              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 12),
+          Text('Incoming Orders',
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700)),
+          SizedBox(height: 12),
 
           _ActionCard(
             icon: Icons.receipt_long,
@@ -297,12 +296,12 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
             },
           ),
 
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
 
           // ── Quick Actions ──
-          const Text('Quick Actions',
-              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 12),
+          Text('Quick Actions',
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700)),
+          SizedBox(height: 12),
 
           _ActionCard(
             icon: Icons.video_call,
@@ -315,15 +314,15 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
               ));
             },
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _ActionCard(
             icon: Icons.restaurant_menu,
             title: 'Update Menu',
             subtitle: 'Add or edit menu items for your restaurant',
-            color: IFridgeTheme.primary,
+            color: Theme.of(context).colorScheme.primary,
             onTap: () => _showMenuEditor(),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           _ActionCard(
             icon: Icons.analytics,
             title: 'View Analytics',
@@ -332,7 +331,7 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
             onTap: () => _showAnalytics(),
           ),
 
-          const SizedBox(height: 30),
+          SizedBox(height: 30),
         ],
       ),
     );
@@ -341,7 +340,7 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
   void _showMenuEditor() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: IFridgeTheme.bgElevated,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -352,31 +351,31 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(width: 40, height: 4,
-                decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2))),
-            const SizedBox(height: 16),
-            const Text('Menu Editor', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 8),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2))),
+            SizedBox(height: 16),
+            Text('Menu Editor', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
+            SizedBox(height: 8),
             Text('Add items your customers can browse. Menu items will appear on your restaurant page.',
-                style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 13), textAlign: TextAlign.center),
-            const SizedBox(height: 20),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 13), textAlign: TextAlign.center),
+            SizedBox(height: 20),
             Container(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.03),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.03),
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+                border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
               ),
               child: Column(
                 children: [
-                  Icon(Icons.restaurant_menu, size: 40, color: IFridgeTheme.primary.withValues(alpha: 0.3)),
-                  const SizedBox(height: 12),
+                  Icon(Icons.restaurant_menu, size: 40, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)),
+                  SizedBox(height: 12),
                   Text('Menu items are managed through the Supabase dashboard for now.\nFull in-app editor is being built.',
-                      style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12, height: 1.5),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 12, height: 1.5),
                       textAlign: TextAlign.center),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
           ],
         ),
       ),
@@ -386,7 +385,7 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
   void _showAnalytics() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: IFridgeTheme.bgElevated,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -397,39 +396,39 @@ class _RestaurantDashboardPageState extends State<RestaurantDashboardPage> {
         final engRate = views > 0 ? ((likes / views) * 100).toStringAsFixed(1) : '0.0';
 
         return Padding(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(width: 40, height: 4,
-                  decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2))),
-              const SizedBox(height: 16),
-              const Text('📊 Analytics Overview', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700)),
-              const SizedBox(height: 20),
+                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2))),
+              SizedBox(height: 16),
+              Text('📊 Analytics Overview', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
+              SizedBox(height: 20),
               Row(
                 children: [
                   Expanded(child: _AnalyticTile(label: 'Total Posts', value: '$posts', icon: Icons.article)),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Expanded(child: _AnalyticTile(label: 'Total Views', value: '$views', icon: Icons.visibility)),
                 ],
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(child: _AnalyticTile(label: 'Total Likes', value: '$likes', icon: Icons.favorite)),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Expanded(child: _AnalyticTile(label: 'Engagement', value: '$engRate%', icon: Icons.trending_up)),
                 ],
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(child: _AnalyticTile(label: 'Followers', value: '$_followers', icon: Icons.people)),
-                  const SizedBox(width: 10),
-                  Expanded(child: _AnalyticTile(label: 'Avg Likes', value: posts > 0 ? '${(likes / posts).toStringAsFixed(1)}' : '0', icon: Icons.thumb_up)),
+                  SizedBox(width: 10),
+                  Expanded(child: _AnalyticTile(label: 'Avg Likes', value: posts > 0 ? (likes / posts).toStringAsFixed(1) : '0', icon: Icons.thumb_up)),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
             ],
           ),
         );
@@ -453,15 +452,15 @@ class _DialogField extends StatelessWidget {
     return TextField(
       controller: controller,
       maxLines: maxLines,
-      style: const TextStyle(color: Colors.white, fontSize: 14),
+      style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
-        prefixIcon: Icon(icon, color: const Color(0xFFFF6D00).withValues(alpha: 0.6), size: 20),
+        labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+        prefixIcon: Icon(icon, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6), size: 20),
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.05),
+        fillColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
     );
   }
@@ -478,7 +477,7 @@ class _StatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(14),
@@ -488,9 +487,9 @@ class _StatTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: color, size: 22),
-          const SizedBox(height: 10),
-          Text(value, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800)),
-          Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12)),
+          SizedBox(height: 10),
+          Text(value, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 22, fontWeight: FontWeight.w800)),
+          Text(label, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
         ],
       ),
     );
@@ -511,34 +510,34 @@ class _ActionCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: IFridgeTheme.bgElevated,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+          border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
         ),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: color, size: 22),
             ),
-            const SizedBox(width: 14),
+            SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 2),
-                  Text(subtitle, style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12)),
+                  Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w600)),
+                  SizedBox(height: 2),
+                  Text(subtitle, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 12)),
                 ],
               ),
             ),
-            Icon(Icons.chevron_right, color: Colors.white.withValues(alpha: 0.3), size: 20),
+            Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), size: 20),
           ],
         ),
       ),
@@ -555,20 +554,20 @@ class _AnalyticTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.04),
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.04),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: Colors.white38, size: 18),
-          const SizedBox(height: 8),
-          Text(value, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800)),
-          const SizedBox(height: 2),
-          Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11)),
+          Icon(icon, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), size: 18),
+          SizedBox(height: 8),
+          Text(value, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w800)),
+          SizedBox(height: 2),
+          Text(label, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 11)),
         ],
       ),
     );

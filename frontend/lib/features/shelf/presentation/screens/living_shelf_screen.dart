@@ -5,7 +5,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/widgets/shimmer_loading.dart';
 import 'package:ifridge_app/core/widgets/empty_state_illustration.dart';
 import 'package:ifridge_app/core/widgets/slide_in_item.dart';
@@ -152,10 +151,10 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('🧊 My Fridge'),
+        title: Text('🧊 My Fridge'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: Icon(Icons.refresh),
             onPressed: _loadInventory,
             tooltip: 'Refresh',
           ),
@@ -163,9 +162,9 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
             icon: Badge(
               isLabelVisible: _alertCount > 0,
               label: Text('$_alertCount',
-                  style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w700)),
-              backgroundColor: IFridgeTheme.criticalRed,
-              child: const Icon(Icons.notifications_outlined),
+                  style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700)),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              child: Icon(Icons.notifications_outlined),
             ),
             onPressed: _showExpiryAlerts,
             tooltip: 'Expiry alerts',
@@ -173,9 +172,9 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
         ],
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: IFridgeTheme.primary,
-          labelColor: IFridgeTheme.primary,
-          unselectedLabelColor: IFridgeTheme.textSecondary,
+          indicatorColor: Theme.of(context).colorScheme.primary,
+          labelColor: Theme.of(context).colorScheme.primary,
+          unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
           tabs: _zones.map((z) => Tab(text: z)).toList(),
         ),
       ),
@@ -196,33 +195,33 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
   Widget _buildErrorState() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.cloud_off,
-                size: 64, color: Colors.white.withValues(alpha: 0.3)),
-            const SizedBox(height: 16),
-            const Text(
+                size: 64, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
+            SizedBox(height: 16),
+            Text(
               'Couldn\'t load inventory',
               style: TextStyle(
-                color: Colors.white70,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               'Check your connection and try again.',
               style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.5), fontSize: 13),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             FilledButton.icon(
               onPressed: _loadInventory,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
-              style: FilledButton.styleFrom(backgroundColor: AppTheme.accent),
+              icon: Icon(Icons.refresh),
+              label: Text('Retry'),
+              style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
             ),
           ],
         ),
@@ -240,20 +239,20 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
     final fresh = total - expiring - expired;
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+      margin: EdgeInsets.fromLTRB(16, 12, 16, 4),
+      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
       decoration: BoxDecoration(
-        color: IFridgeTheme.bgElevated,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _statChip('$total', 'Total', IFridgeTheme.primary),
-          _statChip('$fresh', 'Fresh', IFridgeTheme.freshGreen),
-          _statChip('$expiring', 'Expiring', IFridgeTheme.urgentOrange),
-          _statChip('$expired', 'Expired', IFridgeTheme.criticalRed),
+          _statChip('$total', 'Total', Theme.of(context).colorScheme.primary),
+          _statChip('$fresh', 'Fresh', Theme.of(context).colorScheme.tertiary),
+          _statChip('$expiring', 'Expiring', Theme.of(context).colorScheme.primary),
+          _statChip('$expired', 'Expired', Theme.of(context).colorScheme.error),
         ],
       ),
     );
@@ -264,10 +263,10 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
       Text(value,
           style: TextStyle(
               color: color, fontSize: 20, fontWeight: FontWeight.w800)),
-      const SizedBox(height: 2),
+      SizedBox(height: 2),
       Text(label,
-          style: const TextStyle(
-              color: IFridgeTheme.textSecondary,
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
               fontSize: 11,
               fontWeight: FontWeight.w500)),
     ]);
@@ -277,20 +276,20 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
 
   Widget _buildSearchBar() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+      padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
       child: TextField(
         controller: _searchCtrl,
         onChanged: (v) => setState(() => _searchQuery = v),
-        style: const TextStyle(color: IFridgeTheme.textPrimary, fontSize: 14),
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14),
         decoration: InputDecoration(
           hintText: 'Search ingredients...',
-          hintStyle: const TextStyle(color: IFridgeTheme.textMuted, fontSize: 14),
+          hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 14),
           prefixIcon:
-              const Icon(Icons.search, color: IFridgeTheme.textMuted, size: 20),
+              Icon(Icons.search, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), size: 20),
           suffixIcon: _searchQuery.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.close, size: 18,
-                      color: IFridgeTheme.textMuted),
+                  icon: Icon(Icons.close, size: 18,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)),
                   onPressed: () {
                     _searchCtrl.clear();
                     setState(() => _searchQuery = '');
@@ -298,9 +297,9 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
                 )
               : null,
           filled: true,
-          fillColor: IFridgeTheme.bgElevated,
+          fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide.none,
@@ -308,12 +307,12 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide:
-                BorderSide(color: Colors.white.withValues(alpha: 0.06)),
+                BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(
-                color: IFridgeTheme.primary.withValues(alpha: 0.5)),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5)),
           ),
         ),
       ),
@@ -323,12 +322,12 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
   // ── Category Chips ────────────────────────────────────────────
 
   Widget _buildCategoryChips() {
-    if (_categories.isEmpty) return const SizedBox.shrink();
+    if (_categories.isEmpty) return SizedBox.shrink();
     return SizedBox(
       height: 40,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: EdgeInsets.symmetric(horizontal: 12),
         children: [
           _filterChip(null, 'All'),
           ..._categories.map((c) => _filterChip(c, _cap(c))),
@@ -340,28 +339,28 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
   Widget _filterChip(String? cat, String label) {
     final active = _selectedCategory == cat;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      padding: EdgeInsets.symmetric(horizontal: 4),
       child: FilterChip(
         selected: active,
         label: Text(
           cat != null ? '${categoryEmoji(cat)} $label' : label,
           style: TextStyle(
-            color: active ? IFridgeTheme.bgDark : IFridgeTheme.textSecondary,
+            color: active ? Theme.of(context).scaffoldBackgroundColor : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
             fontSize: 12,
             fontWeight: active ? FontWeight.w600 : FontWeight.w400,
           ),
         ),
         onSelected: (_) => setState(() => _selectedCategory = cat),
-        selectedColor: IFridgeTheme.primary,
-        backgroundColor: IFridgeTheme.bgElevated,
-        checkmarkColor: IFridgeTheme.bgDark,
+        selectedColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+        checkmarkColor: Theme.of(context).scaffoldBackgroundColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         side: BorderSide(
           color: active
-              ? IFridgeTheme.primary
-              : Colors.white.withValues(alpha: 0.08),
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 4),
+        padding: EdgeInsets.symmetric(horizontal: 4),
       ),
     );
   }
@@ -370,26 +369,26 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
 
   Widget _buildSortRow(int count) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Row(children: [
         Text('$count items',
-            style: const TextStyle(
-                color: IFridgeTheme.textSecondary,
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 fontSize: 13,
                 fontWeight: FontWeight.w500)),
-        const Spacer(),
+        Spacer(),
         SizedBox(
           height: 28,
           child: DropdownButtonHideUnderline(
             child: DropdownButton<_SortMode>(
               value: _sortMode,
               isDense: true,
-              icon: const Icon(Icons.swap_vert,
-                  size: 14, color: IFridgeTheme.textMuted),
-              dropdownColor: IFridgeTheme.bgElevated,
+              icon: Icon(Icons.swap_vert,
+                  size: 14, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)),
+              dropdownColor: Theme.of(context).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(12),
-              style: const TextStyle(
-                  color: IFridgeTheme.textMuted, fontSize: 12),
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 12),
               items: _SortMode.values
                   .map((m) => DropdownMenuItem(
                       value: m, child: Text(m.label)))
@@ -414,7 +413,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
 
     if (allZoneItems.isEmpty) {
       return Padding(
-        padding: const EdgeInsets.only(top: 100),
+        padding: EdgeInsets.only(top: 100),
         child: EmptyStateIllustration(
           icon: _zoneIcon(zone),
           title: 'Your $zone is Empty',
@@ -436,7 +435,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
 
     return RefreshIndicator(
       onRefresh: _loadInventory,
-      color: AppTheme.accent,
+      color: Theme.of(context).colorScheme.primary,
       child: CustomScrollView(
         slivers: [
           // --- Summary Banner ---
@@ -448,7 +447,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
           // --- Category Chips ---
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.only(top: 4, bottom: 4),
+              padding: EdgeInsets.only(top: 4, bottom: 4),
               child: _buildCategoryChips(),
             ),
           ),
@@ -457,34 +456,34 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
           if (urgentItems.isNotEmpty)
             SliverToBoxAdapter(
               child: Container(
-                margin: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-                padding: const EdgeInsets.all(14),
+                margin: EdgeInsets.fromLTRB(16, 4, 16, 4),
+                padding: EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [
-                    IFridgeTheme.criticalRed.withValues(alpha: 0.15),
-                    IFridgeTheme.urgentOrange.withValues(alpha: 0.1),
+                    Theme.of(context).colorScheme.error.withValues(alpha: 0.15),
+                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                   ]),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
                       color:
-                          IFridgeTheme.criticalRed.withValues(alpha: 0.3)),
+                          Theme.of(context).colorScheme.error.withValues(alpha: 0.3)),
                 ),
                 child: Row(children: [
-                  const Text('⚠️', style: TextStyle(fontSize: 22)),
-                  const SizedBox(width: 10),
+                  Text('⚠️', style: TextStyle(fontSize: 22)),
+                  SizedBox(width: 10),
                   Expanded(
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Expiring Soon',
+                          Text('Expiring Soon',
                               style: TextStyle(
-                                  color: IFridgeTheme.criticalRed,
+                                  color: Theme.of(context).colorScheme.error,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 13)),
                           Text(
                               '${urgentItems.length} item(s) need attention',
-                              style: const TextStyle(
-                                  color: IFridgeTheme.textSecondary,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                                   fontSize: 11)),
                         ]),
                   ),
@@ -493,13 +492,13 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
                         MaterialPageRoute(
                             builder: (_) => const CookScreen())),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: IFridgeTheme.criticalRed,
-                      padding: const EdgeInsets.symmetric(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      padding: EdgeInsets.symmetric(
                           horizontal: 14, vertical: 6),
                     ),
-                    child: const Text('Cook Now',
+                    child: Text('Cook Now',
                         style:
-                            TextStyle(fontSize: 11, color: Colors.white)),
+                            TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurface)),
                   ),
                 ]),
               ),
@@ -512,26 +511,26 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
           if (items.isEmpty)
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.only(top: 60),
+                padding: EdgeInsets.only(top: 60),
                 child: Center(
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     Icon(Icons.search_off,
                         size: 48,
                         color:
-                            IFridgeTheme.textMuted.withValues(alpha: 0.5)),
-                    const SizedBox(height: 12),
-                    const Text('No items match your filters',
+                            Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+                    SizedBox(height: 12),
+                    Text('No items match your filters',
                         style: TextStyle(
-                            color: IFridgeTheme.textSecondary,
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                             fontSize: 14)),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     TextButton(
                       onPressed: () => setState(() {
                         _searchQuery = '';
                         _searchCtrl.clear();
                         _selectedCategory = null;
                       }),
-                      child: const Text('Clear filters'),
+                      child: Text('Clear filters'),
                     ),
                   ]),
                 ),
@@ -541,7 +540,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
           // --- Main Grid ---
           if (items.isNotEmpty)
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: EdgeInsets.symmetric(horizontal: 12),
               sliver: SliverGrid(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: _gridColumns(context),
@@ -599,11 +598,11 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        decoration: const BoxDecoration(
-          color: IFridgeTheme.bgCard,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -613,46 +612,46 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                    color: IFridgeTheme.textMuted,
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(2)),
               ),
             ),
-            const SizedBox(height: 16),
-            const Text('🔔 Expiry Alerts',
+            SizedBox(height: 16),
+            Text('🔔 Expiry Alerts',
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: IFridgeTheme.textPrimary)),
-            const SizedBox(height: 16),
+                    color: Theme.of(context).colorScheme.onSurface)),
+            SizedBox(height: 16),
             if (expired.isEmpty && expiring.isEmpty)
-              const Center(
+              Center(
                 child: Padding(
                   padding: EdgeInsets.all(32),
                   child: Text('All items are fresh! 🎉',
                       style: TextStyle(
-                          color: IFridgeTheme.textSecondary, fontSize: 15)),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 15)),
                 ),
               ),
             if (expired.isNotEmpty) ...[
               Text('❌ Expired (${expired.length})',
-                  style: const TextStyle(
-                      color: IFridgeTheme.criticalRed,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
                       fontWeight: FontWeight.w600,
                       fontSize: 14)),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               ...expired.take(5).map((item) => _alertTile(item, true)),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
             ],
             if (expiring.isNotEmpty) ...[
               Text('⚠️ Expiring Soon (${expiring.length})',
-                  style: const TextStyle(
-                      color: IFridgeTheme.urgentOrange,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w600,
                       fontSize: 14)),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               ...expiring.take(5).map((item) => _alertTile(item, false)),
             ],
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
           ],
         ),
       ),
@@ -661,24 +660,24 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
 
   Widget _alertTile(InventoryItem item, bool isExpired) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.symmetric(vertical: 4),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: IFridgeTheme.bgElevated,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(children: [
           Text(categoryEmoji(item.category),
-              style: const TextStyle(fontSize: 20)),
-          const SizedBox(width: 12),
+              style: TextStyle(fontSize: 20)),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(item.name,
-                      style: const TextStyle(
-                          color: IFridgeTheme.textPrimary,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.w600,
                           fontSize: 13)),
                   Text(
@@ -689,8 +688,8 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
                             : 'Expires in ${item.daysUntilExpiry} day(s)',
                     style: TextStyle(
                         color: isExpired
-                            ? IFridgeTheme.criticalRed
-                            : IFridgeTheme.urgentOrange,
+                            ? Theme.of(context).colorScheme.error
+                            : Theme.of(context).colorScheme.primary,
                         fontSize: 11),
                   ),
                 ]),

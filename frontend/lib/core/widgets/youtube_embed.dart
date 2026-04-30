@@ -40,22 +40,22 @@ class YouTubeEmbed extends StatelessWidget {
           Image.network(
             'https://img.youtube.com/vi/$youtubeId/hqdefault.jpg',
             fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => Container(
-              color: Colors.black,
-              child: const Center(
-                child: Icon(Icons.play_circle_outline, color: Colors.white54, size: 64),
+            errorBuilder: (_, _, _) => Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: Center(
+                child: Icon(Icons.play_circle_outline, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), size: 64),
               ),
             ),
           ),
           // Play overlay
           Center(
             child: Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.6),
+                color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.6),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.play_arrow, color: Colors.white, size: 48),
+              child: Icon(Icons.play_arrow, color: Theme.of(context).colorScheme.onSurface, size: 48),
             ),
           ),
           // "Opens in YouTube" label
@@ -65,14 +65,14 @@ class YouTubeEmbed extends StatelessWidget {
             right: 0,
             child: Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.7),
+                  color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Text(
+                child: Text(
                   'Tap to open in YouTube',
-                  style: TextStyle(color: Colors.white70, fontSize: 11),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 11),
                 ),
               ),
             ),

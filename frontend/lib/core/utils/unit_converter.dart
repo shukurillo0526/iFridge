@@ -7,6 +7,7 @@
 ///   final converter = UnitConverter(conversions);
 ///   final grams = converter.toGrams(2, 'cup');    // 370g for rice
 ///   final display = converter.humanize(200, 'g');  // "≈ 1⅓ cups"
+library;
 
 class UnitConverter {
   final Map<String, dynamic> _conversions;

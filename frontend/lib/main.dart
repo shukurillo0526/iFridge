@@ -8,7 +8,6 @@ import 'package:ifridge_app/core/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/services/app_settings.dart';
-import 'package:ifridge_app/core/widgets/mode_switch.dart';
 import 'package:ifridge_app/core/widgets/dual_mode_nav_bar.dart';
 
 // ── Screens ──────────────────────────────────────────────
@@ -16,7 +15,6 @@ import 'package:ifridge_app/core/widgets/dual_mode_nav_bar.dart';
 import 'package:ifridge_app/features/shelf/presentation/screens/living_shelf_screen.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/cook_screen.dart';
 import 'package:ifridge_app/features/scan/presentation/screens/scan_screen.dart';
-import 'package:ifridge_app/features/explore/presentation/screens/explore_screen.dart';
 import 'package:ifridge_app/features/profile/presentation/screens/profile_screen.dart';
 
 // Order mode screens (new)
@@ -99,8 +97,8 @@ class _IFridgeAppState extends State<IFridgeApp> {
     return MaterialApp(
       title: 'iFridge',
       debugShowCheckedModeBanner: false,
-      theme: IFridgeTheme.lightTheme,
-      darkTheme: IFridgeTheme.darkTheme,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       themeMode: _settings.themeMode,
       locale: _settings.locale,
       localizationsDelegates: const [
@@ -119,29 +117,29 @@ class _IFridgeAppState extends State<IFridgeApp> {
         // Override ugly red error screen
         ErrorWidget.builder = (details) => Center(
           child: Container(
-            margin: const EdgeInsets.all(20),
-            padding: const EdgeInsets.all(24),
+            margin: EdgeInsets.all(20),
+            padding: EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: IFridgeTheme.bgElevated,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: IFridgeTheme.error.withValues(alpha: 0.3)),
+              border: Border.all(color: Theme.of(context).colorScheme.error.withValues(alpha: 0.3)),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.warning_amber_rounded, color: IFridgeTheme.error.withValues(alpha: 0.7), size: 40),
-                const SizedBox(height: 12),
-                const Text('Something went wrong',
-                    style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 6),
+                Icon(Icons.warning_amber_rounded, color: Theme.of(context).colorScheme.error.withValues(alpha: 0.7), size: 40),
+                SizedBox(height: 12),
+                Text('Something went wrong',
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 16, fontWeight: FontWeight.w600)),
+                SizedBox(height: 6),
                 Text(details.exceptionAsString().split('\n').first,
-                    style: TextStyle(color: Colors.white.withValues(alpha: 0.35), fontSize: 12),
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.35), fontSize: 12),
                     textAlign: TextAlign.center, maxLines: 3, overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
         );
-        return child ?? const SizedBox.shrink();
+        return child ?? SizedBox.shrink();
       },
       home: const _AuthGate(),
     );
@@ -305,6 +303,7 @@ class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
     final navItems = _cookNavItems(l10n);
 
     return Scaffold(
+      extendBody: true,
       body: Column(
         children: [
           // ── Mode Switch Bar ─────────────────────────
@@ -360,7 +359,7 @@ class _ModeSwitchBar extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(16, topPadding + 8, 16, 8),
       decoration: BoxDecoration(
-        color: isDark ? IFridgeTheme.bgDark : const Color(0xFFF6F8FA),
+        color: Theme.of(context).scaffoldBackgroundColor,
       ),
       child: Row(
         children: [
@@ -368,13 +367,13 @@ class _ModeSwitchBar extends StatelessWidget {
           Text(
             'iFridge',
             style: TextStyle(
-              color: isDark ? Colors.white : Colors.black87,
+              color: Theme.of(context).colorScheme.onSurface,
               fontSize: 22,
               fontWeight: FontWeight.w800,
               letterSpacing: -0.5,
             ),
           ),
-          const Spacer(),
+          Spacer(),
           // Mode toggle hidden for MVP
         ],
       ),

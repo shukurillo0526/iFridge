@@ -5,7 +5,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:ifridge_app/core/services/auth_helper.dart';
 
@@ -57,7 +56,7 @@ class _AuthScreenState extends State<AuthScreen>
         // Feedback for signups regarding email verification
         if (_isSignUp && Supabase.instance.client.auth.currentSession == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text('Please check your email to verify your account.'),
               backgroundColor: Colors.green,
             ),
@@ -157,7 +156,7 @@ class _AuthScreenState extends State<AuthScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           // ── Background Gradient ──
@@ -168,8 +167,8 @@ class _AuthScreenState extends State<AuthScreen>
                   center: const Alignment(0, -0.4),
                   radius: 1.2,
                   colors: [
-                    IFridgeTheme.primary.withValues(alpha: 0.15),
-                    AppTheme.background,
+                    Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                    Theme.of(context).scaffoldBackgroundColor,
                   ],
                 ),
               ),
@@ -180,7 +179,7 @@ class _AuthScreenState extends State<AuthScreen>
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
+                padding: EdgeInsets.symmetric(horizontal: 32),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -204,49 +203,49 @@ class _AuthScreenState extends State<AuthScreen>
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              IFridgeTheme.primary,
-                              IFridgeTheme.secondary,
+                              Theme.of(context).colorScheme.primary,
+                              Theme.of(context).colorScheme.secondary,
                             ],
                           ),
                           boxShadow: [
                             BoxShadow(
                               color:
-                                  IFridgeTheme.primary.withValues(alpha: 0.4),
+                                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
                               blurRadius: 40,
                               spreadRadius: 5,
                             ),
                           ],
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text('🧊',
                               style: TextStyle(fontSize: 56)),
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 32),
+                    SizedBox(height: 32),
 
                     // ── Title ──
-                    const Text(
+                    Text(
                       'iFridge',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 36,
                         fontWeight: FontWeight.w800,
                         letterSpacing: -1,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Text(
                       'Zero‑Waste, Maximum Taste.',
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.5),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
 
-                    const SizedBox(height: 48),
+                    SizedBox(height: 48),
 
                     // ── Email & Password Fields ──
                     _TextField(
@@ -255,7 +254,7 @@ class _AuthScreenState extends State<AuthScreen>
                       icon: Icons.email_outlined,
                       keyboardType: TextInputType.emailAddress,
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     _TextField(
                       controller: _passwordController,
                       hintText: 'Password',
@@ -263,7 +262,7 @@ class _AuthScreenState extends State<AuthScreen>
                       obscureText: true,
                     ),
 
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
 
                     // ── Email Sign In / Sign Up Button ──
                     _AuthButton(
@@ -273,7 +272,7 @@ class _AuthScreenState extends State<AuthScreen>
                       isPrimary: true,
                     ),
 
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
 
                     // ── Toggle Mode ──
                     TextButton(
@@ -288,26 +287,26 @@ class _AuthScreenState extends State<AuthScreen>
                             ? 'Already have an account? Sign In'
                             : 'Need an account? Sign Up',
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.8),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 32),
+                    SizedBox(height: 32),
                     
                     Row(
                       children: [
-                        Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.2))),
+                        Expanded(child: Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text('OR', style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12)),
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Text('OR', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
                         ),
-                        Expanded(child: Divider(color: Colors.white.withValues(alpha: 0.2))),
+                        Expanded(child: Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
                       ],
                     ),
 
-                    const SizedBox(height: 32),
+                    SizedBox(height: 32),
 
                     // ── Google Sign In ──
                     _AuthButton(
@@ -317,7 +316,7 @@ class _AuthScreenState extends State<AuthScreen>
                       isPrimary: false, // Changed from true to false
                     ),
 
-                    const SizedBox(height: 14),
+                    SizedBox(height: 14),
 
                     // ── Guest ──
                     _AuthButton(
@@ -328,21 +327,21 @@ class _AuthScreenState extends State<AuthScreen>
                     ),
 
                     if (_loading) ...[
-                      const SizedBox(height: 28),
+                      SizedBox(height: 28),
                       SizedBox(
                         width: 24,
                         height: 24,
                         child: CircularProgressIndicator(
                           strokeWidth: 2.5,
-                          color: IFridgeTheme.primary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ],
 
                     if (_error != null) ...[
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20),
                       Container(
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                             horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
                           color: Colors.red.withValues(alpha: 0.1),
@@ -352,13 +351,13 @@ class _AuthScreenState extends State<AuthScreen>
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.error_outline,
+                            Icon(Icons.error_outline,
                                 color: Colors.redAccent, size: 20),
-                            const SizedBox(width: 10),
+                            SizedBox(width: 10),
                             Expanded(
                               child: Text(
                                 _error!,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.redAccent,
                                   fontSize: 13,
                                 ),
@@ -369,12 +368,12 @@ class _AuthScreenState extends State<AuthScreen>
                       ),
                     ],
 
-                    const SizedBox(height: 48),
+                    SizedBox(height: 48),
 
                     Text(
                       'Your kitchen, intelligently managed.',
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.3),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                         fontSize: 12,
                       ),
                     ),
@@ -414,11 +413,11 @@ class _AuthButton extends StatelessWidget {
               onPressed: onPressed,
               icon: Icon(icon, size: 28),
               label: Text(label,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 15, fontWeight: FontWeight.w600)),
               style: FilledButton.styleFrom(
-                backgroundColor: IFridgeTheme.primary,
-                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onSurface,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -427,15 +426,15 @@ class _AuthButton extends StatelessWidget {
           : OutlinedButton.icon(
               onPressed: onPressed,
               icon: Icon(icon, size: 24,
-                  color: Colors.white.withValues(alpha: 0.7)),
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
               label: Text(label,
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white.withValues(alpha: 0.7))),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
               style: OutlinedButton.styleFrom(
                 side: BorderSide(
-                    color: Colors.white.withValues(alpha: 0.15)),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -466,21 +465,21 @@ class _TextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)),
       ),
       child: TextField(
         controller: controller,
         obscureText: obscureText,
         keyboardType: keyboardType,
-        style: const TextStyle(color: Colors.white, fontSize: 15),
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.4)),
-          prefixIcon: Icon(icon, color: Colors.white.withValues(alpha: 0.5), size: 22),
+          hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)),
+          prefixIcon: Icon(icon, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), size: 22),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
         ),
       ),
     );

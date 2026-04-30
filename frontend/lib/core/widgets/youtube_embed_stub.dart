@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 Widget buildWebEmbed(String youtubeId, {bool autoplay = false}) {
   // Should never be called on mobile — YouTubeEmbed checks kIsWeb
-  return const SizedBox.shrink();
+  return SizedBox.shrink();
 }
 
 void registerView(String youtubeId) {

@@ -52,55 +52,60 @@ class _FlavorProfilePageState extends State<FlavorProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
-      appBar: AppBar(title: const Text('Flavor Profile', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(title: Text('Flavor Profile', style: TextStyle(fontWeight: FontWeight.w700))),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: IFridgeTheme.primary))
+          ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary))
           : _flavors.isEmpty
               ? Center(child: Text('Cook more recipes to build your flavor profile!',
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.5))))
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5))))
               : ListView(
-                  padding: const EdgeInsets.all(20),
+                  padding: EdgeInsets.all(20),
                   children: [
                     // Radar chart placeholder
                     Container(
                       height: 260,
                       decoration: BoxDecoration(
-                        color: AppTheme.surface, borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.white.withValues(alpha: 0.06))),
+                        color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06))),
                       child: CustomPaint(
-                        painter: _RadarPainter(_flavors),
-                        child: const Center(child: Text('🍳', style: TextStyle(fontSize: 32))),
+                        painter: _RadarPainter(
+                          _flavors,
+                          gridColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                          textColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                          accentColor: Theme.of(context).colorScheme.primary,
+                        ),
+                        child: Center(child: Text('🍳', style: TextStyle(fontSize: 32))),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
 
                     // Detailed bars
                     ..._flavors.entries.map((e) {
                       final meta = _flavorMeta[e.key];
-                      final color = (meta?['color'] as Color?) ?? Colors.white;
+                      final color = (meta?['color'] as Color?) ?? Theme.of(context).colorScheme.onSurface;
                       final emoji = (meta?['emoji'] as String?) ?? '❓';
                       final pct = (e.value / 100).clamp(0.0, 1.0);
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
+                        padding: EdgeInsets.only(bottom: 12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
                                 Text('$emoji  ${e.key[0].toUpperCase()}${e.key.substring(1)}',
-                                  style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600)),
-                                const Spacer(),
+                                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15, fontWeight: FontWeight.w600)),
+                                Spacer(),
                                 Text('${e.value.toInt()}%',
                                   style: TextStyle(color: color, fontSize: 14, fontWeight: FontWeight.w700)),
                               ],
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: 6),
                             ClipRRect(
                               borderRadius: BorderRadius.circular(6),
                               child: LinearProgressIndicator(
                                 value: pct, minHeight: 10,
-                                backgroundColor: Colors.white.withValues(alpha: 0.08),
+                                backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
                                 valueColor: AlwaysStoppedAnimation(color)),
                             ),
                           ],
@@ -115,18 +120,31 @@ class _FlavorProfilePageState extends State<FlavorProfilePage> {
 
 class _RadarPainter extends CustomPainter {
   final Map<String, double> data;
-  _RadarPainter(this.data);
+  final Color gridColor;
+  final Color textColor;
+  final Color accentColor;
+
+  _RadarPainter(this.data, {
+    required this.gridColor,
+    required this.textColor,
+    required this.accentColor,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final r = size.width / 2.5;
+    final r = size.width / 2.5; // Radius of the radar
+    final keys = data.keys.toList();
     final values = data.values.toList();
     final n = values.length;
     if (n == 0) return;
 
     // Grid
-    final gridPaint = Paint()..color = Colors.white.withOpacity(0.08)..style = PaintingStyle.stroke;
+    final gridPaint = Paint()
+      ..color = gridColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+
     for (int ring = 1; ring <= 3; ring++) {
       final rr = r * ring / 3;
       final path = Path();
@@ -138,9 +156,22 @@ class _RadarPainter extends CustomPainter {
       canvas.drawPath(path, gridPaint);
     }
 
+    // Axes
+    for (int i = 0; i < n; i++) {
+      final a = -math.pi / 2 + 2 * math.pi * i / n;
+      final pt = Offset(center.dx + r * math.cos(a), center.dy + r * math.sin(a));
+      canvas.drawLine(center, pt, gridPaint);
+    }
+
     // Data polygon
-    final fillPaint = Paint()..color = const Color(0xFF00E676).withOpacity(0.2)..style = PaintingStyle.fill;
-    final strokePaint = Paint()..color = const Color(0xFF00E676)..style = PaintingStyle.stroke..strokeWidth = 2;
+    final fillPaint = Paint()
+      ..color = accentColor.withValues(alpha: 0.2)
+      ..style = PaintingStyle.fill;
+    final strokePaint = Paint()
+      ..color = accentColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
     final dataPath = Path();
     for (int i = 0; i <= n; i++) {
       final v = (values[i % n] / 100).clamp(0.0, 1.0);
@@ -150,6 +181,31 @@ class _RadarPainter extends CustomPainter {
     }
     canvas.drawPath(dataPath, fillPaint);
     canvas.drawPath(dataPath, strokePaint);
+
+    // Labels
+    final textPainter = TextPainter(textDirection: TextDirection.ltr);
+    for (int i = 0; i < n; i++) {
+      final a = -math.pi / 2 + 2 * math.pi * i / n;
+      final labelRadius = r + 20; // push label outside the grid
+      final pt = Offset(center.dx + labelRadius * math.cos(a), center.dy + labelRadius * math.sin(a));
+      
+      final label = keys[i];
+      final capitalized = label[0].toUpperCase() + label.substring(1);
+      
+      textPainter.text = TextSpan(
+        text: capitalized,
+        style: TextStyle(
+          color: textColor,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+      );
+      textPainter.layout();
+      textPainter.paint(
+        canvas,
+        Offset(pt.dx - textPainter.width / 2, pt.dy - textPainter.height / 2),
+      );
+    }
   }
 
   @override

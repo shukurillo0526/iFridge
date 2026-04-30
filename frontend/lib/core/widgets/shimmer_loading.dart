@@ -45,16 +45,16 @@ class _ShimmerBoxState extends State<ShimmerBox>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _animation,
-      builder: (_, __) => Container(
+      builder: (_, _) => Container(
         width: widget.width,
         height: widget.height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(widget.borderRadius),
           gradient: LinearGradient(
             colors: [
-              Colors.white.withValues(alpha: 0.04 + _animation.value * 0.06),
-              Colors.white.withValues(alpha: 0.08 + _animation.value * 0.04),
-              Colors.white.withValues(alpha: 0.04 + _animation.value * 0.06),
+              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.04 + _animation.value * 0.06),
+              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08 + _animation.value * 0.04),
+              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.04 + _animation.value * 0.06),
             ],
             stops: const [0.0, 0.5, 1.0],
           ),
@@ -71,7 +71,7 @@ class ShelfSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       child: GridView.builder(
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -81,7 +81,7 @@ class ShelfSkeleton extends StatelessWidget {
           childAspectRatio: 0.72,
         ),
         itemCount: 6,
-        itemBuilder: (_, __) => const ShimmerBox(height: 120, borderRadius: 14),
+        itemBuilder: (_, _) => const ShimmerBox(height: 120, borderRadius: 14),
       ),
     );
   }
@@ -95,10 +95,10 @@ class RecipeListSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       itemCount: 4,
-      itemBuilder: (_, __) => Padding(
-        padding: const EdgeInsets.only(bottom: 12),
+      itemBuilder: (_, _) => Padding(
+        padding: EdgeInsets.only(bottom: 12),
         child: ShimmerBox(height: 140, borderRadius: 16),
       ),
     );
@@ -112,29 +112,29 @@ class ProfileSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20),
       child: Column(
         children: [
           // Avatar
-          const Center(child: ShimmerBox(width: 80, height: 80, borderRadius: 40)),
-          const SizedBox(height: 16),
-          const Center(child: ShimmerBox(width: 120, height: 20)),
-          const SizedBox(height: 24),
+          Center(child: ShimmerBox(width: 80, height: 80, borderRadius: 40)),
+          SizedBox(height: 16),
+          Center(child: ShimmerBox(width: 120, height: 20)),
+          SizedBox(height: 24),
           // XP bar
           const ShimmerBox(height: 60),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           // Stats row
           Row(
             children: List.generate(3, (_) => Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+                padding: EdgeInsets.symmetric(horizontal: 4),
                 child: ShimmerBox(height: 80),
               ),
             )),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           const ShimmerBox(height: 120),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           const ShimmerBox(height: 180),
         ],
       ),
