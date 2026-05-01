@@ -52,7 +52,7 @@ class _CookFeedsScreenState extends State<CookFeedsScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          leading: const BackButton(color: Theme.of(context).colorScheme.onSurface),
+          leading: BackButton(color: Theme.of(context).colorScheme.onSurface),
         ),
         body: Center(child: CircularProgressIndicator(color: Color(0xFF4CAF50))),
       );
@@ -63,7 +63,7 @@ class _CookFeedsScreenState extends State<CookFeedsScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          leading: const BackButton(color: Theme.of(context).colorScheme.onSurface),
+          leading: BackButton(color: Theme.of(context).colorScheme.onSurface),
           title: Text('Cook Feed', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
         ),
         body: Center(
@@ -334,10 +334,10 @@ class _RecipeOverlay extends StatelessWidget {
           ]),
           SizedBox(height: 8),
           Row(children: [
-            if (video.recipePrepTime.isNotEmpty) _stat('Prep', video.recipePrepTime, Icons.schedule),
-            if (video.recipeCookTime.isNotEmpty) _stat('Cook', video.recipeCookTime, Icons.local_fire_department),
-            _stat('Serves', '${video.recipeServings}', Icons.people),
-            if (video.recipeDifficulty.isNotEmpty) _stat('Level', video.recipeDifficulty, Icons.signal_cellular_alt),
+            if (video.recipePrepTime.isNotEmpty) _stat(context, 'Prep', video.recipePrepTime, Icons.schedule),
+            if (video.recipeCookTime.isNotEmpty) _stat(context, 'Cook', video.recipeCookTime, Icons.local_fire_department),
+            _stat(context, 'Serves', '${video.recipeServings}', Icons.people),
+            if (video.recipeDifficulty.isNotEmpty) _stat(context, 'Level', video.recipeDifficulty, Icons.signal_cellular_alt),
           ]),
           SizedBox(height: 16),
           Expanded(
@@ -420,7 +420,7 @@ class _RecipeOverlay extends StatelessWidget {
     );
   }
 
-  Widget _stat(String label, String value, IconData icon) => Expanded(
+  Widget _stat(BuildContext context, String label, String value, IconData icon) => Expanded(
     child: Column(children: [
       Icon(icon, size: 16, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)),
       SizedBox(height: 2),

@@ -1,0 +1,199 @@
+[
+  {
+    "title": "Lentil Rice Pilaf",
+    "ingredients": [
+      {"name": "Rice", "quantity": 1, "unit": "cup", "prep_note": "Rinsed"},
+      {"name": "Green or brown lentils", "quantity": 0.5, "unit": "cup", "prep_note": "Rinsed"},
+      {"name": "Onion", "quantity": 1, "unit": "large", "prep_note": "Thinly sliced"},
+      {"name": "Olive oil", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Chicken broth", "quantity": 2.5, "unit": "cups", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Plain yogurt", "quantity": 0.25, "unit": "cup", "prep_note": "For serving"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Cook lentils in boiling water for 10 minutes until just tender. Drain.", "timer_seconds": 600},
+      {"step_number": 2, "text": "Heat 2 tbsp oil in a pot. Fry sliced onion for 10 minutes on medium until deep golden and caramelized. Remove half for garnish.", "timer_seconds": 600},
+      {"step_number": 3, "text": "Add cumin to remaining onion in pot, stir 30 seconds. Add rice, stir 1 minute.", "timer_seconds": 90},
+      {"step_number": 4, "text": "Add broth, lentils, and salt. Bring to a boil, then cover and cook on low for 18 minutes.", "timer_seconds": 1080},
+      {"step_number": 5, "text": "Fluff with a fork. Top with reserved crispy onions and a dollop of yogurt.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Beef Onion Stir-Fry",
+    "ingredients": [
+      {"name": "Beef sirloin", "quantity": 300, "unit": "g", "prep_note": "Thinly sliced"},
+      {"name": "Onions", "quantity": 2, "unit": "large", "prep_note": "Sliced into wedges"},
+      {"name": "Soy sauce", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Oyster sauce", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Garlic", "quantity": 3, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Cornstarch", "quantity": 1, "unit": "tsp", "prep_note": "For marinade"},
+      {"name": "Vegetable oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Toss beef with cornstarch, 1 tbsp soy sauce, and pepper. Marinate 10 minutes.", "timer_seconds": 600},
+      {"step_number": 2, "text": "Heat 1 tbsp oil in a wok over high heat. Sear beef for 2 minutes until browned. Remove.", "timer_seconds": 120},
+      {"step_number": 3, "text": "Add remaining oil. Stir-fry onions for 3 minutes until slightly charred but still crisp.", "timer_seconds": 180},
+      {"step_number": 4, "text": "Add garlic, cook 15 seconds. Return beef. Add remaining soy sauce and oyster sauce. Toss 1 minute.", "timer_seconds": 75},
+      {"step_number": 5, "text": "Serve over steamed rice.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Pea and Potato Curry",
+    "ingredients": [
+      {"name": "Potatoes", "quantity": 3, "unit": "medium", "prep_note": "Peeled, cubed"},
+      {"name": "Green peas", "quantity": 1, "unit": "cup", "prep_note": "Frozen"},
+      {"name": "Onion", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Ginger", "quantity": 1, "unit": "tsp", "prep_note": "Grated"},
+      {"name": "Tomatoes", "quantity": 2, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Turmeric", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Garam masala", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Water", "quantity": 1, "unit": "cup", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Cilantro", "quantity": 2, "unit": "tbsp", "prep_note": "Chopped"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil. Sauté onion 4 minutes. Add garlic, ginger, turmeric, and cumin. Cook 1 minute.", "timer_seconds": 300},
+      {"step_number": 2, "text": "Add tomatoes and cook 3 minutes until softened.", "timer_seconds": 180},
+      {"step_number": 3, "text": "Add potatoes, water, and salt. Cover and simmer 15 minutes until potatoes are tender.", "timer_seconds": 900},
+      {"step_number": 4, "text": "Add peas and garam masala. Cook 5 more minutes.", "timer_seconds": 300},
+      {"step_number": 5, "text": "Garnish with cilantro. Serve with rice or roti.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Butter Toast with Egg",
+    "ingredients": [
+      {"name": "Bread", "quantity": 2, "unit": "slices", "prep_note": "Thick-cut"},
+      {"name": "Eggs", "quantity": 2, "unit": "large", "prep_note": ""},
+      {"name": "Butter", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.25, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 1, "unit": "pinch", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Toast bread until golden. Spread generously with butter.", "timer_seconds": 120},
+      {"step_number": 2, "text": "Melt a little butter in a pan over medium heat. Fry eggs sunny-side up for 3 minutes until whites are set but yolk is runny.", "timer_seconds": 180},
+      {"step_number": 3, "text": "Place eggs on buttered toast. Season with salt and pepper. Serve immediately.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Garlic Chicken Rice Bowl",
+    "ingredients": [
+      {"name": "Chicken thighs", "quantity": 400, "unit": "g", "prep_note": "Boneless, diced"},
+      {"name": "Garlic", "quantity": 6, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Soy sauce", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Butter", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Cooked rice", "quantity": 2, "unit": "cups", "prep_note": ""},
+      {"name": "Green onion", "quantity": 2, "unit": "stalks", "prep_note": "Sliced"},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Sesame seeds", "quantity": 1, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Melt butter in a skillet over medium-high heat. Add chicken, season with pepper. Cook 5 minutes until browned.", "timer_seconds": 300},
+      {"step_number": 2, "text": "Add garlic and cook 1 minute until fragrant.", "timer_seconds": 60},
+      {"step_number": 3, "text": "Pour in soy sauce, toss chicken to coat. Cook 2 more minutes until sauce is reduced.", "timer_seconds": 120},
+      {"step_number": 4, "text": "Serve chicken over rice. Garnish with green onion and sesame seeds.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Egg Potato Hash",
+    "ingredients": [
+      {"name": "Potatoes", "quantity": 3, "unit": "medium", "prep_note": "Diced small"},
+      {"name": "Eggs", "quantity": 4, "unit": "large", "prep_note": ""},
+      {"name": "Onion", "quantity": 0.5, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Bell pepper", "quantity": 0.5, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Paprika", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Olive oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil in a large skillet over medium-high heat. Add potatoes in a single layer. Cook 10 minutes, stirring every 2-3 minutes, until golden and crispy.", "timer_seconds": 600},
+      {"step_number": 2, "text": "Add onion and bell pepper. Cook 3 minutes. Season with paprika, salt, and pepper.", "timer_seconds": 180},
+      {"step_number": 3, "text": "Make 4 wells in the hash. Crack an egg into each well. Cover and cook 4 minutes until whites are set.", "timer_seconds": 240},
+      {"step_number": 4, "text": "Serve directly from the skillet.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Caramelized Onion Pasta",
+    "ingredients": [
+      {"name": "Pasta", "quantity": 300, "unit": "g", "prep_note": "Any shape"},
+      {"name": "Onions", "quantity": 3, "unit": "large", "prep_note": "Thinly sliced"},
+      {"name": "Butter", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Olive oil", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Balsamic vinegar", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Parmesan", "quantity": 0.33, "unit": "cup", "prep_note": "Grated"},
+      {"name": "Fresh thyme", "quantity": 1, "unit": "tsp", "prep_note": "Leaves"},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat butter and oil in a large pan over medium-low heat. Add onions and a pinch of salt. Cook 25-30 minutes, stirring every 5 minutes, until deep golden brown.", "timer_seconds": 1650},
+      {"step_number": 2, "text": "Add balsamic vinegar and thyme. Cook 1 more minute.", "timer_seconds": 60},
+      {"step_number": 3, "text": "Cook pasta in salted water until al dente. Reserve 0.5 cup pasta water. Drain.", "timer_seconds": 540},
+      {"step_number": 4, "text": "Toss pasta with caramelized onions and pasta water. Add Parmesan and pepper. Serve.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Egg Bean Breakfast Wrap",
+    "ingredients": [
+      {"name": "Flour tortillas", "quantity": 2, "unit": "large", "prep_note": ""},
+      {"name": "Eggs", "quantity": 3, "unit": "large", "prep_note": "Scrambled"},
+      {"name": "Black beans", "quantity": 0.5, "unit": "cup", "prep_note": "Drained, warmed"},
+      {"name": "Cheddar cheese", "quantity": 0.25, "unit": "cup", "prep_note": "Shredded"},
+      {"name": "Salsa", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Avocado", "quantity": 0.5, "unit": "medium", "prep_note": "Sliced"},
+      {"name": "Salt", "quantity": 0.25, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Scramble eggs in a buttered pan over medium heat until just set, about 2 minutes. Season with salt.", "timer_seconds": 120},
+      {"step_number": 2, "text": "Warm tortillas in a dry pan for 15 seconds per side.", "timer_seconds": 30},
+      {"step_number": 3, "text": "Layer scrambled eggs, beans, cheese, avocado, and salsa down the center of each tortilla.", "timer_seconds": null},
+      {"step_number": 4, "text": "Fold the bottom up, then roll tightly from one side. Slice in half and serve.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Chicken Lentil Stew",
+    "ingredients": [
+      {"name": "Chicken thighs", "quantity": 400, "unit": "g", "prep_note": "Boneless, cubed"},
+      {"name": "Brown lentils", "quantity": 0.75, "unit": "cup", "prep_note": "Rinsed"},
+      {"name": "Onion", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Carrot", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Garlic", "quantity": 3, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Tomato paste", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Chicken broth", "quantity": 3, "unit": "cups", "prep_note": ""},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Olive oil", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Lemon juice", "quantity": 1, "unit": "tbsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil in a pot. Brown chicken for 4 minutes. Remove.", "timer_seconds": 240},
+      {"step_number": 2, "text": "Sauté onion and carrot 4 minutes. Add garlic, cumin, and tomato paste. Cook 1 minute.", "timer_seconds": 300},
+      {"step_number": 3, "text": "Add lentils, broth, and chicken. Bring to a boil, then simmer 25 minutes until lentils are tender.", "timer_seconds": 1500},
+      {"step_number": 4, "text": "Season with salt and lemon juice. Serve with crusty bread.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Quick Bean Soup",
+    "ingredients": [
+      {"name": "Canned white beans", "quantity": 2, "unit": "cans (400g each)", "prep_note": "Drained"},
+      {"name": "Onion", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Garlic", "quantity": 3, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Chicken broth", "quantity": 3, "unit": "cups", "prep_note": ""},
+      {"name": "Olive oil", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Rosemary", "quantity": 1, "unit": "tsp", "prep_note": "Dried"},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Lemon juice", "quantity": 1, "unit": "tbsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil. Sauté onion 3 minutes. Add garlic and rosemary, cook 30 seconds.", "timer_seconds": 210},
+      {"step_number": 2, "text": "Add beans and broth. Bring to a boil, then simmer 10 minutes.", "timer_seconds": 600},
+      {"step_number": 3, "text": "Mash a third of the beans with a fork to thicken the soup.", "timer_seconds": null},
+      {"step_number": 4, "text": "Season with salt and lemon juice. Serve with bread.", "timer_seconds": null}
+    ]
+  }
+]

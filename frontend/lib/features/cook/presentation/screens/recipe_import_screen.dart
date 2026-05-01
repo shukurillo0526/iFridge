@@ -141,8 +141,23 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
       final diff = widget.data['difficulty'] ?? 1;
       final serv = widget.data['servings'] ?? 2;
       
-      // 1. Insert recipe
-      final resp = await Supabase.instance.client.from('recipes').insert({
+      final ingsRaw = widget.data['ingredients'] as List? ?? [];
+      final jsonIngredients = ingsRaw.map((ing) => {
+        'name': ing['name'],
+        'quantity': ing['quantity'],
+        'unit': ing['unit'] ?? 'pcs',
+        'prep_note': ''
+      }).toList();
+
+      final stepsRaw = widget.data['steps'] as List? ?? [];
+      final jsonSteps = stepsRaw.map((s) => {
+        'step_number': s['step'],
+        'text': s['text'],
+        'timer_seconds': null
+      }).toList();
+
+      // Insert recipe with JSONB data directly
+      await Supabase.instance.client.from('recipes').insert({
         'author_id': userId,
         'title': title,
         'description': desc,
@@ -152,44 +167,9 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
         'servings': serv,
         'is_public': false,
         'calories_per_serving': 0, // Could ask AI for this too
-      }).select().single();
-      
-      final recipeId = resp['id'] as String;
-      
-      // 2. Insert ingredients
-      final ings = widget.data['ingredients'] as List? ?? [];
-      for (var ing in ings) {
-        final name = ing['name'];
-        final qty = ing['quantity'];
-        final String unit = ing['unit'] ?? 'pcs';
-        
-        // Lookup canonical ingredient or create proxy
-        final searchResp = await Supabase.instance.client
-            .from('ingredients')
-            .select('id')
-            .ilike('display_name_en', '%$name%')
-            .limit(1);
-            
-        String? cIngId;
-        if ((searchResp as List).isNotEmpty) {
-          cIngId = searchResp.first['id'];
-        }
-        
-        await Supabase.instance.client.from('recipe_ingredients').insert({
-          'recipe_id': recipeId,
-          'ingredient_id': cIngId,
-          'raw_text': '$qty $unit $name',
-          'quantity': qty,
-          'unit': unit,
-        });
-      }
-      
-      // 3. Format steps
-      final stepsRaw = widget.data['steps'] as List? ?? [];
-      final stepsFormatted = stepsRaw.map((s) => s['text'] ?? '').toList();
-      await Supabase.instance.client.from('recipes').update({
-        'instructions': stepsFormatted,
-      }).eq('id', recipeId);
+        'ingredients': jsonIngredients,
+        'steps': jsonSteps,
+      });
       
       if (!mounted) return;
       Navigator.pop(context); // Close sheet

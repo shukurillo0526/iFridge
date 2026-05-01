@@ -1,0 +1,219 @@
+[
+  {
+    "title": "Hummus",
+    "ingredients": [
+      {"name": "Canned chickpeas", "quantity": 1, "unit": "can (400g)", "prep_note": "Drained, reserve liquid"},
+      {"name": "Tahini", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Lemon juice", "quantity": 2, "unit": "tbsp", "prep_note": "Fresh"},
+      {"name": "Garlic", "quantity": 1, "unit": "clove", "prep_note": ""},
+      {"name": "Olive oil", "quantity": 3, "unit": "tbsp", "prep_note": "Extra virgin"},
+      {"name": "Cumin", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Paprika", "quantity": 0.25, "unit": "tsp", "prep_note": "For garnish"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Blend tahini and lemon juice in a food processor for 1 minute until thick and creamy.", "timer_seconds": 60},
+      {"step_number": 2, "text": "Add garlic, cumin, salt, and 1 tbsp olive oil. Blend 30 seconds.", "timer_seconds": 30},
+      {"step_number": 3, "text": "Add chickpeas. Blend 1 minute. Scrape sides. Add 2-3 tbsp reserved chickpea liquid. Blend 1 more minute until very smooth.", "timer_seconds": 120},
+      {"step_number": 4, "text": "Spread on a plate, drizzle remaining olive oil, sprinkle paprika. Serve with pita.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Beef Stroganoff",
+    "ingredients": [
+      {"name": "Beef sirloin", "quantity": 500, "unit": "g", "prep_note": "Sliced into strips"},
+      {"name": "Mushrooms", "quantity": 250, "unit": "g", "prep_note": "Sliced"},
+      {"name": "Onion", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Beef broth", "quantity": 1, "unit": "cup", "prep_note": ""},
+      {"name": "Sour cream", "quantity": 0.5, "unit": "cup", "prep_note": ""},
+      {"name": "Dijon mustard", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Flour", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Butter", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Egg noodles", "quantity": 250, "unit": "g", "prep_note": "Cooked"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Season beef with salt and pepper. Sear in hot butter for 2 minutes until browned. Remove.", "timer_seconds": 120},
+      {"step_number": 2, "text": "In the same pan, cook mushrooms 4 minutes until golden. Add onion, cook 3 minutes. Add garlic, 30 seconds.", "timer_seconds": 450},
+      {"step_number": 3, "text": "Sprinkle flour over vegetables, stir 1 minute. Pour in broth, simmer 5 minutes until thickened.", "timer_seconds": 360},
+      {"step_number": 4, "text": "Remove from heat. Stir in sour cream and mustard. Return beef and toss gently.", "timer_seconds": null},
+      {"step_number": 5, "text": "Serve over egg noodles. Garnish with fresh parsley.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Banana Bread",
+    "ingredients": [
+      {"name": "Ripe bananas", "quantity": 3, "unit": "large", "prep_note": "Very ripe, mashed"},
+      {"name": "All-purpose flour", "quantity": 1.5, "unit": "cups", "prep_note": ""},
+      {"name": "Sugar", "quantity": 0.75, "unit": "cup", "prep_note": ""},
+      {"name": "Butter", "quantity": 0.33, "unit": "cup", "prep_note": "Melted"},
+      {"name": "Egg", "quantity": 1, "unit": "large", "prep_note": ""},
+      {"name": "Baking soda", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.25, "unit": "tsp", "prep_note": ""},
+      {"name": "Vanilla", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Walnuts", "quantity": 0.5, "unit": "cup", "prep_note": "Chopped, optional"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Preheat oven to 175C (350F). Grease a 9x5 loaf pan.", "timer_seconds": null},
+      {"step_number": 2, "text": "Mash bananas. Stir in melted butter, sugar, egg, and vanilla.", "timer_seconds": null},
+      {"step_number": 3, "text": "Add flour, baking soda, and salt. Fold until just combined. Fold in walnuts if using.", "timer_seconds": null},
+      {"step_number": 4, "text": "Pour into pan. Bake 55-60 minutes until a toothpick comes out clean.", "timer_seconds": 3450},
+      {"step_number": 5, "text": "Cool in pan 10 minutes, then turn out onto a rack.", "timer_seconds": 600}
+    ]
+  },
+  {
+    "title": "Chicken Caesar Salad",
+    "ingredients": [
+      {"name": "Chicken breast", "quantity": 2, "unit": "large", "prep_note": ""},
+      {"name": "Romaine lettuce", "quantity": 1, "unit": "head", "prep_note": "Chopped"},
+      {"name": "Parmesan", "quantity": 0.5, "unit": "cup", "prep_note": "Shaved"},
+      {"name": "Croutons", "quantity": 1, "unit": "cup", "prep_note": ""},
+      {"name": "Olive oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Mayonnaise", "quantity": 3, "unit": "tbsp", "prep_note": "For dressing"},
+      {"name": "Lemon juice", "quantity": 1, "unit": "tbsp", "prep_note": "For dressing"},
+      {"name": "Garlic", "quantity": 1, "unit": "clove", "prep_note": "Minced, for dressing"},
+      {"name": "Dijon mustard", "quantity": 1, "unit": "tsp", "prep_note": "For dressing"},
+      {"name": "Worcestershire sauce", "quantity": 0.5, "unit": "tsp", "prep_note": "For dressing"},
+      {"name": "Salt", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.25, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Season chicken with salt, pepper, and olive oil. Grill or pan-sear 5 minutes per side until cooked through. Rest 5 minutes, then slice.", "timer_seconds": 900},
+      {"step_number": 2, "text": "Whisk mayo, lemon juice, garlic, mustard, Worcestershire, and 1 tbsp Parmesan for the dressing.", "timer_seconds": null},
+      {"step_number": 3, "text": "Toss lettuce with dressing in a large bowl.", "timer_seconds": null},
+      {"step_number": 4, "text": "Top with sliced chicken, croutons, and shaved Parmesan.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Chocolate Mug Cake",
+    "ingredients": [
+      {"name": "All-purpose flour", "quantity": 4, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sugar", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Cocoa powder", "quantity": 2, "unit": "tbsp", "prep_note": "Unsweetened"},
+      {"name": "Milk", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Egg", "quantity": 1, "unit": "small", "prep_note": ""},
+      {"name": "Vanilla", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Baking powder", "quantity": 0.25, "unit": "tsp", "prep_note": ""},
+      {"name": "Chocolate chips", "quantity": 1, "unit": "tbsp", "prep_note": "Optional"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Mix flour, sugar, cocoa, and baking powder in a large microwave-safe mug.", "timer_seconds": null},
+      {"step_number": 2, "text": "Add milk, oil, egg, and vanilla. Whisk with a fork until smooth. Stir in chocolate chips.", "timer_seconds": null},
+      {"step_number": 3, "text": "Microwave on high for 90 seconds. The cake should be set but still moist in the center.", "timer_seconds": 90},
+      {"step_number": 4, "text": "Let cool 1 minute. Eat directly from the mug or turn out onto a plate.", "timer_seconds": 60}
+    ]
+  },
+  {
+    "title": "Mushroom Risotto",
+    "ingredients": [
+      {"name": "Arborio rice", "quantity": 1.5, "unit": "cups", "prep_note": ""},
+      {"name": "Mushrooms", "quantity": 300, "unit": "g", "prep_note": "Mixed, sliced"},
+      {"name": "Onion", "quantity": 1, "unit": "small", "prep_note": "Finely diced"},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "White wine", "quantity": 0.5, "unit": "cup", "prep_note": "Dry"},
+      {"name": "Chicken broth", "quantity": 4, "unit": "cups", "prep_note": "Warm"},
+      {"name": "Butter", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Parmesan", "quantity": 0.5, "unit": "cup", "prep_note": "Grated"},
+      {"name": "Olive oil", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Fresh thyme", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.75, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Sauté mushrooms in 1 tbsp butter and oil over high heat for 5 minutes until golden. Season with thyme. Remove.", "timer_seconds": 300},
+      {"step_number": 2, "text": "In the same pot, cook onion in 1 tbsp butter for 3 minutes. Add garlic, 30 seconds. Add rice, stir 1 minute to toast.", "timer_seconds": 270},
+      {"step_number": 3, "text": "Pour in wine, stir until absorbed. Then add warm broth one ladle at a time, stirring frequently, waiting until each addition is absorbed. This takes about 18 minutes.", "timer_seconds": 1080},
+      {"step_number": 4, "text": "When rice is creamy and al dente, remove from heat. Stir in remaining butter, Parmesan, mushrooms, and salt.", "timer_seconds": null},
+      {"step_number": 5, "text": "Cover and rest 2 minutes. Serve immediately.", "timer_seconds": 120}
+    ]
+  },
+  {
+    "title": "Chicken Quesadilla",
+    "ingredients": [
+      {"name": "Flour tortillas", "quantity": 4, "unit": "large", "prep_note": ""},
+      {"name": "Cooked chicken", "quantity": 1.5, "unit": "cups", "prep_note": "Shredded"},
+      {"name": "Cheddar cheese", "quantity": 1.5, "unit": "cups", "prep_note": "Shredded"},
+      {"name": "Bell pepper", "quantity": 0.5, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Onion", "quantity": 0.25, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Cumin", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Butter", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salsa", "quantity": 4, "unit": "tbsp", "prep_note": "For serving"},
+      {"name": "Sour cream", "quantity": 4, "unit": "tbsp", "prep_note": "For serving"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Mix chicken with cumin, diced pepper, and onion.", "timer_seconds": null},
+      {"step_number": 2, "text": "Place a tortilla in a dry skillet over medium heat. Sprinkle cheese on half, then chicken mixture, then more cheese. Fold in half.", "timer_seconds": null},
+      {"step_number": 3, "text": "Cook 2 minutes until bottom is golden and cheese melts. Flip and cook 2 more minutes.", "timer_seconds": 240},
+      {"step_number": 4, "text": "Repeat with remaining tortillas. Cut into wedges. Serve with salsa and sour cream.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Japchae",
+    "ingredients": [
+      {"name": "Sweet potato noodles", "quantity": 200, "unit": "g", "prep_note": "Dangmyeon"},
+      {"name": "Beef sirloin", "quantity": 150, "unit": "g", "prep_note": "Thinly sliced"},
+      {"name": "Spinach", "quantity": 2, "unit": "cups", "prep_note": "Blanched"},
+      {"name": "Carrot", "quantity": 1, "unit": "medium", "prep_note": "Julienned"},
+      {"name": "Onion", "quantity": 0.5, "unit": "medium", "prep_note": "Sliced"},
+      {"name": "Mushrooms", "quantity": 4, "unit": "pcs", "prep_note": "Sliced"},
+      {"name": "Soy sauce", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sesame oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sugar", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Sesame seeds", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 1, "unit": "tbsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Cook noodles according to package. Drain, rinse, and cut with scissors into shorter lengths. Toss with 1 tbsp soy sauce and 1 tbsp sesame oil.", "timer_seconds": 420},
+      {"step_number": 2, "text": "Marinate beef in 1 tbsp soy sauce, sugar, and garlic for 10 minutes. Stir-fry 3 minutes. Remove.", "timer_seconds": 780},
+      {"step_number": 3, "text": "Stir-fry carrot 2 minutes, then onion and mushrooms 2 minutes, each separately.", "timer_seconds": 240},
+      {"step_number": 4, "text": "Combine noodles, beef, all vegetables, and blanched spinach in a large bowl. Add remaining soy sauce and sesame oil. Toss gently.", "timer_seconds": null},
+      {"step_number": 5, "text": "Sprinkle sesame seeds. Serve warm or at room temperature.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Classic Waffles",
+    "ingredients": [
+      {"name": "All-purpose flour", "quantity": 2, "unit": "cups", "prep_note": ""},
+      {"name": "Milk", "quantity": 1.75, "unit": "cups", "prep_note": ""},
+      {"name": "Eggs", "quantity": 2, "unit": "large", "prep_note": "Separated"},
+      {"name": "Butter", "quantity": 0.33, "unit": "cup", "prep_note": "Melted"},
+      {"name": "Sugar", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Baking powder", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Vanilla", "quantity": 1, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Preheat waffle iron. Whisk flour, sugar, baking powder, and salt.", "timer_seconds": null},
+      {"step_number": 2, "text": "Mix egg yolks, milk, melted butter, and vanilla. Stir into dry ingredients.", "timer_seconds": null},
+      {"step_number": 3, "text": "Beat egg whites to stiff peaks. Gently fold into the batter for extra fluffy waffles.", "timer_seconds": null},
+      {"step_number": 4, "text": "Pour batter into waffle iron. Cook 4-5 minutes until golden and crispy.", "timer_seconds": 270},
+      {"step_number": 5, "text": "Serve with butter, maple syrup, and fresh berries.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Tom Yum Soup",
+    "ingredients": [
+      {"name": "Shrimp", "quantity": 300, "unit": "g", "prep_note": "Peeled, deveined"},
+      {"name": "Mushrooms", "quantity": 150, "unit": "g", "prep_note": "Halved"},
+      {"name": "Lemongrass", "quantity": 2, "unit": "stalks", "prep_note": "Smashed, cut into pieces"},
+      {"name": "Galangal or ginger", "quantity": 4, "unit": "slices", "prep_note": ""},
+      {"name": "Kaffir lime leaves", "quantity": 4, "unit": "leaves", "prep_note": "Torn"},
+      {"name": "Thai chili", "quantity": 3, "unit": "pcs", "prep_note": "Smashed"},
+      {"name": "Fish sauce", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Lime juice", "quantity": 3, "unit": "tbsp", "prep_note": "Fresh"},
+      {"name": "Sugar", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Water", "quantity": 4, "unit": "cups", "prep_note": ""},
+      {"name": "Cilantro", "quantity": 2, "unit": "tbsp", "prep_note": "Chopped"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Bring water to a boil. Add lemongrass, galangal, lime leaves, and chilies. Simmer 5 minutes.", "timer_seconds": 300},
+      {"step_number": 2, "text": "Add mushrooms. Cook 3 minutes.", "timer_seconds": 180},
+      {"step_number": 3, "text": "Add shrimp. Cook 3 minutes until pink and curled.", "timer_seconds": 180},
+      {"step_number": 4, "text": "Remove from heat. Add fish sauce, lime juice, and sugar. Stir.", "timer_seconds": null},
+      {"step_number": 5, "text": "Garnish with cilantro. Serve immediately.", "timer_seconds": null}
+    ]
+  }
+]

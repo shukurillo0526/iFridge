@@ -1,0 +1,202 @@
+[
+  {
+    "title": "Qozon Kabob",
+    "ingredients": [
+      {"name": "Lamb ribs or beef", "quantity": 700, "unit": "g", "prep_note": "Bone-in pieces"},
+      {"name": "Potato", "quantity": 4, "unit": "medium", "prep_note": "Halved"},
+      {"name": "Onion", "quantity": 2, "unit": "large", "prep_note": "Sliced into rings"},
+      {"name": "Vegetable oil", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Water", "quantity": 0.5, "unit": "cup", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil in a heavy kazan. Sear meat on all sides for 5 minutes until well browned.", "timer_seconds": 300},
+      {"step_number": 2, "text": "Layer onion rings over the meat. Place potato halves on top, cut-side down. Season with cumin, salt, and pepper.", "timer_seconds": null},
+      {"step_number": 3, "text": "Add water around the edges. Cover tightly.", "timer_seconds": null},
+      {"step_number": 4, "text": "Cook on lowest heat for 55 minutes. Do not open the lid.", "timer_seconds": 3300},
+      {"step_number": 5, "text": "Serve by flipping onto a large platter — potatoes on bottom, meat on top.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Suzma Oshi",
+    "ingredients": [
+      {"name": "Rice", "quantity": 1.5, "unit": "cups", "prep_note": "Rinsed"},
+      {"name": "Suzma (strained yogurt)", "quantity": 1, "unit": "cup", "prep_note": "Or thick Greek yogurt"},
+      {"name": "Onion", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Vegetable oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Water", "quantity": 2, "unit": "cups", "prep_note": ""},
+      {"name": "Fresh dill", "quantity": 2, "unit": "tbsp", "prep_note": "Chopped"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil in a pot. Sauté onion 4 minutes until golden.", "timer_seconds": 240},
+      {"step_number": 2, "text": "Add rice and stir 1 minute. Add water and salt. Bring to a boil.", "timer_seconds": 120},
+      {"step_number": 3, "text": "Reduce heat to low, cover. Cook 18 minutes until rice is tender and water absorbed.", "timer_seconds": 1080},
+      {"step_number": 4, "text": "Fluff rice. Stir in suzma and dill. Serve warm.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Halvaitar",
+    "ingredients": [
+      {"name": "All-purpose flour", "quantity": 1, "unit": "cup", "prep_note": ""},
+      {"name": "Butter or oil", "quantity": 0.5, "unit": "cup", "prep_note": ""},
+      {"name": "Sugar", "quantity": 0.5, "unit": "cup", "prep_note": ""},
+      {"name": "Water", "quantity": 0.75, "unit": "cup", "prep_note": ""},
+      {"name": "Walnuts", "quantity": 0.25, "unit": "cup", "prep_note": "Chopped, for garnish"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Melt butter in a heavy pan over medium heat. Add flour and stir constantly for 10 minutes until it turns deep golden brown and smells nutty.", "timer_seconds": 600},
+      {"step_number": 2, "text": "Meanwhile, dissolve sugar in water and bring to a boil.", "timer_seconds": 120},
+      {"step_number": 3, "text": "Carefully pour the sugar syrup into the browned flour. Stir vigorously — it will bubble. Cook 2 minutes until thick and smooth.", "timer_seconds": 120},
+      {"step_number": 4, "text": "Pour into a serving dish. Garnish with chopped walnuts. Serve warm or at room temperature.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Garlic Butter Pasta",
+    "ingredients": [
+      {"name": "Spaghetti", "quantity": 300, "unit": "g", "prep_note": ""},
+      {"name": "Butter", "quantity": 4, "unit": "tbsp", "prep_note": ""},
+      {"name": "Garlic", "quantity": 6, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Red pepper flakes", "quantity": 0.25, "unit": "tsp", "prep_note": ""},
+      {"name": "Parmesan", "quantity": 0.33, "unit": "cup", "prep_note": "Grated"},
+      {"name": "Fresh parsley", "quantity": 2, "unit": "tbsp", "prep_note": "Chopped"},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": "For pasta water"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Cook spaghetti in salted water until al dente. Reserve 0.5 cup pasta water. Drain.", "timer_seconds": 540},
+      {"step_number": 2, "text": "Melt butter in a large pan over medium heat. Add garlic and pepper flakes. Cook 1 minute until fragrant.", "timer_seconds": 60},
+      {"step_number": 3, "text": "Add pasta and a splash of pasta water. Toss to coat. Add Parmesan and parsley. Toss again.", "timer_seconds": 60},
+      {"step_number": 4, "text": "Serve immediately.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Garlic Bread",
+    "ingredients": [
+      {"name": "Baguette", "quantity": 1, "unit": "medium", "prep_note": "Halved lengthwise"},
+      {"name": "Butter", "quantity": 4, "unit": "tbsp", "prep_note": "Softened"},
+      {"name": "Garlic", "quantity": 4, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Fresh parsley", "quantity": 2, "unit": "tbsp", "prep_note": "Chopped"},
+      {"name": "Salt", "quantity": 0.25, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Preheat oven to 200C (400F).", "timer_seconds": null},
+      {"step_number": 2, "text": "Mix softened butter with garlic, parsley, and salt.", "timer_seconds": null},
+      {"step_number": 3, "text": "Spread garlic butter generously on both baguette halves.", "timer_seconds": null},
+      {"step_number": 4, "text": "Place on a baking sheet. Bake 8-10 minutes until edges are golden and butter is bubbly.", "timer_seconds": 540},
+      {"step_number": 5, "text": "Slice and serve hot.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Flour Tortillas",
+    "ingredients": [
+      {"name": "All-purpose flour", "quantity": 2, "unit": "cups", "prep_note": ""},
+      {"name": "Lard or vegetable shortening", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Warm water", "quantity": 0.75, "unit": "cup", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.75, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Mix flour and salt. Rub in lard until crumbly. Add warm water. Knead 3 minutes until smooth.", "timer_seconds": 180},
+      {"step_number": 2, "text": "Divide into 8 balls. Cover and rest 20 minutes.", "timer_seconds": 1200},
+      {"step_number": 3, "text": "Roll each ball into a thin circle, about 20cm.", "timer_seconds": null},
+      {"step_number": 4, "text": "Cook in a dry, hot skillet for 45 seconds per side until bubbles form and light brown spots appear.", "timer_seconds": 90},
+      {"step_number": 5, "text": "Stack and wrap in a towel to keep warm.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Spinach Egg Scramble",
+    "ingredients": [
+      {"name": "Eggs", "quantity": 3, "unit": "large", "prep_note": "Beaten"},
+      {"name": "Baby spinach", "quantity": 2, "unit": "cups", "prep_note": ""},
+      {"name": "Garlic", "quantity": 1, "unit": "clove", "prep_note": "Minced"},
+      {"name": "Butter", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.25, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 1, "unit": "pinch", "prep_note": ""},
+      {"name": "Sesame oil", "quantity": 0.5, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Melt butter in a pan over medium heat. Add garlic, cook 15 seconds.", "timer_seconds": 15},
+      {"step_number": 2, "text": "Add spinach, stir until wilted, about 1 minute.", "timer_seconds": 60},
+      {"step_number": 3, "text": "Pour in beaten eggs. Gently push from edges to center as they set, about 2 minutes.", "timer_seconds": 120},
+      {"step_number": 4, "text": "Season with salt, pepper, and sesame oil. Serve immediately.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Apple Ginger Smoothie",
+    "ingredients": [
+      {"name": "Apple", "quantity": 1, "unit": "large", "prep_note": "Cored, chopped"},
+      {"name": "Banana", "quantity": 1, "unit": "medium", "prep_note": "Frozen preferred"},
+      {"name": "Fresh ginger", "quantity": 1, "unit": "tsp", "prep_note": "Grated"},
+      {"name": "Milk or yogurt", "quantity": 1, "unit": "cup", "prep_note": ""},
+      {"name": "Honey", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Cinnamon", "quantity": 0.25, "unit": "tsp", "prep_note": ""},
+      {"name": "Ice", "quantity": 0.5, "unit": "cup", "prep_note": "If not using frozen banana"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Add all ingredients to a blender.", "timer_seconds": null},
+      {"step_number": 2, "text": "Blend on high for 45-60 seconds until completely smooth.", "timer_seconds": 60},
+      {"step_number": 3, "text": "Pour into a glass and serve immediately.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Carrot Ginger Stir-Fry",
+    "ingredients": [
+      {"name": "Carrots", "quantity": 4, "unit": "medium", "prep_note": "Julienned"},
+      {"name": "Fresh ginger", "quantity": 1, "unit": "tbsp", "prep_note": "Minced"},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Soy sauce", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sesame oil", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Honey", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sesame seeds", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Green onion", "quantity": 1, "unit": "stalk", "prep_note": "Sliced"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil in a wok over high heat. Add ginger and garlic, stir 15 seconds.", "timer_seconds": 15},
+      {"step_number": 2, "text": "Add carrots. Stir-fry 4 minutes until tender-crisp.", "timer_seconds": 240},
+      {"step_number": 3, "text": "Add soy sauce, sesame oil, and honey. Toss 30 seconds.", "timer_seconds": 30},
+      {"step_number": 4, "text": "Garnish with sesame seeds and green onion. Serve as a side.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Tomato Egg Stir-Fry",
+    "ingredients": [
+      {"name": "Tomatoes", "quantity": 3, "unit": "medium", "prep_note": "Cut into wedges"},
+      {"name": "Eggs", "quantity": 4, "unit": "large", "prep_note": "Beaten"},
+      {"name": "Sugar", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Ketchup", "quantity": 1, "unit": "tbsp", "prep_note": "Optional"},
+      {"name": "Green onion", "quantity": 1, "unit": "stalk", "prep_note": "Chopped"},
+      {"name": "Vegetable oil", "quantity": 2, "unit": "tbsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat 1 tbsp oil in a wok over high heat. Scramble eggs until just set, about 30 seconds. Break into large pieces. Remove.", "timer_seconds": 30},
+      {"step_number": 2, "text": "Add remaining oil. Stir-fry tomatoes for 3 minutes until they soften and release juice.", "timer_seconds": 180},
+      {"step_number": 3, "text": "Add sugar, salt, and ketchup. Stir 30 seconds.", "timer_seconds": 30},
+      {"step_number": 4, "text": "Return eggs. Toss gently for 30 seconds. Garnish with green onion. Serve over rice.", "timer_seconds": 30}
+    ]
+  },
+  {
+    "title": "Chicken Broccoli Bake",
+    "ingredients": [
+      {"name": "Chicken breast", "quantity": 400, "unit": "g", "prep_note": "Cubed"},
+      {"name": "Broccoli", "quantity": 3, "unit": "cups", "prep_note": "Florets"},
+      {"name": "Heavy cream", "quantity": 0.75, "unit": "cup", "prep_note": ""},
+      {"name": "Cheddar cheese", "quantity": 1, "unit": "cup", "prep_note": "Shredded"},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Dijon mustard", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Olive oil", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Breadcrumbs", "quantity": 0.25, "unit": "cup", "prep_note": "Optional topping"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Preheat oven to 190C (375F). Sear chicken in oil for 3 minutes. Transfer to a baking dish.", "timer_seconds": 180},
+      {"step_number": 2, "text": "Blanch broccoli in boiling water for 2 minutes. Drain and add to the baking dish.", "timer_seconds": 120},
+      {"step_number": 3, "text": "Mix cream, half the cheese, garlic, mustard, salt, and pepper. Pour over chicken and broccoli.", "timer_seconds": null},
+      {"step_number": 4, "text": "Top with remaining cheese and breadcrumbs. Bake 25 minutes until bubbly and golden.", "timer_seconds": 1500},
+      {"step_number": 5, "text": "Rest 5 minutes. Serve hot.", "timer_seconds": 300}
+    ]
+  }
+]

@@ -15,6 +15,7 @@ import 'package:ifridge_app/features/scan/presentation/screens/scan_screen.dart'
 import 'package:ifridge_app/features/shelf/presentation/widgets/inventory_detail_sheet.dart';
 import 'package:ifridge_app/core/utils/category_images.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 
 class LivingShelfScreen extends StatefulWidget {
   const LivingShelfScreen({super.key});
@@ -151,12 +152,12 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('🧊 My Fridge'),
+        title: Text(AppLocalizations.of(context)?.myFridge ?? '🧊 My Fridge'),
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),
             onPressed: _loadInventory,
-            tooltip: 'Refresh',
+            tooltip: AppLocalizations.of(context)?.refresh ?? 'Refresh',
           ),
           IconButton(
             icon: Badge(
@@ -167,15 +168,15 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
               child: Icon(Icons.notifications_outlined),
             ),
             onPressed: _showExpiryAlerts,
-            tooltip: 'Expiry alerts',
+            tooltip: AppLocalizations.of(context)?.expiryAlerts ?? 'Expiry alerts',
           ),
         ],
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: Theme.of(context).colorScheme.primary,
+          indicatorSize: TabBarIndicatorSize.tab,
           labelColor: Theme.of(context).colorScheme.primary,
           unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-          tabs: _zones.map((z) => Tab(text: z)).toList(),
+          tabs: _zones.map((z) => Tab(text: _getLocalizedZone(z))).toList(),
         ),
       ),
       body: _loading
@@ -203,7 +204,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
                 size: 64, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
             SizedBox(height: 16),
             Text(
-              'Couldn\'t load inventory',
+              AppLocalizations.of(context)?.errorLoadInventory ?? 'Couldn\'t load inventory',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 fontSize: 16,
@@ -212,7 +213,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
             ),
             SizedBox(height: 8),
             Text(
-              'Check your connection and try again.',
+              AppLocalizations.of(context)?.errorCheckConnection ?? 'Check your connection and try again.',
               style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13),
             ),
@@ -220,7 +221,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
             FilledButton.icon(
               onPressed: _loadInventory,
               icon: Icon(Icons.refresh),
-              label: Text('Retry'),
+              label: Text(AppLocalizations.of(context)?.retry ?? 'Retry'),
               style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
             ),
           ],
@@ -249,10 +250,10 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _statChip('$total', 'Total', Theme.of(context).colorScheme.primary),
-          _statChip('$fresh', 'Fresh', Theme.of(context).colorScheme.tertiary),
-          _statChip('$expiring', 'Expiring', Theme.of(context).colorScheme.primary),
-          _statChip('$expired', 'Expired', Theme.of(context).colorScheme.error),
+          _statChip('$total', AppLocalizations.of(context)?.total ?? 'Total', Theme.of(context).colorScheme.primary),
+          _statChip('$fresh', AppLocalizations.of(context)?.fresh ?? 'Fresh', Theme.of(context).colorScheme.tertiary),
+          _statChip('$expiring', AppLocalizations.of(context)?.expiring ?? 'Expiring', Theme.of(context).colorScheme.primary),
+          _statChip('$expired', AppLocalizations.of(context)?.expired ?? 'Expired', Theme.of(context).colorScheme.error),
         ],
       ),
     );
@@ -282,7 +283,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
         onChanged: (v) => setState(() => _searchQuery = v),
         style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14),
         decoration: InputDecoration(
-          hintText: 'Search ingredients...',
+          hintText: AppLocalizations.of(context)?.searchIngredients ?? 'Search ingredients...',
           hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 14),
           prefixIcon:
               Icon(Icons.search, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), size: 20),
@@ -329,7 +330,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 12),
         children: [
-          _filterChip(null, 'All'),
+          _filterChip(null, AppLocalizations.of(context)?.all ?? 'All'),
           ..._categories.map((c) => _filterChip(c, _cap(c))),
         ],
       ),
@@ -371,7 +372,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Row(children: [
-        Text('$count items',
+        Text(AppLocalizations.of(context)?.itemsCount(count) ?? '$count items',
             style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 fontSize: 13,
@@ -416,10 +417,10 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
         padding: EdgeInsets.only(top: 100),
         child: EmptyStateIllustration(
           icon: _zoneIcon(zone),
-          title: 'Your $zone is Empty',
+          title: AppLocalizations.of(context)?.zoneEmptyTitle(_getLocalizedZone(zone)) ?? 'Your ${_getLocalizedZone(zone)} is Empty',
           description:
-              'Ready to fill up your digital kitchen.\nAdd items manually or tap scan.',
-          actionLabel: 'Add Ingredient',
+              AppLocalizations.of(context)?.zoneEmptyDesc ?? 'Ready to fill up your digital kitchen.\nAdd items manually or tap scan.',
+          actionLabel: AppLocalizations.of(context)?.addIngredient ?? 'Add Ingredient',
           onAction: () {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const ScanScreen()),
@@ -475,7 +476,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Expiring Soon',
+                          Text(AppLocalizations.of(context)?.expiringSoon ?? 'Expiring Soon',
                               style: TextStyle(
                                   color: Theme.of(context).colorScheme.error,
                                   fontWeight: FontWeight.w700,
@@ -496,7 +497,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
                       padding: EdgeInsets.symmetric(
                           horizontal: 14, vertical: 6),
                     ),
-                    child: Text('Cook Now',
+                    child: Text(AppLocalizations.of(context)?.urgentCook ?? 'Cook Now',
                         style:
                             TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurface)),
                   ),
@@ -519,7 +520,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
                         color:
                             Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
                     SizedBox(height: 12),
-                    Text('No items match your filters',
+                    Text(AppLocalizations.of(context)?.noItemsMatch ?? 'No items match your filters',
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                             fontSize: 14)),
@@ -530,7 +531,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
                         _searchCtrl.clear();
                         _selectedCategory = null;
                       }),
-                      child: Text('Clear filters'),
+                      child: Text(AppLocalizations.of(context)?.clearFilters ?? 'Clear filters'),
                     ),
                   ]),
                 ),
@@ -576,6 +577,15 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
     return Icons.shelves;
   }
 
+  String _getLocalizedZone(String zone) {
+    switch (zone) {
+      case 'Fridge': return AppLocalizations.of(context)?.auto_fridge ?? 'Fridge';
+      case 'Freezer': return AppLocalizations.of(context)?.auto_freezer ?? 'Freezer';
+      case 'Pantry': return AppLocalizations.of(context)?.auto_pantry ?? 'Pantry';
+      default: return zone;
+    }
+  }
+
   int get _alertCount =>
       _items.where((i) => i.daysUntilExpiry <= 3).length;
 
@@ -617,7 +627,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
               ),
             ),
             SizedBox(height: 16),
-            Text('🔔 Expiry Alerts',
+            Text(AppLocalizations.of(context)?.expiryAlertsTitle ?? '🔔 Expiry Alerts',
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -627,13 +637,13 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
               Center(
                 child: Padding(
                   padding: EdgeInsets.all(32),
-                  child: Text('All items are fresh! 🎉',
+                  child: Text(AppLocalizations.of(context)?.allFresh ?? 'All items are fresh! 🎉',
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 15)),
                 ),
               ),
             if (expired.isNotEmpty) ...[
-              Text('❌ Expired (${expired.length})',
+              Text(AppLocalizations.of(context)?.expiredCount(expired.length) ?? '❌ Expired (${expired.length})',
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.error,
                       fontWeight: FontWeight.w600,
@@ -643,7 +653,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
               SizedBox(height: 16),
             ],
             if (expiring.isNotEmpty) ...[
-              Text('⚠️ Expiring Soon (${expiring.length})',
+              Text(AppLocalizations.of(context)?.expiringSoonCount(expiring.length) ?? '⚠️ Expiring Soon (${expiring.length})',
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w600,

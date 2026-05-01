@@ -112,6 +112,19 @@ class RecipeMonetizationService {
     try {
       final uid = currentUserId();
 
+      final jsonIngredients = ingredients?.map((ing) => {
+        'name': ing['name'] ?? 'Ingredient',
+        'quantity': ing['quantity'] ?? 1,
+        'unit': ing['unit'] ?? 'piece',
+        'prep_note': ing['prep_note'] ?? ''
+      }).toList() ?? [];
+
+      final jsonSteps = steps?.asMap().entries.map((e) => {
+        'step_number': e.key + 1,
+        'text': e.value['text'] ?? '',
+        'timer_seconds': e.value['seconds'] ?? null,
+      }).toList() ?? [];
+
       final recipeData = await _client.from('recipes').insert({
         'title': title,
         'description': description,
@@ -129,34 +142,11 @@ class RecipeMonetizationService {
         'is_community': true,
         'linked_post_id': linkedPostId,
         'calories_per_serving': caloriesPerServing,
+        'ingredients': jsonIngredients,
+        'steps': jsonSteps,
       }).select().single();
 
       final recipe = RecipeModel.fromMap(recipeData);
-
-      // Insert ingredients if provided
-      if (ingredients != null && ingredients.isNotEmpty) {
-        final rows = ingredients.map((ing) => {
-          'recipe_id': recipe.id,
-          'ingredient_id': ing['ingredient_id'],
-          'quantity': ing['quantity'] ?? 1,
-          'unit': ing['unit'] ?? 'piece',
-          'is_optional': ing['is_optional'] ?? false,
-          'prep_note': ing['prep_note'],
-        }).toList();
-        await _client.from('recipe_ingredients').insert(rows);
-      }
-
-      // Insert steps if provided
-      if (steps != null && steps.isNotEmpty) {
-        final stepRows = steps.asMap().entries.map((e) => {
-          'recipe_id': recipe.id,
-          'step_number': e.key + 1,
-          'human_text': e.value['text'] ?? '',
-          'robot_action': {'type': 'manual'},
-          'estimated_seconds': e.value['seconds'] ?? 60,
-        }).toList();
-        await _client.from('recipe_steps').insert(stepRows);
-      }
 
       return recipe;
     } catch (e) {

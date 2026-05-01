@@ -4,6 +4,7 @@
 // Shown when tapping search icon in Explore header.
 
 import 'package:flutter/material.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/features/explore/presentation/screens/creator_page.dart';
@@ -236,7 +237,7 @@ class _SocialSearchPageState extends State<SocialSearchPage> with SingleTickerPr
                     color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text('You', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 11, fontWeight: FontWeight.w600)),
+                  child: Text(AppLocalizations.of(context)?.auto_you ?? 'You', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 11, fontWeight: FontWeight.w600)),
                 )
               : null,
           onTap: () {

@@ -15,7 +15,7 @@ class GamificationPage extends StatefulWidget {
 
 class _GamificationPageState extends State<GamificationPage> {
   Map<String, dynamic>? _stats;
-  List<Map<String, dynamic>> _earnedBadges = [];
+  Set<String> _earnedBadgeIds = {};
   bool _loading = true;
 
   @override
@@ -26,11 +26,10 @@ class _GamificationPageState extends State<GamificationPage> {
       final uid = currentUserId();
       final stats = await Supabase.instance.client
           .from('gamification_stats').select().eq('user_id', uid).maybeSingle();
-      final userBadges = await Supabase.instance.client
-          .from('user_badges').select().eq('user_id', uid);
+      final earned = computeEarnedBadges(stats);
       setState(() {
         _stats = stats;
-        _earnedBadges = List<Map<String, dynamic>>.from(userBadges ?? []);
+        _earnedBadgeIds = earned.map((b) => b.name).toSet();
         _loading = false;
       });
     } catch (e) {
@@ -44,7 +43,7 @@ class _GamificationPageState extends State<GamificationPage> {
     final level = levelFromXp(xp);
     final nextLevelXp = (level + 1) * 100;
     final levelProgress = (xp % 100) / 100.0;
-    final earnedIds = _earnedBadges.map((b) => b['badge_id']).toSet();
+    final earnedIds = _earnedBadgeIds;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

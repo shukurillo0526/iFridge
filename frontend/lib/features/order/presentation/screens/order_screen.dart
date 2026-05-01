@@ -8,6 +8,7 @@
 // - Category filtering, search, and deals section
 
 import 'package:flutter/material.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ifridge_app/core/services/location_service.dart';
 import 'package:ifridge_app/core/services/restaurant_service.dart';
@@ -825,7 +826,7 @@ class _RestaurantTile extends StatelessWidget {
                             color: Colors.red.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: Text('Closed', style: TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.w600)),
+                          child: Text(AppLocalizations.of(context)?.auto_closed ?? 'Closed', style: TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.w600)),
                         ),
                     ],
                   ),
@@ -991,7 +992,7 @@ class _RestaurantMenuSheetState extends State<_RestaurantMenuSheet> {
               // Menu
               Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
               SizedBox(height: 12),
-              Text('Menu', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
+              Text(AppLocalizations.of(context)?.auto_menu ?? 'Menu', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
               SizedBox(height: 12),
               if (_loading)
                 Center(child: Padding(
@@ -1002,7 +1003,7 @@ class _RestaurantMenuSheetState extends State<_RestaurantMenuSheet> {
                 Center(
                   child: Padding(
                     padding: EdgeInsets.all(24),
-                    child: Text('Menu coming soon', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38))),
+                    child: Text(AppLocalizations.of(context)?.auto_menuComingSoon ?? 'Menu coming soon', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38))),
                   ),
                 )
               else
@@ -1301,7 +1302,7 @@ class _MenuItemTile extends StatelessWidget {
                           color: accent.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Text('🔥 Best', style: TextStyle(color: accent, fontSize: 9, fontWeight: FontWeight.w700)),
+                        child: Text(AppLocalizations.of(context)?.auto_best ?? '🔥 Best', style: TextStyle(color: accent, fontSize: 9, fontWeight: FontWeight.w700)),
                       ),
                   ],
                 ),
@@ -1422,7 +1423,7 @@ class _PopularItemsSectionState extends State<_PopularItemsSection> {
           padding: EdgeInsets.fromLTRB(20, 0, 20, 8),
           child: Row(
             children: [
-              Text('🍽️ Popular Dishes',
+              Text(AppLocalizations.of(context)?.auto_popularDishes ?? '🍽️ Popular Dishes',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   fontSize: 15, fontWeight: FontWeight.w700,

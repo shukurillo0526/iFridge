@@ -4,6 +4,7 @@
 // Shows bio, follower count, posts grid, and follow/unfollow.
 
 import 'package:flutter/material.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 
@@ -139,23 +140,23 @@ class _CreatorPageState extends State<CreatorPage> {
                             style: OutlinedButton.styleFrom(
                               side: BorderSide(color: Theme.of(context).colorScheme.primary),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
-                            child: Text('Following', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w700)),
+                            child: Text(AppLocalizations.of(context)?.auto_following ?? 'Following', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w700)),
                           )
                         : FilledButton(
                             onPressed: _toggleFollow,
                             style: FilledButton.styleFrom(
                               backgroundColor: Theme.of(context).colorScheme.primary,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
-                            child: Text('Follow', style: TextStyle(fontWeight: FontWeight.w700)),
+                            child: Text(AppLocalizations.of(context)?.auto_follow ?? 'Follow', style: TextStyle(fontWeight: FontWeight.w700)),
                           ),
                   ),
                 SizedBox(height: 24),
 
                 // Posts grid
-                Text('Posts', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
+                Text(AppLocalizations.of(context)?.auto_posts ?? 'Posts', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
                 SizedBox(height: 12),
                 if (_posts.isEmpty)
-                  Center(child: Text('No posts yet',
+                  Center(child: Text(AppLocalizations.of(context)?.auto_noPostsYet ?? 'No posts yet',
                     style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4))))
                 else
                   GridView.builder(

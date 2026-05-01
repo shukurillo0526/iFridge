@@ -408,6 +408,1237 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'About iFridge'**
   String get aboutApp;
+
+  /// No description provided for @myFridge.
+  ///
+  /// In en, this message translates to:
+  /// **'🧊 My Fridge'**
+  String get myFridge;
+
+  /// No description provided for @expiryAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry alerts'**
+  String get expiryAlerts;
+
+  /// No description provided for @errorLoadInventory.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load inventory'**
+  String get errorLoadInventory;
+
+  /// No description provided for @errorCheckConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your connection and try again.'**
+  String get errorCheckConnection;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @fresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Fresh'**
+  String get fresh;
+
+  /// No description provided for @expiring.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiring'**
+  String get expiring;
+
+  /// No description provided for @expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expired;
+
+  /// No description provided for @searchIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Search ingredients...'**
+  String get searchIngredients;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @itemsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items'**
+  String itemsCount(int count);
+
+  /// No description provided for @zoneEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {zone} is Empty'**
+  String zoneEmptyTitle(String zone);
+
+  /// No description provided for @zoneEmptyDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to fill up your digital kitchen.\nAdd items manually or tap scan.'**
+  String get zoneEmptyDesc;
+
+  /// No description provided for @addIngredient.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Ingredient'**
+  String get addIngredient;
+
+  /// No description provided for @urgentCook.
+  ///
+  /// In en, this message translates to:
+  /// **'Cook Now'**
+  String get urgentCook;
+
+  /// No description provided for @urgentUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Use {ingredient}'**
+  String urgentUse(String ingredient);
+
+  /// No description provided for @noItemsMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No items match your filters'**
+  String get noItemsMatch;
+
+  /// No description provided for @clearFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get clearFilters;
+
+  /// No description provided for @expiryAlertsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'🔔 Expiry Alerts'**
+  String get expiryAlertsTitle;
+
+  /// No description provided for @allFresh.
+  ///
+  /// In en, this message translates to:
+  /// **'All items are fresh! 🎉'**
+  String get allFresh;
+
+  /// No description provided for @expiredCount.
+  ///
+  /// In en, this message translates to:
+  /// **'❌ Expired ({count})'**
+  String expiredCount(int count);
+
+  /// No description provided for @expiringSoonCount.
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ Expiring Soon ({count})'**
+  String expiringSoonCount(int count);
+
+  /// No description provided for @auto_scanCaloriesIsComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Calories is coming soon!'**
+  String get auto_scanCaloriesIsComingSoon;
+
+  /// No description provided for @auto_scan.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan'**
+  String get auto_scan;
+
+  /// No description provided for @auto_addAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Add All'**
+  String get auto_addAll;
+
+  /// No description provided for @auto_allAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'All Added'**
+  String get auto_allAdded;
+
+  /// No description provided for @auto_scanAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Another'**
+  String get auto_scanAnother;
+
+  /// No description provided for @auto_startVisualAudit.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Visual Audit'**
+  String get auto_startVisualAudit;
+
+  /// No description provided for @auto_enterBarcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Barcode'**
+  String get auto_enterBarcode;
+
+  /// No description provided for @auto_cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get auto_cancel;
+
+  /// No description provided for @auto_lookUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Look Up'**
+  String get auto_lookUp;
+
+  /// No description provided for @auto_fridge.
+  ///
+  /// In en, this message translates to:
+  /// **'Fridge'**
+  String get auto_fridge;
+
+  /// No description provided for @auto_freezer.
+  ///
+  /// In en, this message translates to:
+  /// **'Freezer'**
+  String get auto_freezer;
+
+  /// No description provided for @auto_pantry.
+  ///
+  /// In en, this message translates to:
+  /// **'Pantry'**
+  String get auto_pantry;
+
+  /// No description provided for @auto_addToShelf.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Shelf'**
+  String get auto_addToShelf;
+
+  /// No description provided for @auto_mealLogged.
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Meal logged!'**
+  String get auto_mealLogged;
+
+  /// No description provided for @auto_snapYourMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Snap Your Meal'**
+  String get auto_snapYourMeal;
+
+  /// No description provided for @auto_takeAPhotoAndAiWillEstimateCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo and AI will estimate calories'**
+  String get auto_takeAPhotoAndAiWillEstimateCalories;
+
+  /// No description provided for @auto_analyzingFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing food...'**
+  String get auto_analyzingFood;
+
+  /// No description provided for @auto_camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get auto_camera;
+
+  /// No description provided for @auto_gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get auto_gallery;
+
+  /// No description provided for @auto_estimatedCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'estimated calories'**
+  String get auto_estimatedCalories;
+
+  /// No description provided for @auto_cal.
+  ///
+  /// In en, this message translates to:
+  /// **'cal'**
+  String get auto_cal;
+
+  /// No description provided for @auto_logMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Meal'**
+  String get auto_logMeal;
+
+  /// No description provided for @auto_addSomeIngredientsToYourShelfFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Add some ingredients to your shelf first!'**
+  String get auto_addSomeIngredientsToYourShelfFirst;
+
+  /// No description provided for @auto_aiRecipeGenerator.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Recipe Generator'**
+  String get auto_aiRecipeGenerator;
+
+  /// No description provided for @auto_any.
+  ///
+  /// In en, this message translates to:
+  /// **'Any'**
+  String get auto_any;
+
+  /// No description provided for @auto_shelfOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Shelf Only'**
+  String get auto_shelfOnly;
+
+  /// No description provided for @auto_generateRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate Recipe'**
+  String get auto_generateRecipe;
+
+  /// No description provided for @auto_ingredients.
+  ///
+  /// In en, this message translates to:
+  /// **'🧂 Ingredients'**
+  String get auto_ingredients;
+
+  /// No description provided for @auto_steps.
+  ///
+  /// In en, this message translates to:
+  /// **'👨‍🍳 Steps'**
+  String get auto_steps;
+
+  /// No description provided for @auto_importRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Recipe'**
+  String get auto_importRecipe;
+
+  /// No description provided for @auto_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get auto_retry;
+
+  /// No description provided for @auto_addItemsToYourShelfToGetRecommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Add items to your shelf to get recommendations'**
+  String get auto_addItemsToYourShelfToGetRecommendations;
+
+  /// No description provided for @auto_noRecipesMatchThisCuisine.
+  ///
+  /// In en, this message translates to:
+  /// **'No recipes match this cuisine'**
+  String get auto_noRecipesMatchThisCuisine;
+
+  /// No description provided for @auto_clearFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filter'**
+  String get auto_clearFilter;
+
+  /// No description provided for @auto_deleteItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete item?'**
+  String get auto_deleteItem;
+
+  /// No description provided for @auto_delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get auto_delete;
+
+  /// No description provided for @auto_freshness.
+  ///
+  /// In en, this message translates to:
+  /// **'Freshness'**
+  String get auto_freshness;
+
+  /// No description provided for @auto_use1Unit.
+  ///
+  /// In en, this message translates to:
+  /// **'Use 1 Unit'**
+  String get auto_use1Unit;
+
+  /// No description provided for @auto_removeFromInventory.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from Inventory'**
+  String get auto_removeFromInventory;
+
+  /// No description provided for @auto_following.
+  ///
+  /// In en, this message translates to:
+  /// **'Following'**
+  String get auto_following;
+
+  /// No description provided for @auto_follow.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get auto_follow;
+
+  /// No description provided for @auto_posts.
+  ///
+  /// In en, this message translates to:
+  /// **'Posts'**
+  String get auto_posts;
+
+  /// No description provided for @auto_noPostsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No posts yet'**
+  String get auto_noPostsYet;
+
+  /// No description provided for @auto_explore.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get auto_explore;
+
+  /// No description provided for @auto_noReelsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No reels yet'**
+  String get auto_noReelsYet;
+
+  /// No description provided for @auto_cookThisRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Cook This Recipe'**
+  String get auto_cookThisRecipe;
+
+  /// No description provided for @auto_recipeNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe not found'**
+  String get auto_recipeNotFound;
+
+  /// No description provided for @auto_hasRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Has Recipe'**
+  String get auto_hasRecipe;
+
+  /// No description provided for @auto_noCommunityPostsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No community posts yet'**
+  String get auto_noCommunityPostsYet;
+
+  /// No description provided for @auto_beTheFirstToShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first to share!'**
+  String get auto_beTheFirstToShare;
+
+  /// No description provided for @auto_createPost.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Post'**
+  String get auto_createPost;
+
+  /// No description provided for @auto_savedPosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Posts'**
+  String get auto_savedPosts;
+
+  /// No description provided for @auto_noSavedPostsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved posts yet'**
+  String get auto_noSavedPostsYet;
+
+  /// No description provided for @auto_you.
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get auto_you;
+
+  /// No description provided for @auto_checkout.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout'**
+  String get auto_checkout;
+
+  /// No description provided for @auto_yourCartIsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cart is empty'**
+  String get auto_yourCartIsEmpty;
+
+  /// No description provided for @auto_yourOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Order'**
+  String get auto_yourOrder;
+
+  /// No description provided for @auto_total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get auto_total;
+
+  /// No description provided for @auto_orderConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Confirmed!'**
+  String get auto_orderConfirmed;
+
+  /// No description provided for @auto_yourPickupCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Pickup Code'**
+  String get auto_yourPickupCode;
+
+  /// No description provided for @auto_showThisCodeAtTheCounter.
+  ///
+  /// In en, this message translates to:
+  /// **'Show this code at the counter'**
+  String get auto_showThisCodeAtTheCounter;
+
+  /// No description provided for @auto_deliveryOnTheWay.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery on the way'**
+  String get auto_deliveryOnTheWay;
+
+  /// No description provided for @auto_aDriverWillBeAssignedShortly.
+  ///
+  /// In en, this message translates to:
+  /// **'A driver will be assigned shortly'**
+  String get auto_aDriverWillBeAssignedShortly;
+
+  /// No description provided for @auto_backToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get auto_backToHome;
+
+  /// No description provided for @auto_incomingOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Incoming Orders'**
+  String get auto_incomingOrders;
+
+  /// No description provided for @auto_noFoodVideosYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No food videos yet'**
+  String get auto_noFoodVideosYet;
+
+  /// No description provided for @auto_foodFeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Food Feed'**
+  String get auto_foodFeed;
+
+  /// No description provided for @auto_myOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'My Orders'**
+  String get auto_myOrders;
+
+  /// No description provided for @auto_noOrdersYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No orders yet'**
+  String get auto_noOrdersYet;
+
+  /// No description provided for @auto_yourOrderHistoryWillAppearHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order history will appear here'**
+  String get auto_yourOrderHistoryWillAppearHere;
+
+  /// No description provided for @auto_cancelOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Order?'**
+  String get auto_cancelOrder;
+
+  /// No description provided for @auto_keepOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Order'**
+  String get auto_keepOrder;
+
+  /// No description provided for @auto_orderCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Order cancelled'**
+  String get auto_orderCancelled;
+
+  /// No description provided for @auto_pickupCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup Code:'**
+  String get auto_pickupCode;
+
+  /// No description provided for @auto_closed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get auto_closed;
+
+  /// No description provided for @auto_menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get auto_menu;
+
+  /// No description provided for @auto_menuComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu coming soon'**
+  String get auto_menuComingSoon;
+
+  /// No description provided for @auto_best.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 Best'**
+  String get auto_best;
+
+  /// No description provided for @auto_popularDishes.
+  ///
+  /// In en, this message translates to:
+  /// **'🍽️ Popular Dishes'**
+  String get auto_popularDishes;
+
+  /// No description provided for @auto_fromVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'From video'**
+  String get auto_fromVideo;
+
+  /// No description provided for @auto_bookATable.
+  ///
+  /// In en, this message translates to:
+  /// **'Book a Table'**
+  String get auto_bookATable;
+
+  /// No description provided for @auto_confirmReservation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Reservation'**
+  String get auto_confirmReservation;
+
+  /// No description provided for @auto_locationDirections.
+  ///
+  /// In en, this message translates to:
+  /// **'Location & Directions'**
+  String get auto_locationDirections;
+
+  /// No description provided for @auto_mapView.
+  ///
+  /// In en, this message translates to:
+  /// **'Map View'**
+  String get auto_mapView;
+
+  /// No description provided for @auto_openInGoogleMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in Google Maps'**
+  String get auto_openInGoogleMaps;
+
+  /// No description provided for @auto_writeAReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a Review'**
+  String get auto_writeAReview;
+
+  /// No description provided for @auto_viewCart.
+  ///
+  /// In en, this message translates to:
+  /// **'View Cart'**
+  String get auto_viewCart;
+
+  /// No description provided for @auto_signOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out?'**
+  String get auto_signOut;
+
+  /// No description provided for @auto_youWillNeedToSignInAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'You will need to sign in again.'**
+  String get auto_youWillNeedToSignInAgain;
+
+  /// No description provided for @auto_deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account?'**
+  String get auto_deleteAccount;
+
+  /// No description provided for @auto_deleteForever.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Forever'**
+  String get auto_deleteForever;
+
+  /// No description provided for @auto_accountDeletionRequestedContactSupportToFinalize.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion requested. Contact support to finalize.'**
+  String get auto_accountDeletionRequestedContactSupportToFinalize;
+
+  /// No description provided for @auto_ifridge.
+  ///
+  /// In en, this message translates to:
+  /// **'iFridge'**
+  String get auto_ifridge;
+
+  /// No description provided for @auto_ifridgeIsYourAipoweredKitchenEcosystemItAutomaticallyTracksYourIngredientsPredictsExpirationsGeneratesPersonalizedRecipesAndLetsYouOrderFromLocalRestaurants.
+  ///
+  /// In en, this message translates to:
+  /// **'iFridge is your AI-powered kitchen ecosystem. It automatically tracks your ingredients, predicts expirations, generates personalized recipes, and lets you order from local restaurants.'**
+  String
+  get auto_ifridgeIsYourAipoweredKitchenEcosystemItAutomaticallyTracksYourIngredientsPredictsExpirationsGeneratesPersonalizedRecipesAndLetsYouOrderFromLocalRestaurants;
+
+  /// No description provided for @auto_gotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get auto_gotIt;
+
+  /// No description provided for @auto_editDisplayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Display Name'**
+  String get auto_editDisplayName;
+
+  /// No description provided for @auto_save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get auto_save;
+
+  /// No description provided for @auto_addShoppingItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Shopping Item'**
+  String get auto_addShoppingItem;
+
+  /// No description provided for @auto_add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get auto_add;
+
+  /// No description provided for @auto_selectRecipeForMeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Recipe for Meal'**
+  String get auto_selectRecipeForMeal;
+
+  /// No description provided for @auto_failedToLoadRecipes.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load recipes'**
+  String get auto_failedToLoadRecipes;
+
+  /// No description provided for @auto_noRecipesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No recipes found'**
+  String get auto_noRecipesFound;
+
+  /// No description provided for @auto_mealCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal cleared'**
+  String get auto_mealCleared;
+
+  /// No description provided for @auto_theme.
+  ///
+  /// In en, this message translates to:
+  /// **'🎨 Theme'**
+  String get auto_theme;
+
+  /// No description provided for @whatToCook.
+  ///
+  /// In en, this message translates to:
+  /// **'What to Cook?'**
+  String get whatToCook;
+
+  /// No description provided for @tierPerfect.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect'**
+  String get tierPerfect;
+
+  /// No description provided for @tierForYou.
+  ///
+  /// In en, this message translates to:
+  /// **'For You'**
+  String get tierForYou;
+
+  /// No description provided for @tierUseItUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Use It Up'**
+  String get tierUseItUp;
+
+  /// No description provided for @tierAlmost.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost'**
+  String get tierAlmost;
+
+  /// No description provided for @tierExplore.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get tierExplore;
+
+  /// No description provided for @noTierRecipesYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No {tier} recipes yet'**
+  String noTierRecipesYet(String tier);
+
+  /// No description provided for @addItemsForRecommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Add items to your shelf to get recommendations'**
+  String get addItemsForRecommendations;
+
+  /// No description provided for @scanCaloriesTab.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Calories'**
+  String get scanCaloriesTab;
+
+  /// No description provided for @scanYourIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Your Ingredients'**
+  String get scanYourIngredients;
+
+  /// No description provided for @takePhotoToAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo of food items to add them to your shelf automatically'**
+  String get takePhotoToAdd;
+
+  /// No description provided for @scanReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt'**
+  String get scanReceipt;
+
+  /// No description provided for @scanPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get scanPhoto;
+
+  /// No description provided for @scanBarcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Barcode'**
+  String get scanBarcode;
+
+  /// No description provided for @takePhotoBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get takePhotoBtn;
+
+  /// No description provided for @adjustPortions.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust Portions'**
+  String get adjustPortions;
+
+  /// No description provided for @currentRecipeMakesNServings.
+  ///
+  /// In en, this message translates to:
+  /// **'Current recipe makes {servings} servings.'**
+  String currentRecipeMakesNServings(String servings);
+
+  /// No description provided for @scaleToNServings.
+  ///
+  /// In en, this message translates to:
+  /// **'Scale to {newServings} Servings'**
+  String scaleToNServings(String newServings);
+
+  /// No description provided for @scaledToNServings.
+  ///
+  /// In en, this message translates to:
+  /// **'Scaled to {newServings} servings 🍳'**
+  String scaledToNServings(String newServings);
+
+  /// No description provided for @findingSubstitutesForX.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding substitutes for {ingredientName}...'**
+  String findingSubstitutesForX(String ingredientName);
+
+  /// No description provided for @couldNotFindSubstitutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not find substitutes'**
+  String get couldNotFindSubstitutes;
+
+  /// No description provided for @substitutesForX.
+  ///
+  /// In en, this message translates to:
+  /// **'Substitutes for \"{ingredientName}\"'**
+  String substitutesForX(String ingredientName);
+
+  /// No description provided for @noSubstitutesFoundForThisRecipeContext.
+  ///
+  /// In en, this message translates to:
+  /// **'No substitutes found for this recipe context.'**
+  String get noSubstitutesFoundForThisRecipeContext;
+
+  /// No description provided for @nMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'{match}% Match'**
+  String nMatch(String match);
+
+  /// No description provided for @ingredientsWithCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredients ({count})'**
+  String ingredientsWithCount(String count);
+
+  /// No description provided for @scale.
+  ///
+  /// In en, this message translates to:
+  /// **'Scale'**
+  String get scale;
+
+  /// No description provided for @addedMissingItemsToShoppingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Added missing items to Shopping List!'**
+  String get addedMissingItemsToShoppingList;
+
+  /// No description provided for @failedToAddItemsX.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add items: {e}'**
+  String failedToAddItemsX(String e);
+
+  /// No description provided for @addMissingToShoppingList.
+  ///
+  /// In en, this message translates to:
+  /// **'Add missing to Shopping List'**
+  String get addMissingToShoppingList;
+
+  /// No description provided for @cookingStepsWithCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooking Steps ({count})'**
+  String cookingStepsWithCount(String count);
+
+  /// No description provided for @noStepsAvailableYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No steps available yet'**
+  String get noStepsAvailableYet;
+
+  /// No description provided for @recordedTasteProfileEvolving.
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded! Your taste profile is evolving 🧠'**
+  String get recordedTasteProfileEvolving;
+
+  /// No description provided for @failedToRecordX.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to record: {e}'**
+  String failedToRecordX(String e);
+
+  /// No description provided for @iCookedThis.
+  ///
+  /// In en, this message translates to:
+  /// **'I Cooked This!'**
+  String get iCookedThis;
+
+  /// No description provided for @startCooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Cooking'**
+  String get startCooking;
+
+  /// No description provided for @optional_tag.
+  ///
+  /// In en, this message translates to:
+  /// **'optional'**
+  String get optional_tag;
+
+  /// No description provided for @servings_tag.
+  ///
+  /// In en, this message translates to:
+  /// **'servings'**
+  String get servings_tag;
+
+  /// No description provided for @min_tag.
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get min_tag;
+
+  /// No description provided for @difficulty_tag.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty'**
+  String get difficulty_tag;
+
+  /// No description provided for @expiringSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiring Soon'**
+  String get expiringSoon;
+
+  /// No description provided for @nItemsNeedAttention.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} item(s) need attention'**
+  String nItemsNeedAttention(String count);
+
+  /// No description provided for @takeAPhotoOfFoodItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo of food items to add them\nto your shelf automatically'**
+  String get takeAPhotoOfFoodItems;
+
+  /// No description provided for @addManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Manually'**
+  String get addManually;
+
+  /// No description provided for @recognitionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognition failed. Try again.'**
+  String get recognitionFailed;
+
+  /// No description provided for @analyzingYourFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing your food...'**
+  String get analyzingYourFood;
+
+  /// No description provided for @aiIsIdentifying.
+  ///
+  /// In en, this message translates to:
+  /// **'AI is identifying ingredients'**
+  String get aiIsIdentifying;
+
+  /// No description provided for @nItemsDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Items Detected'**
+  String nItemsDetected(String count);
+
+  /// No description provided for @photoAnalysisSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo Analysis Selected'**
+  String get photoAnalysisSelected;
+
+  /// No description provided for @nIngredientsDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Ingredients Detected'**
+  String nIngredientsDetected(String count);
+
+  /// No description provided for @nOfNAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'{added} / {total} added'**
+  String nOfNAdded(String added, String total);
+
+  /// No description provided for @addedItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {item}!'**
+  String addedItem(String item);
+
+  /// No description provided for @failedToAddItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add {item}'**
+  String failedToAddItem(String item);
+
+  /// No description provided for @addedNItemsToShelf.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {count} items to shelf!'**
+  String addedNItemsToShelf(String count);
+
+  /// No description provided for @noProductFoundForBarcode.
+  ///
+  /// In en, this message translates to:
+  /// **'No product found for barcode {barcode}'**
+  String noProductFoundForBarcode(String barcode);
+
+  /// No description provided for @addedItemToShelf.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {item} to shelf!'**
+  String addedItemToShelf(String item);
+
+  /// No description provided for @errorX.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {e}'**
+  String errorX(String e);
+
+  /// No description provided for @analysisFailedX.
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis failed: {e}'**
+  String analysisFailedX(String e);
+
+  /// No description provided for @failedToLogX.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to log: {e}'**
+  String failedToLogX(String e);
+
+  /// No description provided for @scanBarcodeShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode'**
+  String get scanBarcodeShort;
+
+  /// No description provided for @profileAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get profileAccount;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @tierBadge1.
+  ///
+  /// In en, this message translates to:
+  /// **'✅ Everything you need!'**
+  String get tierBadge1;
+
+  /// No description provided for @tierBadge2.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 Recommended for you'**
+  String get tierBadge2;
+
+  /// No description provided for @tierBadge3.
+  ///
+  /// In en, this message translates to:
+  /// **'⏰ Use expiring items'**
+  String get tierBadge3;
+
+  /// No description provided for @tierBadge4.
+  ///
+  /// In en, this message translates to:
+  /// **'🛒 Just a few items away'**
+  String get tierBadge4;
+
+  /// No description provided for @tierBadge5.
+  ///
+  /// In en, this message translates to:
+  /// **'🌍 Discover something new'**
+  String get tierBadge5;
+
+  /// No description provided for @needLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Need: {items}'**
+  String needLabel(String items);
+
+  /// No description provided for @nOfNIngredients.
+  ///
+  /// In en, this message translates to:
+  /// **'{matched}/{total} ingredients'**
+  String nOfNIngredients(String matched, String total);
+
+  /// No description provided for @servingsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Servings'**
+  String get servingsLabel;
+
+  /// No description provided for @nHave.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} have'**
+  String nHave(String count);
+
+  /// No description provided for @nMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} missing'**
+  String nMissing(String count);
+
+  /// No description provided for @ingredientsHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredients'**
+  String get ingredientsHeader;
+
+  /// No description provided for @swapButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Swap →'**
+  String get swapButton;
+
+  /// No description provided for @aiAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'🤖 AI Assistant'**
+  String get aiAssistant;
+
+  /// No description provided for @aiHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. \"I don\'t have lamb, suggest alternatives\"'**
+  String get aiHint;
+
+  /// No description provided for @editIngredient.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Ingredient'**
+  String get editIngredient;
+
+  /// No description provided for @nameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get nameLabel;
+
+  /// No description provided for @qtyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty'**
+  String get qtyLabel;
+
+  /// No description provided for @unitLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get unitLabel;
 }
 
 class _AppLocalizationsDelegate

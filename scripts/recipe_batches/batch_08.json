@@ -1,0 +1,224 @@
+[
+  {
+    "title": "Chinese Dumplings (Jiaozi)",
+    "ingredients": [
+      {"name": "All-purpose flour", "quantity": 2, "unit": "cups", "prep_note": "For wrappers"},
+      {"name": "Boiling water", "quantity": 0.75, "unit": "cup", "prep_note": "For dough"},
+      {"name": "Ground pork", "quantity": 300, "unit": "g", "prep_note": ""},
+      {"name": "Napa cabbage", "quantity": 2, "unit": "cups", "prep_note": "Finely chopped, squeezed dry"},
+      {"name": "Green onion", "quantity": 3, "unit": "stalks", "prep_note": "Minced"},
+      {"name": "Ginger", "quantity": 1, "unit": "tbsp", "prep_note": "Grated"},
+      {"name": "Soy sauce", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sesame oil", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 2, "unit": "tbsp", "prep_note": "For pan-frying"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Mix flour and boiling water. Knead 8 minutes until smooth. Cover and rest 30 minutes.", "timer_seconds": 2280},
+      {"step_number": 2, "text": "Combine pork, cabbage, green onion, ginger, soy sauce, sesame oil, and salt for the filling.", "timer_seconds": null},
+      {"step_number": 3, "text": "Divide dough into 30 pieces. Roll each into a thin circle. Place 1 tbsp filling in center. Fold and pinch edges to seal.", "timer_seconds": null},
+      {"step_number": 4, "text": "To pan-fry: heat oil in a non-stick pan. Place dumplings flat-side down. Fry 2 minutes until golden.", "timer_seconds": 120},
+      {"step_number": 5, "text": "Add 1/3 cup water, cover immediately. Steam for 6 minutes until water evaporates and bottoms are crispy.", "timer_seconds": 360},
+      {"step_number": 6, "text": "Serve with soy sauce and rice vinegar dipping sauce.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Turkish Menemen",
+    "ingredients": [
+      {"name": "Eggs", "quantity": 4, "unit": "large", "prep_note": ""},
+      {"name": "Tomatoes", "quantity": 3, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Green pepper", "quantity": 2, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Onion", "quantity": 1, "unit": "small", "prep_note": "Diced"},
+      {"name": "Olive oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Red pepper flakes", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.25, "unit": "tsp", "prep_note": ""},
+      {"name": "Fresh parsley", "quantity": 2, "unit": "tbsp", "prep_note": "Chopped"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat olive oil in a skillet. Sauté onion and peppers for 4 minutes.", "timer_seconds": 240},
+      {"step_number": 2, "text": "Add tomatoes, salt, pepper flakes. Cook 8 minutes until tomatoes break down into a sauce.", "timer_seconds": 480},
+      {"step_number": 3, "text": "Crack eggs directly into the sauce. Stir gently to create soft curds. Cook 3 minutes until eggs are just set.", "timer_seconds": 180},
+      {"step_number": 4, "text": "Sprinkle parsley. Serve with crusty bread.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Bibimbap",
+    "ingredients": [
+      {"name": "Cooked rice", "quantity": 2, "unit": "cups", "prep_note": "Warm"},
+      {"name": "Ground beef", "quantity": 200, "unit": "g", "prep_note": ""},
+      {"name": "Spinach", "quantity": 2, "unit": "cups", "prep_note": "Blanched, squeezed"},
+      {"name": "Carrot", "quantity": 1, "unit": "medium", "prep_note": "Julienned"},
+      {"name": "Zucchini", "quantity": 1, "unit": "small", "prep_note": "Julienned"},
+      {"name": "Bean sprouts", "quantity": 1, "unit": "cup", "prep_note": "Blanched"},
+      {"name": "Egg", "quantity": 2, "unit": "large", "prep_note": "Fried sunny-side up"},
+      {"name": "Soy sauce", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sesame oil", "quantity": 2, "unit": "tsp", "prep_note": ""},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Gochujang", "quantity": 2, "unit": "tbsp", "prep_note": "Korean chili paste"},
+      {"name": "Sesame seeds", "quantity": 1, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Season beef with 1 tbsp soy sauce, 1 tsp sesame oil, and garlic. Cook in a pan for 4 minutes until browned.", "timer_seconds": 240},
+      {"step_number": 2, "text": "Sauté carrot and zucchini separately, 2 minutes each, with a pinch of salt.", "timer_seconds": 240},
+      {"step_number": 3, "text": "Season blanched spinach with remaining soy sauce and sesame oil.", "timer_seconds": null},
+      {"step_number": 4, "text": "Place rice in bowls. Arrange beef, spinach, carrot, zucchini, and bean sprouts in sections on top.", "timer_seconds": null},
+      {"step_number": 5, "text": "Top with a fried egg and a dollop of gochujang. Sprinkle sesame seeds. Mix everything before eating.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Shakshuka",
+    "ingredients": [
+      {"name": "Eggs", "quantity": 4, "unit": "large", "prep_note": ""},
+      {"name": "Canned crushed tomatoes", "quantity": 400, "unit": "g", "prep_note": ""},
+      {"name": "Onion", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Bell pepper", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Garlic", "quantity": 3, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Paprika", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Chili flakes", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Olive oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.75, "unit": "tsp", "prep_note": ""},
+      {"name": "Fresh cilantro", "quantity": 2, "unit": "tbsp", "prep_note": "Chopped"},
+      {"name": "Feta cheese", "quantity": 0.25, "unit": "cup", "prep_note": "Crumbled"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil in a deep skillet. Sauté onion and bell pepper 5 minutes. Add garlic, cook 30 seconds.", "timer_seconds": 330},
+      {"step_number": 2, "text": "Add cumin, paprika, and chili flakes. Stir 30 seconds.", "timer_seconds": 30},
+      {"step_number": 3, "text": "Pour in tomatoes and salt. Simmer 10 minutes until sauce thickens.", "timer_seconds": 600},
+      {"step_number": 4, "text": "Make 4 wells in the sauce. Crack an egg into each. Cover and cook 5-7 minutes until whites are set but yolks are still runny.", "timer_seconds": 360},
+      {"step_number": 5, "text": "Top with feta and cilantro. Serve with crusty bread.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Fish and Chips",
+    "ingredients": [
+      {"name": "White fish fillets", "quantity": 4, "unit": "pcs", "prep_note": "Cod or haddock"},
+      {"name": "All-purpose flour", "quantity": 1, "unit": "cup", "prep_note": ""},
+      {"name": "Beer or sparkling water", "quantity": 0.75, "unit": "cup", "prep_note": "Cold"},
+      {"name": "Baking powder", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Potatoes", "quantity": 4, "unit": "large", "prep_note": "Cut into thick chips"},
+      {"name": "Vegetable oil", "quantity": 4, "unit": "cups", "prep_note": "For deep frying"},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Malt vinegar", "quantity": 2, "unit": "tbsp", "prep_note": "For serving"},
+      {"name": "Lemon wedges", "quantity": 4, "unit": "wedges", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Soak cut potatoes in cold water 30 minutes. Drain and pat completely dry.", "timer_seconds": 1800},
+      {"step_number": 2, "text": "Heat oil to 160°C (320°F). Blanch chips for 5 minutes until soft but not browned. Remove and drain.", "timer_seconds": 300},
+      {"step_number": 3, "text": "Increase oil to 190°C (375°F). Fry chips again for 3-4 minutes until golden and crispy. Drain and salt.", "timer_seconds": 210},
+      {"step_number": 4, "text": "Mix flour, baking powder, and salt. Whisk in cold beer until smooth batter forms.", "timer_seconds": null},
+      {"step_number": 5, "text": "Pat fish dry. Dip in batter, letting excess drip. Fry in 190°C oil for 5 minutes until golden and crispy.", "timer_seconds": 300},
+      {"step_number": 6, "text": "Serve fish and chips with malt vinegar and lemon wedges.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Spaghetti Carbonara",
+    "ingredients": [
+      {"name": "Spaghetti", "quantity": 300, "unit": "g", "prep_note": ""},
+      {"name": "Guanciale or pancetta", "quantity": 150, "unit": "g", "prep_note": "Diced"},
+      {"name": "Egg yolks", "quantity": 4, "unit": "large", "prep_note": ""},
+      {"name": "Whole egg", "quantity": 1, "unit": "large", "prep_note": ""},
+      {"name": "Pecorino Romano", "quantity": 0.75, "unit": "cup", "prep_note": "Finely grated"},
+      {"name": "Black pepper", "quantity": 1, "unit": "tsp", "prep_note": "Freshly cracked"},
+      {"name": "Salt", "quantity": 1, "unit": "tbsp", "prep_note": "For pasta water"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Cook spaghetti in heavily salted water until al dente. Reserve 1 cup pasta water.", "timer_seconds": 540},
+      {"step_number": 2, "text": "While pasta cooks, fry guanciale in a cold pan over medium heat for 6 minutes until crispy and fat renders. Remove from heat.", "timer_seconds": 360},
+      {"step_number": 3, "text": "Whisk egg yolks, whole egg, most of the Pecorino, and pepper together.", "timer_seconds": null},
+      {"step_number": 4, "text": "Add hot drained pasta to the guanciale pan (OFF heat). Toss to coat in fat.", "timer_seconds": null},
+      {"step_number": 5, "text": "Pour egg mixture over pasta. Toss vigorously, adding pasta water 1 tbsp at a time until creamy. The residual heat cooks the eggs gently.", "timer_seconds": null},
+      {"step_number": 6, "text": "Serve immediately with remaining Pecorino and extra black pepper.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Kimchi Fried Rice",
+    "ingredients": [
+      {"name": "Cooked rice", "quantity": 3, "unit": "cups", "prep_note": "Day-old, cold"},
+      {"name": "Kimchi", "quantity": 1, "unit": "cup", "prep_note": "Chopped, with juice"},
+      {"name": "Eggs", "quantity": 2, "unit": "large", "prep_note": "Fried sunny-side up"},
+      {"name": "Spam or pork belly", "quantity": 150, "unit": "g", "prep_note": "Diced"},
+      {"name": "Soy sauce", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sesame oil", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Gochujang", "quantity": 1, "unit": "tsp", "prep_note": "Optional"},
+      {"name": "Green onion", "quantity": 2, "unit": "stalks", "prep_note": "Sliced"},
+      {"name": "Vegetable oil", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sesame seeds", "quantity": 1, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Fry diced Spam in a wok over high heat for 3 minutes until crispy. Remove.", "timer_seconds": 180},
+      {"step_number": 2, "text": "Add oil. Stir-fry chopped kimchi for 2 minutes until slightly caramelized.", "timer_seconds": 120},
+      {"step_number": 3, "text": "Add cold rice, soy sauce, sesame oil, and gochujang. Stir-fry 3 minutes, pressing rice against the wok.", "timer_seconds": 180},
+      {"step_number": 4, "text": "Return Spam and toss everything together.", "timer_seconds": null},
+      {"step_number": 5, "text": "Divide into bowls. Top each with a fried egg, green onion, and sesame seeds.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Vietnamese Pho",
+    "ingredients": [
+      {"name": "Beef broth", "quantity": 6, "unit": "cups", "prep_note": ""},
+      {"name": "Rice noodles", "quantity": 200, "unit": "g", "prep_note": "Banh pho, soaked"},
+      {"name": "Beef sirloin", "quantity": 200, "unit": "g", "prep_note": "Sliced paper-thin"},
+      {"name": "Star anise", "quantity": 3, "unit": "whole", "prep_note": ""},
+      {"name": "Cinnamon stick", "quantity": 1, "unit": "stick", "prep_note": ""},
+      {"name": "Ginger", "quantity": 2, "unit": "inches", "prep_note": "Halved, charred"},
+      {"name": "Onion", "quantity": 1, "unit": "medium", "prep_note": "Halved, charred"},
+      {"name": "Fish sauce", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Bean sprouts", "quantity": 1, "unit": "cup", "prep_note": ""},
+      {"name": "Thai basil", "quantity": 0.5, "unit": "cup", "prep_note": ""},
+      {"name": "Lime", "quantity": 1, "unit": "medium", "prep_note": "Wedges"},
+      {"name": "Hoisin sauce", "quantity": 1, "unit": "tbsp", "prep_note": "For serving"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Char ginger and onion halves under a broiler or in a dry pan until blackened, about 5 minutes.", "timer_seconds": 300},
+      {"step_number": 2, "text": "Simmer broth with charred ginger, onion, star anise, cinnamon, and fish sauce for 20 minutes. Strain.", "timer_seconds": 1200},
+      {"step_number": 3, "text": "Cook rice noodles according to package. Drain and divide into bowls.", "timer_seconds": 180},
+      {"step_number": 4, "text": "Arrange raw beef slices over noodles. Ladle boiling broth over the beef — it will cook instantly.", "timer_seconds": null},
+      {"step_number": 5, "text": "Serve with bean sprouts, basil, lime wedges, and hoisin on the side.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Falafel",
+    "ingredients": [
+      {"name": "Dried chickpeas", "quantity": 1, "unit": "cup", "prep_note": "Soaked overnight — do NOT use canned"},
+      {"name": "Onion", "quantity": 0.5, "unit": "medium", "prep_note": "Rough chopped"},
+      {"name": "Fresh parsley", "quantity": 0.5, "unit": "cup", "prep_note": "Packed"},
+      {"name": "Fresh cilantro", "quantity": 0.25, "unit": "cup", "prep_note": ""},
+      {"name": "Garlic", "quantity": 4, "unit": "cloves", "prep_note": ""},
+      {"name": "Cumin", "quantity": 1.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Coriander", "quantity": 1, "unit": "tsp", "prep_note": "Ground"},
+      {"name": "Baking powder", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 3, "unit": "cups", "prep_note": "For frying"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Drain soaked chickpeas. Pulse in a food processor with onion, herbs, garlic, and spices until a coarse, cohesive mixture forms. Do not puree.", "timer_seconds": null},
+      {"step_number": 2, "text": "Mix in baking powder. Refrigerate mixture 30 minutes.", "timer_seconds": 1800},
+      {"step_number": 3, "text": "Shape into 12 patties or balls, about 3cm wide.", "timer_seconds": null},
+      {"step_number": 4, "text": "Heat oil to 175°C (350°F). Fry falafel in batches for 3-4 minutes until deep golden brown.", "timer_seconds": 210},
+      {"step_number": 5, "text": "Drain on paper towels. Serve in pita with tahini, pickles, and vegetables.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Chicken Teriyaki",
+    "ingredients": [
+      {"name": "Chicken thighs", "quantity": 500, "unit": "g", "prep_note": "Boneless, skin-on"},
+      {"name": "Soy sauce", "quantity": 4, "unit": "tbsp", "prep_note": ""},
+      {"name": "Mirin", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sake or rice wine", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sugar", "quantity": 1.5, "unit": "tbsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Cooked rice", "quantity": 2, "unit": "cups", "prep_note": ""},
+      {"name": "Sesame seeds", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Green onion", "quantity": 2, "unit": "stalks", "prep_note": "Sliced"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Mix soy sauce, mirin, sake, and sugar in a bowl to make teriyaki sauce.", "timer_seconds": null},
+      {"step_number": 2, "text": "Heat oil in a skillet over medium-high heat. Place chicken skin-side down. Cook 5 minutes until skin is very crispy.", "timer_seconds": 300},
+      {"step_number": 3, "text": "Flip and cook 4 minutes on the other side.", "timer_seconds": 240},
+      {"step_number": 4, "text": "Pour teriyaki sauce over chicken. Simmer 3 minutes, basting frequently, until sauce is thick and glossy.", "timer_seconds": 180},
+      {"step_number": 5, "text": "Slice chicken. Serve over rice, drizzle remaining sauce, and top with green onion and sesame seeds.", "timer_seconds": null}
+    ]
+  }
+]

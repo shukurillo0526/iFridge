@@ -95,17 +95,34 @@ class _XpToastAnimationState extends State<_XpToastAnimation>
                   ),
                 ],
               ),
-              child: Text(
-                widget.badge != null
-                    ? '${widget.badge!.emoji} ${widget.badge!.title} +${widget.xp}XP!'
-                    : '+${widget.xp}XP! 🌿 Waste Reduced!',
-                style: TextStyle(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                  letterSpacing: 0.3,
-                ),
-              ),
+              child: widget.badge != null
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        widget.badge!.icon.endsWith('.png') || widget.badge!.icon.endsWith('.jpg')
+                            ? Image.asset(widget.badge!.icon, width: 20, height: 20)
+                            : Text(widget.badge!.icon, style: TextStyle(fontSize: 18)),
+                        SizedBox(width: 8),
+                        Text(
+                          '${widget.badge!.title} +${widget.xp}XP!',
+                          style: TextStyle(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                      ],
+                    )
+                  : Text(
+                      '+${widget.xp}XP! 🌿 Waste Reduced!',
+                      style: TextStyle(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
             ),
           ),
         ),

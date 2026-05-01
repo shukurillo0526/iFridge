@@ -6,6 +6,7 @@
 // Tap thumbnail → opens YouTube. Buttons navigate to RestaurantDetailPage.
 
 import 'package:flutter/material.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:ifridge_app/core/services/video_feed_service.dart';
 import 'package:ifridge_app/core/services/location_service.dart';
 import 'package:ifridge_app/core/services/restaurant_service.dart';
@@ -92,7 +93,7 @@ class _OrderFeedsScreenState extends State<OrderFeedsScreen> {
             children: [
               Icon(Icons.play_circle_outline, size: 56, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15)),
               SizedBox(height: 16),
-              Text('No food videos yet', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 16)),
+              Text(AppLocalizations.of(context)?.auto_noFoodVideosYet ?? 'No food videos yet', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 16)),
             ],
           ),
         ),
@@ -129,7 +130,7 @@ class _OrderFeedsScreenState extends State<OrderFeedsScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Food Feed', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w800)),
+                      Text(AppLocalizations.of(context)?.auto_foodFeed ?? 'Food Feed', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w800)),
                       Text('${_location.regionName} · ${_feeds.length} videos',
                         style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 11)),
                     ],

@@ -7,6 +7,7 @@
 import 'dart:typed_data';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
@@ -48,7 +49,7 @@ class _ScanScreenState extends State<ScanScreen>
         _topTabController.index = 0;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Scan Calories is coming soon!'),
+            content: Text(AppLocalizations.of(context)?.auto_scanCaloriesIsComingSoon ?? 'Scan Calories is coming soon!'),
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -183,7 +184,7 @@ class _ScanScreenState extends State<ScanScreen>
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text('Scan', style: TextStyle(fontWeight: FontWeight.w700)),
+        title: Text(AppLocalizations.of(context)?.auto_scan ?? 'Scan', style: TextStyle(fontWeight: FontWeight.w700)),
         centerTitle: true,
         bottom: TabBar(
           controller: _topTabController,
@@ -192,9 +193,9 @@ class _ScanScreenState extends State<ScanScreen>
           labelColor: Theme.of(context).colorScheme.primary,
           unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
           labelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-          tabs: const [
-            Tab(icon: Icon(Icons.fastfood, size: 20), text: 'Scan Food'),
-            Tab(icon: Icon(Icons.local_fire_department, size: 20), text: 'Scan Calories'),
+          tabs: [
+            Tab(icon: Icon(Icons.fastfood, size: 20), text: AppLocalizations.of(context)?.scanFood ?? 'Scan Food'),
+            Tab(icon: Icon(Icons.local_fire_department, size: 20), text: AppLocalizations.of(context)?.scanCaloriesTab ?? 'Scan Calories'),
           ],
         ),
       ),
@@ -254,7 +255,7 @@ class _ScanScreenState extends State<ScanScreen>
             SizedBox(height: 32),
 
             Text(
-              'Scan Your Ingredients',
+              AppLocalizations.of(context)?.scanYourIngredients ?? 'Scan Your Ingredients',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 22,
@@ -263,7 +264,7 @@ class _ScanScreenState extends State<ScanScreen>
             ),
             SizedBox(height: 8),
             Text(
-              'Take a photo of food items to add them\nto your shelf automatically',
+              AppLocalizations.of(context)?.takeAPhotoOfFoodItems ?? 'Take a photo of food items to add them\nto your shelf automatically',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
@@ -285,21 +286,21 @@ class _ScanScreenState extends State<ScanScreen>
                 children: [
                   _ModeTab(
                     icon: Icons.receipt_long,
-                    label: 'Receipt',
+                    label: AppLocalizations.of(context)?.scanReceipt ?? 'Receipt',
                     isActive: _scanMode == 0,
                     activeColor: Theme.of(context).colorScheme.primary,
                     onTap: () => setState(() => _scanMode = 0),
                   ),
                   _ModeTab(
                     icon: Icons.photo_camera,
-                    label: 'Photo',
+                    label: AppLocalizations.of(context)?.scanPhoto ?? 'Photo',
                     isActive: _scanMode == 1,
                     activeColor: Theme.of(context).colorScheme.primary,
                     onTap: () => setState(() => _scanMode = 1),
                   ),
                   _ModeTab(
                     icon: Icons.qr_code_scanner,
-                    label: 'Barcode',
+                    label: AppLocalizations.of(context)?.scanBarcodeShort ?? 'Barcode',
                     isActive: _scanMode == 2,
                     activeColor: Theme.of(context).colorScheme.secondary,
                     onTap: () => setState(() => _scanMode = 2),
@@ -321,7 +322,7 @@ class _ScanScreenState extends State<ScanScreen>
                       : _capturePhoto(ImageSource.camera),
                   icon: Icon(Icons.camera_alt, size: 22),
                   label: Text(
-                    'Take Photo',
+                    AppLocalizations.of(context)?.takePhoto ?? 'Take Photo',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   style: FilledButton.styleFrom(
@@ -343,7 +344,7 @@ class _ScanScreenState extends State<ScanScreen>
                   onPressed: _openBarcodeScanner,
                   icon: Icon(Icons.qr_code_scanner, size: 22),
                   label: Text(
-                    'Scan Barcode',
+                    AppLocalizations.of(context)?.scanBarcode ?? 'Scan Barcode',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   style: FilledButton.styleFrom(
@@ -370,7 +371,7 @@ class _ScanScreenState extends State<ScanScreen>
                   icon: Icon(Icons.photo_library,
                       size: 22, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
                   label: Text(
-                    'Choose from Gallery',
+                    AppLocalizations.of(context)?.chooseFromGallery ?? 'Choose from Gallery',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -400,7 +401,7 @@ class _ScanScreenState extends State<ScanScreen>
                 onPressed: _showManualEntryForm,
                 icon: Icon(Icons.edit_note, size: 22, color: Theme.of(context).colorScheme.primary),
                 label: Text(
-                  'Add Manually',
+                  AppLocalizations.of(context)?.addManually ?? 'Add Manually',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -425,7 +426,7 @@ class _ScanScreenState extends State<ScanScreen>
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Recognition failed. Try again.',
+                        AppLocalizations.of(context)?.recognitionFailed ?? 'Recognition failed. Try again.',
                         style: TextStyle(
                             color: Colors.red.withValues(alpha: 0.8),
                             fontSize: 13),
@@ -459,7 +460,7 @@ class _ScanScreenState extends State<ScanScreen>
           ),
           SizedBox(height: 24),
           Text(
-            'Analyzing your food...',
+            AppLocalizations.of(context)?.analyzingYourFood ?? 'Analyzing your food...',
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurface,
               fontSize: 18,
@@ -468,7 +469,7 @@ class _ScanScreenState extends State<ScanScreen>
           ),
           SizedBox(height: 8),
           Text(
-            'AI is identifying ingredients',
+            AppLocalizations.of(context)?.aiIsIdentifying ?? 'AI is identifying ingredients',
             style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 14),
           ),
@@ -540,7 +541,7 @@ class _ScanScreenState extends State<ScanScreen>
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      '${items.length} Items Detected',
+                      AppLocalizations.of(context)?.nItemsDetected(items.length.toString()) ?? '${items.length} Items Detected',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.tertiary,
                         fontWeight: FontWeight.bold,
@@ -573,7 +574,7 @@ class _ScanScreenState extends State<ScanScreen>
                   ),
                   SizedBox(height: 12),
                   Text(
-                    'Photo Analysis Selected',
+                    AppLocalizations.of(context)?.photoAnalysisSelected ?? 'Photo Analysis Selected',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 20,
@@ -589,7 +590,7 @@ class _ScanScreenState extends State<ScanScreen>
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      '${items.length} Ingredients Detected',
+                      AppLocalizations.of(context)?.nIngredientsDetected(items.length.toString()) ?? '${items.length} Ingredients Detected',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.tertiary,
                         fontWeight: FontWeight.bold,
@@ -613,7 +614,7 @@ class _ScanScreenState extends State<ScanScreen>
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    '${_addedIndices.length} / ${items.length} added',
+                    AppLocalizations.of(context)?.nOfNAdded(_addedIndices.length.toString(), items.length.toString()) ?? '${_addedIndices.length} / ${items.length} added',
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                         fontSize: 13,
@@ -625,7 +626,7 @@ class _ScanScreenState extends State<ScanScreen>
                   FilledButton.icon(
                     onPressed: () => _addAllToShelf(items),
                     icon: Icon(Icons.playlist_add_check, size: 18),
-                    label: Text('Add All'),
+                    label: Text(AppLocalizations.of(context)?.auto_addAll ?? 'Add All'),
                     style: FilledButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.tertiary,
                       foregroundColor: Theme.of(context).colorScheme.onSurface,
@@ -645,7 +646,7 @@ class _ScanScreenState extends State<ScanScreen>
                     child: Row(mainAxisSize: MainAxisSize.min, children: [
                       Icon(Icons.check_circle, size: 16, color: Theme.of(context).colorScheme.tertiary),
                       SizedBox(width: 6),
-                      Text('All Added',
+                      Text(AppLocalizations.of(context)?.auto_allAdded ?? 'All Added',
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.tertiary,
                               fontSize: 13,
@@ -707,7 +708,7 @@ class _ScanScreenState extends State<ScanScreen>
                 _addedIndices.clear();
               }),
               icon: Icon(Icons.refresh, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
-              label: Text('Scan Another', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+              label: Text(AppLocalizations.of(context)?.auto_scanAnother ?? 'Scan Another', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
               style: OutlinedButton.styleFrom(
                 side: BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2)),
                 shape: RoundedRectangleBorder(
@@ -745,7 +746,7 @@ class _ScanScreenState extends State<ScanScreen>
                 );
               },
               icon: Icon(Icons.style),
-              label: Text('Start Visual Audit', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              label: Text(AppLocalizations.of(context)?.auto_startVisualAudit ?? 'Start Visual Audit', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               style: FilledButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 shape: RoundedRectangleBorder(
@@ -781,7 +782,7 @@ class _ScanScreenState extends State<ScanScreen>
       setState(() => _addedIndices.add(idx));
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Added $canonicalName!'),
+          content: Text(AppLocalizations.of(context)?.addedItem(canonicalName) ?? 'Added $canonicalName!'),
           backgroundColor: Theme.of(context).colorScheme.tertiary,
           duration: const Duration(seconds: 1),
         ),
@@ -791,7 +792,7 @@ class _ScanScreenState extends State<ScanScreen>
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to add $canonicalName'),
+          content: Text(AppLocalizations.of(context)?.failedToAddItem(canonicalName) ?? 'Failed to add $canonicalName'),
           backgroundColor: Colors.redAccent,
         ),
       );
@@ -831,7 +832,7 @@ class _ScanScreenState extends State<ScanScreen>
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Added $added items to shelf!'),
+        content: Text(AppLocalizations.of(context)?.addedNItemsToShelf(added.toString()) ?? 'Added $added items to shelf!'),
         backgroundColor: Theme.of(context).colorScheme.tertiary,
       ),
     );
@@ -909,7 +910,7 @@ class _ScanScreenState extends State<ScanScreen>
         final controller = TextEditingController();
         return AlertDialog(
           backgroundColor: Theme.of(context).colorScheme.surface,
-          title: Text('Enter Barcode',
+          title: Text(AppLocalizations.of(context)?.auto_enterBarcode ?? 'Enter Barcode',
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
           content: TextField(
             controller: controller,
@@ -929,14 +930,14 @@ class _ScanScreenState extends State<ScanScreen>
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: Text('Cancel'),
+              child: Text(AppLocalizations.of(context)?.auto_cancel ?? 'Cancel'),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, controller.text.trim()),
               style: FilledButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.secondary,
               ),
-              child: Text('Look Up'),
+              child: Text(AppLocalizations.of(context)?.auto_lookUp ?? 'Look Up'),
             ),
           ],
         );
@@ -965,7 +966,7 @@ class _ScanScreenState extends State<ScanScreen>
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('No product found for barcode $barcode'),
+            content: Text(AppLocalizations.of(context)?.noProductFoundForBarcode(barcode) ?? 'No product found for barcode $barcode'),
             backgroundColor: Colors.orange.shade800,
           ),
         );
@@ -1095,7 +1096,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Added $_ingredientName to shelf!'),
+            content: Text(AppLocalizations.of(context)?.addedItemToShelf(_ingredientName) ?? 'Added $_ingredientName to shelf!'),
             backgroundColor: Theme.of(context).colorScheme.tertiary,
           ),
         );
@@ -1103,7 +1104,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text(AppLocalizations.of(context)?.errorX(e.toString()) ?? 'Error: $e'),
             backgroundColor: Colors.redAccent,
           ),
         );
@@ -1159,10 +1160,10 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
 
             // Location picker
             SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(value: 'Fridge', label: Text('Fridge'), icon: Icon(Icons.kitchen, size: 16)),
-                ButtonSegment(value: 'Freezer', label: Text('Freezer'), icon: Icon(Icons.ac_unit, size: 16)),
-                ButtonSegment(value: 'Pantry', label: Text('Pantry'), icon: Icon(Icons.shelves, size: 16)),
+              segments: [
+                ButtonSegment(value: 'Fridge', label: Text(AppLocalizations.of(context)?.auto_fridge ?? 'Fridge'), icon: Icon(Icons.kitchen, size: 16)),
+                ButtonSegment(value: 'Freezer', label: Text(AppLocalizations.of(context)?.auto_freezer ?? 'Freezer'), icon: Icon(Icons.ac_unit, size: 16)),
+                ButtonSegment(value: 'Pantry', label: Text(AppLocalizations.of(context)?.auto_pantry ?? 'Pantry'), icon: Icon(Icons.shelves, size: 16)),
               ],
               selected: {_location},
               onSelectionChanged: (v) => setState(() => _location = v.first),
@@ -1388,7 +1389,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                 foregroundColor: Theme.of(context).colorScheme.onSurface,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: Text('Add to Shelf', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              child: Text(AppLocalizations.of(context)?.auto_addToShelf ?? 'Add to Shelf', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -1482,7 +1483,7 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
       setState(() => _analyzing = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Analysis failed: $e'), backgroundColor: Colors.redAccent));
+          SnackBar(content: Text(AppLocalizations.of(context)?.analysisFailedX(e.toString()) ?? 'Analysis failed: $e'), backgroundColor: Colors.redAccent));
       }
     }
   }
@@ -1503,13 +1504,13 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
         userId: userId, mealType: _mealType, foodItems: items);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('✅ Meal logged!'), backgroundColor: Theme.of(context).colorScheme.tertiary));
+          SnackBar(content: Text(AppLocalizations.of(context)?.auto_mealLogged ?? '✅ Meal logged!'), backgroundColor: Theme.of(context).colorScheme.tertiary));
         setState(() { _result = null; _imageBytes = null; });
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to log: $e'), backgroundColor: Colors.redAccent));
+          SnackBar(content: Text(AppLocalizations.of(context)?.failedToLogX(e.toString()) ?? 'Failed to log: $e'), backgroundColor: Colors.redAccent));
       }
     }
   }
@@ -1541,10 +1542,10 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
                     children: [
                       Icon(Icons.local_fire_department, size: 56, color: Colors.orange),
                       SizedBox(height: 12),
-                      Text('Snap Your Meal',
+                      Text(AppLocalizations.of(context)?.auto_snapYourMeal ?? 'Snap Your Meal',
                         style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w700)),
                       SizedBox(height: 6),
-                      Text('Take a photo and AI will estimate calories',
+                      Text(AppLocalizations.of(context)?.auto_takeAPhotoAndAiWillEstimateCalories ?? 'Take a photo and AI will estimate calories',
                         style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 13)),
                     ],
                   )
@@ -1559,7 +1560,7 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
                             children: [
                               CircularProgressIndicator(color: Colors.orange),
                               SizedBox(height: 12),
-                              Text('Analyzing food...', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14)),
+                              Text(AppLocalizations.of(context)?.auto_analyzingFood ?? 'Analyzing food...', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14)),
                             ],
                           ),
                         ),
@@ -1577,7 +1578,7 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
                   child: FilledButton.icon(
                     onPressed: _analyzing ? null : () => _captureAndAnalyze(ImageSource.camera),
                     icon: Icon(Icons.camera_alt, size: 20),
-                    label: Text('Camera', style: TextStyle(fontWeight: FontWeight.w600)),
+                    label: Text(AppLocalizations.of(context)?.auto_camera ?? 'Camera', style: TextStyle(fontWeight: FontWeight.w600)),
                     style: FilledButton.styleFrom(
                       backgroundColor: Colors.orange,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
@@ -1591,7 +1592,7 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
                   child: OutlinedButton.icon(
                     onPressed: _analyzing ? null : () => _captureAndAnalyze(ImageSource.gallery),
                     icon: Icon(Icons.photo_library, size: 20, color: Colors.orange),
-                    label: Text('Gallery', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600)),
+                    label: Text(AppLocalizations.of(context)?.auto_gallery ?? 'Gallery', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600)),
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(color: Colors.orange),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
@@ -1637,7 +1638,7 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
                 children: [
                   Text('🔥 ${_result!['total_estimated_calories'] ?? 0}',
                     style: TextStyle(color: Colors.orange, fontSize: 36, fontWeight: FontWeight.w800)),
-                  Text('estimated calories',
+                  Text(AppLocalizations.of(context)?.auto_estimatedCalories ?? 'estimated calories',
                     style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54), fontSize: 13)),
                   SizedBox(height: 8),
                   Text('${(_result!['items'] as List?)?.length ?? 0} items identified',
@@ -1671,7 +1672,7 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
                   ),
                   Text('${item['estimated_calories'] ?? '?'}',
                     style: TextStyle(color: Colors.orange, fontSize: 18, fontWeight: FontWeight.w800)),
-                  Text(' cal', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 11)),
+                  Text(AppLocalizations.of(context)?.auto_cal ?? ' cal', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 11)),
                   SizedBox(width: 6),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -1728,7 +1729,7 @@ class _CalorieScanTabState extends State<_CalorieScanTab> {
               child: FilledButton.icon(
                 onPressed: _logMeal,
                 icon: Icon(Icons.add_task, size: 20),
-                label: Text('Log Meal', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                label: Text(AppLocalizations.of(context)?.auto_logMeal ?? 'Log Meal', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                 style: FilledButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.tertiary,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),

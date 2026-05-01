@@ -6,6 +6,7 @@
 // and serving size scaler with proper math.
 
 import 'package:flutter/material.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
 import 'package:ifridge_app/core/utils/unit_converter.dart';
 import 'package:ifridge_app/core/utils/ingredient_icons.dart';
@@ -76,8 +77,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
 
   Future<void> _editIngredient(int index) async {
     final ing = widget.ingredients[index];
-    final ingData = ing['ingredients'] as Map<String, dynamic>?;
-    final nameC = TextEditingController(text: ingData?['display_name_en'] ?? '');
+    final nameC = TextEditingController(text: ing['name'] ?? '');
     final qtyC = TextEditingController(text: '${ing['quantity'] ?? ''}');
     final unitC = TextEditingController(text: ing['unit'] ?? '');
 
@@ -85,7 +85,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text('Edit Ingredient', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+        title: Text(AppLocalizations.of(context)?.editIngredient ?? 'Edit Ingredient', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -93,7 +93,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
               controller: nameC, autofocus: true,
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
               decoration: InputDecoration(
-                labelText: 'Name', labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+                labelText: AppLocalizations.of(context)?.nameLabel ?? 'Name', labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
                 filled: true, fillColor: Theme.of(context).scaffoldBackgroundColor,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none))),
             SizedBox(height: 12),
@@ -103,7 +103,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                   controller: qtyC, keyboardType: TextInputType.number,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Qty', labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+                    labelText: AppLocalizations.of(context)?.qtyLabel ?? 'Qty', labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
                     filled: true, fillColor: Theme.of(context).scaffoldBackgroundColor,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)))),
                 SizedBox(width: 12),
@@ -111,7 +111,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                   controller: unitC,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
-                    labelText: 'Unit', labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+                    labelText: AppLocalizations.of(context)?.unitLabel ?? 'Unit', labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
                     filled: true, fillColor: Theme.of(context).scaffoldBackgroundColor,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)))),
               ],
@@ -133,7 +133,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
     );
     if (result == null) return;
     setState(() {
-      if (ingData != null) ingData['display_name_en'] = result['name'];
+      ing['name'] = result['name'];
       ing['quantity'] = result['qty'];
       ing['unit'] = result['unit'];
     });
@@ -141,8 +141,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
 
   Future<void> _askSubstitute(int index) async {
     final ing = widget.ingredients[index];
-    final ingData = ing['ingredients'] as Map<String, dynamic>?;
-    final name = ingData?['display_name_en'] ?? 'Unknown';
+    final name = ing['translated_name'] ?? ing['name'] ?? 'Unknown';
 
     setState(() => _loadingSub[index] = true);
 
@@ -179,8 +178,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
 
     try {
       final ingNames = widget.ingredients.map((i) {
-        final d = i['ingredients'] as Map<String, dynamic>?;
-        return d?['display_name_en'] ?? '';
+        return i['translated_name'] ?? i['name'] ?? '';
       }).where((n) => n.isNotEmpty).join(', ');
 
       final result = await _api.getCookingTip(
@@ -199,6 +197,21 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
     }
   }
 
+  String _buildUserInventoryText() {
+    return widget.ingredients.map((ing) {
+      final name = ing['translated_name'] ?? ing['name'] ?? 'Unknown';
+      final ingId = ing['id'] ?? ing['name'] ?? '';
+      final rawQty = ing['quantity'];
+      final unit = ing['unit'] ?? '';
+      final hasIt = widget.ownedIngredientIds.contains(ingId);
+      
+      final scaledQty = _scaleQuantity(rawQty);
+      final qtyStr = UnitConverter.simplifyMetric(scaledQty, unit);
+      
+      return hasIt ? "$name $qtyStr" : "No $name";
+    }).join(', ');
+  }
+
   void _startCooking() {
     Navigator.pushReplacement(
       context,
@@ -211,6 +224,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
           prepNotes: widget.prepNotes,
           matchedIngredientsCount: widget.ownedIngredientIds.length,
           matchPct: widget.matchPct,
+          userInventoryText: _buildUserInventoryText(),
         ),
       ),
     );
@@ -219,7 +233,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
   @override
   Widget build(BuildContext context) {
     final haveCount = widget.ingredients.where((ing) {
-      final id = (ing['ingredients'] as Map?)?['id'];
+      final id = ing['id'] ?? ing['name'];
       return widget.ownedIngredientIds.contains(id);
     }).length;
     final missingCount = widget.ingredients.length - haveCount;
@@ -252,7 +266,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                       children: [
                         Icon(Icons.people, color: Theme.of(context).colorScheme.primary, size: 20),
                         SizedBox(width: 12),
-                        Text('Servings', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w600)),
+                        Text(AppLocalizations.of(context)?.servingsLabel ?? 'Servings', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w600)),
                         Spacer(),
                         IconButton(
                           onPressed: _decrementServings,
@@ -304,31 +318,31 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                     children: [
                       _StatusChip(
                         icon: Icons.check_circle, color: Theme.of(context).colorScheme.tertiary,
-                        label: '$haveCount have'),
+                        label: AppLocalizations.of(context)?.nHave(haveCount.toString()) ?? '$haveCount have'),
                       SizedBox(width: 8),
                       if (missingCount > 0)
                         _StatusChip(
                           icon: Icons.warning_amber, color: Colors.orange,
-                          label: '$missingCount missing'),
+                          label: AppLocalizations.of(context)?.nMissing(missingCount.toString()) ?? '$missingCount missing'),
                     ],
                   ),
                   SizedBox(height: 12),
 
                   // ── Ingredients List ──────────────────────────
-                  Text('📋 Ingredients',
+                  Text('📋 ${AppLocalizations.of(context)?.ingredientsHeader ?? 'Ingredients'}',
                     style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w700)),
                   SizedBox(height: 8),
 
                   ...List.generate(widget.ingredients.length, (i) {
                     final ing = widget.ingredients[i];
-                    final ingData = ing['ingredients'] as Map<String, dynamic>?;
-                    final name = ingData?['display_name_en'] ?? 'Unknown';
-                    final ingId = ingData?['id'] ?? '';
+                    final name = ing['translated_name'] ?? ing['name'] ?? 'Unknown';
+                    final ingId = ing['id'] ?? '';
                     final rawQty = ing['quantity'];
                     final unit = ing['unit'] ?? '';
+                    final translatedUnit = L10nHelper.translateUnit(unit, Localizations.localeOf(context).languageCode);
                     final isOwned = widget.ownedIngredientIds.contains(ingId);
                     final scaledQty = _scaleQuantity(rawQty);
-                    final emoji = IngredientIcons.getEmoji(name, category: ingData?['category']);
+                    final emoji = IngredientIcons.getEmoji(name, category: ing['category']);
 
                     return Column(
                       children: [
@@ -354,8 +368,15 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(name, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w600)),
-                                    Text(UnitConverter.simplifyMetric(scaledQty, unit),
-                                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
+                                    Builder(builder: (context) {
+                                      final displayQty = UnitConverter.simplifyMetric(scaledQty, unit);
+                                      final parts = displayQty.split(' ');
+                                      if (parts.length > 1) {
+                                        parts.last = L10nHelper.translateUnit(parts.last, Localizations.localeOf(context).languageCode);
+                                      }
+                                      return Text(parts.join(' '),
+                                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12));
+                                    }),
                                   ],
                                 ),
                               ),
@@ -373,7 +394,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                                     child: _loadingSub[i] == true
                                         ? SizedBox(width: 14, height: 14,
                                             child: CircularProgressIndicator(strokeWidth: 2, color: Colors.orange))
-                                        : Text('Swap →',
+                                        : Text(AppLocalizations.of(context)?.swapButton ?? 'Swap →',
                                             style: TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.w700)),
                                   ),
                                 ),
@@ -423,7 +444,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                           children: [
                             Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.primary, size: 18),
                             SizedBox(width: 8),
-                            Text('🤖 AI Assistant',
+                            Text('🤖 ${AppLocalizations.of(context)?.aiAssistant ?? 'AI Assistant'}',
                               style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 14, fontWeight: FontWeight.w700)),
                           ],
                         ),
@@ -432,7 +453,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                           onChanged: (v) => _aiQuestion = v,
                           style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14),
                           decoration: InputDecoration(
-                            hintText: 'e.g. "I don\'t have lamb, suggest alternatives"',
+                            hintText: AppLocalizations.of(context)?.aiHint ?? 'e.g. "I don\'t have lamb, suggest alternatives"',
                             hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 13),
                             filled: true,
                             fillColor: Theme.of(context).colorScheme.surface,

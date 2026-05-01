@@ -6,8 +6,12 @@ enum WasteBadge {
   firstMeal('🍳', 'First Meal', 'Cook your first recipe', 0),
   wasteFighter('♻️', 'Waste Fighter', 'Cook 10 Tier 1 meals', 10),
   wasteWarrior('🛡️', 'Waste Warrior', 'Cook 50 Tier 1 meals', 50),
-  weekStreak('🔥', 'Week Streak', '7-day cooking streak', 7),
-  streak67('assets/images/badges/streak_67.png', '6,7 Day Streak', 'Cook for 6-7 consecutive days', 6),
+  streak67(
+    'assets/images/badges/streak_67.png',
+    '6,7 Day Streak',
+    'Cook for 6-7 consecutive days',
+    7,
+  ),
   monthStreak('⭐', 'Iron Chef', '30-day cooking streak', 30),
   explorer('🌍', 'Flavor Explorer', 'Cook 5 different cuisines', 5),
   rescuer('🚨', 'Expiry Rescuer', 'Save 20 items from expiring', 20),
@@ -58,4 +62,27 @@ double levelProgress(int xp) {
     required = (required * 1.5).round();
   }
   return remaining / required;
+}
+
+/// Compute earned badges based on gamification stats.
+Set<WasteBadge> computeEarnedBadges(Map<String, dynamic>? stats) {
+  if (stats == null) return {};
+  final meals = stats['total_meals_cooked'] as int? ?? 0;
+  final tier1 = stats['tier1_meals'] as int? ?? 0;
+  final saved = stats['items_saved'] as int? ?? 0;
+  final streak = stats['longest_streak'] as int? ?? 0;
+  
+  final earned = <WasteBadge>{};
+  if (meals >= 1) earned.add(WasteBadge.firstMeal);
+  if (tier1 >= WasteBadge.wasteFighter.threshold) earned.add(WasteBadge.wasteFighter);
+  if (tier1 >= WasteBadge.wasteWarrior.threshold) earned.add(WasteBadge.wasteWarrior);
+  if (streak >= WasteBadge.streak67.threshold) earned.add(WasteBadge.streak67);
+  if (streak >= WasteBadge.monthStreak.threshold) earned.add(WasteBadge.monthStreak);
+  if (saved >= WasteBadge.rescuer.threshold) earned.add(WasteBadge.rescuer);
+  
+  // Derived approximations for things not yet fully tracked:
+  if (meals >= 15) earned.add(WasteBadge.explorer); 
+  if (streak >= 14) earned.add(WasteBadge.zeroWasteWeek);
+  
+  return earned;
 }

@@ -6,6 +6,7 @@
 // Features: likes, bookmarks, external video links, tags.
 
 import 'package:flutter/material.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ifridge_app/core/services/video_feed_service.dart';
@@ -55,7 +56,7 @@ class _ExploreScreenState extends State<ExploreScreen> with SingleTickerProvider
                 children: [
                   Text('✨', style: TextStyle(fontSize: 24)),
                   SizedBox(width: 10),
-                  Text('Explore',
+                  Text(AppLocalizations.of(context)?.auto_explore ?? 'Explore',
                     style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 24, fontWeight: FontWeight.w800)),
                   Spacer(),
                   Container(
@@ -175,7 +176,7 @@ class _ReelsFeedState extends State<_ReelsFeed> {
       return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
       Text('🎬', style: TextStyle(fontSize: 48)),
       SizedBox(height: 12),
-      Text('No reels yet', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 16)),
+      Text(AppLocalizations.of(context)?.auto_noReelsYet ?? 'No reels yet', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 16)),
     ]));
     }
 
@@ -348,7 +349,7 @@ class _VideoRecipeSheet extends StatelessWidget {
         ]),
         SizedBox(height: 8),
         Expanded(child: ListView(children: [
-          Text('Ingredients', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w700)),
+          Text(AppLocalizations.of(context)?.auto_ingredients ?? 'Ingredients', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w700)),
           SizedBox(height: 4),
           ...video.recipeIngredients.map((i) => Padding(padding: EdgeInsets.only(bottom: 2),
             child: Row(children: [
@@ -357,7 +358,7 @@ class _VideoRecipeSheet extends StatelessWidget {
               Expanded(child: Text(i, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12))),
             ]))),
           SizedBox(height: 10),
-          Text('Steps', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w700)),
+          Text(AppLocalizations.of(context)?.auto_steps ?? 'Steps', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w700)),
           SizedBox(height: 4),
           ...video.recipeSteps.asMap().entries.map((e) => Padding(padding: EdgeInsets.only(bottom: 6),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -381,7 +382,7 @@ class _VideoRecipeSheet extends StatelessWidget {
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Icon(Icons.restaurant_menu, color: Theme.of(context).colorScheme.onSurface, size: 16),
               SizedBox(width: 6),
-              Text('Cook This Recipe', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700)),
+              Text(AppLocalizations.of(context)?.auto_cookThisRecipe ?? 'Cook This Recipe', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700)),
             ])),
         ),
       ]),
@@ -474,7 +475,7 @@ class _ReelCardState extends State<_ReelCard> {
               child: FutureBuilder(
                 future: Supabase.instance.client
                     .from('recipes')
-                    .select('*, recipe_ingredients(*, ingredients(display_name_en, default_unit))')
+                    .select('*')
                     .eq('id', recipeId)
                     .maybeSingle(),
                 builder: (context, snapshot) {
@@ -482,14 +483,15 @@ class _ReelCardState extends State<_ReelCard> {
                     return Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary));
                   }
                   if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-                    return Center(child: Text('Recipe not found', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))));
+                    return Center(child: Text(AppLocalizations.of(context)?.auto_recipeNotFound ?? 'Recipe not found', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))));
                   }
                   
                   final recipe = snapshot.data as Map<String, dynamic>;
-                  final ingredients = (recipe['recipe_ingredients'] as List?)?.cast<Map<String, dynamic>>() ?? [];
-                  final rawSteps = recipe['instructions'];
-                  final steps = rawSteps is List ? rawSteps.cast<String>() : 
-                      (rawSteps is String ? rawSteps.split('. ') : []);
+                  final ingredients = (recipe['ingredients'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+                  final rawSteps = recipe['steps'];
+                  final steps = rawSteps is List 
+                      ? rawSteps.map((s) => s is Map ? (s['text'] ?? '$s') : '$s').toList().cast<String>()
+                      : (rawSteps is String ? rawSteps.split('. ') : <String>[]);
 
                   return Column(
                     children: [
@@ -540,19 +542,18 @@ class _ReelCardState extends State<_ReelCard> {
                             ),
                             SizedBox(height: 24),
                             
-                            // Ingredients
-                            Text('Ingredients', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.bold)),
+                            // Ingredients (JSONB)
+                            Text(AppLocalizations.of(context)?.auto_ingredients ?? 'Ingredients', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.bold)),
                             SizedBox(height: 12),
                             ...ingredients.map((ing) {
-                                final detail = ing['ingredients'] as Map?;
                                 return Padding(
                                   padding: EdgeInsets.only(bottom: 8),
                                   child: Row(
                                     children: [
                                       Icon(Icons.circle, size: 8, color: Theme.of(context).colorScheme.primary),
                                       SizedBox(width: 12),
-                                      Expanded(child: Text(detail?['display_name_en'] ?? 'Unknown', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15))),
-                                      Text('${ing['quantity']} ${ing['unit'] ?? detail?['default_unit'] ?? ''}', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
+                                      Expanded(child: Text(ing['name'] ?? 'Unknown', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15))),
+                                      Text('${ing['quantity'] ?? ''} ${ing['unit'] ?? ''}', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
                                     ],
                                   ),
                                 );
@@ -560,7 +561,7 @@ class _ReelCardState extends State<_ReelCard> {
                             
                             SizedBox(height: 24),
                             // Steps
-                            Text('Steps', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.bold)),
+                            Text(AppLocalizations.of(context)?.auto_steps ?? 'Steps', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.bold)),
                             SizedBox(height: 12),
                             ...steps.asMap().entries.map((req) {
                               return Padding(
@@ -749,7 +750,7 @@ class _ReelCardState extends State<_ReelCard> {
                       children: [
                         Icon(Icons.restaurant_menu, size: 14, color: Colors.orange),
                         SizedBox(width: 4),
-                        Text('Has Recipe', style: TextStyle(color: Colors.orange, fontSize: 11, fontWeight: FontWeight.w700)),
+                        Text(AppLocalizations.of(context)?.auto_hasRecipe ?? 'Has Recipe', style: TextStyle(color: Colors.orange, fontSize: 11, fontWeight: FontWeight.w700)),
                       ],
                     ),
                   ),
@@ -835,7 +836,7 @@ class _CommunityFeedState extends State<_CommunityFeed> {
               children: [
                 // Story ring even when no posts
                 const StoryRing(),
-                const Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12), height: 1),
+                Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12), height: 1),
                 Expanded(
                   child: Center(
                     child: Column(
@@ -843,16 +844,16 @@ class _CommunityFeedState extends State<_CommunityFeed> {
                       children: [
                         Text('\u{1F37D}\u{FE0F}', style: TextStyle(fontSize: 48)),
                         SizedBox(height: 12),
-                        Text('No community posts yet',
+                        Text(AppLocalizations.of(context)?.auto_noCommunityPostsYet ?? 'No community posts yet',
                           style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 16)),
                         SizedBox(height: 8),
-                        Text('Be the first to share!',
+                        Text(AppLocalizations.of(context)?.auto_beTheFirstToShare ?? 'Be the first to share!',
                           style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 13)),
                         SizedBox(height: 20),
                         FilledButton.icon(
                           onPressed: _openCreatePost,
                           icon: Icon(Icons.add_a_photo, size: 18),
-                          label: Text('Create Post'),
+                          label: Text(AppLocalizations.of(context)?.auto_createPost ?? 'Create Post'),
                           style: FilledButton.styleFrom(
                             backgroundColor: Theme.of(context).colorScheme.primary,
                             foregroundColor: Theme.of(context).colorScheme.onSurface,
@@ -948,7 +949,7 @@ class _BookmarksSheetState extends State<_BookmarksSheet> {
             children: [
               Icon(Icons.bookmark, color: Theme.of(context).colorScheme.primary, size: 22),
               SizedBox(width: 8),
-              Text('Saved Posts',
+              Text(AppLocalizations.of(context)?.auto_savedPosts ?? 'Saved Posts',
                 style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
             ],
           ),
@@ -959,7 +960,7 @@ class _BookmarksSheetState extends State<_BookmarksSheet> {
             Center(
               child: Padding(
                 padding: EdgeInsets.all(32),
-                child: Text('No saved posts yet',
+                child: Text(AppLocalizations.of(context)?.auto_noSavedPostsYet ?? 'No saved posts yet',
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4))),
               ),
             )

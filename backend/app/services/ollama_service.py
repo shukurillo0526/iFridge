@@ -203,10 +203,11 @@ class OllamaService:
         prompt: str,
         model: Optional[str] = None,
         system_prompt: Optional[str] = None,
+        max_tokens: int = 4096,
     ) -> Dict[str, Any]:
         """Generate text and parse as JSON."""
         raw = await self.generate_text(
-            prompt, model, system_prompt, temperature=0.1
+            prompt, model, system_prompt, temperature=0.1, max_tokens=max_tokens
         )
         return self._parse_json_response(raw)
 

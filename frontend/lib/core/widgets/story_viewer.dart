@@ -220,7 +220,7 @@ class _StoryViewerState extends State<StoryViewer> with SingleTickerProviderStat
                                     builder: (_, _) => LinearProgressIndicator(
                                       value: _progressController.value,
                                       backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
-                                      valueColor: const AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.onSurface),
+                                      valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.onSurface),
                                       minHeight: 2.5,
                                     ),
                                   )

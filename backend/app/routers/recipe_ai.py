@@ -7,6 +7,8 @@ ingredient substitution, and cooking tips.
 
 import json
 import logging
+import httpx
+import os
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 from typing import List, Optional
@@ -51,6 +53,13 @@ class YouTubeRecipeRequest(BaseModel):
 class ShoppingListRequest(BaseModel):
     user_id: str
     recipe_ids: List[str]  # recipes the user wants to cook
+
+class TranslateRecipeRequest(BaseModel):
+    recipe_id: str
+    title: str
+    ingredients: str
+    steps: str
+    target_language: str
 
 
 # ── Endpoints ────────────────────────────────────────────────────
@@ -158,6 +167,43 @@ Give a brief, practical cooking tip (2-3 sentences max)."""
         "data": {"tip": response.strip()},
     }
 
+
+class ChatRequest(BaseModel):
+    messages: list[dict]
+    stream: Optional[bool] = False
+    context: Optional[str] = None
+
+@router.post("/api/v1/ai/chat")
+async def ai_chat(req: ChatRequest):
+    """
+    Generic chat endpoint for AI assistant.
+    """
+    ollama = get_ollama_service()
+    if not await ollama.is_available():
+        raise HTTPException(status_code=503, detail="AI service unavailable. Start Ollama.")
+    
+    # We will just pass the messages directly to Ollama generate_text if it supports history,
+    # but ollama_service.py's generate_text expects a prompt string.
+    # So we'll format the history into a single prompt for now.
+    prompt_parts = []
+    for msg in req.messages:
+        role = msg.get('role', 'user').upper()
+        content = msg.get('content', '')
+        prompt_parts.append(f"{role}:\n{content}")
+    
+    final_prompt = "\n\n".join(prompt_parts)
+    if req.context:
+        final_prompt = f"Context:\n{req.context}\n\n" + final_prompt
+        
+    system = "You are a helpful cooking assistant."
+    
+    response = await ollama.generate_text(final_prompt, system_prompt=system, max_tokens=1024)
+    
+    return {
+        "status": "success",
+        "source": "ollama-local",
+        "data": {"message": response.strip()},
+    }
 
 class NormalizeRecipeRequest(BaseModel):
     raw_text: str
@@ -281,6 +327,89 @@ async def extract_youtube_recipe(request: Request, req: YouTubeRecipeRequest):
         logger.error(f"[YouTubeRecipe] Extraction failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
+import httpx
+
+@router.post("/api/v1/ai/translate-recipe")
+async def translate_recipe(req: TranslateRecipeRequest):
+    """
+    Translate a recipe using the local Ollama LLM.
+    Fast translation, cached in Supabase.
+    """
+    db = get_supabase()
+    
+    # 1. Check cache in database
+    try:
+        cached = (
+            db.table("recipe_translations")
+            .select("title_translated, ingredients_translated, steps_translated")
+            .eq("recipe_id", req.recipe_id)
+            .eq("language_code", req.target_language)
+            .maybe_single()
+            .execute()
+        )
+        if cached and cached.data:
+            return {
+                "status": "success",
+                "source": "database-cache",
+                "data": {
+                    "title": cached.data["title_translated"],
+                    "ingredients": cached.data["ingredients_translated"],
+                    "steps": cached.data["steps_translated"]
+                }
+            }
+    except Exception as e:
+        logger.warning(f"Failed to check translation cache: {e}")
+
+    # 2. Not cached, call local Ollama
+    ollama = get_ollama_service()
+    if not await ollama.is_available():
+        raise HTTPException(status_code=503, detail="Local AI service unavailable. Start Ollama.")
+
+    prompt = f"""Translate the following recipe to {req.target_language} language.
+Keep all measurements exact. Make instructions natural.
+
+Title: {req.title}
+Ingredients: {req.ingredients}
+Steps: {req.steps}
+
+Return JSON strictly in this format:
+{{
+  "title": "...",
+  "ingredients": [{{"name": "...", "quantity": 1, "unit": "...", "prep_note": "..."}}],
+  "steps": [{{"step_number": 1, "text": "...", "timer_seconds": null}}]
+}}"""
+
+    system = "You are a professional recipe translator. Return only exact JSON structure as requested."
+
+    result = await ollama.generate_text_json(prompt, system_prompt=system)
+
+    if "error" in result:
+        return {
+            "status": "partial",
+            "message": "AI returned non-JSON. Raw response included.",
+            "data": result,
+        }
+
+    parsed = result
+
+    # 3. Save to cache
+    try:
+        db.table("recipe_translations").insert({
+            "recipe_id": req.recipe_id,
+            "language_code": req.target_language,
+            "title_translated": parsed.get("title", req.title),
+            "ingredients_translated": parsed.get("ingredients", []),
+            "steps_translated": parsed.get("steps", [])
+        }).execute()
+    except Exception as e:
+        logger.warning(f"Failed to save translation cache: {e}")
+        
+    return {
+        "status": "success",
+        "source": "ollama-local",
+        "data": parsed
+    }
 
 @router.post("/api/v1/ai/shopping-list")
 async def generate_shopping_list(req: ShoppingListRequest):

@@ -8,14 +8,18 @@
     "profileTitle": "Profil",
     "profileGamificationLevel": "{level}-daraja",
     "@profileGamificationLevel": {
-        "placeholders": { "level": { "type": "int" } }
+        "placeholders": {
+            "level": {
+                "type": "int"
+            }
+        }
     },
     "profileMealsCooked": "Pishirilgan taomlar",
     "profileItemsSaved": "Saqlangan mahsulotlar",
     "profileDayStreak": "Kunlik seriya",
     "profileFlavorProfile": "Ta'm profili",
     "profileBadges": "Nishonlar va yutuqlar",
-    "profileShoppingList": "Xaridlar ro'yxati",
+    "profileShoppingList": "Xarid ro'yxati",
     "profileMealPlanner": "Ovqatlanish rejasi",
     "actionAdd": "Qo'shish",
     "actionCancel": "Bekor qilish",
@@ -28,7 +32,11 @@
     "profileLevelProgress": "Daraja jarayoni",
     "profileLevel": "{level}-daraja",
     "@profileLevel": {
-        "placeholders": { "level": { "type": "int" } }
+        "placeholders": {
+            "level": {
+                "type": "int"
+            }
+        }
     },
     "profileYourImpact": "Sizning ta'siringiz",
     "addShoppingItem": "Element qo'shish",
@@ -37,12 +45,11 @@
     "planToday": "Bugungi reja",
     "today": "Bugun",
     "planMeal": "Taom rejalashtirish...",
-
     "tabExplore": "Kashfiyot",
-    "scanFood": "Taom skanerlash",
+    "scanFood": "Ovqatni skanerlash",
     "scanCalories": "Kaloriya skanerlash",
-    "takePhoto": "Rasm olish",
-    "chooseFromGallery": "Galereyadan tanlash",
+    "takePhoto": "Suratga olish",
+    "chooseFromGallery": "Galereyadan tanlang",
     "analyzeCalories": "Kaloriyalarni tahlil qilish",
     "caloriesPerServing": "kal/porsiya",
     "totalCalories": "jami kal",
@@ -57,5 +64,291 @@
     "settings": "Sozlamalar",
     "settingsLanguage": "Til",
     "settingsTheme": "Mavzu",
-    "aboutApp": "iFridge haqida"
+    "aboutApp": "iFridge haqida",
+    "myFridge": "🧊 Mening muzlatgichim",
+    "expiryAlerts": "Muddati tugashi haqida ogohlantirishlar",
+    "errorLoadInventory": "Inventarni yuklab bo‘lmadi",
+    "errorCheckConnection": "Ulanishingizni tekshiring va qaytadan urining.",
+    "total": "Jami",
+    "fresh": "Yangi",
+    "expiring": "Muddati tugayapti",
+    "expired": "Muddati tugagan",
+    "searchIngredients": "Ingredientlarni qidirish...",
+    "all": "Hammasi",
+    "itemsCount": "{count} elementlari",
+    "@itemsCount": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "zoneEmptyTitle": "Sizning {zone} bo'sh",
+    "@zoneEmptyTitle": {
+        "placeholders": {
+            "zone": {
+                "type": "String"
+            }
+        }
+    },
+    "zoneEmptyDesc": "Raqamli oshxonangizni to'ldirishga tayyor.\nElementlarni qoʻlda qoʻshing yoki skanerlash tugmasini bosing.",
+    "addIngredient": "Ingredient qo'shing",
+    "urgentCook": "Hozir pishiring",
+    "urgentUse": "{ingredient} dan foydalaning",
+    "@urgentUse": {
+        "placeholders": {
+            "ingredient": {
+                "type": "String"
+            }
+        }
+    },
+    "noItemsMatch": "Hech qanday element filtringizga mos kelmaydi",
+    "clearFilters": "Filtrlarni tozalash",
+    "expiryAlertsTitle": "🔔 Muddati tugashi haqida ogohlantirishlar",
+    "allFresh": "Barcha mahsulotlar yangi! 🎉",
+    "expiredCount": "❌ Muddati tugagan ({count})",
+    "@expiredCount": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "expiringSoonCount": "⚠️ Tez orada tugaydi ({count})",
+    "@expiringSoonCount": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "auto_scanCaloriesIsComingSoon": "Kaloriyalarni skanerlash tez orada!",
+    "auto_scan": "Skanerlash",
+    "auto_addAll": "Hammasini qo'shish",
+    "auto_allAdded": "Hammasi qo'shildi",
+    "auto_scanAnother": "Boshqasini skanerlash",
+    "auto_startVisualAudit": "Vizual auditni boshlang",
+    "auto_enterBarcode": "Shtrix kodini kiriting",
+    "auto_cancel": "Bekor qilish",
+    "auto_lookUp": "Axtarish, izlash",
+    "auto_fridge": "Muzlatgich",
+    "auto_freezer": "Muzlatish kamerasi",
+    "auto_pantry": "Omborxona",
+    "auto_addToShelf": "Rafga qo'shish",
+    "auto_mealLogged": "✅ Ovqat qayd etildi!",
+    "auto_snapYourMeal": "Ovqatlanishni yeng",
+    "auto_takeAPhotoAndAiWillEstimateCalories": "Suratga oling va AI kaloriyalarni hisoblab chiqadi",
+    "auto_analyzingFood": "Oziq-ovqatlarni tahlil qilish...",
+    "auto_camera": "Kamera",
+    "auto_gallery": "Galereya",
+    "auto_estimatedCalories": "taxmin qilingan kaloriyalar",
+    "auto_cal": "kal",
+    "auto_logMeal": "Kundalik ovqat",
+    "auto_addSomeIngredientsToYourShelfFirst": "Avval javoningizga ba'zi ingredientlarni qo'shing!",
+    "auto_aiRecipeGenerator": "AI retsepti generatori",
+    "auto_any": "Har qanday",
+    "auto_shelfOnly": "Faqat javon",
+    "auto_generateRecipe": "Retsept yaratish",
+    "auto_ingredients": "🧂 Tarkibi",
+    "auto_steps": "👨‍🍳 Qadamlar",
+    "auto_importRecipe": "Import retsepti",
+    "auto_retry": "Qayta urinish",
+    "auto_addItemsToYourShelfToGetRecommendations": "Tavsiyalarni olish uchun javoningizga narsalarni qo'shing",
+    "auto_noRecipesMatchThisCuisine": "Hech qanday retsept bu oshxonaga mos kelmaydi",
+    "auto_clearFilter": "Filtrni tozalash",
+    "auto_deleteItem": "Element oʻchirilsinmi?",
+    "auto_delete": "Oʻchirish",
+    "auto_freshness": "Yangilik",
+    "auto_use1Unit": "1 birlikdan foydalaning",
+    "auto_removeFromInventory": "Inventarizatsiyadan olib tashlang",
+    "auto_following": "Kuzatish",
+    "auto_follow": "Kuzatish",
+    "auto_posts": "Xabarlar",
+    "auto_noPostsYet": "Hozircha postlar yo‘q",
+    "auto_explore": "Tadqiq qiling",
+    "auto_noReelsYet": "Hali makaralar yo'q",
+    "auto_cookThisRecipe": "Ushbu retseptni pishiring",
+    "auto_recipeNotFound": "Retsept topilmadi",
+    "auto_hasRecipe": "Retsepti bor",
+    "auto_noCommunityPostsYet": "Hozircha hamjamiyat postlari yo‘q",
+    "auto_beTheFirstToShare": "Birinchi bo'lib baham ko'ring!",
+    "auto_createPost": "Post yaratish",
+    "auto_savedPosts": "Saqlangan xabarlar",
+    "auto_noSavedPostsYet": "Hali hech qanday post saqlangan emas",
+    "auto_you": "Siz",
+    "auto_checkout": "Ro'yxatdan o'chirilish",
+    "auto_yourCartIsEmpty": "Savatingiz boʻsh",
+    "auto_yourOrder": "Sizning buyurtmangiz",
+    "auto_total": "Jami",
+    "auto_orderConfirmed": "Buyurtma tasdiqlandi!",
+    "auto_yourPickupCode": "Qabul qilish kodingiz",
+    "auto_showThisCodeAtTheCounter": "Ushbu kodni peshtaxtada ko'rsating",
+    "auto_deliveryOnTheWay": "Yo'lda yetkazib berish",
+    "auto_aDriverWillBeAssignedShortly": "Tez orada haydovchi tayinlanadi",
+    "auto_backToHome": "Uyga qaytish",
+    "auto_incomingOrders": "Kiruvchi Buyurtmalar",
+    "auto_noFoodVideosYet": "Hozircha ovqat haqida video yo'q",
+    "auto_foodFeed": "Oziq-ovqat",
+    "auto_myOrders": "Mening Buyurtmalarim",
+    "auto_noOrdersYet": "Hozircha buyurtmalar yo'q",
+    "auto_yourOrderHistoryWillAppearHere": "Buyurtmalaringiz tarixi shu yerda paydo bo'ladi",
+    "auto_cancelOrder": "Buyurtma bekor qilinsinmi?",
+    "auto_keepOrder": "Buyurtmani saqlang",
+    "auto_orderCancelled": "Buyurtma bekor qilindi",
+    "auto_pickupCode": "Olib ketish kodi:",
+    "auto_closed": "Yopiq",
+    "auto_menu": "Menyu",
+    "auto_menuComingSoon": "Menyu tez orada",
+    "auto_best": "🔥 Eng yaxshi",
+    "auto_popularDishes": "🍽️ Mashhur taomlar",
+    "auto_fromVideo": "Videodan",
+    "auto_bookATable": "Jadvalni bron qilish",
+    "auto_confirmReservation": "Rezervasyonni tasdiqlang",
+    "auto_locationDirections": "Joylashuv va yoʻnalishlar",
+    "auto_mapView": "Xarita ko'rinishi",
+    "auto_openInGoogleMaps": "Google Xaritalarda oching",
+    "auto_writeAReview": "Sharh yozing",
+    "auto_viewCart": "Savatni ko'rish",
+    "auto_signOut": "Tizimdan chiqish?",
+    "auto_youWillNeedToSignInAgain": "Siz yana tizimga kirishingiz kerak bo'ladi.",
+    "auto_deleteAccount": "Akkauntni o'chirish",
+    "auto_deleteForever": "Abadiy o'chirish",
+    "auto_accountDeletionRequestedContactSupportToFinalize": "Hisobni oʻchirish soʻraldi. Tugatish uchun qo‘llab-quvvatlash xizmatiga murojaat qiling.",
+    "auto_ifridge": "iFridge",
+    "auto_ifridgeIsYourAipoweredKitchenEcosystemItAutomaticallyTracksYourIngredientsPredictsExpirationsGeneratesPersonalizedRecipesAndLetsYouOrderFromLocalRestaurants": "iFridge sizning sun'iy intellekt asosida ishlaydigan oshxona ekotizimidir. U avtomatik ravishda ingredientlaringizni kuzatib boradi, amal qilish muddatini bashorat qiladi, moslashtirilgan retseptlar yaratadi va mahalliy restoranlardan buyurtma berish imkonini beradi.",
+    "auto_gotIt": "Tushundim",
+    "auto_editDisplayName": "Displey nomini tahrirlash",
+    "auto_save": "Saqlash",
+    "auto_addShoppingItem": "Xarid qilish elementini qo'shing",
+    "auto_add": "Qo'shish",
+    "auto_selectRecipeForMeal": "Ovqatlanish uchun retseptni tanlang",
+    "auto_failedToLoadRecipes": "Retseptlar yuklanmadi",
+    "auto_noRecipesFound": "Hech qanday retsept topilmadi",
+    "auto_mealCleared": "Ovqat tozalandi",
+    "auto_theme": "🎨 Mavzu",
+    "whatToCook": "Nima pishiramiz?",
+    "tierPerfect": "Mukammal",
+    "tierForYou": "Siz uchun",
+    "tierUseItUp": "Tezroq ishlating",
+    "tierAlmost": "Deyarli",
+    "tierExplore": "Kashf qilish",
+    "noTierRecipesYet": "Hozircha {tier} retseptlari yo'q",
+    "@noTierRecipesYet": {
+        "placeholders": {
+            "tier": {
+                "type": "String"
+            }
+        }
+    },
+    "addItemsForRecommendations": "Tavsiyalar olish uchun javonga mahsulot qo'shing",
+    "scanCaloriesTab": "Kaloriyani skanerlash",
+    "scanYourIngredients": "Ingredientlaringizni skanerlang",
+    "takePhotoToAdd": "Javonga avtomatik qo'shish uchun ovqat rasmini oling",
+    "scanReceipt": "Chek",
+    "scanPhoto": "Rasm",
+    "scanBarcode": "Shtrix-kodni skanerlash",
+    "takePhotoBtn": "Rasmga olish",
+    "auto_account": "Akkaunt",
+    "auto_settings": "Sozlamalar",
+    "adjustPortions": "Porsiyalarni sozlash",
+    "currentRecipeMakesNServings": "Joriy retsept }Y porsiyani { porsiya qiladi.",
+    "scaleToNServings": "{ newServings} porsiyalariga o'lchab ko'ring",
+    "scaledToNServings": "{newServings} porsiyalariga oʻlchandi 🍳",
+    "findingSubstitutesForX": "{ingredientName} o‘rnini bosuvchilar qidirilmoqda...",
+    "couldNotFindSubstitutes": "O‘rinbosarlarni topib bo‘lmadi",
+    "substitutesForX": "“{ingredientName}” o‘rniga",
+    "noSubstitutesFoundForThisRecipeContext": "Ushbu retsept konteksti uchun hech qanday o'rinbosar topilmadi.",
+    "nMatch": "{match}% moslik",
+    "ingredientsWithCount": "Ingredientlar ({count})",
+    "scale": "Masshtab",
+    "addedMissingItemsToShoppingList": "Xarid qilish ro'yxatiga etishmayotgan narsalar qo'shildi!",
+    "failedToAddItemsX": "Elementlarni qo‘shib bo‘lmadi: {e}",
+    "addMissingToShoppingList": "Xarid qilish ro'yxatiga etishmayotgan narsalarni qo'shing",
+    "cookingStepsWithCount": "Pishirish bosqichlari ({count})",
+    "noStepsAvailableYet": "Hali qadamlar mavjud emas",
+    "recordedTasteProfileEvolving": "Yozib olingan! Sizning didingiz profili rivojlanmoqda 🧠",
+    "failedToRecordX": "Yozib bo‘lmadi: {e}",
+    "iCookedThis": "Men buni pishirdim!",
+    "startCooking": "Ovqat pishirishni boshlang",
+    "optional_tag": "ixtiyoriy",
+    "servings_tag": "porsiya",
+    "min_tag": "min",
+    "difficulty_tag": "Qiyinchilik",
+    "expiringSoon": "Tez orada tugaydi",
+    "nItemsNeedAttention": "{count} element(lar)iga e'tibor kerak",
+    "takeAPhotoOfFoodItems": "Oziq-ovqat mahsulotlarini qo'shish uchun ularni suratga oling\njavoningizga avtomatik ravishda",
+    "addManually": "Qo'lda qo'shish",
+    "recognitionFailed": "Tanib bo‘lmadi. Qayta urinib ko'ring.",
+    "analyzingYourFood": "Oziq-ovqatingiz tahlil qilinmoqda...",
+    "aiIsIdentifying": "AI ingredientlarni aniqlaydi",
+    "nItemsDetected": "{count} elementlari aniqlandi",
+    "photoAnalysisSelected": "Fotosurat tahlili tanlandi",
+    "nIngredientsDetected": "{count} ingrediyentlari aniqlandi",
+    "nOfNAdded": "{added} / {total} qo'shildi",
+    "addedItem": "{item} qo'shildi!",
+    "failedToAddItem": "{item} qo‘shib bo‘lmadi",
+    "addedNItemsToShelf": "{count} buyumlari javonga qo'shildi!",
+    "noProductFoundForBarcode": "{barcode} shtrix-kodi uchun mahsulot topilmadi",
+    "addedItemToShelf": "{item} javonga qo'shildi!",
+    "errorX": "Xato: {e}",
+    "analysisFailedX": "Tahlil bajarilmadi: {e}",
+    "failedToLogX": "Jurnalga kiritilmadi: {e}",
+    "scanBarcodeShort": "Shtrix-kod",
+    "profileAccount": "Hisob",
+    "deleteAccount": "Hisobni o'chirish",
+    "tierBadge1": "✅ Hamma narsa bor!",
+    "tierBadge2": "🔥 Siz uchun tavsiya",
+    "tierBadge3": "⏰ Muddati tugayotganlarni ishlating",
+    "tierBadge4": "🛒 Bir nechta mahsulot yetishmaydi",
+    "tierBadge5": "🌍 Yangi narsa kashf eting",
+    "needLabel": "Kerak: {items}",
+    "@needLabel": {
+        "placeholders": {
+            "items": { "type": "String" }
+        }
+    },
+    "nOfNIngredients": "{matched}/{total} ingredient",
+    "@nOfNIngredients": {
+        "placeholders": {
+            "matched": { "type": "String" },
+            "total": { "type": "String" }
+        }
+    },
+    "servingsLabel": "Porsiya",
+    "nHave": "{count} ta bor",
+    "@nHave": {
+        "placeholders": {
+            "count": { "type": "String" }
+        }
+    },
+    "nMissing": "{count} ta yetishmaydi",
+    "@nMissing": {
+        "placeholders": {
+            "count": { "type": "String" }
+        }
+    },
+    "ingredientsHeader": "Ingredientlar",
+    "swapButton": "Almashtirish →",
+    "aiAssistant": "🤖 AI yordamchi",
+    "aiHint": "masalan: \"Menda go'sht yo'q, o'rniga nimani ishlatsam bo'ladi?\"",
+    "editIngredient": "Ingredientni tahrirlash",
+    "nameLabel": "Nomi",
+    "qtyLabel": "Miqdor",
+    "unitLabel": "Birlik",
+    "handsOn": "Qo'lda",
+    "automatic": "Avtomatik",
+    "min_tag": "daq",
+    "difficulty_tag": "Qiyinchilik",
+    "servings_tag": "porsiya",
+    "optional_tag": "ixtiyoriy",
+    "addMissingToShoppingList": "Yetishmayotganlarni ro'yxatga qo'shish",
+    "startCooking": "Pishirishni boshlash",
+    "iCookedThis": "Men buni pishirdim!",
+    "scale": "Masshtab",
+    "recordedTasteProfileEvolving": "Yozib olindi! Didingiz profili rivojlanmoqda 🧠",
+    "failedToRecordX": "Yozib olishda xatolik: {error}",
+    "addedMissingItemsToShoppingList": "Yetishmayotgan mahsulotlar xarid ro'yxatiga qo'shildi!",
+    "failedToAddItemsX": "Qo'shishda xatolik: {error}",
+    "ingredientsWithCount": "Mahsulotlar ({count})",
+    "cookingStepsWithCount": "Pishirish qadamlari ({count})"
 }

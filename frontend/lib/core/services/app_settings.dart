@@ -3,6 +3,7 @@
 // Manages language, theme, and app mode preferences with persistence
 // using SharedPreferences. Notifies the widget tree of changes.
 
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,7 +20,7 @@ class AppSettings extends ChangeNotifier {
   static const String _keyAppMode = 'app_mode';
 
   Locale _locale = const Locale('en');
-  ThemeMode _themeMode = ThemeMode.dark;
+  ThemeMode _themeMode = ThemeMode.system;
   AppMode _appMode = AppMode.cook; // Default to Cook (existing experience)
 
   Locale get locale => _locale;
@@ -36,7 +37,7 @@ class AppSettings extends ChangeNotifier {
   };
 
   /// Helper to convert string like 'uz_Cyrl' to Locale
-  Locale _parseLocale(String code) {
+  static Locale parseLocale(String code) {
     if (code.contains('_')) {
       final parts = code.split('_');
       return Locale.fromSubtags(languageCode: parts[0], scriptCode: parts[1]);
@@ -55,10 +56,31 @@ class AppSettings extends ChangeNotifier {
   /// Initialize settings from SharedPreferences
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
-    final localeCode = prefs.getString(_keyLocale) ?? 'en';
-    _locale = _parseLocale(localeCode);
+    
+    // Language logic: saved pref > system locale > 'en'
+    final savedLocaleCode = prefs.getString(_keyLocale);
+    if (savedLocaleCode != null) {
+      _locale = parseLocale(savedLocaleCode);
+    } else {
+      // First launch: detect system locale
+      final sysLocale = ui.PlatformDispatcher.instance.locale;
+      final langCode = sysLocale.languageCode;
+      
+      if (langCode == 'uz') {
+        if (sysLocale.scriptCode == 'Cyrl') {
+          _locale = parseLocale('uz_Cyrl');
+        } else {
+          _locale = parseLocale('uz');
+        }
+      } else if (supportedLanguages.containsKey(langCode)) {
+        _locale = Locale(langCode);
+      } else {
+        _locale = const Locale('en');
+      }
+    }
 
-    final themeName = prefs.getString(_keyThemeMode) ?? 'dark';
+    // Theme logic: saved pref > 'system'
+    final themeName = prefs.getString(_keyThemeMode) ?? 'system';
     _themeMode = _themeModeFromString(themeName);
 
     final modeName = prefs.getString(_keyAppMode) ?? 'cook';
@@ -95,10 +117,10 @@ class AppSettings extends ChangeNotifier {
   }
 
   String get currentLanguageName =>
-      supportedLanguages[_locale.languageCode]?['name'] ?? 'English';
+      supportedLanguages[_localeToString(_locale)]?['name'] ?? 'English';
 
   String get currentLanguageFlag =>
-      supportedLanguages[_locale.languageCode]?['flag'] ?? '🇺🇸';
+      supportedLanguages[_localeToString(_locale)]?['flag'] ?? '🇺🇸';
 
   String get currentThemeName {
     switch (_themeMode) {

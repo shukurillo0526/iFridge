@@ -1,6 +1,6 @@
 {
     "@@locale": "ru",
-    "appTitle": "iFridge",
+    "appTitle": "iХолодильник",
     "tabShelf": "Полка",
     "tabCook": "Готовить",
     "tabScan": "Сканер",
@@ -8,7 +8,11 @@
     "profileTitle": "Профиль",
     "profileGamificationLevel": "Уровень {level}",
     "@profileGamificationLevel": {
-        "placeholders": { "level": { "type": "int" } }
+        "placeholders": {
+            "level": {
+                "type": "int"
+            }
+        }
     },
     "profileMealsCooked": "Приготовлено блюд",
     "profileItemsSaved": "Сохранено продуктов",
@@ -28,7 +32,11 @@
     "profileLevelProgress": "Прогресс уровня",
     "profileLevel": "Уровень {level}",
     "@profileLevel": {
-        "placeholders": { "level": { "type": "int" } }
+        "placeholders": {
+            "level": {
+                "type": "int"
+            }
+        }
     },
     "profileYourImpact": "Ваш вклад",
     "addShoppingItem": "Добавить",
@@ -37,11 +45,10 @@
     "planToday": "Запланировать",
     "today": "Сегодня",
     "planMeal": "Спланировать...",
-
     "tabExplore": "Обзор",
     "scanFood": "Сканировать еду",
     "scanCalories": "Сканировать калории",
-    "takePhoto": "Сделать фото",
+    "takePhoto": "Сфотографироваться",
     "chooseFromGallery": "Выбрать из галереи",
     "analyzeCalories": "Анализ калорий",
     "caloriesPerServing": "ккал/порция",
@@ -57,5 +64,291 @@
     "settings": "Настройки",
     "settingsLanguage": "Язык",
     "settingsTheme": "Тема",
-    "aboutApp": "О iFridge"
+    "aboutApp": "О iFridge",
+    "myFridge": "🧊 Мой холодильник",
+    "expiryAlerts": "Уведомления об истечении срока действия",
+    "errorLoadInventory": "Не удалось загрузить инвентарь",
+    "errorCheckConnection": "Проверьте подключение и повторите попытку.",
+    "total": "Общий",
+    "fresh": "Свежий",
+    "expiring": "Срок действия истекает",
+    "expired": "Истекший",
+    "searchIngredients": "Поиск ингредиентов...",
+    "all": "Все",
+    "itemsCount": "{count} предметов",
+    "@itemsCount": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "zoneEmptyTitle": "Ваш {zone} пуст",
+    "@zoneEmptyTitle": {
+        "placeholders": {
+            "zone": {
+                "type": "String"
+            }
+        }
+    },
+    "zoneEmptyDesc": "Готовы заполнить вашу цифровую кухню.\nДобавляйте элементы вручную или нажмите «Сканировать».",
+    "addIngredient": "Добавить ингредиент",
+    "urgentCook": "Готовьте сейчас",
+    "urgentUse": "Используйте {ingredient}",
+    "@urgentUse": {
+        "placeholders": {
+            "ingredient": {
+                "type": "String"
+            }
+        }
+    },
+    "noItemsMatch": "Нет товаров, соответствующих вашим фильтрам",
+    "clearFilters": "Очистить фильтры",
+    "expiryAlertsTitle": "🔔 Уведомления об истечении срока действия",
+    "allFresh": "Все товары свежие! 🎉",
+    "expiredCount": "❌ Срок действия истек ( {count} )",
+    "@expiredCount": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "expiringSoonCount": "⚠️ Срок действия скоро истекает ( {count} )",
+    "@expiringSoonCount": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "auto_scanCaloriesIsComingSoon": "Сканирование калорий скоро появится!",
+    "auto_scan": "Сканировать",
+    "auto_addAll": "Добавить все",
+    "auto_allAdded": "Все добавлено",
+    "auto_scanAnother": "Сканировать другой",
+    "auto_startVisualAudit": "Начать визуальный аудит",
+    "auto_enterBarcode": "Введите штрих-код",
+    "auto_cancel": "Отмена",
+    "auto_lookUp": "Искать",
+    "auto_fridge": "Холодильник",
+    "auto_freezer": "Морозильник",
+    "auto_pantry": "Кладовая",
+    "auto_addToShelf": "Добавить на полку",
+    "auto_mealLogged": "✅ Питание зарегистрировано!",
+    "auto_snapYourMeal": "Приготовь еду",
+    "auto_takeAPhotoAndAiWillEstimateCalories": "Сделайте фото, и искусственный интеллект оценит калории.",
+    "auto_analyzingFood": "Анализ еды...",
+    "auto_camera": "Камера",
+    "auto_gallery": "Галерея",
+    "auto_estimatedCalories": "расчетные калории",
+    "auto_cal": "кал",
+    "auto_logMeal": "Бревенчатая еда",
+    "auto_addSomeIngredientsToYourShelfFirst": "Сначала добавьте несколько ингредиентов на полку!",
+    "auto_aiRecipeGenerator": "Генератор рецептов AI",
+    "auto_any": "Любой",
+    "auto_shelfOnly": "Только полка",
+    "auto_generateRecipe": "Создать рецепт",
+    "auto_ingredients": "🧂 Ингредиенты",
+    "auto_steps": "👨‍🍳 Шаги",
+    "auto_importRecipe": "Импортировать рецепт",
+    "auto_retry": "Повторить попытку",
+    "auto_addItemsToYourShelfToGetRecommendations": "Добавляйте товары на полку, чтобы получать рекомендации.",
+    "auto_noRecipesMatchThisCuisine": "Нет рецептов, соответствующих этой кухне.",
+    "auto_clearFilter": "Очистить фильтр",
+    "auto_deleteItem": "Удалить элемент?",
+    "auto_delete": "Удалить",
+    "auto_freshness": "Свежесть",
+    "auto_use1Unit": "Используйте 1 единицу",
+    "auto_removeFromInventory": "Удалить из инвентаря",
+    "auto_following": "Следующий",
+    "auto_follow": "Следовать",
+    "auto_posts": "Сообщения",
+    "auto_noPostsYet": "Пока нет сообщений",
+    "auto_explore": "Исследовать",
+    "auto_noReelsYet": "Катушек пока нет",
+    "auto_cookThisRecipe": "Приготовьте этот рецепт",
+    "auto_recipeNotFound": "Рецепт не найден",
+    "auto_hasRecipe": "Есть рецепт",
+    "auto_noCommunityPostsYet": "Сообщений в сообществе пока нет.",
+    "auto_beTheFirstToShare": "Будьте первым, кто поделитесь!",
+    "auto_createPost": "Создать сообщение",
+    "auto_savedPosts": "Сохраненные сообщения",
+    "auto_noSavedPostsYet": "Пока нет сохраненных сообщений",
+    "auto_you": "Ты",
+    "auto_checkout": "Проверить",
+    "auto_yourCartIsEmpty": "Ваша корзина пуста",
+    "auto_yourOrder": "Ваш заказ",
+    "auto_total": "Общий",
+    "auto_orderConfirmed": "Заказ подтвержден!",
+    "auto_yourPickupCode": "Ваш код самовывоза",
+    "auto_showThisCodeAtTheCounter": "Покажите этот код на стойке",
+    "auto_deliveryOnTheWay": "Доставка в пути",
+    "auto_aDriverWillBeAssignedShortly": "Водитель будет назначен в ближайшее время",
+    "auto_backToHome": "Вернуться домой",
+    "auto_incomingOrders": "Входящие заказы",
+    "auto_noFoodVideosYet": "Видео о еде пока нет",
+    "auto_foodFeed": "Пищевой корм",
+    "auto_myOrders": "Мои заказы",
+    "auto_noOrdersYet": "Заказов пока нет",
+    "auto_yourOrderHistoryWillAppearHere": "Здесь появится история ваших заказов",
+    "auto_cancelOrder": "Отменить заказ?",
+    "auto_keepOrder": "Следите за порядком",
+    "auto_orderCancelled": "Заказ отменен",
+    "auto_pickupCode": "Код самовывоза:",
+    "auto_closed": "Закрыто",
+    "auto_menu": "Меню",
+    "auto_menuComingSoon": "Меню скоро появится",
+    "auto_best": "🔥Лучший",
+    "auto_popularDishes": "🍽️ Популярные блюда",
+    "auto_fromVideo": "Из видео",
+    "auto_bookATable": "Забронировать столик",
+    "auto_confirmReservation": "Подтвердить бронирование",
+    "auto_locationDirections": "Местоположение и направление",
+    "auto_mapView": "Просмотр карты",
+    "auto_openInGoogleMaps": "Открыть в Google Картах",
+    "auto_writeAReview": "Написать отзыв",
+    "auto_viewCart": "Посмотреть корзину",
+    "auto_signOut": "Выход?",
+    "auto_youWillNeedToSignInAgain": "Вам нужно будет войти снова.",
+    "auto_deleteAccount": "Удалить аккаунт",
+    "auto_deleteForever": "Удалить навсегда",
+    "auto_accountDeletionRequestedContactSupportToFinalize": "Запрошено удаление аккаунта. Свяжитесь со службой поддержки для завершения.",
+    "auto_ifridge": "iХолодильник",
+    "auto_ifridgeIsYourAipoweredKitchenEcosystemItAutomaticallyTracksYourIngredientsPredictsExpirationsGeneratesPersonalizedRecipesAndLetsYouOrderFromLocalRestaurants": "iFridge — это ваша кухонная экосистема на базе искусственного интеллекта. Он автоматически отслеживает ваши ингредиенты, прогнозирует срок годности, создает персонализированные рецепты и позволяет делать заказы в местных ресторанах.",
+    "auto_gotIt": "Понятно",
+    "auto_editDisplayName": "Изменить отображаемое имя",
+    "auto_save": "Сохранять",
+    "auto_addShoppingItem": "Добавить товар для покупок",
+    "auto_add": "Добавлять",
+    "auto_selectRecipeForMeal": "Выберите рецепт блюда",
+    "auto_failedToLoadRecipes": "Не удалось загрузить рецепты.",
+    "auto_noRecipesFound": "Рецептов не найдено",
+    "auto_mealCleared": "Еда очищена",
+    "auto_theme": "🎨 Тема",
+    "whatToCook": "Что приготовить?",
+    "tierPerfect": "Идеально",
+    "tierForYou": "Для вас",
+    "tierUseItUp": "Использовать",
+    "tierAlmost": "Почти",
+    "tierExplore": "Исследовать",
+    "noTierRecipesYet": "Пока нет рецептов {tier}",
+    "addItemsForRecommendations": "Добавьте продукты на полку для рекомендаций",
+    "scanCaloriesTab": "Калории",
+    "scanYourIngredients": "Сканируйте свои ингредиенты",
+    "takePhotoToAdd": "Сделайте фото продуктов, чтобы автоматически добавить их на полку",
+    "scanReceipt": "Чек",
+    "scanPhoto": "Фото",
+    "scanBarcode": "Сканировать штрих-код",
+    "takePhotoBtn": "Сделать фото",
+    "@noTierRecipesYet": {
+        "placeholders": {
+            "tier": {
+                "type": "String"
+            }
+        }
+    },
+    "auto_account": "Аккаунт",
+    "auto_settings": "Настройки",
+    "adjustPortions": "Отрегулировать порции",
+    "currentRecipeMakesNServings": "По текущему рецепту рассчитано порций {servings}.",
+    "scaleToNServings": "Масштабируйте до порций {newServings}",
+    "scaledToNServings": "Масштабировано до порций {newServings} 🍳",
+    "findingSubstitutesForX": "Поиск заменителей для {ingredientName}...",
+    "couldNotFindSubstitutes": "Не смог найти заменителей",
+    "substitutesForX": "Заменители «{ingredientName}»",
+    "noSubstitutesFoundForThisRecipeContext": "Для этого контекста рецепта заменителей не найдено.",
+    "nMatch": "{match}% совпадений",
+    "ingredientsWithCount": "Ингредиенты ({count})",
+    "scale": "Шкала",
+    "addedMissingItemsToShoppingList": "Добавлены недостающие товары в список покупок!",
+    "failedToAddItemsX": "Не удалось добавить элементы: {e}.",
+    "addMissingToShoppingList": "Добавить недостающее в список покупок",
+    "cookingStepsWithCount": "Этапы приготовления ({count})",
+    "noStepsAvailableYet": "Шагов пока нет",
+    "recordedTasteProfileEvolving": "Записано! Ваш вкусовой профиль развивается 🧠",
+    "failedToRecordX": "Не удалось записать: {e}",
+    "iCookedThis": "Я приготовил это!",
+    "startCooking": "Начать готовить",
+    "optional_tag": "необязательный",
+    "servings_tag": "порции",
+    "min_tag": "мин",
+    "difficulty_tag": "Сложность",
+    "expiringSoon": "Срок действия скоро истекает",
+    "nItemsNeedAttention": "Элемент(ы) {count} требуют внимания",
+    "takeAPhotoOfFoodItems": "Сфотографируйте продукты питания, чтобы добавить их.\nна вашу полку автоматически",
+    "addManually": "Добавить вручную",
+    "recognitionFailed": "Распознавание не удалось. Попробуйте еще раз.",
+    "analyzingYourFood": "Анализ вашего питания...",
+    "aiIsIdentifying": "ИИ определяет ингредиенты",
+    "nItemsDetected": "Обнаружено {count} предметов",
+    "photoAnalysisSelected": "Анализ фотографий выбран",
+    "nIngredientsDetected": "{count} Обнаружены ингредиенты",
+    "nOfNAdded": "Добавлен {added}/{total}",
+    "addedItem": "Добавлен {item}!",
+    "failedToAddItem": "Не удалось добавить {item}",
+    "addedNItemsToShelf": "На полку добавлены товары {count}!",
+    "noProductFoundForBarcode": "Товар со штрих-кодом {barcode} не найден.",
+    "addedItemToShelf": "Добавлен {item} на полку!",
+    "errorX": "Ошибка: Х0Х",
+    "analysisFailedX": "Анализ не удался: {e}",
+    "failedToLogX": "Не удалось войти: {e}",
+    "scanBarcodeShort": "Штрих-код",
+    "profileAccount": "Счет",
+    "deleteAccount": "Удалить аккаунт",
+    "tierBadge1": "✅ Все, что нужно!",
+    "tierBadge2": "🔥 Рекомендуем вам",
+    "tierBadge3": "⏰ Используйте быстрее",
+    "tierBadge4": "🛒 Не хватает нескольких продуктов",
+    "tierBadge5": "🌍 Откройте для себя что-то новое",
+    "needLabel": "Нужно: {items}",
+    "@needLabel": {
+        "placeholders": {
+            "items": { "type": "String" }
+        }
+    },
+    "nOfNIngredients": "{matched}/{total} ингредиентов",
+    "@nOfNIngredients": {
+        "placeholders": {
+            "matched": { "type": "String" },
+            "total": { "type": "String" }
+        }
+    },
+    "servingsLabel": "Порции",
+    "nHave": "{count} есть",
+    "@nHave": {
+        "placeholders": {
+            "count": { "type": "String" }
+        }
+    },
+    "nMissing": "{count} не хватает",
+    "@nMissing": {
+        "placeholders": {
+            "count": { "type": "String" }
+        }
+    },
+    "ingredientsHeader": "Ингредиенты",
+    "swapButton": "Заменить →",
+    "aiAssistant": "🤖 ИИ Ассистент",
+    "aiHint": "например: \"У меня нет мяса, чем заменить?\"",
+    "editIngredient": "Изменить ингредиент",
+    "nameLabel": "Название",
+    "qtyLabel": "Кол-во",
+    "unitLabel": "Ед. изм.",
+    "handsOn": "Вручную",
+    "automatic": "Автоматически",
+    "min_tag": "мин",
+    "difficulty_tag": "Сложность",
+    "servings_tag": "порций",
+    "optional_tag": "необязательно",
+    "addMissingToShoppingList": "Добавить недостающее в список",
+    "startCooking": "Начать готовку",
+    "iCookedThis": "Я приготовил это!",
+    "scale": "Масштаб",
+    "recordedTasteProfileEvolving": "Записано! Ваш вкусовой профиль улучшается 🧠",
+    "failedToRecordX": "Ошибка при записи: {error}",
+    "addedMissingItemsToShoppingList": "Недостающие продукты добавлены в список!",
+    "failedToAddItemsX": "Ошибка при добавлении: {error}",
+    "ingredientsWithCount": "Ингредиенты ({count})",
+    "cookingStepsWithCount": "Шаги приготовления ({count})"
 }

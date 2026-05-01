@@ -9,6 +9,7 @@
 // Navigation: from feeds (with menuItemId) or from order screen.
 
 import 'package:flutter/material.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:ifridge_app/core/services/restaurant_service.dart';
 import 'package:ifridge_app/core/services/cart_service.dart';
 import 'package:ifridge_app/features/order/presentation/screens/checkout_screen.dart';
@@ -399,7 +400,7 @@ class _MenuTab extends StatelessWidget {
           children: [
             Icon(Icons.restaurant_menu, size: 48, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12)),
             SizedBox(height: 12),
-            Text('Menu coming soon',
+            Text(AppLocalizations.of(context)?.auto_menuComingSoon ?? 'Menu coming soon',
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 16),
             ),
             SizedBox(height: 4),
@@ -532,7 +533,7 @@ class _MenuItemCard extends StatelessWidget {
                           color: accent.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Text('From video', style: TextStyle(color: accent, fontSize: 9, fontWeight: FontWeight.w700)),
+                        child: Text(AppLocalizations.of(context)?.auto_fromVideo ?? 'From video', style: TextStyle(color: accent, fontSize: 9, fontWeight: FontWeight.w700)),
                       ),
                     if (item.tags.contains('bestseller') && !isHighlighted)
                       Container(
@@ -541,7 +542,7 @@ class _MenuItemCard extends StatelessWidget {
                           color: accent.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Text('🔥 Best', style: TextStyle(color: accent, fontSize: 9, fontWeight: FontWeight.w700)),
+                        child: Text(AppLocalizations.of(context)?.auto_best ?? '🔥 Best', style: TextStyle(color: accent, fontSize: 9, fontWeight: FontWeight.w700)),
                       ),
                   ],
                 ),
@@ -662,7 +663,7 @@ class _ReserveTab extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(20, 16, 20, 80),
       children: [
         // Header
-        Text('Book a Table',
+        Text(AppLocalizations.of(context)?.auto_bookATable ?? 'Book a Table',
           style: TextStyle(
             color: Theme.of(context).colorScheme.onSurface,
             fontSize: 22, fontWeight: FontWeight.w800,
@@ -806,7 +807,7 @@ class _ReserveTab extends StatelessWidget {
               children: [
                 Icon(Icons.event_seat, color: Theme.of(context).colorScheme.onSurface, size: 20),
                 SizedBox(width: 8),
-                Text('Confirm Reservation', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700)),
+                Text(AppLocalizations.of(context)?.auto_confirmReservation ?? 'Confirm Reservation', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700)),
               ],
             ),
           ),
@@ -877,7 +878,7 @@ class _LocationTab extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(20, 16, 20, 80),
       children: [
         // Header
-        Text('Location & Directions',
+        Text(AppLocalizations.of(context)?.auto_locationDirections ?? 'Location & Directions',
           style: TextStyle(
             color: Theme.of(context).colorScheme.onSurface,
             fontSize: 22, fontWeight: FontWeight.w800,
@@ -966,7 +967,7 @@ class _LocationTab extends StatelessWidget {
               children: [
                 Icon(Icons.map, size: 48, color: accent.withValues(alpha: 0.4)),
                 SizedBox(height: 8),
-                Text('Map View', style: TextStyle(
+                Text(AppLocalizations.of(context)?.auto_mapView ?? 'Map View', style: TextStyle(
                   color: accent.withValues(alpha: 0.6), fontSize: 14, fontWeight: FontWeight.w600,
                 )),
                 Text('${r.latitude.toStringAsFixed(4)}, ${r.longitude.toStringAsFixed(4)}',
@@ -1002,7 +1003,7 @@ class _LocationTab extends StatelessWidget {
               children: [
                 Icon(Icons.navigation, color: Theme.of(context).colorScheme.onSurface, size: 20),
                 SizedBox(width: 8),
-                Text('Open in Google Maps', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700)),
+                Text(AppLocalizations.of(context)?.auto_openInGoogleMaps ?? 'Open in Google Maps', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700)),
               ],
             ),
           ),
@@ -1135,7 +1136,7 @@ class _ReviewsTab extends StatelessWidget {
               children: [
                 Icon(Icons.edit, size: 16, color: accent),
                 SizedBox(width: 8),
-                Text('Write a Review', style: TextStyle(color: accent, fontSize: 14, fontWeight: FontWeight.w700)),
+                Text(AppLocalizations.of(context)?.auto_writeAReview ?? 'Write a Review', style: TextStyle(color: accent, fontSize: 14, fontWeight: FontWeight.w700)),
               ],
             ),
           ),
@@ -1272,7 +1273,7 @@ class _CartBar extends StatelessWidget {
                 ),
                 SizedBox(width: 12),
                 Expanded(
-                  child: Text('View Cart',
+                  child: Text(AppLocalizations.of(context)?.auto_viewCart ?? 'View Cart',
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 16,

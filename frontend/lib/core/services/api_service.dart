@@ -5,12 +5,12 @@
 
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 class ApiConfig {
-  static const String _localUrl = 'http://localhost:8000';
   static const String _productionUrl =
       'https://merry-motivation-production-3529.up.railway.app';
 
@@ -26,11 +26,14 @@ class ApiConfig {
       }
     }
     // Local development (flutter run, desktop, emulator)
-    return _localUrl;
+    if (!kIsWeb && Platform.isAndroid) {
+      return 'http://10.0.2.2:8000';
+    }
+    return 'http://localhost:8000';
   }
 
   /// True when connecting to the local backend (Ollama AI available).
-  static bool get isLocal => baseUrl == _localUrl;
+  static bool get isLocal => baseUrl.contains('localhost') || baseUrl.contains('10.0.2.2');
 }
 
 class ApiService {
@@ -167,15 +170,17 @@ class ApiService {
     int? difficulty,
     int servings = 2,
     bool shelfOnly = false,
+    String? locale,
   }) async {
     final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/ai/generate-recipe');
     final body = {
       'ingredients': ingredients,
-      'cuisine': ?cuisine,
-      'max_time_minutes': ?maxTimeMinutes,
-      'difficulty': ?difficulty,
+      if (cuisine != null) 'cuisine': cuisine,
+      if (maxTimeMinutes != null) 'max_time_minutes': maxTimeMinutes,
+      if (difficulty != null) 'difficulty': difficulty,
       'servings': servings,
       'shelf_only': shelfOnly,
+      if (locale != null) 'locale': locale,
     };
     final response = await _client.post(
       uri,
@@ -324,6 +329,30 @@ class ApiService {
   Future<Map<String, dynamic>> healthCheck() async {
     final uri = Uri.parse('${ApiConfig.baseUrl}/health');
     final response = await _client.get(uri, headers: _headers);
+    return _handleResponse(response);
+  }
+
+  /// Fast on-the-fly translation using Gemini 1.5 Flash
+  Future<Map<String, dynamic>> translateRecipe({
+    required String recipeId,
+    required String title,
+    required String ingredients,
+    required String steps,
+    required String targetLanguage,
+  }) async {
+    final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/ai/translate-recipe');
+    final body = {
+      'recipe_id': recipeId,
+      'title': title,
+      'ingredients': ingredients,
+      'steps': steps,
+      'target_language': targetLanguage,
+    };
+    final response = await _client.post(
+      uri,
+      headers: {..._headers, 'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
     return _handleResponse(response);
   }
 

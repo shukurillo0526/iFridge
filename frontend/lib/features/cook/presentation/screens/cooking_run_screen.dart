@@ -19,6 +19,7 @@ class CookingRunScreen extends StatefulWidget {
   final List<String>? prepNotes;
   final int matchedIngredientsCount;
   final double matchPct;
+  final String userInventoryText;
 
   const CookingRunScreen({
     super.key,
@@ -29,6 +30,7 @@ class CookingRunScreen extends StatefulWidget {
     this.prepNotes,
     required this.matchedIngredientsCount,
     required this.matchPct,
+    required this.userInventoryText,
   });
 
   @override
@@ -44,15 +46,25 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
   final Map<int, int> _activeTimers = {};
   final Map<int, Timer> _timerObjects = {};
 
+  // For modifiedRecipe state
+  late List<Map<String, dynamic>> _modifiedSteps;
+  late String _ingredientsListText;
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
     WakelockPlus.enable();
-    // Hide prep notes if none exist
     if (widget.prepNotes == null || widget.prepNotes!.isEmpty) {
       _showPrepNotes = false;
     }
+    _modifiedSteps = List.of(widget.steps.map((s) => Map<String, dynamic>.from(s)));
+    _ingredientsListText = widget.ingredients?.map((ing) {
+      final name = (ing['ingredients'] as Map?)?['display_name_en'] ?? 'Unknown';
+      final qty = ing['quantity']?.toString() ?? '';
+      final unit = ing['unit'] ?? '';
+      return "$qty $unit $name";
+    }).join(', ') ?? '';
   }
 
   @override
@@ -138,7 +150,7 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.steps.isEmpty) {
+    if (_modifiedSteps.isEmpty) {
       return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
@@ -154,7 +166,7 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
       return _buildPrepNotesScreen();
     }
 
-    final totalSteps = widget.steps.length;
+    final totalSteps = _modifiedSteps.length;
     final progress = (_currentIndex + 1) / totalSteps;
 
     return Scaffold(
@@ -253,10 +265,19 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
                 itemCount: totalSteps,
                 itemBuilder: (context, index) {
                   return _CookingStepCard(
-                    step: widget.steps[index],
+                    step: _modifiedSteps[index],
                     stepIndex: index,
+                    totalSteps: totalSteps,
+                    recipeTitle: widget.title,
+                    ingredientsListText: _ingredientsListText,
+                    userInventoryText: widget.userInventoryText,
                     timerRemaining: _activeTimers[index],
                     onStartTimer: (seconds) => _startTimerForStep(index, seconds),
+                    onStepModified: (newText) {
+                      setState(() {
+                        _modifiedSteps[index]['human_text'] = newText;
+                      });
+                    },
                   );
                 },
               ),
@@ -412,14 +433,24 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
 class _CookingStepCard extends StatefulWidget {
   final Map<String, dynamic> step;
   final int stepIndex;
+  final int totalSteps;
+  final String recipeTitle;
+  final String ingredientsListText;
+  final String userInventoryText;
   final int? timerRemaining;
   final void Function(int seconds) onStartTimer;
+  final void Function(String newText) onStepModified;
 
   const _CookingStepCard({
     required this.step,
     required this.stepIndex,
+    required this.totalSteps,
+    required this.recipeTitle,
+    required this.ingredientsListText,
+    required this.userInventoryText,
     this.timerRemaining,
     required this.onStartTimer,
+    required this.onStepModified,
   });
 
   @override
@@ -428,9 +459,10 @@ class _CookingStepCard extends StatefulWidget {
 
 class _CookingStepCardState extends State<_CookingStepCard> {
   final ApiService _api = ApiService();
-  String? _aiTip;
+  final List<Map<String, String>> _chatMessages = [];
   bool _aiLoading = false;
   bool _autoStartTriggered = false;
+  final TextEditingController _chatController = TextEditingController();
 
   int? get _timerSeconds {
     // Prefer new timer_seconds field, fall back to estimated_seconds or robot_action
@@ -506,24 +538,87 @@ class _CookingStepCardState extends State<_CookingStepCard> {
     return Icons.restaurant;
   }
 
-  Future<void> _askAi() async {
-    if (_aiLoading || _aiTip != null) return;
-    setState(() => _aiLoading = true);
+  void _editStep() {
+    final c = TextEditingController(text: widget.step['translated_text'] ?? widget.step['human_text'] ?? widget.step['text'] ?? '');
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: Text('Edit Step', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+        content: TextField(
+          controller: c,
+          maxLines: null,
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Theme.of(context).scaffoldBackgroundColor,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('Cancel')),
+          FilledButton(
+            onPressed: () {
+              widget.onStepModified(c.text.trim());
+              Navigator.pop(ctx);
+            },
+            child: Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _sendMessage() async {
+    final q = _chatController.text.trim();
+    if (q.isEmpty || _aiLoading) return;
+
+    _chatController.clear();
+    setState(() {
+      _chatMessages.add({'role': 'user', 'content': q});
+      _aiLoading = true;
+    });
+
     try {
-      final result = await _api.getCookingTip(
-        stepText: widget.step['human_text'] ?? '',
-      );
-      final tip = result['data']?['tip'] ?? '';
+      final userLanguage = Localizations.localeOf(context).languageCode;
+      final stepText = widget.step['translated_text'] ?? widget.step['human_text'] ?? widget.step['text'] ?? '';
+      
+      final prompt = '''
+You are a helpful cooking assistant. The user is currently cooking.
+
+**User's Inventory:**
+${widget.userInventoryText}
+
+**Current Recipe:**
+Title: ${widget.recipeTitle}
+Ingredients: ${widget.ingredientsListText}
+Current Step (${widget.stepIndex + 1}/${widget.totalSteps}): $stepText
+
+**User's Question:**
+$q
+
+Answer in $userLanguage language.
+Be helpful, clear, and natural. 
+If they ask for substitutions, suggest realistic alternatives based on what they have in their inventory.
+Keep your answer short and easy to read while cooking.
+''';
+
+      // We only send the prompt as a single user message to follow the exact template
+      final messagesToSend = [{'role': 'user', 'content': prompt}];
+
+      final result = await _api.chatWithAssistant(messages: messagesToSend);
+      final reply = result['data']?['message'] ?? 'No response.';
+
       if (mounted) {
         setState(() {
-          _aiTip = tip.isEmpty ? 'No tip available for this step.' : tip;
+          _chatMessages.add({'role': 'assistant', 'content': reply});
           _aiLoading = false;
         });
       }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _aiTip = 'Could not reach AI. Is Ollama running?';
+          _chatMessages.add({'role': 'assistant', 'content': 'Could not reach AI. Is Ollama running?'});
           _aiLoading = false;
         });
       }
@@ -532,7 +627,7 @@ class _CookingStepCardState extends State<_CookingStepCard> {
 
   @override
   Widget build(BuildContext context) {
-    final humanText = widget.step['human_text'] ?? '';
+    final humanText = widget.step['translated_text'] ?? widget.step['human_text'] ?? widget.step['text'] ?? '';
     final requiresAttention = widget.step['requires_attention'] == true;
     final icon = _pickIcon(humanText);
     final tempC = widget.step['temperature_c'];
@@ -591,9 +686,21 @@ class _CookingStepCardState extends State<_CookingStepCard> {
           ),
           SizedBox(height: 20),
 
-          // Core Instruction
-          Text(humanText,
-            style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w700, height: 1.5)),
+          // Core Instruction with Edit Button
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(humanText,
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w700, height: 1.5)),
+              ),
+              IconButton(
+                icon: Icon(Icons.edit, size: 20, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+                onPressed: _editStep,
+                tooltip: 'Modify Recipe Step',
+              ),
+            ],
+          ),
           SizedBox(height: 16),
 
           // Interactive Timer Button
@@ -639,63 +746,78 @@ class _CookingStepCardState extends State<_CookingStepCard> {
               ),
             ),
 
-          // AI Tip Section
+          // AI Tip Section (Chat UI)
           SizedBox(height: 12),
-          if (_aiTip != null)
-            Container(
-              padding: EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.primary, size: 18),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Text(_aiTip!,
-                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85), fontSize: 14, height: 1.5)),
-                  ),
-                ],
-              ),
-            )
-          else
-            GestureDetector(
-              onTap: _askAi,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: _aiLoading
-                      ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
-                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.04),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: _aiLoading
-                        ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)
-                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08)),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          Container(
+            padding: EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    if (_aiLoading) ...[
-                      SizedBox(width: 16, height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Theme.of(context).colorScheme.primary)),
-                      SizedBox(width: 10),
-                      Text('Thinking...',
-                        style: TextStyle(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.8), fontSize: 14, fontWeight: FontWeight.w600)),
-                    ] else ...[
-                      Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), size: 18),
-                      SizedBox(width: 8),
-                      Text('💡 Ask AI for a tip',
-                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 14, fontWeight: FontWeight.w600)),
-                    ],
+                    Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.primary, size: 18),
+                    SizedBox(width: 8),
+                    Text('🤖 Assistant',
+                      style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 14, fontWeight: FontWeight.w700)),
                   ],
                 ),
-              ),
+                if (_chatMessages.isNotEmpty) ...[
+                  SizedBox(height: 10),
+                  ..._chatMessages.map((msg) {
+                    final isUser = msg['role'] == 'user';
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(isUser ? 'You: ' : 'AI: ',
+                            style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w700, fontSize: 13)),
+                          Expanded(
+                            child: Text(msg['content'] ?? '',
+                              style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.85), fontSize: 13, height: 1.5)),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ],
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _chatController,
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 13),
+                        decoration: InputDecoration(
+                          hintText: 'Ask a question or request substitution...',
+                          hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 13),
+                          filled: true,
+                          fillColor: Theme.of(context).colorScheme.surface,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+                        ),
+                        onSubmitted: (_) => _sendMessage(),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    _aiLoading
+                        ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Theme.of(context).colorScheme.primary))
+                        : IconButton(
+                            icon: Icon(Icons.send, color: Theme.of(context).colorScheme.primary, size: 20),
+                            onPressed: _sendMessage,
+                            constraints: BoxConstraints(),
+                            padding: EdgeInsets.zero,
+                          ),
+                  ],
+                ),
+              ],
             ),
+          ),
 
           Spacer(),
         ],

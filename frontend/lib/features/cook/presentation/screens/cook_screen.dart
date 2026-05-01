@@ -5,14 +5,17 @@
 // user's inventory, and computes a match score.
 
 import 'package:flutter/material.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/widgets/shimmer_loading.dart';
 import 'package:ifridge_app/core/widgets/slide_in_item.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
+import 'package:ifridge_app/core/utils/l10n_helper.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/recipe_detail_screen.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/recipe_import_screen.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
+import 'package:ifridge_app/core/services/app_settings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class CookScreen extends StatefulWidget {
@@ -36,18 +39,18 @@ class _CookScreenState extends State<CookScreen>
   // Cuisine filter (Batch 2)
   String? _cuisineFilter;
 
-  static const _tierMeta = [
-    (label: 'Perfect', icon: Icons.verified, key: '1'),
-    (label: 'For You', icon: Icons.auto_awesome, key: '2'),
-    (label: 'Use It Up', icon: Icons.timer, key: '3'),
-    (label: 'Almost', icon: Icons.shopping_cart_outlined, key: '4'),
-    (label: 'Explore', icon: Icons.explore, key: '5'),
+  List<({String label, IconData icon, String key})> _getTierMeta(BuildContext context) => [
+    (label: AppLocalizations.of(context)?.tierPerfect ?? 'Perfect', icon: Icons.verified, key: '1'),
+    (label: AppLocalizations.of(context)?.tierForYou ?? 'For You', icon: Icons.auto_awesome, key: '2'),
+    (label: AppLocalizations.of(context)?.tierUseItUp ?? 'Use It Up', icon: Icons.timer, key: '3'),
+    (label: AppLocalizations.of(context)?.tierAlmost ?? 'Almost', icon: Icons.shopping_cart_outlined, key: '4'),
+    (label: AppLocalizations.of(context)?.tierExplore ?? 'Explore', icon: Icons.explore, key: '5'),
   ];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _tierMeta.length, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     _fetchRecipes();
   }
 
@@ -55,6 +58,20 @@ class _CookScreenState extends State<CookScreen>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  String _lastLang = '';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final currentLang = Localizations.localeOf(context).languageCode;
+    if (_lastLang.isNotEmpty && _lastLang != currentLang) {
+      _lastLang = currentLang;
+      _fetchRecipes();
+    } else if (_lastLang.isEmpty) {
+      _lastLang = currentLang;
+    }
   }
 
   // ── Data Loading ─────────────────────────────────────────────
@@ -68,14 +85,20 @@ class _CookScreenState extends State<CookScreen>
     try {
       final client = Supabase.instance.client;
 
-      // 1. Get user's inventory ingredient IDs for "Missing" badges
+      // 1. Get user's inventory ingredient names for matching
       final inventoryRows = await client
           .from('inventory_items')
-          .select('ingredient_id')
+          .select('ingredient_id, ingredients(display_name_en)')
           .eq('user_id', currentUserId());
 
       final ownedIds = (inventoryRows as List)
           .map((r) => r['ingredient_id'] as String)
+          .toSet();
+
+      // Build a set of lowercase owned ingredient names for JSONB matching
+      final ownedNames = (inventoryRows as List)
+          .map((r) => ((r['ingredients'] as Map?)?['display_name_en'] as String?)?.toLowerCase())
+          .whereType<String>()
           .toSet();
 
       // 2. Try server-side 6-signal scoring first (fastest, most accurate)
@@ -148,36 +171,58 @@ class _CookScreenState extends State<CookScreen>
       }
 
       List<Map<String, dynamic>> scored = [];
+      
+      final currentLang = AppSettings().locale.languageCode;
+      Map<String, Map<String, dynamic>> translations = {};
+      if (currentLang != 'en') {
+        try {
+          final transRows = await client
+              .from('recipe_translations')
+              .select('recipe_id, title_translated, ingredients_translated')
+              .eq('language_code', currentLang);
+          for (final t in transRows) {
+            translations[t['recipe_id']] = t;
+          }
+        } catch (_) {}
+      }
 
       if (useDirectQuery) {
-        // ── Direct Query Fallback ─────────────────────────────
+        // ── Direct Query Fallback (JSONB ingredients) ─────────
         final recipeRows = await client
             .from('recipes')
-            .select(
-              '*, recipe_ingredients(ingredient_id, quantity, unit, is_optional, prep_note, ingredients(display_name_en))',
-            )
+            .select('*')
             .limit(200);
 
         for (final recipe in (recipeRows as List)) {
-          final ri = (recipe['recipe_ingredients'] as List?) ?? [];
-          final required = ri.where((r) => r['is_optional'] != true).toList();
-          final totalRequired = required.length;
-          final matchedCount = required
-              .where((r) => ownedIds.contains(r['ingredient_id']))
-              .length;
-          final matchPct = totalRequired > 0 ? matchedCount / totalRequired : 0.0;
+          final jsonIngredients = (recipe['ingredients'] as List?) ?? [];
+          final totalRequired = jsonIngredients.length;
 
-          final missing = required
-              .where((r) => !ownedIds.contains(r['ingredient_id']))
-              .map((r) {
-                final ing = r['ingredients'] as Map<String, dynamic>?;
-                return ing?['display_name_en'] ?? 'unknown';
-              })
-              .toList();
+          final t = translations[recipe['id']];
+          final transIngs = t?['ingredients_translated'] as List?;
+
+          // Match by ingredient name (case-insensitive) using English for matching
+          int matchedCount = 0;
+          final List<String> missing = [];
+          for (int i = 0; i < jsonIngredients.length; i++) {
+            final ing = jsonIngredients[i];
+            final name = (ing is Map ? (ing['name'] ?? '') : '$ing').toString().toLowerCase();
+            
+            String displayName = ing is Map ? (ing['name'] ?? 'unknown') : '$ing';
+            if (transIngs != null && i < transIngs.length) {
+                displayName = transIngs[i]['name'] ?? displayName;
+            }
+
+            if (ownedNames.any((owned) => name.contains(owned) || owned.contains(name))) {
+              matchedCount++;
+            } else {
+              missing.add(displayName);
+            }
+          }
+          final matchPct = totalRequired > 0 ? matchedCount / totalRequired : 0.0;
 
           scored.add({
             'id': recipe['id'],
-            'title': recipe['title'],
+            'title': t?['title_translated'] ?? recipe['title'],
             'description': recipe['description'],
             'cuisine': recipe['cuisine'] ?? '',
             'difficulty': recipe['difficulty'] ?? 1,
@@ -189,17 +234,16 @@ class _CookScreenState extends State<CookScreen>
             'matched': matchedCount,
             'total': totalRequired,
             'missing': missing,
+            'image_url': recipe['image_url'],
           });
         }
       } else {
-        // ── RPC Path ──────────────────────────────────────────
+        // ── RPC Path (JSONB ingredients) ──────────────────────
         final recipeIds = rpcResponse.map((r) => r['recipe_id'] as String).toList();
 
         final recipeRows = await client
             .from('recipes')
-            .select(
-              '*, recipe_ingredients(ingredient_id, quantity, unit, is_optional, prep_note, ingredients(display_name_en))',
-            )
+            .select('*')
             .inFilter('id', recipeIds);
 
         for (final r in rpcResponse) {
@@ -218,26 +262,32 @@ class _CookScreenState extends State<CookScreen>
 
           if (recipeDetails == null) continue;
 
-          final ri = (recipeDetails['recipe_ingredients'] as List?) ?? [];
-          final requiredIngredients = ri
-              .where((req) => req['is_optional'] != true)
-              .toList();
-          final totalRequired = requiredIngredients.length;
-          final matchedCount = requiredIngredients
-              .where((req) => ownedIds.contains(req['ingredient_id']))
-              .length;
+          final jsonIngredients = (recipeDetails['ingredients'] as List?) ?? [];
+          final totalRequired = jsonIngredients.length;
+          final t = translations[recipeDetails['id']];
+          final transIngs = t?['ingredients_translated'] as List?;
 
-          final missing = requiredIngredients
-              .where((req) => !ownedIds.contains(req['ingredient_id']))
-              .map((req) {
-                final ing = req['ingredients'] as Map<String, dynamic>?;
-                return ing?['display_name_en'] ?? 'unknown';
-              })
-              .toList();
+          int matchedCount = 0;
+          final List<String> missing = [];
+          for (int i = 0; i < jsonIngredients.length; i++) {
+            final ing = jsonIngredients[i];
+            final name = (ing is Map ? (ing['name'] ?? '') : '$ing').toString().toLowerCase();
+            
+            String displayName = ing is Map ? (ing['name'] ?? 'unknown') : '$ing';
+            if (transIngs != null && i < transIngs.length) {
+                displayName = transIngs[i]['name'] ?? displayName;
+            }
+
+            if (ownedNames.any((owned) => name.contains(owned) || owned.contains(name))) {
+              matchedCount++;
+            } else {
+              missing.add(displayName);
+            }
+          }
 
           scored.add({
             'id': recipeDetails['id'],
-            'title': recipeDetails['title'],
+            'title': t?['title_translated'] ?? recipeDetails['title'],
             'description': recipeDetails['description'],
             'cuisine': recipeDetails['cuisine'] ?? '',
             'difficulty': recipeDetails['difficulty'] ?? 1,
@@ -249,6 +299,7 @@ class _CookScreenState extends State<CookScreen>
             'matched': matchedCount,
             'total': totalRequired,
             'missing': missing,
+            'image_url': recipeDetails['image_url'],
           });
         }
       }
@@ -316,7 +367,7 @@ class _CookScreenState extends State<CookScreen>
     if (!context.mounted) return;
     if (ingredientNames.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Add some ingredients to your shelf first!')),
+        SnackBar(content: Text(AppLocalizations.of(context)?.auto_addSomeIngredientsToYourShelfFirst ?? 'Add some ingredients to your shelf first!')),
       );
       return;
     }
@@ -350,7 +401,7 @@ class _CookScreenState extends State<CookScreen>
             Row(children: [
               Icon(Icons.auto_awesome, color: Theme.of(context).colorScheme.primary),
               SizedBox(width: 8),
-              Text('AI Recipe Generator',
+              Text(AppLocalizations.of(context)?.auto_aiRecipeGenerator ?? 'AI Recipe Generator',
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 18,
@@ -369,7 +420,7 @@ class _CookScreenState extends State<CookScreen>
                 isDense: true,
                 dropdownColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                 style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 14),
-                hint: Text('Any', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4))),
+                hint: Text(AppLocalizations.of(context)?.auto_any ?? 'Any', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4))),
                 items: [null, 'Korean', 'Italian', 'Japanese', 'Mexican', 'Chinese', 'Indian', 'American']
                     .map((c) => DropdownMenuItem(value: c, child: Text(c ?? 'Any')))
                     .toList(),
@@ -432,7 +483,7 @@ class _CookScreenState extends State<CookScreen>
               child: SwitchListTile(
                 value: shelfOnly,
                 onChanged: (v) => setSheetState(() => shelfOnly = v),
-                title: Text('Shelf Only',
+                title: Text(AppLocalizations.of(context)?.auto_shelfOnly ?? 'Shelf Only',
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 13,
@@ -462,7 +513,7 @@ class _CookScreenState extends State<CookScreen>
               child: FilledButton.icon(
                 onPressed: () => Navigator.pop(ctx, true),
                 icon: Icon(Icons.auto_awesome, size: 18),
-                label: Text('Generate Recipe'),
+                label: Text(AppLocalizations.of(context)?.auto_generateRecipe ?? 'Generate Recipe'),
                 style: FilledButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -505,6 +556,7 @@ class _CookScreenState extends State<CookScreen>
         difficulty: selectedDifficulty,
         servings: selectedServings,
         shelfOnly: shelfOnly,
+        locale: AppLocalizations.of(context)?.localeName,
       );
       api.dispose();
       if (!context.mounted) return;
@@ -563,7 +615,7 @@ class _CookScreenState extends State<CookScreen>
                 // Ingredients
                 if (aiIngredients.isNotEmpty) ...[
                   SizedBox(height: 20),
-                  Text('🧂 Ingredients',
+                  Text(AppLocalizations.of(context)?.auto_ingredients ?? '🧂 Ingredients',
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 15,
@@ -588,7 +640,7 @@ class _CookScreenState extends State<CookScreen>
                 // Steps
                 if (stepsList.isNotEmpty) ...[
                   SizedBox(height: 20),
-                  Text('👨‍🍳 Steps',
+                  Text(AppLocalizations.of(context)?.auto_steps ?? '👨‍🍳 Steps',
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 15,
@@ -669,7 +721,7 @@ class _CookScreenState extends State<CookScreen>
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          'What to Cook?',
+          AppLocalizations.of(context)?.whatToCook ?? 'What to Cook?',
           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
         ),
         actions: [
@@ -684,6 +736,13 @@ class _CookScreenState extends State<CookScreen>
             tooltip: 'AI Generate',
           ),
           IconButton(
+            icon: Icon(Icons.post_add),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const RecipeImportScreen()));
+            },
+            tooltip: AppLocalizations.of(context)?.auto_importRecipe ?? 'Import Recipe',
+          ),
+          IconButton(
             icon: Icon(Icons.refresh),
             onPressed: _fetchRecipes,
             tooltip: 'Refresh',
@@ -696,7 +755,7 @@ class _CookScreenState extends State<CookScreen>
           labelColor: Theme.of(context).colorScheme.primary,
           unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
           tabAlignment: TabAlignment.start,
-          tabs: _tierMeta.map((t) {
+          tabs: _getTierMeta(context).map((t) {
             final count = (_tiers[t.key] ?? []).length;
             return Tab(
               icon: Icon(t.icon, size: 18),
@@ -706,14 +765,6 @@ class _CookScreenState extends State<CookScreen>
         ),
       ),
       body: _buildBody(),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => const RecipeImportScreen()));
-        },
-        icon: Icon(Icons.content_paste, color: Theme.of(context).colorScheme.onSurface),
-        label: Text('Import Recipe', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.bold)),
-      ),
     );
   }
 
@@ -755,7 +806,7 @@ class _CookScreenState extends State<CookScreen>
               FilledButton.icon(
                 onPressed: _fetchRecipes,
                 icon: Icon(Icons.refresh),
-                label: Text('Retry'),
+                label: Text(AppLocalizations.of(context)?.auto_retry ?? 'Retry'),
                 style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
               ),
             ],
@@ -766,7 +817,7 @@ class _CookScreenState extends State<CookScreen>
 
     return TabBarView(
       controller: _tabController,
-      children: _tierMeta.map((t) => _buildTierList(t.key, t.label)).toList(),
+      children: _getTierMeta(context).map((t) => _buildTierList(t.key, t.label)).toList(),
     );
   }
 
@@ -807,11 +858,11 @@ class _CookScreenState extends State<CookScreen>
             Icon(Icons.restaurant_menu,
                 size: 56, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2)),
             SizedBox(height: 12),
-            Text('No $tierLabel recipes yet',
+            Text(AppLocalizations.of(context)?.noTierRecipesYet(tierLabel) ?? 'No $tierLabel recipes yet',
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 15)),
             SizedBox(height: 6),
-            Text('Add items to your shelf to get recommendations',
+            Text(AppLocalizations.of(context)?.auto_addItemsToYourShelfToGetRecommendations ?? 'Add items to your shelf to get recommendations',
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), fontSize: 12)),
           ],
@@ -848,12 +899,12 @@ class _CookScreenState extends State<CookScreen>
                   Icon(Icons.search_off, size: 48,
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
                   SizedBox(height: 12),
-                  Text('No recipes match this cuisine',
+                  Text(AppLocalizations.of(context)?.auto_noRecipesMatchThisCuisine ?? 'No recipes match this cuisine',
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14)),
                   TextButton(
                     onPressed: () => setState(() => _cuisineFilter = null),
-                    child: Text('Clear filter'),
+                    child: Text(AppLocalizations.of(context)?.auto_clearFilter ?? 'Clear filter'),
                   ),
                 ]),
               ),
@@ -935,18 +986,18 @@ class _RecipeCard extends StatelessWidget {
     }
   }
 
-  String get _tierBadge {
+  String _getTierBadge(BuildContext context) {
     switch (tierKey) {
       case '1':
-        return '✅ Everything you need!';
+        return AppLocalizations.of(context)?.tierBadge1 ?? '✅ Everything you need!';
       case '2':
-        return '🔥 Recommended for you';
+        return AppLocalizations.of(context)?.tierBadge2 ?? '🔥 Recommended for you';
       case '3':
-        return '⏰ Use expiring items';
+        return AppLocalizations.of(context)?.tierBadge3 ?? '⏰ Use expiring items';
       case '4':
-        return '🛒 Just a few items away';
+        return AppLocalizations.of(context)?.tierBadge4 ?? '🛒 Just a few items away';
       default:
-        return '🌍 Discover something new';
+        return AppLocalizations.of(context)?.tierBadge5 ?? '🌍 Discover something new';
     }
   }
 
@@ -1066,7 +1117,7 @@ class _RecipeCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      _tierBadge,
+                      _getTierBadge(context),
                       style: TextStyle(
                         color: _tierColor,
                         fontSize: 12,
@@ -1129,7 +1180,7 @@ class _RecipeCard extends StatelessWidget {
                 children: [
                   _InfoChip(
                     icon: Icons.inventory_2,
-                    label: '$matched/$total ingredients',
+                    label: AppLocalizations.of(context)?.nOfNIngredients(matched.toString(), total.toString()) ?? '$matched/$total ingredients',
                     color: matchPct >= 100
                         ? Theme.of(context).colorScheme.tertiary
                         : Colors.orange,
@@ -1137,20 +1188,20 @@ class _RecipeCard extends StatelessWidget {
                   if (cuisine.isNotEmpty)
                     _InfoChip(
                       icon: Icons.public,
-                      label: cuisine,
+                      label: L10nHelper.translateCuisine(cuisine, Localizations.localeOf(context).languageCode),
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                     ),
                   if (prepTime != null)
                     _InfoChip(
                       icon: Icons.timer,
                       label: cookTime != null
-                          ? '${prepTime + cookTime} min'
-                          : '$prepTime min',
+                          ? '${prepTime + cookTime} ${AppLocalizations.of(context)?.min_tag ?? "min"}'
+                          : '$prepTime ${AppLocalizations.of(context)?.min_tag ?? "min"}',
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                     ),
                   _InfoChip(
                     icon: Icons.signal_cellular_alt,
-                    label: '⚡' * (difficulty as int),
+                    label: '${'⚡' * (difficulty as int)} ${AppLocalizations.of(context)?.difficulty_tag ?? ""}'.trim(),
                     color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                   ),
                 ],
@@ -1175,7 +1226,7 @@ class _RecipeCard extends StatelessWidget {
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Need: ${missing.join(", ")}',
+                          AppLocalizations.of(context)?.needLabel(missing.join(", ")) ?? 'Need: ${missing.join(", ")}',
                           style: TextStyle(
                             color: Colors.orange,
                             fontSize: 12,

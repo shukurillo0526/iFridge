@@ -1,0 +1,223 @@
+[
+  {
+    "title": "Beef Bulgogi",
+    "ingredients": [
+      {"name": "Beef sirloin", "quantity": 500, "unit": "g", "prep_note": "Thinly sliced against grain"},
+      {"name": "Soy sauce", "quantity": 4, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sesame oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sugar", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Asian pear or apple", "quantity": 0.5, "unit": "medium", "prep_note": "Grated"},
+      {"name": "Garlic", "quantity": 4, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Ginger", "quantity": 1, "unit": "tsp", "prep_note": "Grated"},
+      {"name": "Green onion", "quantity": 3, "unit": "stalks", "prep_note": "Chopped"},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Sesame seeds", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 1, "unit": "tbsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Mix soy sauce, sesame oil, sugar, grated pear, garlic, ginger, and pepper to make the marinade.", "timer_seconds": null},
+      {"step_number": 2, "text": "Toss beef in marinade. Refrigerate at least 30 minutes, ideally 2 hours.", "timer_seconds": 1800},
+      {"step_number": 3, "text": "Heat oil in a large skillet over high heat. Cook beef in a single layer, 2 minutes per side, working in batches to avoid steaming.", "timer_seconds": 240},
+      {"step_number": 4, "text": "Garnish with green onion and sesame seeds. Serve with rice and lettuce wraps.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Stuffed Bell Peppers",
+    "ingredients": [
+      {"name": "Bell peppers", "quantity": 4, "unit": "large", "prep_note": "Tops cut, seeds removed"},
+      {"name": "Ground beef", "quantity": 400, "unit": "g", "prep_note": ""},
+      {"name": "Cooked rice", "quantity": 1, "unit": "cup", "prep_note": ""},
+      {"name": "Onion", "quantity": 0.5, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Tomato sauce", "quantity": 1, "unit": "cup", "prep_note": ""},
+      {"name": "Cheddar cheese", "quantity": 0.5, "unit": "cup", "prep_note": "Shredded"},
+      {"name": "Italian seasoning", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Olive oil", "quantity": 1, "unit": "tbsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Preheat oven to 190C (375F). Cook beef with onion 5 minutes. Add garlic, cook 30 seconds. Drain fat.", "timer_seconds": 330},
+      {"step_number": 2, "text": "Mix beef with rice, half the tomato sauce, Italian seasoning, and salt.", "timer_seconds": null},
+      {"step_number": 3, "text": "Stuff peppers with the mixture. Place in a baking dish. Pour remaining sauce around the peppers.", "timer_seconds": null},
+      {"step_number": 4, "text": "Cover with foil. Bake 30 minutes. Remove foil, top with cheese. Bake 10 more minutes.", "timer_seconds": 2400},
+      {"step_number": 5, "text": "Let rest 5 minutes. Serve.", "timer_seconds": 300}
+    ]
+  },
+  {
+    "title": "Egg Sandwich",
+    "ingredients": [
+      {"name": "Bread", "quantity": 2, "unit": "slices", "prep_note": "Toasted"},
+      {"name": "Eggs", "quantity": 2, "unit": "large", "prep_note": ""},
+      {"name": "Butter", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Cheese", "quantity": 1, "unit": "slice", "prep_note": "American or cheddar"},
+      {"name": "Salt", "quantity": 0.25, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 1, "unit": "pinch", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Melt butter in a non-stick pan over medium heat. Fry eggs to your liking — 3 minutes for over-easy.", "timer_seconds": 180},
+      {"step_number": 2, "text": "Season with salt and pepper. Place cheese on egg while still in pan to melt slightly.", "timer_seconds": 30},
+      {"step_number": 3, "text": "Place egg and cheese between toasted bread. Press gently and serve.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Lemon Garlic Shrimp",
+    "ingredients": [
+      {"name": "Shrimp", "quantity": 400, "unit": "g", "prep_note": "Peeled, deveined"},
+      {"name": "Garlic", "quantity": 5, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Butter", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Lemon juice", "quantity": 2, "unit": "tbsp", "prep_note": "Fresh"},
+      {"name": "White wine", "quantity": 0.25, "unit": "cup", "prep_note": "Optional"},
+      {"name": "Red pepper flakes", "quantity": 0.25, "unit": "tsp", "prep_note": ""},
+      {"name": "Fresh parsley", "quantity": 2, "unit": "tbsp", "prep_note": "Chopped"},
+      {"name": "Salt", "quantity": 0.5, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Melt butter in a large skillet over medium-high heat. Add garlic and pepper flakes, cook 30 seconds.", "timer_seconds": 30},
+      {"step_number": 2, "text": "Add shrimp in a single layer. Cook 2 minutes per side until pink and curled.", "timer_seconds": 240},
+      {"step_number": 3, "text": "Add wine (if using) and lemon juice. Cook 1 minute until sauce reduces slightly.", "timer_seconds": 60},
+      {"step_number": 4, "text": "Sprinkle parsley. Serve over pasta or with crusty bread.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Baked Beans",
+    "ingredients": [
+      {"name": "Canned navy beans", "quantity": 2, "unit": "cans (400g each)", "prep_note": "Drained"},
+      {"name": "Bacon", "quantity": 4, "unit": "strips", "prep_note": "Diced"},
+      {"name": "Onion", "quantity": 1, "unit": "small", "prep_note": "Diced"},
+      {"name": "Ketchup", "quantity": 0.33, "unit": "cup", "prep_note": ""},
+      {"name": "Brown sugar", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Mustard", "quantity": 1, "unit": "tsp", "prep_note": "Yellow"},
+      {"name": "Worcestershire sauce", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.5, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Cook bacon in a saucepan over medium heat for 4 minutes until crispy. Add onion, cook 3 minutes.", "timer_seconds": 420},
+      {"step_number": 2, "text": "Add beans, ketchup, brown sugar, mustard, Worcestershire, and salt. Stir to combine.", "timer_seconds": null},
+      {"step_number": 3, "text": "Simmer on low for 20 minutes, stirring occasionally, until thick and saucy.", "timer_seconds": 1200},
+      {"step_number": 4, "text": "Serve as a side dish.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Avocado Toast",
+    "ingredients": [
+      {"name": "Bread", "quantity": 2, "unit": "slices", "prep_note": "Thick-cut sourdough"},
+      {"name": "Avocado", "quantity": 1, "unit": "large", "prep_note": "Ripe"},
+      {"name": "Lemon juice", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Red pepper flakes", "quantity": 0.25, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.25, "unit": "tsp", "prep_note": "Flaky sea salt"},
+      {"name": "Olive oil", "quantity": 1, "unit": "tsp", "prep_note": "Extra virgin"},
+      {"name": "Egg", "quantity": 1, "unit": "large", "prep_note": "Optional, poached or fried"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Toast bread until golden and crunchy.", "timer_seconds": 120},
+      {"step_number": 2, "text": "Halve avocado, remove pit. Scoop flesh onto toast. Mash with a fork to desired texture.", "timer_seconds": null},
+      {"step_number": 3, "text": "Squeeze lemon juice over avocado. Season with salt and pepper flakes. Drizzle olive oil.", "timer_seconds": null},
+      {"step_number": 4, "text": "Top with a fried or poached egg if desired. Serve immediately.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Southern Fried Chicken",
+    "ingredients": [
+      {"name": "Chicken pieces", "quantity": 1, "unit": "kg", "prep_note": "Drumsticks and thighs"},
+      {"name": "Buttermilk", "quantity": 2, "unit": "cups", "prep_note": ""},
+      {"name": "All-purpose flour", "quantity": 2, "unit": "cups", "prep_note": ""},
+      {"name": "Paprika", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Garlic powder", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Onion powder", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Cayenne pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 2, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 4, "unit": "cups", "prep_note": "For frying"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Soak chicken in buttermilk for at least 1 hour, ideally overnight in the fridge.", "timer_seconds": 3600},
+      {"step_number": 2, "text": "Mix flour with paprika, garlic powder, onion powder, cayenne, salt, and pepper.", "timer_seconds": null},
+      {"step_number": 3, "text": "Remove chicken from buttermilk, dredge heavily in seasoned flour. Let rest 10 minutes on a rack.", "timer_seconds": 600},
+      {"step_number": 4, "text": "Heat oil to 170C (340F). Fry chicken 12-15 minutes, turning once, until golden and internal temp reaches 74C.", "timer_seconds": 810},
+      {"step_number": 5, "text": "Drain on a wire rack. Rest 5 minutes before serving.", "timer_seconds": 300}
+    ]
+  },
+  {
+    "title": "Butter Corn on the Cob",
+    "ingredients": [
+      {"name": "Corn on the cob", "quantity": 4, "unit": "ears", "prep_note": "Husked"},
+      {"name": "Butter", "quantity": 3, "unit": "tbsp", "prep_note": "Softened"},
+      {"name": "Salt", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.25, "unit": "tsp", "prep_note": ""},
+      {"name": "Fresh parsley", "quantity": 1, "unit": "tbsp", "prep_note": "Chopped, optional"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Bring a large pot of water to a boil. Add corn. Cook 8-10 minutes until kernels are tender.", "timer_seconds": 540},
+      {"step_number": 2, "text": "Remove corn and pat dry.", "timer_seconds": null},
+      {"step_number": 3, "text": "Spread butter generously over hot corn. Season with salt and pepper.", "timer_seconds": null},
+      {"step_number": 4, "text": "Sprinkle parsley if desired. Serve immediately.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Chocolate Chip Cookies",
+    "ingredients": [
+      {"name": "All-purpose flour", "quantity": 2.25, "unit": "cups", "prep_note": ""},
+      {"name": "Butter", "quantity": 1, "unit": "cup", "prep_note": "Softened"},
+      {"name": "Sugar", "quantity": 0.75, "unit": "cup", "prep_note": ""},
+      {"name": "Brown sugar", "quantity": 0.75, "unit": "cup", "prep_note": "Packed"},
+      {"name": "Eggs", "quantity": 2, "unit": "large", "prep_note": ""},
+      {"name": "Vanilla", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Baking soda", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Chocolate chips", "quantity": 2, "unit": "cups", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Cream butter with both sugars until fluffy, about 3 minutes. Beat in eggs one at a time, then vanilla.", "timer_seconds": 180},
+      {"step_number": 2, "text": "Whisk flour, baking soda, and salt. Add to butter mixture and mix until just combined. Fold in chocolate chips.", "timer_seconds": null},
+      {"step_number": 3, "text": "Chill dough 30 minutes for thicker cookies.", "timer_seconds": 1800},
+      {"step_number": 4, "text": "Preheat oven to 190C (375F). Scoop rounded tablespoons onto lined baking sheets.", "timer_seconds": null},
+      {"step_number": 5, "text": "Bake 9-11 minutes until edges are golden but centers look slightly underdone.", "timer_seconds": 600},
+      {"step_number": 6, "text": "Cool on pan 5 minutes, then transfer to a rack.", "timer_seconds": 300}
+    ]
+  },
+  {
+    "title": "Doenjang Jjigae",
+    "ingredients": [
+      {"name": "Doenjang", "quantity": 2, "unit": "tbsp", "prep_note": "Korean fermented soybean paste"},
+      {"name": "Tofu", "quantity": 200, "unit": "g", "prep_note": "Cubed"},
+      {"name": "Zucchini", "quantity": 0.5, "unit": "medium", "prep_note": "Sliced"},
+      {"name": "Onion", "quantity": 0.5, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Potato", "quantity": 1, "unit": "small", "prep_note": "Cubed"},
+      {"name": "Garlic", "quantity": 3, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Korean chili flakes", "quantity": 0.5, "unit": "tsp", "prep_note": "Gochugaru"},
+      {"name": "Anchovy broth or water", "quantity": 2, "unit": "cups", "prep_note": ""},
+      {"name": "Green onion", "quantity": 1, "unit": "stalk", "prep_note": "Chopped"},
+      {"name": "Green chili", "quantity": 1, "unit": "small", "prep_note": "Sliced"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Bring broth to a boil in a small pot. Dissolve doenjang paste into the broth by pressing through a sieve.", "timer_seconds": 180},
+      {"step_number": 2, "text": "Add potato and onion. Simmer 8 minutes until potato is almost tender.", "timer_seconds": 480},
+      {"step_number": 3, "text": "Add zucchini, tofu, garlic, and gochugaru. Simmer 5 more minutes.", "timer_seconds": 300},
+      {"step_number": 4, "text": "Add green onion and chili. Serve bubbling hot with rice.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Plov (Osh)",
+    "ingredients": [
+      {"name": "Lamb or beef", "quantity": 500, "unit": "g", "prep_note": "Cut into large chunks"},
+      {"name": "Rice", "quantity": 2, "unit": "cups", "prep_note": "Devzira or basmati, soaked 30 min"},
+      {"name": "Carrots", "quantity": 4, "unit": "large", "prep_note": "Julienned into thick strips"},
+      {"name": "Onions", "quantity": 2, "unit": "large", "prep_note": "Sliced into half-rings"},
+      {"name": "Vegetable oil", "quantity": 0.5, "unit": "cup", "prep_note": ""},
+      {"name": "Cumin seeds", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Garlic", "quantity": 1, "unit": "whole head", "prep_note": "Unpeeled, top sliced off"},
+      {"name": "Chickpeas", "quantity": 0.5, "unit": "cup", "prep_note": "Soaked overnight, optional"},
+      {"name": "Salt", "quantity": 1.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Water", "quantity": 3, "unit": "cups", "prep_note": "Boiling"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil in a heavy kazan or Dutch oven over high heat until smoking. Fry onions 5 minutes until deep golden brown.", "timer_seconds": 300},
+      {"step_number": 2, "text": "Add meat. Sear on all sides for 5 minutes until browned.", "timer_seconds": 300},
+      {"step_number": 3, "text": "Add carrots. Stir-fry 5 minutes without breaking them. Add cumin, salt, and chickpeas.", "timer_seconds": 300},
+      {"step_number": 4, "text": "Pour boiling water over. Nestle garlic head in the center. Simmer on medium for 30 minutes (this is the zirvak).", "timer_seconds": 1800},
+      {"step_number": 5, "text": "Drain soaked rice. Spread evenly over the zirvak without stirring. Add more boiling water if needed — rice should be just covered.", "timer_seconds": null},
+      {"step_number": 6, "text": "Cook uncovered on medium until water absorbs into the rice. Then poke holes with a chopstick, cover tightly, reduce to lowest heat for 25 minutes.", "timer_seconds": 1500},
+      {"step_number": 7, "text": "Gently flip the entire plov onto a large serving platter. Serve with achichuk salad.", "timer_seconds": null}
+    ]
+  }
+]

@@ -5,12 +5,15 @@
 // Fetches recipe_ingredients and recipe_steps from Supabase.
 
 import 'package:flutter/material.dart';
+
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/widgets/shimmer_loading.dart';
 import 'package:ifridge_app/core/widgets/slide_in_item.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/recipe_prep_screen.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
+import 'package:ifridge_app/core/utils/l10n_helper.dart';
 
 class RecipeDetailScreen extends StatefulWidget {
   final String recipeId;
@@ -50,6 +53,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   bool _loading = true;
   List<Map<String, dynamic>> _ingredients = [];
   List<Map<String, dynamic>> _steps = [];
+  String _displayTitle = '';
+  String? _displayDescription;
 
   @override
   void initState() {
@@ -57,32 +62,108 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     _loadDetails();
   }
 
-  Future<void> _loadDetails() async {
+    Future<void> _loadDetails() async {
     try {
       final supabase = Supabase.instance.client;
 
-      // Fetch ingredients with their display names
-      final ingredientRows = await supabase
-          .from('recipe_ingredients')
-          .select('*, ingredients(id, display_name_en, category)')
-          .eq('recipe_id', widget.recipeId)
-          .order('is_optional', ascending: true);
+      // Fetch JSONB ingredients and steps directly from the recipes table
+      final recipeData = await supabase
+          .from('recipes')
+          .select('ingredients, steps')
+          .eq('id', widget.recipeId)
+          .maybeSingle();
+          
+      if (recipeData == null) {
+         setState(() => _loading = false);
+         return;
+      }
 
-      // Fetch cooking steps
-      final stepRows = await supabase
-          .from('recipe_steps')
-          .select()
-          .eq('recipe_id', widget.recipeId)
-          .order('step_number', ascending: true);
+      _ingredients = List<Map<String, dynamic>>.from(recipeData['ingredients'] ?? []);
+      _steps = List<Map<String, dynamic>>.from(recipeData['steps'] ?? []);
+      _displayTitle = widget.title;
+      _displayDescription = widget.description;
+      
+      final userLanguage = Localizations.localeOf(context).languageCode;
+
+      // If not English, fetch translation from backend (cached in DB)
+      if (userLanguage != 'en') {
+        try {
+          final ingText = _ingredients.map((i) {
+            final name = i['name'] ?? 'Unknown';
+            final qty = i['quantity'] ?? '';
+            final unit = i['unit'] ?? '';
+            return "- $qty $unit $name";
+          }).join('\\n');
+
+          final stepsText = _steps.map((s) {
+            final num = s['step_number'] ?? 0;
+            final text = s['text'] ?? '';
+            return "$num. $text";
+          }).join('\\n');
+
+          final transData = await supabase
+              .from('recipe_translations')
+              .select('*')
+              .eq('recipe_id', widget.recipeId)
+              .eq('language_code', userLanguage)
+              .maybeSingle();
+
+          if (transData != null) {
+            setState(() {
+              if (transData['title_translated'] != null) _displayTitle = transData['title_translated'];
+              
+              if (transData['ingredients_translated'] != null) {
+                final transIngs = transData['ingredients_translated'] as List;
+                for (int i = 0; i < _ingredients.length && i < transIngs.length; i++) {
+                   _ingredients[i]['translated_name'] = transIngs[i]['name'];
+                }
+              }
+              
+              if (transData['steps_translated'] != null) {
+                final transSteps = transData['steps_translated'] as List;
+                for (int i = 0; i < _steps.length && i < transSteps.length; i++) {
+                   _steps[i]['translated_text'] = transSteps[i]['text'];
+                }
+              }
+            });
+          }
+        } catch (e) {
+          debugPrint('DB Translation fetch failed: $e');
+        }
+      }
 
       setState(() {
-        _ingredients = List<Map<String, dynamic>>.from(ingredientRows);
-        _steps = List<Map<String, dynamic>>.from(stepRows);
         _loading = false;
       });
     } catch (e) {
       setState(() => _loading = false);
     }
+  }
+
+
+  void _applyTranslation(Map<String, dynamic> data) {
+    setState(() {
+      if (data['title'] != null) _displayTitle = data['title'];
+      if (data['description'] != null) _displayDescription = data['description'];
+      
+      try {
+        final translatedIngs = data['ingredients'] as List<dynamic>?;
+        if (translatedIngs != null) {
+            for (int i = 0; i < _ingredients.length && i < translatedIngs.length; i++) {
+                _ingredients[i]['translated_name'] = translatedIngs[i]['name'];
+            }
+        }
+
+        final translatedSteps = data['steps'] as List<dynamic>?;
+        if (translatedSteps != null) {
+            for (int i = 0; i < _steps.length && i < translatedSteps.length; i++) {
+                _steps[i]['translated_text'] = translatedSteps[i]['text'];
+            }
+        }
+      } catch (e) {
+         debugPrint('Failed to map translation: $e');
+      }
+    });
   }
 
   void _showAdjustPortionsDialog() {
@@ -148,7 +229,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         _adjustWithAi(newServings);
                       },
                       icon: Icon(Icons.auto_awesome),
-                      label: Text('Scale to $newServings Servings'),
+                      label: Text(AppLocalizations.of(context)?.scaleToNServings(newServings.toString()) ?? 'Scale to $newServings Servings'),
                       style: FilledButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -466,7 +547,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         SizedBox(height: 12),
                         // Title
                         Text(
-                          widget.title,
+                          _displayTitle,
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.onSurface,
                             fontSize: 26,
@@ -474,11 +555,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                             height: 1.2,
                           ),
                         ),
-                        if (widget.description != null &&
-                            widget.description!.isNotEmpty) ...[
+                        if (_displayDescription != null &&
+                            _displayDescription!.isNotEmpty) ...[
                           SizedBox(height: 6),
                           Text(
-                            widget.description!,
+                            _displayDescription!,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -504,18 +585,18 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                 runSpacing: 8,
                 children: [
                   if (widget.cuisine != null && widget.cuisine!.isNotEmpty)
-                    _QuickChip(icon: Icons.public, label: widget.cuisine!),
+                    _QuickChip(icon: Icons.public, label: L10nHelper.translateCuisine(widget.cuisine!, Localizations.localeOf(context).languageCode)),
                   if (_totalTime > 0)
-                    _QuickChip(icon: Icons.timer, label: '$_totalTime min'),
+                    _QuickChip(icon: Icons.timer, label: '$_totalTime ${AppLocalizations.of(context)?.min_tag ?? "min"}'),
                   if (widget.servings != null)
                     _QuickChip(
                       icon: Icons.people,
-                      label: '${widget.servings} servings',
+                      label: '${widget.servings} ${AppLocalizations.of(context)?.servings_tag ?? "servings"}',
                     ),
                   if (widget.difficulty != null)
                     _QuickChip(
                       icon: Icons.signal_cellular_alt,
-                      label: '${'⚡' * widget.difficulty!} Difficulty',
+                      label: '${'⚡' * widget.difficulty!} ${AppLocalizations.of(context)?.difficulty_tag ?? "Difficulty"}',
                     ),
                   if (widget.caloriesPerServing != null && widget.caloriesPerServing! > 0)
                     _QuickChip(
@@ -544,7 +625,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Ingredients (${_ingredients.length})',
+                      AppLocalizations.of(context)?.ingredientsWithCount(_ingredients.length.toString()) ?? 'Ingredients (${_ingredients.length})',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 18,
@@ -555,7 +636,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     TextButton.icon(
                       onPressed: _showAdjustPortionsDialog,
                       icon: Icon(Icons.auto_awesome, size: 16),
-                      label: Text('Scale'),
+                      label: Text(AppLocalizations.of(context)?.scale ?? 'Scale'),
                       style: TextButton.styleFrom(
                         foregroundColor: Theme.of(context).colorScheme.primary,
                         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
@@ -573,9 +654,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final ing = _ingredients[index];
-                  final ingData = ing['ingredients'] as Map<String, dynamic>?;
-                  final name = ingData?['display_name_en'] ?? 'Unknown';
-                  final ingId = ingData?['id'] ?? '';
+                  
+                  final name = ing['translated_name'] ?? ing['name'] ?? 'Unknown';
+                  final ingId = ing['ingredient_id'] ?? '';
                   final qty = ing['quantity'];
                   final unit = ing['unit'] ?? '';
                   final isOptional = ing['is_optional'] == true;
@@ -586,7 +667,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     delay: index * 50,
                     child: _IngredientRow(
                       name: name,
-                      quantity: '$qty $unit',
+                      quantity: '$qty ${L10nHelper.translateUnit(unit, Localizations.localeOf(context).languageCode)}',
                       prepNote: prepNote,
                       isOptional: isOptional,
                       isOwned: isOwned,
@@ -601,7 +682,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
             // ── Add Missing to Shopping List Button ────────────────
             if (_ingredients.any((ing) {
-              final id = (ing['ingredients'] as Map?)?['id'];
+              final id = ing['ingredient_id'];
               return !widget.ownedIngredientIds.contains(id) &&
                   ing['is_optional'] != true;
             }))
@@ -611,7 +692,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                   child: OutlinedButton.icon(
                     onPressed: () async {
                       final missingItems = _ingredients.where((ing) {
-                        final id = (ing['ingredients'] as Map?)?['id'];
+                        final id = ing['ingredient_id'];
                         return !widget.ownedIngredientIds.contains(id) &&
                             ing['is_optional'] != true;
                       }).toList();
@@ -619,8 +700,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       if (missingItems.isEmpty) return;
 
                       final insertData = missingItems.map((ing) {
-                        final ingData = ing['ingredients'] as Map<String, dynamic>?;
-                        final name = ingData?['display_name_en'] ?? 'Unknown';
+                        
+                        final name = ing['translated_name'] ?? ing['name'] ?? 'Unknown';
                         return {
                           'user_id': currentUserId(),
                           'ingredient_name': name,
@@ -638,7 +719,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Added missing items to Shopping List!'),
+                              content: Text(AppLocalizations.of(context)?.addedMissingItemsToShoppingList ?? 'Added missing items to Shopping List!'),
                               backgroundColor: Theme.of(context).colorScheme.primary,
                             ),
                           );
@@ -647,7 +728,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                          if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Failed to add items: $e'),
+                              content: Text(AppLocalizations.of(context)?.failedToAddItemsX(e.toString()) ?? 'Failed to add items: $e'),
                               backgroundColor: Colors.redAccent,
                             ),
                           );
@@ -656,7 +737,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     },
                     icon: Icon(Icons.shopping_cart_outlined, size: 20),
                     label: Text(
-                      'Add missing to Shopping List',
+                      AppLocalizations.of(context)?.addMissingToShoppingList ?? 'Add missing to Shopping List',
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                     style: OutlinedButton.styleFrom(
@@ -681,7 +762,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Cooking Steps (${_steps.length})',
+                      AppLocalizations.of(context)?.cookingStepsWithCount(_steps.length.toString()) ?? 'Cooking Steps (${_steps.length})',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 18,
@@ -740,8 +821,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       delay: (_ingredients.length + index) * 50,
                       child: _StepCard(
                         stepNumber: step['step_number'] ?? (index + 1),
-                        humanText: step['human_text'] ?? '',
-                        estimatedSeconds: step['estimated_seconds'],
+                        humanText: step['translated_text'] ?? step['text'] ?? '',
+                        estimatedSeconds: step['timer_seconds'],
                         requiresAttention: step['requires_attention'] == true,
                         tierColor: widget.tierColor,
                         isLast: isLast,
@@ -770,7 +851,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                               children: [
                                 Icon(Icons.celebration, color: Theme.of(context).colorScheme.onSurface, size: 20),
                                 SizedBox(width: 8),
-                                Text('Recorded! Your taste profile is evolving 🧠'),
+                                Text(AppLocalizations.of(context)?.recordedTasteProfileEvolving ?? 'Recorded! Your taste profile is evolving 🧠'),
                               ],
                             ),
                             backgroundColor: Theme.of(context).colorScheme.tertiary,
@@ -780,14 +861,14 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     } catch (e) {
                       if (mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Failed to record: $e')),
+                          SnackBar(content: Text(AppLocalizations.of(context)?.failedToRecordX(e.toString()) ?? 'Failed to record: $e')),
                         );
                       }
                     }
                   },
                   icon: Icon(Icons.restaurant, size: 20),
                   label: Text(
-                    'I Cooked This!',
+                    AppLocalizations.of(context)?.iCookedThis ?? 'I Cooked This!',
                     style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
                   ),
                   style: FilledButton.styleFrom(
@@ -837,7 +918,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     icon: Icon(Icons.play_arrow, size: 24),
                     label: Text(
-                      'Start Cooking',
+                      AppLocalizations.of(context)?.startCooking ?? 'Start Cooking',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -965,7 +1046,7 @@ class _IngredientRow extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          'optional',
+                          AppLocalizations.of(context)?.optional_tag ?? 'optional',
                           style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38), fontSize: 9),
                         ),
                       ),
@@ -1003,7 +1084,7 @@ class _IngredientRow extends StatelessWidget {
                     Icon(Icons.swap_horiz, size: 14, color: Theme.of(context).colorScheme.primary),
                     SizedBox(width: 3),
                     Text(
-                      'Swap',
+                      AppLocalizations.of(context)?.swapButton ?? 'Swap',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
                         fontSize: 11,
@@ -1159,7 +1240,7 @@ class _StepCard extends StatelessWidget {
                             ),
                             SizedBox(width: 4),
                             Text(
-                              requiresAttention ? 'Hands-on' : 'Automatic',
+                              requiresAttention ? (AppLocalizations.of(context)?.handsOn ?? 'Hands-on') : (AppLocalizations.of(context)?.automatic ?? 'Automatic'),
                               style: TextStyle(
                                 color: requiresAttention
                                     ? Colors.orange

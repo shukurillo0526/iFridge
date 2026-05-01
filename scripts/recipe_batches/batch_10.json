@@ -1,0 +1,199 @@
+[
+  {
+    "title": "Tteokbokki",
+    "ingredients": [
+      {"name": "Rice cakes", "quantity": 300, "unit": "g", "prep_note": "Tteok, soaked if frozen"},
+      {"name": "Gochujang", "quantity": 2, "unit": "tbsp", "prep_note": "Korean chili paste"},
+      {"name": "Gochugaru", "quantity": 1, "unit": "tbsp", "prep_note": "Korean chili flakes"},
+      {"name": "Soy sauce", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sugar", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Anchovy or dashima broth", "quantity": 2, "unit": "cups", "prep_note": "Or water"},
+      {"name": "Fish cake", "quantity": 100, "unit": "g", "prep_note": "Sliced"},
+      {"name": "Green onion", "quantity": 2, "unit": "stalks", "prep_note": "Chopped"},
+      {"name": "Hard-boiled egg", "quantity": 2, "unit": "large", "prep_note": "Optional"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Bring broth to a boil. Whisk in gochujang, gochugaru, soy sauce, and sugar until dissolved.", "timer_seconds": 180},
+      {"step_number": 2, "text": "Add rice cakes. Cook 8-10 minutes, stirring frequently, until cakes are soft and sauce is thick.", "timer_seconds": 540},
+      {"step_number": 3, "text": "Add fish cake in the last 2 minutes.", "timer_seconds": 120},
+      {"step_number": 4, "text": "Top with green onion and halved boiled eggs. Serve hot.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Chicken Nuggets",
+    "ingredients": [
+      {"name": "Chicken breast", "quantity": 500, "unit": "g", "prep_note": "Cut into bite-size pieces"},
+      {"name": "All-purpose flour", "quantity": 0.5, "unit": "cup", "prep_note": ""},
+      {"name": "Eggs", "quantity": 2, "unit": "large", "prep_note": "Beaten"},
+      {"name": "Breadcrumbs", "quantity": 1, "unit": "cup", "prep_note": "Panko"},
+      {"name": "Garlic powder", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Paprika", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 3, "unit": "cups", "prep_note": "For frying"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Season flour with salt, garlic powder, and paprika. Set up three bowls: flour, beaten eggs, breadcrumbs.", "timer_seconds": null},
+      {"step_number": 2, "text": "Coat each chicken piece in flour, then egg, then breadcrumbs. Press firmly.", "timer_seconds": null},
+      {"step_number": 3, "text": "Heat oil to 175C (350F). Fry nuggets in batches for 4 minutes until golden and cooked through.", "timer_seconds": 240},
+      {"step_number": 4, "text": "Drain on paper towels. Serve with ketchup or honey mustard.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Pasta Aglio e Olio",
+    "ingredients": [
+      {"name": "Spaghetti", "quantity": 300, "unit": "g", "prep_note": ""},
+      {"name": "Garlic", "quantity": 8, "unit": "cloves", "prep_note": "Thinly sliced"},
+      {"name": "Olive oil", "quantity": 0.33, "unit": "cup", "prep_note": "Extra virgin"},
+      {"name": "Red pepper flakes", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Fresh parsley", "quantity": 3, "unit": "tbsp", "prep_note": "Chopped"},
+      {"name": "Parmesan", "quantity": 0.25, "unit": "cup", "prep_note": "Grated"},
+      {"name": "Salt", "quantity": 1, "unit": "tbsp", "prep_note": "For pasta water"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Cook spaghetti in heavily salted water until al dente. Reserve 1 cup pasta water.", "timer_seconds": 540},
+      {"step_number": 2, "text": "While pasta cooks, heat olive oil over medium-low heat. Add garlic and pepper flakes. Cook gently 3-4 minutes until garlic is light golden — not brown.", "timer_seconds": 210},
+      {"step_number": 3, "text": "Add drained pasta and 0.25 cup pasta water to the pan. Toss vigorously over medium heat for 1 minute.", "timer_seconds": 60},
+      {"step_number": 4, "text": "Add parsley and Parmesan. Toss and serve immediately.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Chicken Katsu Curry",
+    "ingredients": [
+      {"name": "Chicken breast", "quantity": 2, "unit": "large", "prep_note": "Pounded thin"},
+      {"name": "Flour", "quantity": 0.5, "unit": "cup", "prep_note": ""},
+      {"name": "Eggs", "quantity": 2, "unit": "large", "prep_note": "Beaten"},
+      {"name": "Panko breadcrumbs", "quantity": 1.5, "unit": "cups", "prep_note": ""},
+      {"name": "Onion", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Curry powder", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Chicken broth", "quantity": 1.5, "unit": "cups", "prep_note": ""},
+      {"name": "Soy sauce", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Honey", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Butter", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 3, "unit": "cups", "prep_note": "For frying"},
+      {"name": "Cooked rice", "quantity": 2, "unit": "cups", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Make curry sauce: melt butter, sauté onion 5 minutes. Add garlic and curry powder, cook 1 minute. Add broth, soy sauce, honey. Simmer 10 minutes. Blend until smooth.", "timer_seconds": 960},
+      {"step_number": 2, "text": "Season chicken with salt. Dredge in flour, dip in egg, coat in panko.", "timer_seconds": null},
+      {"step_number": 3, "text": "Heat oil to 175C (350F). Fry chicken 4 minutes per side until golden and cooked through.", "timer_seconds": 480},
+      {"step_number": 4, "text": "Slice katsu. Serve over rice, drizzled generously with curry sauce.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Bruschetta",
+    "ingredients": [
+      {"name": "Baguette", "quantity": 1, "unit": "medium", "prep_note": "Sliced 2cm thick"},
+      {"name": "Tomatoes", "quantity": 4, "unit": "medium", "prep_note": "Diced, seeds removed"},
+      {"name": "Fresh basil", "quantity": 8, "unit": "leaves", "prep_note": "Chiffonade"},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "1 whole for rubbing, 1 minced"},
+      {"name": "Olive oil", "quantity": 3, "unit": "tbsp", "prep_note": "Extra virgin"},
+      {"name": "Balsamic vinegar", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.25, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Mix diced tomatoes with minced garlic, basil, 2 tbsp olive oil, balsamic vinegar, salt, and pepper. Let sit 15 minutes.", "timer_seconds": 900},
+      {"step_number": 2, "text": "Toast baguette slices under a broiler or on a grill for 2 minutes per side until golden.", "timer_seconds": 240},
+      {"step_number": 3, "text": "Rub each toast with the cut side of a halved garlic clove. Drizzle with remaining oil.", "timer_seconds": null},
+      {"step_number": 4, "text": "Spoon tomato mixture generously on each toast. Serve immediately.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Egg Fried Noodles",
+    "ingredients": [
+      {"name": "Egg noodles", "quantity": 250, "unit": "g", "prep_note": "Cooked, drained"},
+      {"name": "Eggs", "quantity": 3, "unit": "large", "prep_note": "Beaten"},
+      {"name": "Soy sauce", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Oyster sauce", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sesame oil", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Bean sprouts", "quantity": 1, "unit": "cup", "prep_note": ""},
+      {"name": "Green onion", "quantity": 2, "unit": "stalks", "prep_note": "Sliced"},
+      {"name": "Vegetable oil", "quantity": 2, "unit": "tbsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat 1 tbsp oil in a wok over high heat. Scramble eggs 30 seconds. Remove.", "timer_seconds": 30},
+      {"step_number": 2, "text": "Add remaining oil. Stir-fry garlic 15 seconds. Add noodles and toss for 2 minutes.", "timer_seconds": 135},
+      {"step_number": 3, "text": "Add soy sauce, oyster sauce, and sesame oil. Toss to coat evenly.", "timer_seconds": 30},
+      {"step_number": 4, "text": "Return eggs. Add bean sprouts and green onion. Toss 30 seconds. Serve hot.", "timer_seconds": 30}
+    ]
+  },
+  {
+    "title": "Crispy Potato Wedges",
+    "ingredients": [
+      {"name": "Potatoes", "quantity": 4, "unit": "large", "prep_note": "Cut into wedges"},
+      {"name": "Olive oil", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Garlic powder", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Paprika", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Onion powder", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Parmesan", "quantity": 2, "unit": "tbsp", "prep_note": "Grated, optional"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Preheat oven to 220C (425F). Line a baking sheet with parchment.", "timer_seconds": null},
+      {"step_number": 2, "text": "Toss wedges with oil, garlic powder, paprika, onion powder, and salt.", "timer_seconds": null},
+      {"step_number": 3, "text": "Spread in a single layer, skin-side down. Bake 30 minutes, flipping halfway, until golden and crispy.", "timer_seconds": 1800},
+      {"step_number": 4, "text": "Sprinkle with Parmesan if desired. Serve with ketchup or aioli.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Gyeran-mari (Korean Egg Roll)",
+    "ingredients": [
+      {"name": "Eggs", "quantity": 4, "unit": "large", "prep_note": ""},
+      {"name": "Carrot", "quantity": 0.25, "unit": "medium", "prep_note": "Finely diced"},
+      {"name": "Green onion", "quantity": 2, "unit": "stalks", "prep_note": "Finely chopped"},
+      {"name": "Salt", "quantity": 0.25, "unit": "tsp", "prep_note": ""},
+      {"name": "Sesame oil", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 1, "unit": "tbsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Beat eggs with salt. Mix in diced carrot, green onion, and sesame oil.", "timer_seconds": null},
+      {"step_number": 2, "text": "Heat oil in a rectangular or round non-stick pan over medium-low heat.", "timer_seconds": 60},
+      {"step_number": 3, "text": "Pour a thin layer of egg mixture. When almost set, roll it tightly to one side of the pan.", "timer_seconds": 60},
+      {"step_number": 4, "text": "Pour another thin layer. When set, roll again incorporating the first roll. Repeat until all egg is used.", "timer_seconds": 180},
+      {"step_number": 5, "text": "Remove, let cool 2 minutes. Slice into 2cm rounds and serve.", "timer_seconds": 120}
+    ]
+  },
+  {
+    "title": "Grilled Chicken Wrap",
+    "ingredients": [
+      {"name": "Chicken breast", "quantity": 300, "unit": "g", "prep_note": "Grilled, sliced"},
+      {"name": "Flour tortillas", "quantity": 2, "unit": "large", "prep_note": ""},
+      {"name": "Lettuce", "quantity": 1, "unit": "cup", "prep_note": "Shredded"},
+      {"name": "Tomato", "quantity": 1, "unit": "medium", "prep_note": "Sliced"},
+      {"name": "Red onion", "quantity": 0.25, "unit": "medium", "prep_note": "Sliced"},
+      {"name": "Ranch or yogurt sauce", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.25, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.25, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Season chicken with salt and pepper. Grill or pan-sear 5 minutes per side. Rest and slice.", "timer_seconds": 600},
+      {"step_number": 2, "text": "Warm tortillas in a dry pan 15 seconds per side.", "timer_seconds": 30},
+      {"step_number": 3, "text": "Layer sauce, lettuce, tomato, onion, and chicken down the center.", "timer_seconds": null},
+      {"step_number": 4, "text": "Fold bottom up, then roll tightly. Cut in half and serve.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "French Onion Soup",
+    "ingredients": [
+      {"name": "Onions", "quantity": 4, "unit": "large", "prep_note": "Thinly sliced"},
+      {"name": "Butter", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Beef broth", "quantity": 4, "unit": "cups", "prep_note": ""},
+      {"name": "White wine", "quantity": 0.5, "unit": "cup", "prep_note": "Dry"},
+      {"name": "Fresh thyme", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Bay leaf", "quantity": 1, "unit": "leaf", "prep_note": ""},
+      {"name": "Baguette", "quantity": 4, "unit": "slices", "prep_note": "Toasted"},
+      {"name": "Gruyere cheese", "quantity": 1, "unit": "cup", "prep_note": "Shredded"},
+      {"name": "Salt", "quantity": 0.75, "unit": "tsp", "prep_note": ""},
+      {"name": "Sugar", "quantity": 0.5, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Melt butter in a heavy pot over medium heat. Add onions and sugar. Cook 30-35 minutes, stirring every 5 minutes, until deeply caramelized.", "timer_seconds": 1950},
+      {"step_number": 2, "text": "Add wine, scraping up any browned bits. Cook 2 minutes until reduced.", "timer_seconds": 120},
+      {"step_number": 3, "text": "Add broth, thyme, and bay leaf. Simmer 15 minutes. Season with salt. Remove bay leaf.", "timer_seconds": 900},
+      {"step_number": 4, "text": "Ladle into oven-safe bowls. Float a toasted baguette slice on top. Cover with Gruyere.", "timer_seconds": null},
+      {"step_number": 5, "text": "Broil 3-4 minutes until cheese is bubbly and golden. Serve immediately.", "timer_seconds": 210}
+    ]
+  }
+]

@@ -4,6 +4,7 @@
 // Supports quantity adjustment, location/state changes, and deletion.
 
 import 'package:flutter/material.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/utils/category_images.dart';
 import 'package:ifridge_app/features/shelf/domain/inventory_item.dart';
@@ -85,17 +86,17 @@ class _InventoryDetailSheetState extends State<InventoryDetailSheet> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text('Delete item?'),
+        title: Text(AppLocalizations.of(context)?.auto_deleteItem ?? 'Delete item?'),
         content: Text('Remove "${item.name}" from your inventory?'),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: Text('Cancel')),
+              child: Text(AppLocalizations.of(context)?.auto_cancel ?? 'Cancel')),
           TextButton(
               onPressed: () => Navigator.pop(ctx, true),
               style: TextButton.styleFrom(
                   foregroundColor: Theme.of(context).colorScheme.error),
-              child: Text('Delete')),
+              child: Text(AppLocalizations.of(context)?.auto_delete ?? 'Delete')),
         ],
       ),
     );
@@ -242,7 +243,7 @@ class _InventoryDetailSheetState extends State<InventoryDetailSheet> {
       padding: EdgeInsets.symmetric(horizontal: 24),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          Text('Freshness',
+          Text(AppLocalizations.of(context)?.auto_freshness ?? 'Freshness',
               style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   fontSize: 12,
@@ -461,7 +462,7 @@ class _InventoryDetailSheetState extends State<InventoryDetailSheet> {
             child: FilledButton.icon(
               onPressed: _updating ? null : _consumeOne,
               icon: Icon(Icons.restaurant, size: 18),
-              label: Text('Use 1 Unit'),
+              label: Text(AppLocalizations.of(context)?.auto_use1Unit ?? 'Use 1 Unit'),
               style: FilledButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -477,7 +478,7 @@ class _InventoryDetailSheetState extends State<InventoryDetailSheet> {
             child: OutlinedButton.icon(
               onPressed: _updating ? null : _deleteItem,
               icon: Icon(Icons.delete_outline, size: 18),
-              label: Text('Remove from Inventory'),
+              label: Text(AppLocalizations.of(context)?.auto_removeFromInventory ?? 'Remove from Inventory'),
               style: OutlinedButton.styleFrom(
                 foregroundColor: Theme.of(context).colorScheme.error,
                 side: BorderSide(

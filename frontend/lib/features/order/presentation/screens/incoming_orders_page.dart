@@ -5,6 +5,7 @@
 // Restaurant can advance order status: confirmed → preparing → ready → completed.
 
 import 'package:flutter/material.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class IncomingOrdersPage extends StatefulWidget {
@@ -22,7 +23,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
   List<Map<String, dynamic>> _orders = [];
   bool _loading = true;
 
-  static final accent = Theme.of(context).colorScheme.primary;
+
 
   @override
   void initState() {
@@ -75,7 +76,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Order updated to: ${_statusLabel(newStatus)}'),
-          backgroundColor: accent,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ));
@@ -110,7 +111,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text('Incoming Orders',
+        title: Text(AppLocalizations.of(context)?.auto_incomingOrders ?? 'Incoming Orders',
             style: TextStyle(fontWeight: FontWeight.w700)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
@@ -124,9 +125,9 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
         ],
         bottom: TabBar(
           controller: _tabController,
-          labelColor: accent,
+          labelColor: Theme.of(context).colorScheme.primary,
           unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
-          indicatorColor: accent,
+          indicatorColor: Theme.of(context).colorScheme.primary,
           indicatorWeight: 3,
           labelStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
           tabs: [
@@ -137,7 +138,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
         ),
       ),
       body: _loading
-          ? Center(child: CircularProgressIndicator(color: accent))
+          ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary))
           : TabBarView(
               controller: _tabController,
               children: [
@@ -169,7 +170,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
 
     return RefreshIndicator(
       onRefresh: _loadOrders,
-      color: accent,
+      color: Theme.of(context).colorScheme.primary,
       child: ListView.builder(
         padding: EdgeInsets.all(16),
         itemCount: orders.length,
@@ -195,7 +196,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
         switch (currentStatus) {
       'confirmed' => ('preparing', 'Start Preparing', Icons.restaurant, Colors.blue),
       'preparing' => ('ready', 'Mark Ready', Icons.check_circle, Colors.green),
-      'ready' => ('completed', 'Complete', Icons.done_all, accent),
+      'ready' => ('completed', 'Complete', Icons.done_all, Theme.of(context).colorScheme.primary),
       _ => (null, '', Icons.check, Colors.grey),
     };
 
@@ -216,7 +217,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
               Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: (type == 'delivery' ? Colors.purple : accent)
+                  color: (type == 'delivery' ? Colors.purple : Theme.of(context).colorScheme.primary)
                       .withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -224,7 +225,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
                   type == 'delivery'
                       ? Icons.delivery_dining
                       : Icons.shopping_bag_outlined,
-                  color: type == 'delivery' ? Colors.purple : accent,
+                  color: type == 'delivery' ? Colors.purple : Theme.of(context).colorScheme.primary,
                   size: 18,
                 ),
               ),
@@ -240,12 +241,12 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
                             padding: EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              color: accent.withValues(alpha: 0.15),
+                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(pickupCode,
                                 style: TextStyle(
-                                    color: accent,
+                                    color: Theme.of(context).colorScheme.primary,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 2)),
@@ -270,7 +271,7 @@ class _IncomingOrdersPageState extends State<IncomingOrdersPage>
               ),
               Text('${total.round()} UZS',
                   style: TextStyle(
-                      color: accent,
+                      color: Theme.of(context).colorScheme.primary,
                       fontSize: 16,
                       fontWeight: FontWeight.w700)),
             ],

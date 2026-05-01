@@ -12,7 +12,7 @@ import 'package:ifridge_app/core/theme/app_theme.dart';
 import 'package:ifridge_app/core/constants/app_info.dart';
 import 'package:ifridge_app/core/widgets/shimmer_loading.dart';
 import 'package:ifridge_app/core/widgets/slide_in_item.dart';
-import 'package:ifridge_app/features/gamification/domain/badges.dart' show levelFromXp;
+import 'package:ifridge_app/features/gamification/domain/badges.dart' show levelFromXp, WasteBadge, computeEarnedBadges;
 import 'package:ifridge_app/core/services/auth_helper.dart';
 import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:ifridge_app/core/services/app_settings.dart';
@@ -49,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int _mealsCooked = 0;
   int _itemsSaved = 0;
   int _currentStreak = 0;
-  List<Map<String, dynamic>> _badges = [];
+  Set<WasteBadge> _earnedBadges = {};
 
   // Flavor profile
   Map<String, double> _flavorValues = {
@@ -89,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _mealsCooked = 0;
           _itemsSaved = 0;
           _currentStreak = 0;
-          _badges = [];
+          _earnedBadges = {};
           _flavorValues = {
             'Sweet': 0.5, 'Salty': 0.5, 'Sour': 0.5,
             'Bitter': 0.5, 'Umami': 0.5, 'Spicy': 0.5,
@@ -165,9 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         // Badges from JSONB
         final rawBadges = statsData?['badges'];
-        if (rawBadges is List) {
-          _badges = rawBadges.cast<Map<String, dynamic>>();
-        }
+        _earnedBadges = computeEarnedBadges(statsData);
 
         // Flavor profile
         if (flavorData != null) {
@@ -726,7 +724,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SlideInItem(
                   delay: 350,
                   child: _SectionCard(
-                    title: 'Account',
+                    title: AppLocalizations.of(context)?.profileAccount ?? 'Account',
                     child: Column(
                       children: [
                         // Email display
@@ -746,18 +744,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               builder: (ctx) => AlertDialog(
                                 backgroundColor: Theme.of(context).colorScheme.surface,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                title: Text('Sign Out?', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
-                                content: Text('You will need to sign in again.',
+                                title: Text(AppLocalizations.of(context)?.auto_signOut ?? 'Sign Out?', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+                                content: Text(AppLocalizations.of(context)?.auto_youWillNeedToSignInAgain ?? 'You will need to sign in again.',
                                     style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx, false),
-                                    child: Text('Cancel'),
+                                    child: Text(AppLocalizations.of(context)?.auto_cancel ?? 'Cancel'),
                                   ),
                                   FilledButton(
                                     onPressed: () => Navigator.pop(ctx, true),
                                     style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
-                                    child: Text('Sign Out'),
+                                    child: Text(AppLocalizations.of(context)?.auto_signOut ?? 'Sign Out'),
                                   ),
                                 ],
                               ),
@@ -770,7 +768,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         // Delete Account
                         _SettingsRow(
                           icon: Icons.delete_forever,
-                          label: 'Delete Account',
+                          label: AppLocalizations.of(context)?.deleteAccount ?? 'Delete Account',
                           iconColor: Colors.redAccent,
                           labelColor: Colors.redAccent,
                           onTap: () async {
@@ -779,7 +777,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               builder: (ctx) => AlertDialog(
                                 backgroundColor: Theme.of(context).colorScheme.surface,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                title: Text('Delete Account?',
+                                title: Text(AppLocalizations.of(context)?.auto_deleteAccount ?? 'Delete Account?',
                                     style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w700)),
                                 content: Text(
                                   'This action is permanent and cannot be undone. All your data will be lost.',
@@ -788,12 +786,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx, false),
-                                    child: Text('Cancel'),
+                                    child: Text(AppLocalizations.of(context)?.auto_cancel ?? 'Cancel'),
                                   ),
                                   FilledButton(
                                     onPressed: () => Navigator.pop(ctx, true),
                                     style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
-                                    child: Text('Delete Forever'),
+                                    child: Text(AppLocalizations.of(context)?.auto_deleteForever ?? 'Delete Forever'),
                                   ),
                                 ],
                               ),
@@ -801,7 +799,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             if (confirm == true && mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text('Account deletion requested. Contact support to finalize.'),
+                                  content: Text(AppLocalizations.of(context)?.auto_accountDeletionRequestedContactSupportToFinalize ?? 'Account deletion requested. Contact support to finalize.'),
                                   backgroundColor: Colors.redAccent,
                                 ),
                               );
@@ -853,7 +851,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   children: [
                                     Text('🧊', style: TextStyle(fontSize: 32)),
                                     SizedBox(width: 12),
-                                    Text('iFridge', style: TextStyle(fontWeight: FontWeight.w800)),
+                                    Text(AppLocalizations.of(context)?.auto_ifridge ?? 'iFridge', style: TextStyle(fontWeight: FontWeight.w800)),
                                   ],
                                 ),
                                 content: Column(
@@ -862,13 +860,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   children: [
                                     Text('Version ${AppInfo.version} — The Intelligent Kitchen', style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary)),
                                     SizedBox(height: 12),
-                                    Text('iFridge is your AI-powered kitchen ecosystem. It automatically tracks your ingredients, predicts expirations, generates personalized recipes, and lets you order from local restaurants.', style: TextStyle(height: 1.5, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8))),
+                                    Text(AppLocalizations.of(context)?.auto_ifridgeIsYourAipoweredKitchenEcosystemItAutomaticallyTracksYourIngredientsPredictsExpirationsGeneratesPersonalizedRecipesAndLetsYouOrderFromLocalRestaurants ?? 'iFridge is your AI-powered kitchen ecosystem. It automatically tracks your ingredients, predicts expirations, generates personalized recipes, and lets you order from local restaurants.', style: TextStyle(height: 1.5, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8))),
                                   ],
                                 ),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(context),
-                                    child: Text('Got it', style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.primary)),
+                                    child: Text(AppLocalizations.of(context)?.auto_gotIt ?? 'Got it', style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.primary)),
                                   ),
                                 ],
                               ),
@@ -909,7 +907,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text('Edit Display Name',
+        title: Text(AppLocalizations.of(context)?.auto_editDisplayName ?? 'Edit Display Name',
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w700)),
         content: TextField(
           controller: controller,
@@ -930,7 +928,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel'),
+            child: Text(AppLocalizations.of(context)?.auto_cancel ?? 'Cancel'),
           ),
           FilledButton(
             onPressed: () async {
@@ -949,7 +947,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               if (mounted) Navigator.pop(ctx);
             },
             style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
-            child: Text('Save'),
+            child: Text(AppLocalizations.of(context)?.auto_save ?? 'Save'),
           ),
         ],
       ),
@@ -957,25 +955,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   List<Widget> _buildBadgeList() {
-    final earnedIds = _badges.map((b) => b['id'] as String?).toSet();
-
-    const allPossible = [
-      {'id': 'first_scan', 'icon': '🌱', 'name': 'First Scan'},
-      {'id': 'first_meal', 'icon': '👨‍🍳', 'name': 'First Cook'},
-      {'id': 'waste_fighter', 'icon': '🧹', 'name': 'Waste Fighter'},
-      {'id': 'streak_7', 'icon': '🔥', 'name': '7-Day Streak'},
-      {'id': 'streak_67', 'icon': 'assets/images/badges/streak_67.png', 'name': '6,7 Day Streak'},
-      {'id': 'world_chef', 'icon': '🌍', 'name': 'World Chef'},
-      {'id': 'master_chef', 'icon': '💎', 'name': 'Master Chef'},
-    ];
-
-    return allPossible
-        .map((b) => _BadgeTile(
-              icon: b['icon']!,
-              name: b['name']!,
-              earned: earnedIds.contains(b['id']),
-            ))
-        .toList();
+    return WasteBadge.values.map((badge) {
+      final earned = _earnedBadges.contains(badge);
+      return _BadgeTile(
+        icon: badge.icon,
+        name: badge.title,
+        earned: earned,
+      );
+    }).toList();
   }
 
   // ── Shopping List Helpers ───────────────────────────────────────
@@ -986,7 +973,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text('Add Shopping Item',
+        title: Text(AppLocalizations.of(context)?.auto_addShoppingItem ?? 'Add Shopping Item',
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
         content: TextField(
           controller: controller,
@@ -1006,7 +993,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: Text('Cancel'),
+              child: Text(AppLocalizations.of(context)?.auto_cancel ?? 'Cancel'),
             ),
             FilledButton(
               onPressed: () async {
@@ -1031,7 +1018,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
               style: FilledButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary),
-              child: Text('Add'),
+              child: Text(AppLocalizations.of(context)?.auto_add ?? 'Add'),
             ),
         ],
       ),
@@ -1052,7 +1039,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               Padding(
                 padding: EdgeInsets.all(16.0),
-                child: Text('Select Recipe for Meal', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.bold)),
+                child: Text(AppLocalizations.of(context)?.auto_selectRecipeForMeal ?? 'Select Recipe for Meal', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.bold)),
               ),
               Expanded(
                 child: FutureBuilder(
@@ -1062,11 +1049,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       return Center(child: CircularProgressIndicator());
                     }
                     if (snapshot.hasError || !snapshot.hasData) {
-                      return Center(child: Text('Failed to load recipes', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))));
+                      return Center(child: Text(AppLocalizations.of(context)?.auto_failedToLoadRecipes ?? 'Failed to load recipes', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))));
                     }
                     final recipes = snapshot.data as List;
                     if (recipes.isEmpty) {
-                      return Center(child: Text('No recipes found', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))));
+                      return Center(child: Text(AppLocalizations.of(context)?.auto_noRecipesFound ?? 'No recipes found', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54))));
                     }
                     return ListView.builder(
                       itemCount: recipes.length,
@@ -1122,7 +1109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Meal cleared'),
+          content: Text(AppLocalizations.of(context)?.auto_mealCleared ?? 'Meal cleared'),
           backgroundColor: Theme.of(context).colorScheme.surface,
           duration: const Duration(seconds: 1),
         ),
@@ -1153,7 +1140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 final code = entry.key;
                 final name = entry.value['name']!;
                 final flag = entry.value['flag']!;
-                final isActive = settings.locale.languageCode == code;
+                final isActive = settings.locale == AppSettings.parseLocale(code);
                 return ListTile(
                   leading: Text(flag, style: TextStyle(fontSize: 24)),
                   title: Text(name, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 15)),
@@ -1163,7 +1150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   tileColor: isActive ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1) : null,
                   onTap: () {
-                    settings.setLocale(Locale(code));
+                    settings.setLocale(AppSettings.parseLocale(code));
                     Navigator.pop(ctx);
                     setState(() {});
                   },
@@ -1195,7 +1182,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('🎨 Theme',
+              Text(AppLocalizations.of(context)?.auto_theme ?? '🎨 Theme',
                 style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
               SizedBox(height: 16),
               ...options.map((opt) {

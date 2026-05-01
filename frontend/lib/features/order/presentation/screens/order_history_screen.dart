@@ -4,6 +4,7 @@
 // Accessible from the Profile/Manage tab.
 
 import 'package:flutter/material.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:ifridge_app/core/services/order_service.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
 
@@ -19,7 +20,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   bool _loading = true;
   String? _error;
 
-  static final accent = Theme.of(context).colorScheme.primary;
+
 
   @override
   void initState() {
@@ -59,14 +60,14 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text('My Orders',
+        title: Text(AppLocalizations.of(context)?.auto_myOrders ?? 'My Orders',
             style: TextStyle(fontWeight: FontWeight.w700)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: _loading
-          ? Center(child: CircularProgressIndicator(color: accent))
+          ? Center(child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary))
           : _error != null
               ? _buildError(isDark)
               : _orders.isEmpty
@@ -91,8 +92,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
           FilledButton.icon(
             onPressed: _loadOrders,
             icon: Icon(Icons.refresh, size: 18),
-            label: Text('Retry'),
-            style: FilledButton.styleFrom(backgroundColor: accent),
+            label: Text(AppLocalizations.of(context)?.auto_retry ?? 'Retry'),
+            style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
           ),
         ],
       ),
@@ -107,13 +108,13 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
           Icon(Icons.receipt_long_outlined, size: 64,
               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12)),
           SizedBox(height: 16),
-          Text('No orders yet',
+          Text(AppLocalizations.of(context)?.auto_noOrdersYet ?? 'No orders yet',
               style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                   fontSize: 18,
                   fontWeight: FontWeight.w600)),
           SizedBox(height: 4),
-          Text('Your order history will appear here',
+          Text(AppLocalizations.of(context)?.auto_yourOrderHistoryWillAppearHere ?? 'Your order history will appear here',
               style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24),
                   fontSize: 14)),
@@ -129,7 +130,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
 
     return RefreshIndicator(
       onRefresh: _loadOrders,
-      color: accent,
+      color: Theme.of(context).colorScheme.primary,
       child: ListView(
         padding: EdgeInsets.all(16),
         children: [
@@ -173,12 +174,12 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
-            color: accent.withValues(alpha: 0.1),
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(count,
               style: TextStyle(
-                  color: accent,
+                  color: Theme.of(context).colorScheme.primary,
                   fontSize: 12,
                   fontWeight: FontWeight.w700)),
         ),
@@ -194,18 +195,18 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             ? Theme.of(context).colorScheme.surface
             : Theme.of(context).colorScheme.onSurface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text('Cancel Order?'),
+        title: Text(AppLocalizations.of(context)?.auto_cancelOrder ?? 'Cancel Order?'),
         content: Text(
             'Cancel your order from ${order.restaurantName ?? "this restaurant"}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: Text('Keep Order'),
+            child: Text(AppLocalizations.of(context)?.auto_keepOrder ?? 'Keep Order'),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: Text('Cancel Order'),
+            child: Text(AppLocalizations.of(context)?.auto_cancelOrder ?? 'Cancel Order'),
           ),
         ],
       ),
@@ -216,7 +217,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       if (success && mounted) {
         _loadOrders();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Order cancelled'),
+          content: Text(AppLocalizations.of(context)?.auto_orderCancelled ?? 'Order cancelled'),
           backgroundColor: Colors.red,
         ));
       }
@@ -241,10 +242,11 @@ class _OrderCard extends StatelessWidget {
     this.onCancel,
   });
 
-  static final accent = Theme.of(context).colorScheme.primary;
+
 
   @override
   Widget build(BuildContext context) {
+    
     return Container(
       margin: EdgeInsets.only(bottom: 12),
       padding: EdgeInsets.all(16),
@@ -253,13 +255,13 @@ class _OrderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isActive
-              ? accent.withValues(alpha: 0.2)
+              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
               : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
           width: isActive ? 1.5 : 1,
         ),
         boxShadow: isActive
             ? [BoxShadow(
-                color: accent.withValues(alpha: 0.05),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               )]
@@ -275,14 +277,14 @@ class _OrderCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: accent.withValues(alpha: 0.1),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   order.type == 'delivery'
                       ? Icons.delivery_dining
                       : Icons.shopping_bag_outlined,
-                  color: accent,
+                  color: Theme.of(context).colorScheme.primary,
                   size: 20,
                 ),
               ),
@@ -329,19 +331,19 @@ class _OrderCard extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
-                color: accent.withValues(alpha: 0.08),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Pickup Code: ',
+                  Text(AppLocalizations.of(context)?.auto_pickupCode ?? 'Pickup Code: ',
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54),
                           fontSize: 13)),
                   Text(order.pickupCode!,
                       style: TextStyle(
-                          color: accent,
+                          color: Theme.of(context).colorScheme.primary,
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 3)),
@@ -357,7 +359,7 @@ class _OrderCard extends StatelessWidget {
             children: [
               Text('${order.total.round()} UZS',
                   style: TextStyle(
-                      color: accent,
+                      color: Theme.of(context).colorScheme.primary,
                       fontSize: 15,
                       fontWeight: FontWeight.w700)),
               SizedBox(width: 8),
@@ -378,7 +380,7 @@ class _OrderCard extends StatelessWidget {
                       color: Colors.red.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Text('Cancel',
+                    child: Text(AppLocalizations.of(context)?.auto_cancel ?? 'Cancel',
                         style: TextStyle(
                             color: Colors.red.withValues(alpha: 0.8),
                             fontSize: 12,
@@ -449,7 +451,7 @@ class _StatusProgress extends StatelessWidget {
 
   const _StatusProgress({required this.status, required this.type});
 
-  static final accent = Theme.of(context).colorScheme.primary;
+
 
   @override
   Widget build(BuildContext context) {
@@ -479,7 +481,7 @@ class _StatusProgress extends StatelessWidget {
                 height: 8,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isCompleted ? accent : accent.withValues(alpha: 0.15),
+                  color: isCompleted ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
                 ),
               ),
               if (!isLast)
@@ -487,8 +489,8 @@ class _StatusProgress extends StatelessWidget {
                   child: Container(
                     height: 2,
                     color: isCompleted
-                        ? accent
-                        : accent.withValues(alpha: 0.15),
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
                   ),
                 ),
             ],

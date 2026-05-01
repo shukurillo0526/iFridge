@@ -5,6 +5,7 @@
 
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:ifridge_app/core/services/cart_service.dart';
 import 'package:ifridge_app/core/services/order_service.dart';
 import 'package:ifridge_app/core/services/auth_helper.dart';
@@ -90,7 +91,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text('Checkout', style: TextStyle(fontWeight: FontWeight.w700)),
+        title: Text(AppLocalizations.of(context)?.auto_checkout ?? 'Checkout', style: TextStyle(fontWeight: FontWeight.w700)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -106,7 +107,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   Icon(Icons.shopping_bag_outlined, size: 64,
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12)),
                   SizedBox(height: 16),
-                  Text('Your cart is empty',
+                  Text(AppLocalizations.of(context)?.auto_yourCartIsEmpty ?? 'Your cart is empty',
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                           fontSize: 18)),
@@ -305,7 +306,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         children: [
           Padding(
             padding: EdgeInsets.fromLTRB(16, 14, 16, 8),
-            child: Text('Your Order',
+            child: Text(AppLocalizations.of(context)?.auto_yourOrder ?? 'Your Order',
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     fontSize: 14,
@@ -417,7 +418,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           SizedBox(height: 8),
           Row(
             children: [
-              Text('Total',
+              Text(AppLocalizations.of(context)?.auto_total ?? 'Total',
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 17,
@@ -561,7 +562,7 @@ class _OrderConfirmationScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 24),
 
-                Text('Order Confirmed!',
+                Text(AppLocalizations.of(context)?.auto_orderConfirmed ?? 'Order Confirmed!',
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 26,
@@ -575,7 +576,7 @@ class _OrderConfirmationScreen extends StatelessWidget {
 
                 // Pickup Code
                 if (orderType == OrderType.pickup) ...[
-                  Text('Your Pickup Code',
+                  Text(AppLocalizations.of(context)?.auto_yourPickupCode ?? 'Your Pickup Code',
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                           fontSize: 13,
@@ -598,7 +599,7 @@ class _OrderConfirmationScreen extends StatelessWidget {
                             letterSpacing: 6)),
                   ),
                   SizedBox(height: 12),
-                  Text('Show this code at the counter',
+                  Text(AppLocalizations.of(context)?.auto_showThisCodeAtTheCounter ?? 'Show this code at the counter',
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                           fontSize: 13)),
@@ -614,13 +615,13 @@ class _OrderConfirmationScreen extends StatelessWidget {
                         Icon(Icons.delivery_dining,
                             color: accent, size: 32),
                         SizedBox(height: 8),
-                        Text('Delivery on the way',
+                        Text(AppLocalizations.of(context)?.auto_deliveryOnTheWay ?? 'Delivery on the way',
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.onSurface,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600)),
                         SizedBox(height: 4),
-                        Text('A driver will be assigned shortly',
+                        Text(AppLocalizations.of(context)?.auto_aDriverWillBeAssignedShortly ?? 'A driver will be assigned shortly',
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
                                 fontSize: 13)),
@@ -659,7 +660,7 @@ class _OrderConfirmationScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14)),
                     ),
-                    child: Text('Back to Home',
+                    child: Text(AppLocalizations.of(context)?.auto_backToHome ?? 'Back to Home',
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.onSurface,
                             fontSize: 16,

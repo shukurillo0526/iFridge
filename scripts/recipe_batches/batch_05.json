@@ -1,0 +1,210 @@
+[
+  {
+    "title": "Creamy Chicken Pasta",
+    "ingredients": [
+      {"name": "Penne pasta", "quantity": 300, "unit": "g", "prep_note": ""},
+      {"name": "Chicken breast", "quantity": 350, "unit": "g", "prep_note": "Sliced thin"},
+      {"name": "Heavy cream", "quantity": 1, "unit": "cup", "prep_note": ""},
+      {"name": "Parmesan", "quantity": 0.5, "unit": "cup", "prep_note": "Grated"},
+      {"name": "Garlic", "quantity": 3, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Olive oil", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Italian seasoning", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Fresh basil", "quantity": 6, "unit": "leaves", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Cook pasta in salted boiling water until al dente. Reserve 0.5 cup pasta water, then drain.", "timer_seconds": 540},
+      {"step_number": 2, "text": "Heat oil in a large skillet over medium-high heat. Season chicken with salt, pepper, and Italian seasoning. Sear 3 minutes per side. Remove and slice.", "timer_seconds": 360},
+      {"step_number": 3, "text": "In the same pan, sauté garlic for 30 seconds. Pour in cream and bring to a gentle simmer for 3 minutes.", "timer_seconds": 210},
+      {"step_number": 4, "text": "Stir in Parmesan until melted. Add pasta and chicken. Toss with pasta water if needed to loosen.", "timer_seconds": 60},
+      {"step_number": 5, "text": "Top with fresh basil and serve.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Egg Curry",
+    "ingredients": [
+      {"name": "Eggs", "quantity": 6, "unit": "large", "prep_note": "Hard-boiled, peeled"},
+      {"name": "Onion", "quantity": 1, "unit": "large", "prep_note": "Finely diced"},
+      {"name": "Tomatoes", "quantity": 2, "unit": "medium", "prep_note": "Pureed"},
+      {"name": "Garlic", "quantity": 3, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Ginger", "quantity": 1, "unit": "tbsp", "prep_note": "Grated"},
+      {"name": "Turmeric", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Coriander powder", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Chili powder", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Fresh cilantro", "quantity": 2, "unit": "tbsp", "prep_note": "Chopped"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil in a pan. Sauté onion for 5 minutes until golden. Add garlic and ginger, cook 1 minute.", "timer_seconds": 360},
+      {"step_number": 2, "text": "Add turmeric, cumin, coriander, and chili powder. Stir for 30 seconds.", "timer_seconds": 30},
+      {"step_number": 3, "text": "Pour in tomato puree and salt. Simmer 10 minutes until sauce thickens.", "timer_seconds": 600},
+      {"step_number": 4, "text": "Score the boiled eggs with shallow cuts. Add to the sauce. Simmer 5 minutes, spooning sauce over eggs.", "timer_seconds": 300},
+      {"step_number": 5, "text": "Garnish with cilantro. Serve with rice or naan.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Crispy Fried Potatoes",
+    "ingredients": [
+      {"name": "Potatoes", "quantity": 4, "unit": "medium", "prep_note": "Cubed 2cm"},
+      {"name": "Vegetable oil", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Garlic powder", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Paprika", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Fresh parsley", "quantity": 2, "unit": "tbsp", "prep_note": "Chopped"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Parboil potato cubes in salted water for 5 minutes. Drain and let steam dry.", "timer_seconds": 300},
+      {"step_number": 2, "text": "Heat oil in a large skillet over medium-high heat.", "timer_seconds": 60},
+      {"step_number": 3, "text": "Add potatoes in a single layer. Cook without moving for 4 minutes until a golden crust forms. Flip and repeat.", "timer_seconds": 480},
+      {"step_number": 4, "text": "Season with garlic powder, paprika, salt, and pepper. Toss for 1 minute.", "timer_seconds": 60},
+      {"step_number": 5, "text": "Sprinkle with parsley and serve hot.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Bean and Onion Salad",
+    "ingredients": [
+      {"name": "Canned white beans", "quantity": 1, "unit": "can (400g)", "prep_note": "Drained, rinsed"},
+      {"name": "Red onion", "quantity": 0.5, "unit": "medium", "prep_note": "Thinly sliced"},
+      {"name": "Cherry tomatoes", "quantity": 1, "unit": "cup", "prep_note": "Halved"},
+      {"name": "Fresh parsley", "quantity": 3, "unit": "tbsp", "prep_note": "Chopped"},
+      {"name": "Olive oil", "quantity": 3, "unit": "tbsp", "prep_note": "Extra virgin"},
+      {"name": "Red wine vinegar", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.25, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Whisk olive oil, vinegar, salt, and pepper in a large bowl.", "timer_seconds": null},
+      {"step_number": 2, "text": "Add beans, onion, tomatoes, and parsley. Toss gently to combine.", "timer_seconds": null},
+      {"step_number": 3, "text": "Let sit at room temperature for 10 minutes for flavors to meld.", "timer_seconds": 600},
+      {"step_number": 4, "text": "Serve as a side dish or light lunch.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Milk Bread Rolls",
+    "ingredients": [
+      {"name": "All-purpose flour", "quantity": 3, "unit": "cups", "prep_note": ""},
+      {"name": "Whole milk", "quantity": 0.75, "unit": "cup", "prep_note": "Warm"},
+      {"name": "Butter", "quantity": 3, "unit": "tbsp", "prep_note": "Melted"},
+      {"name": "Sugar", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Active dry yeast", "quantity": 2.25, "unit": "tsp", "prep_note": "1 packet"},
+      {"name": "Egg", "quantity": 1, "unit": "large", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Dissolve yeast and 1 tsp sugar in warm milk. Let sit 5 minutes until foamy.", "timer_seconds": 300},
+      {"step_number": 2, "text": "Mix flour, remaining sugar, and salt. Add yeast mixture, egg, and melted butter. Knead 8 minutes until smooth and elastic.", "timer_seconds": 480},
+      {"step_number": 3, "text": "Place in a greased bowl, cover with a towel. Let rise 1 hour until doubled.", "timer_seconds": 3600},
+      {"step_number": 4, "text": "Punch down dough. Divide into 9 equal pieces. Shape into balls and place in a greased 9-inch square pan.", "timer_seconds": null},
+      {"step_number": 5, "text": "Cover and let rise 30 minutes.", "timer_seconds": 1800},
+      {"step_number": 6, "text": "Preheat oven to 175°C (350°F). Brush tops with a little milk. Bake 22-25 minutes until golden.", "timer_seconds": 1410},
+      {"step_number": 7, "text": "Brush with melted butter while warm. Serve.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Chicken Fried Rice",
+    "ingredients": [
+      {"name": "Cooked rice", "quantity": 3, "unit": "cups", "prep_note": "Day-old, cold"},
+      {"name": "Chicken breast", "quantity": 200, "unit": "g", "prep_note": "Diced small"},
+      {"name": "Eggs", "quantity": 2, "unit": "large", "prep_note": "Beaten"},
+      {"name": "Soy sauce", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sesame oil", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Frozen mixed vegetables", "quantity": 0.75, "unit": "cup", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Green onion", "quantity": 2, "unit": "stalks", "prep_note": "Sliced"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat 1 tbsp oil in a wok over high heat. Cook diced chicken for 4 minutes until golden. Remove.", "timer_seconds": 240},
+      {"step_number": 2, "text": "Scramble eggs quickly in the wok, about 30 seconds. Remove.", "timer_seconds": 30},
+      {"step_number": 3, "text": "Add remaining oil. Stir-fry garlic 15 seconds, then add frozen vegetables for 2 minutes.", "timer_seconds": 135},
+      {"step_number": 4, "text": "Add cold rice, pressing against the wok. Stir-fry 3 minutes until heated and slightly crispy.", "timer_seconds": 180},
+      {"step_number": 5, "text": "Return chicken and eggs. Add soy sauce and sesame oil. Toss 1 minute. Garnish with green onion.", "timer_seconds": 60}
+    ]
+  },
+  {
+    "title": "Potato Carrot Gratin",
+    "ingredients": [
+      {"name": "Potatoes", "quantity": 3, "unit": "large", "prep_note": "Thinly sliced"},
+      {"name": "Carrots", "quantity": 2, "unit": "large", "prep_note": "Thinly sliced"},
+      {"name": "Heavy cream", "quantity": 1, "unit": "cup", "prep_note": ""},
+      {"name": "Gruyere cheese", "quantity": 1, "unit": "cup", "prep_note": "Shredded"},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Butter", "quantity": 1, "unit": "tbsp", "prep_note": "For dish"},
+      {"name": "Thyme", "quantity": 1, "unit": "tsp", "prep_note": "Dried"},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Nutmeg", "quantity": 1, "unit": "pinch", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Preheat oven to 190°C (375°F). Butter a baking dish.", "timer_seconds": null},
+      {"step_number": 2, "text": "Layer potato and carrot slices, overlapping. Between layers sprinkle cheese, garlic, thyme, salt, and nutmeg.", "timer_seconds": null},
+      {"step_number": 3, "text": "Pour cream evenly over the top. Sprinkle remaining cheese.", "timer_seconds": null},
+      {"step_number": 4, "text": "Cover with foil and bake 40 minutes. Remove foil and bake 15 more minutes until golden and bubbly.", "timer_seconds": 3300},
+      {"step_number": 5, "text": "Rest 5 minutes before serving.", "timer_seconds": 300}
+    ]
+  },
+  {
+    "title": "Soy Butter Rice",
+    "ingredients": [
+      {"name": "Cooked rice", "quantity": 2, "unit": "cups", "prep_note": "Warm"},
+      {"name": "Butter", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Soy sauce", "quantity": 1.5, "unit": "tbsp", "prep_note": ""},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Sesame seeds", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Green onion", "quantity": 1, "unit": "stalk", "prep_note": "Sliced"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Melt butter in a skillet over medium heat. Add garlic and cook 30 seconds.", "timer_seconds": 30},
+      {"step_number": 2, "text": "Add warm rice and stir-fry for 2 minutes until coated in butter.", "timer_seconds": 120},
+      {"step_number": 3, "text": "Drizzle soy sauce and toss for 1 minute.", "timer_seconds": 60},
+      {"step_number": 4, "text": "Top with sesame seeds and green onion. Serve as a quick side.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Minestrone Soup",
+    "ingredients": [
+      {"name": "Canned diced tomatoes", "quantity": 400, "unit": "g", "prep_note": ""},
+      {"name": "Kidney beans", "quantity": 1, "unit": "can (400g)", "prep_note": "Drained"},
+      {"name": "Small pasta", "quantity": 0.5, "unit": "cup", "prep_note": "Ditalini or elbow"},
+      {"name": "Carrot", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Celery", "quantity": 1, "unit": "stalk", "prep_note": "Diced"},
+      {"name": "Zucchini", "quantity": 1, "unit": "small", "prep_note": "Diced"},
+      {"name": "Onion", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Garlic", "quantity": 3, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Vegetable broth", "quantity": 4, "unit": "cups", "prep_note": ""},
+      {"name": "Olive oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Italian seasoning", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Parmesan rind", "quantity": 1, "unit": "piece", "prep_note": "Optional"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil in a large pot. Sauté onion, carrot, and celery for 5 minutes. Add garlic and Italian seasoning, cook 30 seconds.", "timer_seconds": 330},
+      {"step_number": 2, "text": "Add tomatoes, broth, and Parmesan rind. Bring to a boil, then simmer 10 minutes.", "timer_seconds": 600},
+      {"step_number": 3, "text": "Add pasta, zucchini, and beans. Cook 10 more minutes until pasta is tender.", "timer_seconds": 600},
+      {"step_number": 4, "text": "Remove Parmesan rind. Season with salt. Serve with a drizzle of olive oil.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Bread Pudding",
+    "ingredients": [
+      {"name": "Day-old bread", "quantity": 6, "unit": "cups", "prep_note": "Cubed"},
+      {"name": "Whole milk", "quantity": 2, "unit": "cups", "prep_note": ""},
+      {"name": "Eggs", "quantity": 3, "unit": "large", "prep_note": ""},
+      {"name": "Sugar", "quantity": 0.5, "unit": "cup", "prep_note": ""},
+      {"name": "Butter", "quantity": 3, "unit": "tbsp", "prep_note": "Melted"},
+      {"name": "Vanilla", "quantity": 1.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Cinnamon", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Raisins", "quantity": 0.33, "unit": "cup", "prep_note": "Optional"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Preheat oven to 175°C (350°F). Butter a 9x9 baking dish. Spread bread cubes in dish.", "timer_seconds": null},
+      {"step_number": 2, "text": "Whisk milk, eggs, sugar, melted butter, vanilla, and cinnamon until smooth. Scatter raisins over bread.", "timer_seconds": null},
+      {"step_number": 3, "text": "Pour custard over bread. Press bread down gently. Let soak 10 minutes.", "timer_seconds": 600},
+      {"step_number": 4, "text": "Bake 40-45 minutes until set and golden on top.", "timer_seconds": 2550},
+      {"step_number": 5, "text": "Cool slightly. Serve warm with cream or ice cream.", "timer_seconds": null}
+    ]
+  }
+]

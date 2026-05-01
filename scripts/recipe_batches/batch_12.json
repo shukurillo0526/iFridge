@@ -1,0 +1,247 @@
+[
+  {
+    "title": "Mastava",
+    "ingredients": [
+      {"name": "Lamb or beef", "quantity": 400, "unit": "g", "prep_note": "Cubed"},
+      {"name": "Rice", "quantity": 0.5, "unit": "cup", "prep_note": "Rinsed"},
+      {"name": "Onion", "quantity": 1, "unit": "large", "prep_note": "Diced"},
+      {"name": "Carrot", "quantity": 1, "unit": "large", "prep_note": "Diced"},
+      {"name": "Potato", "quantity": 2, "unit": "medium", "prep_note": "Cubed"},
+      {"name": "Tomato", "quantity": 2, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Garlic", "quantity": 3, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Water", "quantity": 6, "unit": "cups", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Sour cream", "quantity": 4, "unit": "tbsp", "prep_note": "For serving"},
+      {"name": "Fresh herbs", "quantity": 2, "unit": "tbsp", "prep_note": "Dill and cilantro, chopped"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil in a large pot. Brown meat on all sides, 5 minutes. Add onion, cook 3 minutes.", "timer_seconds": 480},
+      {"step_number": 2, "text": "Add carrot and tomato. Cook 3 minutes. Add cumin, stir.", "timer_seconds": 180},
+      {"step_number": 3, "text": "Pour in water, bring to a boil. Skim any foam. Simmer 20 minutes.", "timer_seconds": 1200},
+      {"step_number": 4, "text": "Add potatoes and rice. Cook 15 minutes until rice and potatoes are tender.", "timer_seconds": 900},
+      {"step_number": 5, "text": "Add garlic and salt. Serve in bowls with a dollop of sour cream and fresh herbs.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Lagman",
+    "ingredients": [
+      {"name": "Beef or lamb", "quantity": 400, "unit": "g", "prep_note": "Cut into small cubes"},
+      {"name": "Hand-pulled noodles or thick spaghetti", "quantity": 300, "unit": "g", "prep_note": ""},
+      {"name": "Bell pepper", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Onion", "quantity": 1, "unit": "large", "prep_note": "Diced"},
+      {"name": "Carrot", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Potato", "quantity": 1, "unit": "medium", "prep_note": "Cubed"},
+      {"name": "Tomato", "quantity": 2, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Tomato paste", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Garlic", "quantity": 4, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Water", "quantity": 3, "unit": "cups", "prep_note": ""},
+      {"name": "Salt", "quantity": 1.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Fresh cilantro", "quantity": 2, "unit": "tbsp", "prep_note": "Chopped"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil in a pot over high heat. Brown meat 5 minutes. Add onion, cook 3 minutes.", "timer_seconds": 480},
+      {"step_number": 2, "text": "Add carrot, bell pepper, and potato. Stir-fry 3 minutes.", "timer_seconds": 180},
+      {"step_number": 3, "text": "Add tomatoes, tomato paste, garlic, and cumin. Cook 2 minutes.", "timer_seconds": 120},
+      {"step_number": 4, "text": "Pour in water. Bring to a boil, then simmer 20 minutes until meat is tender.", "timer_seconds": 1200},
+      {"step_number": 5, "text": "Cook noodles separately according to package. Drain.", "timer_seconds": 420},
+      {"step_number": 6, "text": "Place noodles in bowls, ladle the sauce and meat over. Garnish with cilantro.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Shurpa",
+    "ingredients": [
+      {"name": "Lamb or beef on the bone", "quantity": 600, "unit": "g", "prep_note": "Large pieces"},
+      {"name": "Potato", "quantity": 3, "unit": "medium", "prep_note": "Halved"},
+      {"name": "Carrot", "quantity": 2, "unit": "medium", "prep_note": "Large chunks"},
+      {"name": "Onion", "quantity": 2, "unit": "medium", "prep_note": "Quartered"},
+      {"name": "Tomato", "quantity": 2, "unit": "medium", "prep_note": "Quartered"},
+      {"name": "Bell pepper", "quantity": 1, "unit": "medium", "prep_note": "Large pieces"},
+      {"name": "Water", "quantity": 8, "unit": "cups", "prep_note": ""},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Fresh herbs", "quantity": 3, "unit": "tbsp", "prep_note": "Dill and cilantro"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Place meat in a large pot with cold water. Bring to a boil, skim foam thoroughly.", "timer_seconds": 600},
+      {"step_number": 2, "text": "Add onion. Reduce heat to low. Simmer gently for 40 minutes.", "timer_seconds": 2400},
+      {"step_number": 3, "text": "Add carrots and potatoes. Cook 10 minutes.", "timer_seconds": 600},
+      {"step_number": 4, "text": "Add tomatoes, bell pepper, cumin, salt, and pepper. Simmer 10 more minutes until vegetables are tender.", "timer_seconds": 600},
+      {"step_number": 5, "text": "Serve in deep bowls with generous fresh herbs.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Manti",
+    "ingredients": [
+      {"name": "All-purpose flour", "quantity": 3, "unit": "cups", "prep_note": ""},
+      {"name": "Water", "quantity": 0.75, "unit": "cup", "prep_note": "Warm"},
+      {"name": "Egg", "quantity": 1, "unit": "large", "prep_note": ""},
+      {"name": "Ground lamb or beef", "quantity": 400, "unit": "g", "prep_note": ""},
+      {"name": "Onion", "quantity": 2, "unit": "medium", "prep_note": "Very finely diced"},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Sour cream", "quantity": 0.5, "unit": "cup", "prep_note": "For serving"},
+      {"name": "Garlic", "quantity": 2, "unit": "cloves", "prep_note": "Minced, for sauce"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Make dough: mix flour, egg, water, and 0.5 tsp salt. Knead 10 minutes until smooth. Rest 30 minutes.", "timer_seconds": 2400},
+      {"step_number": 2, "text": "Make filling: mix meat, onion, cumin, remaining salt, and pepper.", "timer_seconds": null},
+      {"step_number": 3, "text": "Roll dough very thin (2mm). Cut into 8cm squares. Place 1 tbsp filling in center. Pinch corners together to seal.", "timer_seconds": null},
+      {"step_number": 4, "text": "Grease a steamer tier. Place manti without touching. Steam over boiling water for 30 minutes.", "timer_seconds": 1800},
+      {"step_number": 5, "text": "Mix sour cream with minced garlic. Serve manti with garlic sour cream.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Samsa",
+    "ingredients": [
+      {"name": "All-purpose flour", "quantity": 3, "unit": "cups", "prep_note": ""},
+      {"name": "Butter or lamb fat", "quantity": 0.5, "unit": "cup", "prep_note": "Cold, cubed"},
+      {"name": "Water", "quantity": 0.5, "unit": "cup", "prep_note": "Cold"},
+      {"name": "Ground lamb", "quantity": 400, "unit": "g", "prep_note": ""},
+      {"name": "Onion", "quantity": 2, "unit": "large", "prep_note": "Finely diced"},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Egg", "quantity": 1, "unit": "large", "prep_note": "Beaten, for egg wash"},
+      {"name": "Sesame seeds", "quantity": 2, "unit": "tbsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Make dough: rub butter into flour until crumbly. Add water and salt, knead briefly into a smooth dough. Refrigerate 30 minutes.", "timer_seconds": 1800},
+      {"step_number": 2, "text": "Mix lamb, onion, cumin, salt, and pepper for filling.", "timer_seconds": null},
+      {"step_number": 3, "text": "Roll dough thin. Cut into 12cm squares. Place filling in center. Fold into triangles, pinch edges tightly.", "timer_seconds": null},
+      {"step_number": 4, "text": "Preheat oven to 200C (400F). Place seam-side down on a baking sheet. Brush with egg wash, sprinkle sesame seeds.", "timer_seconds": null},
+      {"step_number": 5, "text": "Bake 25 minutes until golden brown and flaky.", "timer_seconds": 1500},
+      {"step_number": 6, "text": "Serve hot.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Chuchvara",
+    "ingredients": [
+      {"name": "All-purpose flour", "quantity": 2, "unit": "cups", "prep_note": ""},
+      {"name": "Egg", "quantity": 1, "unit": "large", "prep_note": ""},
+      {"name": "Water", "quantity": 0.33, "unit": "cup", "prep_note": ""},
+      {"name": "Ground beef", "quantity": 300, "unit": "g", "prep_note": ""},
+      {"name": "Onion", "quantity": 1, "unit": "medium", "prep_note": "Very finely diced"},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Cumin", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Beef broth", "quantity": 4, "unit": "cups", "prep_note": "For soup"},
+      {"name": "Sour cream", "quantity": 4, "unit": "tbsp", "prep_note": "For serving"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Make dough: mix flour, egg, water, pinch of salt. Knead 8 minutes. Rest 20 minutes.", "timer_seconds": 1680},
+      {"step_number": 2, "text": "Mix beef, onion, salt, pepper, and cumin for filling.", "timer_seconds": null},
+      {"step_number": 3, "text": "Roll dough very thin. Cut into 4cm squares. Place small amount of filling in center, fold into triangles, press edges to seal.", "timer_seconds": null},
+      {"step_number": 4, "text": "Bring broth to a boil. Drop chuchvara in. Cook 7-8 minutes until they float and dough is tender.", "timer_seconds": 450},
+      {"step_number": 5, "text": "Serve in broth with sour cream and fresh herbs.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Norin",
+    "ingredients": [
+      {"name": "Lamb or horse meat", "quantity": 500, "unit": "g", "prep_note": "Large piece, boiled"},
+      {"name": "All-purpose flour", "quantity": 2.5, "unit": "cups", "prep_note": "For noodles"},
+      {"name": "Egg", "quantity": 1, "unit": "large", "prep_note": ""},
+      {"name": "Water", "quantity": 0.5, "unit": "cup", "prep_note": ""},
+      {"name": "Onion", "quantity": 1, "unit": "large", "prep_note": "Thinly sliced into rings"},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Black pepper", "quantity": 0.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Broth from meat", "quantity": 2, "unit": "cups", "prep_note": "Reserved"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Boil meat in salted water for 1.5 hours until very tender. Reserve broth. Shred meat finely.", "timer_seconds": 5400},
+      {"step_number": 2, "text": "Make noodle dough: mix flour, egg, water, salt. Knead 10 minutes. Rest 30 minutes.", "timer_seconds": 2400},
+      {"step_number": 3, "text": "Roll dough paper-thin. Cut into very thin noodles. Boil in salted water 3 minutes. Drain.", "timer_seconds": 180},
+      {"step_number": 4, "text": "Toss hot noodles with shredded meat, raw onion rings, cumin, and pepper.", "timer_seconds": null},
+      {"step_number": 5, "text": "Serve with a cup of warm broth on the side.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Dimlama",
+    "ingredients": [
+      {"name": "Lamb or beef", "quantity": 500, "unit": "g", "prep_note": "Large chunks"},
+      {"name": "Potato", "quantity": 3, "unit": "large", "prep_note": "Halved"},
+      {"name": "Carrot", "quantity": 2, "unit": "large", "prep_note": "Large chunks"},
+      {"name": "Onion", "quantity": 2, "unit": "large", "prep_note": "Sliced"},
+      {"name": "Cabbage", "quantity": 0.25, "unit": "head", "prep_note": "Quartered"},
+      {"name": "Tomato", "quantity": 2, "unit": "medium", "prep_note": "Quartered"},
+      {"name": "Bell pepper", "quantity": 1, "unit": "medium", "prep_note": "Large pieces"},
+      {"name": "Garlic", "quantity": 1, "unit": "head", "prep_note": "Whole, unpeeled"},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Fresh dill", "quantity": 2, "unit": "tbsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "In a heavy kazan or Dutch oven, layer: oil on bottom, then meat, then onion, then carrot, then potato, then tomato, pepper, and cabbage on top. Season each layer with salt and cumin.", "timer_seconds": null},
+      {"step_number": 2, "text": "Nestle the whole garlic head in the center. Do NOT add water — the vegetables will release enough liquid.", "timer_seconds": null},
+      {"step_number": 3, "text": "Cover with a very tight lid. Cook on the lowest heat for 90 minutes. Do not open the lid.", "timer_seconds": 5400},
+      {"step_number": 4, "text": "Open carefully. The meat should be falling apart. Garnish with dill. Serve from the pot.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Non (Uzbek Flatbread)",
+    "ingredients": [
+      {"name": "All-purpose flour", "quantity": 3, "unit": "cups", "prep_note": ""},
+      {"name": "Warm water", "quantity": 1, "unit": "cup", "prep_note": ""},
+      {"name": "Active dry yeast", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Sugar", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 2, "unit": "tbsp", "prep_note": ""},
+      {"name": "Sesame seeds", "quantity": 1, "unit": "tbsp", "prep_note": ""},
+      {"name": "Nigella seeds", "quantity": 1, "unit": "tsp", "prep_note": "Optional"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Dissolve yeast and sugar in warm water. Let sit 5 minutes until foamy.", "timer_seconds": 300},
+      {"step_number": 2, "text": "Mix flour and salt. Add yeast mixture and oil. Knead 8 minutes. Rest covered for 1 hour.", "timer_seconds": 4080},
+      {"step_number": 3, "text": "Preheat oven to 230C (450F) with a baking sheet or stone inside.", "timer_seconds": null},
+      {"step_number": 4, "text": "Divide dough into 2 portions. Shape into flat discs 20cm wide. Press the center down with a chekich or fork to create the classic pattern, leaving a raised rim.", "timer_seconds": null},
+      {"step_number": 5, "text": "Sprinkle with sesame and nigella seeds. Bake 12-15 minutes until golden.", "timer_seconds": 810},
+      {"step_number": 6, "text": "Serve warm alongside any Uzbek meal.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Achichuk Salad",
+    "ingredients": [
+      {"name": "Tomatoes", "quantity": 3, "unit": "large", "prep_note": "Sliced into thin rings"},
+      {"name": "Onion", "quantity": 1, "unit": "large", "prep_note": "Sliced into thin rings"},
+      {"name": "Fresh basil or cilantro", "quantity": 3, "unit": "tbsp", "prep_note": "Chopped"},
+      {"name": "Hot green pepper", "quantity": 1, "unit": "small", "prep_note": "Thinly sliced"},
+      {"name": "Salt", "quantity": 0.5, "unit": "tsp", "prep_note": ""}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Slice onion into thin rings. Sprinkle with salt and let sit 5 minutes to mellow, then squeeze gently.", "timer_seconds": 300},
+      {"step_number": 2, "text": "Arrange tomato and onion slices on a plate, alternating.", "timer_seconds": null},
+      {"step_number": 3, "text": "Scatter hot pepper and fresh herbs over the top. No oil, no vinegar — keep it simple and authentic.", "timer_seconds": null},
+      {"step_number": 4, "text": "Serve immediately alongside plov or any Uzbek dish.", "timer_seconds": null}
+    ]
+  },
+  {
+    "title": "Narhangi",
+    "ingredients": [
+      {"name": "Lamb", "quantity": 500, "unit": "g", "prep_note": "Cubed"},
+      {"name": "Eggplant", "quantity": 1, "unit": "large", "prep_note": "Cubed"},
+      {"name": "Potato", "quantity": 2, "unit": "medium", "prep_note": "Cubed"},
+      {"name": "Tomato", "quantity": 3, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Bell pepper", "quantity": 1, "unit": "medium", "prep_note": "Diced"},
+      {"name": "Onion", "quantity": 1, "unit": "large", "prep_note": "Sliced"},
+      {"name": "Garlic", "quantity": 4, "unit": "cloves", "prep_note": "Minced"},
+      {"name": "Cumin", "quantity": 1, "unit": "tsp", "prep_note": ""},
+      {"name": "Vegetable oil", "quantity": 3, "unit": "tbsp", "prep_note": ""},
+      {"name": "Salt", "quantity": 1.5, "unit": "tsp", "prep_note": ""},
+      {"name": "Fresh herbs", "quantity": 2, "unit": "tbsp", "prep_note": "Cilantro and dill"}
+    ],
+    "steps": [
+      {"step_number": 1, "text": "Heat oil in a heavy pot. Brown lamb 5 minutes. Add onion, cook 3 minutes.", "timer_seconds": 480},
+      {"step_number": 2, "text": "Layer eggplant, potatoes, bell pepper, and tomatoes over the meat. Season with cumin, garlic, and salt.", "timer_seconds": null},
+      {"step_number": 3, "text": "Do not stir. Cover tightly and cook on low heat for 50 minutes.", "timer_seconds": 3000},
+      {"step_number": 4, "text": "Gently stir once. Garnish with herbs. Serve with non.", "timer_seconds": null}
+    ]
+  }
+]

@@ -136,7 +136,7 @@ class _CommentSheetState extends State<CommentSheet> {
             ),
           ),
 
-          const Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12), height: 1),
+          Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12), height: 1),
 
           // ── Comment list ──
           Expanded(
