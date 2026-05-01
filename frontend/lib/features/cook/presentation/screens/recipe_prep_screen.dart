@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:ifridge_app/l10n/app_localizations.dart';
 import 'package:ifridge_app/core/services/api_service.dart';
 import 'package:ifridge_app/core/utils/unit_converter.dart';
+import 'package:ifridge_app/core/utils/l10n_helper.dart';
 import 'package:ifridge_app/core/utils/ingredient_icons.dart';
 import 'package:ifridge_app/features/cook/presentation/screens/cooking_run_screen.dart';
 

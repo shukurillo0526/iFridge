@@ -660,11 +660,11 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get scale => 'Шкала';
+  String get scale => 'Масштаб';
 
   @override
   String get addedMissingItemsToShoppingList =>
-      'Добавлены недостающие товары в список покупок!';
+      'Недостающие продукты добавлены в список!';
 
   @override
   String failedToAddItemsX(String e) {
@@ -672,12 +672,11 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get addMissingToShoppingList =>
-      'Добавить недостающее в список покупок';
+  String get addMissingToShoppingList => 'Добавить недостающее в список';
 
   @override
   String cookingStepsWithCount(String count) {
-    return 'Этапы приготовления ($count)';
+    return 'Шаги приготовления ($count)';
   }
 
   @override
@@ -685,7 +684,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get recordedTasteProfileEvolving =>
-      'Записано! Ваш вкусовой профиль развивается 🧠';
+      'Записано! Ваш вкусовой профиль улучшается 🧠';
 
   @override
   String failedToRecordX(String e) {
@@ -696,13 +695,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get iCookedThis => 'Я приготовил это!';
 
   @override
-  String get startCooking => 'Начать готовить';
+  String get startCooking => 'Начать готовку';
 
   @override
-  String get optional_tag => 'необязательный';
+  String get optional_tag => 'необязательно';
 
   @override
-  String get servings_tag => 'порции';
+  String get servings_tag => 'порций';
 
   @override
   String get min_tag => 'мин';
@@ -863,4 +862,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get unitLabel => 'Ед. изм.';
+
+  @override
+  String get handsOn => 'Вручную';
+
+  @override
+  String get automatic => 'Автоматически';
 }

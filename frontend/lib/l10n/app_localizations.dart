@@ -1639,6 +1639,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unit'**
   String get unitLabel;
+
+  /// No description provided for @handsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Hands-on'**
+  String get handsOn;
+
+  /// No description provided for @automatic.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get automatic;
 }
 
 class _AppLocalizationsDelegate

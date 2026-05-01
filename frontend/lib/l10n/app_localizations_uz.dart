@@ -658,7 +658,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String ingredientsWithCount(String count) {
-    return 'Ingredientlar ($count)';
+    return 'Mahsulotlar ($count)';
   }
 
   @override
@@ -666,7 +666,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get addedMissingItemsToShoppingList =>
-      'Xarid qilish ro\'yxatiga etishmayotgan narsalar qo\'shildi!';
+      'Yetishmayotgan mahsulotlar xarid ro\'yxatiga qo\'shildi!';
 
   @override
   String failedToAddItemsX(String e) {
@@ -675,11 +675,11 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get addMissingToShoppingList =>
-      'Xarid qilish ro\'yxatiga etishmayotgan narsalarni qo\'shing';
+      'Yetishmayotganlarni ro\'yxatga qo\'shish';
 
   @override
   String cookingStepsWithCount(String count) {
-    return 'Pishirish bosqichlari ($count)';
+    return 'Pishirish qadamlari ($count)';
   }
 
   @override
@@ -687,7 +687,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get recordedTasteProfileEvolving =>
-      'Yozib olingan! Sizning didingiz profili rivojlanmoqda 🧠';
+      'Yozib olindi! Didingiz profili rivojlanmoqda 🧠';
 
   @override
   String failedToRecordX(String e) {
@@ -698,7 +698,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get iCookedThis => 'Men buni pishirdim!';
 
   @override
-  String get startCooking => 'Ovqat pishirishni boshlang';
+  String get startCooking => 'Pishirishni boshlash';
 
   @override
   String get optional_tag => 'ixtiyoriy';
@@ -707,7 +707,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get servings_tag => 'porsiya';
 
   @override
-  String get min_tag => 'min';
+  String get min_tag => 'daq';
 
   @override
   String get difficulty_tag => 'Qiyinchilik';
@@ -865,6 +865,12 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get unitLabel => 'Birlik';
+
+  @override
+  String get handsOn => 'Qo\'lda';
+
+  @override
+  String get automatic => 'Avtomatik';
 }
 
 /// The translations for Uzbek, using the Cyrillic script (`uz_Cyrl`).

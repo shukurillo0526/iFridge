@@ -858,4 +858,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unitLabel => 'Unit';
+
+  @override
+  String get handsOn => 'Hands-on';
+
+  @override
+  String get automatic => 'Automatic';
 }

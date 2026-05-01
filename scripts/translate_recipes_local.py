@@ -35,7 +35,7 @@ async def main():
     recipes = response.data
     print(f"Found {len(recipes)} recipes in the database.")
 
-    target_languages = ["ru", "uz"]
+    target_languages = ["ru", "uz", "ko", "uz_Cyrl"]
 
     for i, recipe in enumerate(recipes):
         recipe_id = recipe["id"]

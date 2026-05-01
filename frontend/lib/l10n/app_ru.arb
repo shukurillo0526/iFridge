@@ -346,9 +346,7 @@
     "iCookedThis": "Я приготовил это!",
     "scale": "Масштаб",
     "recordedTasteProfileEvolving": "Записано! Ваш вкусовой профиль улучшается 🧠",
-    "failedToRecordX": "Ошибка при записи: {error}",
     "addedMissingItemsToShoppingList": "Недостающие продукты добавлены в список!",
-    "failedToAddItemsX": "Ошибка при добавлении: {error}",
     "ingredientsWithCount": "Ингредиенты ({count})",
     "cookingStepsWithCount": "Шаги приготовления ({count})"
 }

@@ -346,9 +346,7 @@
     "iCookedThis": "Men buni pishirdim!",
     "scale": "Masshtab",
     "recordedTasteProfileEvolving": "Yozib olindi! Didingiz profili rivojlanmoqda 🧠",
-    "failedToRecordX": "Yozib olishda xatolik: {error}",
     "addedMissingItemsToShoppingList": "Yetishmayotgan mahsulotlar xarid ro'yxatiga qo'shildi!",
-    "failedToAddItemsX": "Qo'shishda xatolik: {error}",
     "ingredientsWithCount": "Mahsulotlar ({count})",
     "cookingStepsWithCount": "Pishirish qadamlari ({count})"
 }
