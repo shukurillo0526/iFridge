@@ -120,7 +120,9 @@ class _GamificationPageState extends State<GamificationPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(badge.emoji,
+                          badge.icon.endsWith('.png') || badge.icon.endsWith('.jpg')
+                              ? Image.asset(badge.icon, height: 32, width: 32, color: earned ? null : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), colorBlendMode: earned ? null : BlendMode.saturation)
+                              : Text(badge.icon,
                             style: TextStyle(fontSize: 32, color: earned ? null : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
                           SizedBox(height: 6),
                           Text(badge.title,

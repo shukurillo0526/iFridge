@@ -7,17 +7,18 @@ enum WasteBadge {
   wasteFighter('♻️', 'Waste Fighter', 'Cook 10 Tier 1 meals', 10),
   wasteWarrior('🛡️', 'Waste Warrior', 'Cook 50 Tier 1 meals', 50),
   weekStreak('🔥', 'Week Streak', '7-day cooking streak', 7),
+  streak67('assets/images/badges/streak_67.png', '6,7 Day Streak', 'Cook for 6-7 consecutive days', 6),
   monthStreak('⭐', 'Iron Chef', '30-day cooking streak', 30),
   explorer('🌍', 'Flavor Explorer', 'Cook 5 different cuisines', 5),
   rescuer('🚨', 'Expiry Rescuer', 'Save 20 items from expiring', 20),
   zeroWasteWeek('💎', 'Zero Waste Week', 'No expired items for 7 days', 7);
 
-  final String emoji;
+  final String icon;
   final String title;
   final String description;
   final int threshold;
 
-  const WasteBadge(this.emoji, this.title, this.description, this.threshold);
+  const WasteBadge(this.icon, this.title, this.description, this.threshold);
 }
 
 /// XP reward table for different actions.

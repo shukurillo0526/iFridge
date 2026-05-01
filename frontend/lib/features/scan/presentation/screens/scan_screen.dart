@@ -43,6 +43,17 @@ class _ScanScreenState extends State<ScanScreen>
       duration: const Duration(milliseconds: 1500),
     )..repeat(reverse: true);
     _topTabController = TabController(length: 2, vsync: this);
+    _topTabController.addListener(() {
+      if (_topTabController.index == 1) {
+        _topTabController.index = 0;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Scan Calories is coming soon!'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    });
   }
 
   @override

@@ -52,5 +52,8 @@
     "community": "커뮤니티",
     "hasRecipe": "레시피 있음",
     "noReelsYet": "아직 릴스가 없습니다",
-    "settings": "설정"
+    "settings": "설정",
+    "settingsLanguage": "언어",
+    "settingsTheme": "테마",
+    "aboutApp": "iFridge 정보"
 }

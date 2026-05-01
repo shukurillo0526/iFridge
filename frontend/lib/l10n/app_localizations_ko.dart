@@ -155,4 +155,13 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get settings => '설정';
+
+  @override
+  String get settingsLanguage => '언어';
+
+  @override
+  String get settingsTheme => '테마';
+
+  @override
+  String get aboutApp => 'iFridge 정보';
 }

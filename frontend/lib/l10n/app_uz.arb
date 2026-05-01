@@ -54,5 +54,8 @@
     "community": "Jamoa",
     "hasRecipe": "Retsept bor",
     "noReelsYet": "Hozircha rillar yo'q",
-    "settings": "Sozlamalar"
+    "settings": "Sozlamalar",
+    "settingsLanguage": "Til",
+    "settingsTheme": "Mavzu",
+    "aboutApp": "iFridge haqida"
 }

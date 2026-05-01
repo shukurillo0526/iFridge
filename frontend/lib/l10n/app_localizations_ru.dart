@@ -155,4 +155,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get settings => 'Настройки';
+
+  @override
+  String get settingsLanguage => 'Язык';
+
+  @override
+  String get settingsTheme => 'Тема';
+
+  @override
+  String get aboutApp => 'О iFridge';
 }

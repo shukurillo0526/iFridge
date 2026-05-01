@@ -100,6 +100,7 @@ abstract class AppLocalizations {
     Locale('ko'),
     Locale('ru'),
     Locale('uz'),
+    Locale.fromSubtags(languageCode: 'uz', scriptCode: 'Cyrl'),
   ];
 
   /// The title of the application
@@ -389,6 +390,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
+
+  /// No description provided for @settingsLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguage;
+
+  /// No description provided for @settingsTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get settingsTheme;
+
+  /// No description provided for @aboutApp.
+  ///
+  /// In en, this message translates to:
+  /// **'About iFridge'**
+  String get aboutApp;
 }
 
 class _AppLocalizationsDelegate
@@ -409,6 +428,18 @@ class _AppLocalizationsDelegate
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when language+script codes are specified.
+  switch (locale.languageCode) {
+    case 'uz':
+      {
+        switch (locale.scriptCode) {
+          case 'Cyrl':
+            return AppLocalizationsUzCyrl();
+        }
+        break;
+      }
+  }
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'en':

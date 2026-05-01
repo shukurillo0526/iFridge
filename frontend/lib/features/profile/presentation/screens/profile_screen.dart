@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ifridge_app/core/theme/app_theme.dart';
+import 'package:ifridge_app/core/constants/app_info.dart';
 import 'package:ifridge_app/core/widgets/shimmer_loading.dart';
 import 'package:ifridge_app/core/widgets/slide_in_item.dart';
 import 'package:ifridge_app/features/gamification/domain/badges.dart' show levelFromXp;
@@ -396,27 +397,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
 
-                      SizedBox(height: 12),
-
-                      // ── Social Stats Row ──
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _SocialStat(value: '$_postCount', label: 'Posts'),
-                          Container(
-                            width: 1, height: 24,
-                            margin: EdgeInsets.symmetric(horizontal: 16),
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12),
-                          ),
-                          _SocialStat(value: '$_followerCount', label: 'Followers'),
-                          Container(
-                            width: 1, height: 24,
-                            margin: EdgeInsets.symmetric(horizontal: 16),
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12),
-                          ),
-                          _SocialStat(value: '$_followingCount', label: 'Following'),
-                        ],
-                      ),
                     ],
                   ),
                 ),
@@ -844,7 +824,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         _SettingsRow(
                           icon: Icons.language,
-                          label: 'Language',
+                          label: AppLocalizations.of(context)?.settingsLanguage ?? 'Language',
                           trailing: Text(
                             '${AppSettings().currentLanguageFlag} ${AppSettings().currentLanguageName}',
                             style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13),
@@ -853,7 +833,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         _SettingsRow(
                           icon: Icons.dark_mode,
-                          label: 'Theme',
+                            label: AppLocalizations.of(context)?.settingsTheme ?? 'Theme',
                           trailing: Text(
                             AppSettings().currentThemeName,
                             style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13),
@@ -862,23 +842,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         _SettingsRow(
                           icon: Icons.info_outline,
-                          label: 'About iFridge',
+                            label: AppLocalizations.of(context)?.aboutApp ?? 'About iFridge',
                           onTap: () {
-                            showAboutDialog(
+                            showDialog(
                               context: context,
-                              applicationName: 'iFridge',
-                              applicationVersion: '1.0.0',
-                              applicationIcon: Text('🧊', style: TextStyle(fontSize: 48)),
-                              children: [
-                                Text('Smart kitchen ecosystem powered by AI.'),
-                              ],
+                              builder: (_) => AlertDialog(
+                                backgroundColor: Theme.of(context).colorScheme.surface,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                title: Row(
+                                  children: [
+                                    Text('🧊', style: TextStyle(fontSize: 32)),
+                                    SizedBox(width: 12),
+                                    Text('iFridge', style: TextStyle(fontWeight: FontWeight.w800)),
+                                  ],
+                                ),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Version ${AppInfo.version} — The Intelligent Kitchen', style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary)),
+                                    SizedBox(height: 12),
+                                    Text('iFridge is your AI-powered kitchen ecosystem. It automatically tracks your ingredients, predicts expirations, generates personalized recipes, and lets you order from local restaurants.', style: TextStyle(height: 1.5, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8))),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text('Got it', style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.primary)),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 8),
                           child: Text(
-                            'v1.0.0',
+                            AppInfo.formattedVersion,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
                               fontSize: 11,
@@ -960,17 +960,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final earnedIds = _badges.map((b) => b['id'] as String?).toSet();
 
     const allPossible = [
-      {'id': 'first_scan', 'emoji': '🌱', 'name': 'First Scan'},
-      {'id': 'first_meal', 'emoji': '👨‍🍳', 'name': 'First Cook'},
-      {'id': 'waste_fighter', 'emoji': '🧹', 'name': 'Waste Fighter'},
-      {'id': 'streak_7', 'emoji': '🔥', 'name': '7-Day Streak'},
-      {'id': 'world_chef', 'emoji': '🌍', 'name': 'World Chef'},
-      {'id': 'master_chef', 'emoji': '💎', 'name': 'Master Chef'},
+      {'id': 'first_scan', 'icon': '🌱', 'name': 'First Scan'},
+      {'id': 'first_meal', 'icon': '👨‍🍳', 'name': 'First Cook'},
+      {'id': 'waste_fighter', 'icon': '🧹', 'name': 'Waste Fighter'},
+      {'id': 'streak_7', 'icon': '🔥', 'name': '7-Day Streak'},
+      {'id': 'streak_67', 'icon': 'assets/images/badges/streak_67.png', 'name': '6,7 Day Streak'},
+      {'id': 'world_chef', 'icon': '🌍', 'name': 'World Chef'},
+      {'id': 'master_chef', 'icon': '💎', 'name': 'Master Chef'},
     ];
 
     return allPossible
         .map((b) => _BadgeTile(
-              emoji: b['emoji']!,
+              icon: b['icon']!,
               name: b['name']!,
               earned: earnedIds.contains(b['id']),
             ))
@@ -1145,7 +1146,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('🌐 Language',
+              Text('🌐 ${AppLocalizations.of(context)?.settingsLanguage ?? 'Language'}',
                 style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
               SizedBox(height: 16),
               ...AppSettings.supportedLanguages.entries.map((entry) {
@@ -1329,12 +1330,12 @@ class _AnimatedStatTile extends StatelessWidget {
 // ── Badge Tile ───────────────────────────────────────────────────
 
 class _BadgeTile extends StatelessWidget {
-  final String emoji;
+  final String icon;
   final String name;
   final bool earned;
 
   const _BadgeTile(
-      {required this.emoji, required this.name, required this.earned});
+      {required this.icon, required this.name, required this.earned});
 
   @override
   Widget build(BuildContext context) {
@@ -1357,7 +1358,9 @@ class _BadgeTile extends StatelessWidget {
               ),
             ),
             child: Center(
-              child: Text(emoji, style: TextStyle(fontSize: 24)),
+              child: icon.endsWith('.png') || icon.endsWith('.jpg')
+                  ? Image.asset(icon, width: 28, height: 28, color: earned ? null : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), colorBlendMode: earned ? null : BlendMode.saturation)
+                  : Text(icon, style: TextStyle(fontSize: 24)),
             ),
           ),
           SizedBox(height: 6),

@@ -155,4 +155,175 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get settings => 'Sozlamalar';
+
+  @override
+  String get settingsLanguage => 'Til';
+
+  @override
+  String get settingsTheme => 'Mavzu';
+
+  @override
+  String get aboutApp => 'iFridge haqida';
+}
+
+/// The translations for Uzbek, using the Cyrillic script (`uz_Cyrl`).
+class AppLocalizationsUzCyrl extends AppLocalizationsUz {
+  AppLocalizationsUzCyrl() : super('uz_Cyrl');
+
+  @override
+  String get appTitle => 'iFridge';
+
+  @override
+  String get tabShelf => 'Жавон';
+
+  @override
+  String get tabCook => 'Пишириш';
+
+  @override
+  String get tabScan => 'Сканерлаш';
+
+  @override
+  String get tabProfile => 'Профил';
+
+  @override
+  String get profileTitle => 'Профил';
+
+  @override
+  String profileGamificationLevel(int level) {
+    return '$level-даража';
+  }
+
+  @override
+  String get profileMealsCooked => 'Пиширилган таомлар';
+
+  @override
+  String get profileItemsSaved => 'Сақланган маҳсулотлар';
+
+  @override
+  String get profileDayStreak => 'Кунлик серия';
+
+  @override
+  String get profileFlavorProfile => 'Таъм профили';
+
+  @override
+  String get profileBadges => 'Нишонлар ва ютуқлар';
+
+  @override
+  String get profileShoppingList => 'Харидлар рўйхати';
+
+  @override
+  String get profileMealPlanner => 'Овқатланиш режаси';
+
+  @override
+  String get actionAdd => 'Қўшиш';
+
+  @override
+  String get actionCancel => 'Бекор қилиш';
+
+  @override
+  String get actionSave => 'Сақлаш';
+
+  @override
+  String get actionDelete => 'Ўчириш';
+
+  @override
+  String get profileLoadError => 'Профилни юклаб бўлмади';
+
+  @override
+  String get retry => 'Қайта уриниш';
+
+  @override
+  String get refresh => 'Янгилаш';
+
+  @override
+  String get signOut => 'Чиқиш';
+
+  @override
+  String get profileLevelProgress => 'Даража жараёни';
+
+  @override
+  String profileLevel(int level) {
+    return '$level-даража';
+  }
+
+  @override
+  String get profileYourImpact => 'Сизнинг таъсирингиз';
+
+  @override
+  String get addShoppingItem => 'Элемент қўшиш';
+
+  @override
+  String get shoppingListEmpty => 'Харидлар рўйхати бўш';
+
+  @override
+  String get mealPlannerEmpty => 'Режалаштирилган таомлар йўқ';
+
+  @override
+  String get planToday => 'Бугунги режа';
+
+  @override
+  String get today => 'Бугун';
+
+  @override
+  String get planMeal => 'Таом режалаштириш...';
+
+  @override
+  String get tabExplore => 'Кашфиёт';
+
+  @override
+  String get scanFood => 'Таом сканерлаш';
+
+  @override
+  String get scanCalories => 'Калория сканерлаш';
+
+  @override
+  String get takePhoto => 'Расм олиш';
+
+  @override
+  String get chooseFromGallery => 'Галереядан танлаш';
+
+  @override
+  String get analyzeCalories => 'Калорияларни таҳлил қилиш';
+
+  @override
+  String get caloriesPerServing => 'кал/порсия';
+
+  @override
+  String get totalCalories => 'жами кал';
+
+  @override
+  String get creatorProfile => 'Муаллиф профили';
+
+  @override
+  String get follow => 'Кузатиш';
+
+  @override
+  String get following => 'Кузатилмоқда';
+
+  @override
+  String get nutritionTracker => 'Овқатланиш кузатуви';
+
+  @override
+  String get reels => 'Риллар';
+
+  @override
+  String get community => 'Жамоа';
+
+  @override
+  String get hasRecipe => 'Рецепт бор';
+
+  @override
+  String get noReelsYet => 'Ҳозирча риллар йўқ';
+
+  @override
+  String get settings => 'Созламалар';
+
+  @override
+  String get settingsLanguage => 'Тил';
+
+  @override
+  String get settingsTheme => 'Мавзу';
+
+  @override
+  String get aboutApp => 'iFridge ҳақида';
 }

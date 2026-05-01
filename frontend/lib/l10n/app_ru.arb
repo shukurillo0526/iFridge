@@ -54,5 +54,8 @@
     "community": "Сообщество",
     "hasRecipe": "Есть рецепт",
     "noReelsYet": "Рилсов пока нет",
-    "settings": "Настройки"
+    "settings": "Настройки",
+    "settingsLanguage": "Язык",
+    "settingsTheme": "Тема",
+    "aboutApp": "О iFridge"
 }

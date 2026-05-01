@@ -30,15 +30,33 @@ class AppSettings extends ChangeNotifier {
   static const Map<String, Map<String, String>> supportedLanguages = {
     'en': {'name': 'English', 'flag': '🇺🇸'},
     'ko': {'name': '한국어', 'flag': '🇰🇷'},
-    'uz': {'name': "O'zbekcha", 'flag': '🇺🇿'},
+    'uz': {'name': "O'zbekcha (Lotin)", 'flag': '🇺🇿'},
+    'uz_Cyrl': {'name': 'Ўзбекча (Кирил)', 'flag': '🇺🇿'},
     'ru': {'name': 'Русский', 'flag': '🇷🇺'},
   };
+
+  /// Helper to convert string like 'uz_Cyrl' to Locale
+  Locale _parseLocale(String code) {
+    if (code.contains('_')) {
+      final parts = code.split('_');
+      return Locale.fromSubtags(languageCode: parts[0], scriptCode: parts[1]);
+    }
+    return Locale(code);
+  }
+
+  /// Helper to convert Locale to string like 'uz_Cyrl'
+  String _localeToString(Locale locale) {
+    if (locale.scriptCode != null) {
+      return '${locale.languageCode}_${locale.scriptCode}';
+    }
+    return locale.languageCode;
+  }
 
   /// Initialize settings from SharedPreferences
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     final localeCode = prefs.getString(_keyLocale) ?? 'en';
-    _locale = Locale(localeCode);
+    _locale = _parseLocale(localeCode);
 
     final themeName = prefs.getString(_keyThemeMode) ?? 'dark';
     _themeMode = _themeModeFromString(themeName);
@@ -54,7 +72,7 @@ class AppSettings extends ChangeNotifier {
     if (_locale == newLocale) return;
     _locale = newLocale;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_keyLocale, newLocale.languageCode);
+    await prefs.setString(_keyLocale, _localeToString(newLocale));
     notifyListeners();
   }
 

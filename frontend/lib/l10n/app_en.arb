@@ -69,5 +69,8 @@
     "community": "Community",
     "hasRecipe": "Has Recipe",
     "noReelsYet": "No reels yet",
-    "settings": "Settings"
+    "settings": "Settings",
+    "settingsLanguage": "Language",
+    "settingsTheme": "Theme",
+    "aboutApp": "About iFridge"
 }

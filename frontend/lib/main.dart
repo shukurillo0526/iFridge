@@ -111,6 +111,7 @@ class _IFridgeAppState extends State<IFridgeApp> {
         Locale('en'),
         Locale('ko'),
         Locale('uz'),
+        Locale.fromSubtags(languageCode: 'uz', scriptCode: 'Cyrl'),
         Locale('ru'),
       ],
       builder: (context, child) {
@@ -208,30 +209,23 @@ class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
 
   // ── Cook mode screens ──────────────────────────────
   static const List<Widget> _cookScreens = [
-    LivingShelfScreen(),   // Inventory
-    CookScreen(),          // Recipe
+    CookScreen(),          // Recipe (left)
     ScanScreen(),          // Scan (center)
-    ProfileScreen(),       // Management
+    LivingShelfScreen(),   // Inventory (right)
   ];
 
   // ── Order mode screens ─────────────────────────────
   static const List<Widget> _orderScreens = [
     OrderScreen(),         // Order
     OrderFeedsScreen(),    // Feeds (center)
-    ProfileScreen(),       // Management
   ];
 
   // ── Cook mode nav items ────────────────────────────
   List<NavItem> _cookNavItems(AppLocalizations? l10n) => [
     NavItem(
-      icon: Icons.kitchen_outlined,
-      activeIcon: Icons.kitchen,
-      label: l10n?.tabShelf ?? 'Inventory',
-    ),
-    NavItem(
       icon: Icons.restaurant_menu_outlined,
       activeIcon: Icons.restaurant_menu,
-      label: l10n?.tabCook ?? 'Recipe',
+      label: l10n?.tabCook ?? 'Cook',
     ),
     NavItem(
       icon: Icons.center_focus_strong_outlined,
@@ -240,9 +234,9 @@ class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
       isCenter: true,
     ),
     NavItem(
-      icon: Icons.grid_view_outlined,
-      activeIcon: Icons.grid_view,
-      label: 'Manage',
+      icon: Icons.kitchen_outlined,
+      activeIcon: Icons.kitchen,
+      label: l10n?.tabShelf ?? 'Shelf',
     ),
   ];
 
@@ -374,7 +368,20 @@ class _ModeSwitchBar extends StatelessWidget {
             ),
           ),
           Spacer(),
-          // Mode toggle hidden for MVP
+          // Profile / Manage button
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ProfileScreen()),
+              );
+            },
+            child: CircleAvatar(
+              radius: 18,
+              backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+              child: Icon(Icons.person, color: Theme.of(context).colorScheme.primary, size: 20),
+            ),
+          ),
         ],
       ),
     );
