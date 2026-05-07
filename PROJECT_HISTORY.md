@@ -1,12 +1,12 @@
-# Plately: Project History & Vision Alignment
+# I-Fridge: Project History & Vision Alignment
 
-This document tracks the development history of **Plately**—an ambitious smart-kitchen ecosystem capable of tracking physical inventory and recommending hyper-personalized recipes.
+This document tracks the development history of **I-Fridge**—an ambitious smart-kitchen ecosystem capable of tracking physical inventory and recommending hyper-personalized recipes.
 
 ## 🌟 The Core Vision & Pivot
 
-Originally conceived with robotic hardware integrations in mind, Plately has **pivoted to focus entirely on a premium consumer app experience**. We realized that before automating physical cooking, the core user experience of managing ingredients and finding the perfect recipe needs to be flawlessly executed.
+Originally conceived with robotic hardware integrations in mind, I-Fridge has **pivoted to focus entirely on a premium consumer app experience**. We realized that before automating physical cooking, the core user experience of managing ingredients and finding the perfect recipe needs to be flawlessly executed.
 
-The master plan for Plately encompasses:
+The master plan for I-Fridge encompasses:
 1. **Living Shelf:** A digital representation of a real shelf/fridge showing available ingredients with freshness tracking.
 2. **Social-Style Recommendations:** Replacing clinical filters with engaging feeds (For You, Use It Up, Explore) powered by intelligent match algorithms.
 3. **Frictionless Ingestion:** Making it incredibly easy to add items via parsing grocery receipts and analyzing photos of loose ingredients using AI Vision.
@@ -87,14 +87,14 @@ Following the consumer pivot, we replaced expensive cloud AI services with local
 ## 🚀 Phase 12-13: Deployment & Branding (Complete)
 
 ### Phase 12: Application Branding
-- Explicitly standardized the application name exactly as **"Plately"**.
+- Explicitly standardized the application name exactly as **"iFridge"**.
 - Generated a custom, ultra-premium 1:1 squircle iOS app icon featuring a glassmorphic 3D rendering of a refrigerator holding vibrant fruits.
 - Spliced, cropped, and embedded this custom icon into the `manifest.json` as `Icon-192`, `Icon-512`, and `favicon.png`.
 
 ### Phase 13: GitHub Monorepo & CI/CD
 - Demolished fractured sub-git folders and consolidated both Flutter Front-end and FastAPI Back-end into a single **Monorepo**.
 - Programmed a `flutter_web_deploy.yml` GitHub Actions Workflow to autonomously trigger on `main` branch pushes.
-- Fixed notorious WASM CanvasKit web-rendering blank screen crashes and Case-Sensitive (`--base-href /Plately/`) directory routing issues on GitHub Pages.
+- Fixed notorious WASM CanvasKit web-rendering blank screen crashes and Case-Sensitive (`--base-href /iFridge/`) directory routing issues on GitHub Pages.
 - Synced the Flutter application directly to the live Railway Production API, cleanly publishing the app to the internet.
 
 ---
@@ -127,7 +127,7 @@ Systematically iterated through each major screen, fixing bugs, adding features,
 - **Animated Stats:** Replaced static stat tiles with `TweenAnimationBuilder` count-up animations and color-coded icon backgrounds (green/teal/orange).
 - **Badge Layout Fix:** Used `LayoutBuilder` to constrain badges to 4 per row, preventing overflow on small screens.
 - **Account Section:** Added email display, Sign Out (with confirmation dialog — moved from AppBar), and Delete Account (with warning).
-- **Settings Section:** Added Language display, Theme indicator, "About Plately" dialog, and version number.
+- **Settings Section:** Added Language display, Theme indicator, "About iFridge" dialog, and version number.
 - **Shopping List Counter:** Title now shows checked vs total count (e.g., "Shopping List (2/5)").
 - **Meal Planner Clear:** Long-press the edit icon on any planned meal to remove it from the schedule.
 
@@ -308,7 +308,7 @@ Systematic preparation of the app for public release:
 
 ## 🛒 Phase P: Marketplace Ecosystem — "VISION" (Complete)
 
-The pivotal phase where Plately evolved from a personal kitchen app into a **three-sided food commerce marketplace**.
+The pivotal phase where iFridge evolved from a personal kitchen app into a **three-sided food commerce marketplace**.
 
 ### Phase P-1: Cart & Checkout System
 - **Cart Service** (`cart_service.dart`): Singleton in-memory cart with quantity management, restaurant binding (auto-clears on restaurant switch), order type toggle (pickup/delivery), special instructions, and JSON serialization for order submission.
@@ -345,6 +345,56 @@ Consumer                           Restaurant
    ├─ View in Order History            │
    └─ Rate & Reorder                   │
 ```
+
+---
+
+# 📦 v0.0.4 — Plately: Multilingual Ingredients, Relational Recipes & Rebrand
+
+The pivotal release where I-Fridge became **Plately** — rebuilt the recipe-ingredient data model from the ground up with full multilingual support.
+
+### Phase Q-1: Multilingual Translation System
+- **4-Language Support:** English, Korean (한국어), Uzbek Latin (O'zbekcha), Uzbek Cyrillic (Ўзбекча), Russian (Русский).
+- **AI Translation Pipeline:** Hybrid local/cloud system — `qwen3:14b` via Ollama (primary) with Gemini Flash fallback when rate-limited.
+- **Glossary System:** Curated culinary glossary ensuring consistent translation of specialized terms (e.g., "gochujang" → "고추장" not "빨간 고추 된장").
+- **Ingredient Translations:** All 319 canonical ingredients translated to 4 languages with full coverage:
+  - Korean: 319/319 (100%)
+  - Uzbek Latin: 319/319 (100%)
+  - Russian: 319/319 (100%)
+- **Recipe Translations:** Title, description, and cooking steps translated via AI with caching in `recipe_translations` table.
+
+### Phase Q-2: Ingredient Database Expansion
+- **319 canonical ingredients** (up from ~100) with complete metadata:
+  - Display names in 4 languages (EN/KO/UZ/RU) + Uzbek Cyrillic
+  - Category, default unit, sealed/opened shelf life, storage zone
+- **41 new ingredients added** via migration 013: broths, ground meats, specialty items (dashima, nori, panko, lemongrass, tamarind, wonton wrappers, etc.).
+- **Normalization map:** 255 unique recipe ingredient strings → canonical names (100% mapped, 0 unmatched).
+
+### Phase Q-3: Relational Recipe-Ingredient Architecture
+- **Restored `recipe_ingredients` table** with proper foreign keys:
+  ```sql
+  recipe_ingredients(recipe_id → recipes, ingredient_id → ingredients,
+                     quantity, unit, prep_note, is_optional, display_order)
+  ```
+- **1,218 relational links** created across 133 recipes (avg 9.2 ingredients/recipe).
+- **Frontend migration:** All 4 consumer screens updated:
+  - `recipe_detail_screen`: Reads from `recipe_ingredients` JOIN `ingredients` — ingredient names auto-localized per user's language.
+  - `cook_screen`: Scoring uses ingredient ID matching instead of fuzzy name strings.
+  - `cooking_run_screen`: Updated data format for relational ingredients.
+  - `recipe_import_screen`: Creates `recipe_ingredients` entries on recipe import.
+- **Cyrillic support:** `uz_Cyrl` locale detection via `scriptCode` — uses `display_name_uz_cyrl` column.
+
+### Phase Q-4: Performance Fix
+- **Batch query optimization:** Replaced 133 individual `recipe_ingredients` queries in cook_screen with a single batch fetch, then client-side grouping. Loading time reduced from ~30s to <1s.
+
+### Phase Q-5: Full Rebrand — I-Fridge → Plately
+- **229 files renamed** across the entire codebase (670 replacements).
+- Package: `ifridge_app` → `plately_app`
+- Android: `com.ifridge.ifridge_app` → `com.plately.plately_app`
+- iOS: `com.ifridge.ifridgeApp` → `com.plately.platelyApp`, display name "Plately"
+- Windows: project name and window title updated
+- Web: manifest, index.html, service worker
+- Git remote: `shukurillo0526/Plately.git`
+- Zero remaining references to iFridge in source files.
 
 ---
 
