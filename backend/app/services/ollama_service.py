@@ -94,9 +94,6 @@ class OllamaService:
         b64_image = base64.b64encode(image_bytes).decode("utf-8")
 
         messages = []
-        # For qwen3 models, append /no_think to skip extended reasoning
-        if model and "qwen3" in model:
-            messages.append({"role": "system", "content": "/no_think"})
         messages.append({
             "role": "user",
             "content": prompt,
@@ -151,13 +148,7 @@ class OllamaService:
 
         messages = []
         if system_prompt:
-            # For qwen3 models, append /no_think to skip extended reasoning
-            sys_content = system_prompt
-            if model and "qwen3" in model:
-                sys_content += "\n/no_think"
-            messages.append({"role": "system", "content": sys_content})
-        elif model and "qwen3" in model:
-            messages.append({"role": "system", "content": "/no_think"})
+            messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
 
         payload = {
@@ -271,12 +262,6 @@ class OllamaService:
         """
         model = model or await self._resolve_model("text")
 
-        # Inject /no_think for qwen3 models
-        if model and "qwen3" in model:
-            if messages and messages[0]["role"] == "system":
-                messages[0]["content"] += "\n/no_think"
-            else:
-                messages.insert(0, {"role": "system", "content": "/no_think"})
 
         payload = {
             "model": model,
