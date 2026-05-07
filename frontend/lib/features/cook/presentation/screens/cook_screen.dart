@@ -95,12 +95,6 @@ class _CookScreenState extends State<CookScreen>
           .map((r) => r['ingredient_id'] as String)
           .toSet();
 
-      // Build a set of lowercase owned ingredient names for JSONB matching
-      final ownedNames = (inventoryRows as List)
-          .map((r) => ((r['ingredients'] as Map?)?['display_name_en'] as String?)?.toLowerCase())
-          .whereType<String>()
-          .toSet();
-
       // 2. Try server-side 6-signal scoring first (fastest, most accurate)
       bool useServerScoring = false;
       try {
@@ -188,32 +182,30 @@ class _CookScreenState extends State<CookScreen>
       }
 
       if (useDirectQuery) {
-        // ── Direct Query Fallback (JSONB ingredients) ─────────
+        // ── Direct Query Fallback (relational recipe_ingredients) ─────
         final recipeRows = await client
             .from('recipes')
-            .select('*')
+            .select('id, title, description, cuisine, difficulty, prep_time_minutes, cook_time_minutes, servings, tags, image_url')
             .limit(200);
 
         for (final recipe in (recipeRows as List)) {
-          final jsonIngredients = (recipe['ingredients'] as List?) ?? [];
-          final totalRequired = jsonIngredients.length;
+          // Fetch this recipe's ingredients via the relational table
+          final riRows = await client
+              .from('recipe_ingredients')
+              .select('ingredient_id, ingredients(display_name_en)')
+              .eq('recipe_id', recipe['id']);
 
+          final totalRequired = (riRows as List).length;
           final t = translations[recipe['id']];
-          final transIngs = t?['ingredients'] as List?;
 
-          // Match by ingredient name (case-insensitive) using English for matching
           int matchedCount = 0;
           final List<String> missing = [];
-          for (int i = 0; i < jsonIngredients.length; i++) {
-            final ing = jsonIngredients[i];
-            final name = (ing is Map ? (ing['name'] ?? '') : '$ing').toString().toLowerCase();
-            
-            String displayName = ing is Map ? (ing['name'] ?? 'unknown') : '$ing';
-            if (transIngs != null && i < transIngs.length) {
-                displayName = transIngs[i]['name'] ?? displayName;
-            }
+          for (final ri in riRows) {
+            final ingId = ri['ingredient_id'] as String;
+            final ingData = ri['ingredients'] as Map?;
+            final displayName = ingData?['display_name_en'] ?? 'Unknown';
 
-            if (ownedNames.any((owned) => name.contains(owned) || owned.contains(name))) {
+            if (ownedIds.contains(ingId)) {
               matchedCount++;
             } else {
               missing.add(displayName);
@@ -239,12 +231,12 @@ class _CookScreenState extends State<CookScreen>
           });
         }
       } else {
-        // ── RPC Path (JSONB ingredients) ──────────────────────
+        // ── RPC Path (relational recipe_ingredients) ──────────
         final recipeIds = rpcResponse.map((r) => r['recipe_id'] as String).toList();
 
         final recipeRows = await client
             .from('recipes')
-            .select('*')
+            .select('id, title, description, cuisine, difficulty, prep_time_minutes, cook_time_minutes, servings, tags, image_url')
             .inFilter('id', recipeIds);
 
         for (final r in rpcResponse) {
@@ -263,23 +255,23 @@ class _CookScreenState extends State<CookScreen>
 
           if (recipeDetails == null) continue;
 
-          final jsonIngredients = (recipeDetails['ingredients'] as List?) ?? [];
-          final totalRequired = jsonIngredients.length;
+          // Fetch this recipe's ingredients via the relational table
+          final riRows = await client
+              .from('recipe_ingredients')
+              .select('ingredient_id, ingredients(display_name_en)')
+              .eq('recipe_id', recipeId);
+
+          final totalRequired = (riRows as List).length;
           final t = translations[recipeDetails['id']];
-          final transIngs = t?['ingredients'] as List?;
 
           int matchedCount = 0;
           final List<String> missing = [];
-          for (int i = 0; i < jsonIngredients.length; i++) {
-            final ing = jsonIngredients[i];
-            final name = (ing is Map ? (ing['name'] ?? '') : '$ing').toString().toLowerCase();
-            
-            String displayName = ing is Map ? (ing['name'] ?? 'unknown') : '$ing';
-            if (transIngs != null && i < transIngs.length) {
-                displayName = transIngs[i]['name'] ?? displayName;
-            }
+          for (final ri in riRows) {
+            final ingId = ri['ingredient_id'] as String;
+            final ingData = ri['ingredients'] as Map?;
+            final displayName = ingData?['display_name_en'] ?? 'Unknown';
 
-            if (ownedNames.any((owned) => name.contains(owned) || owned.contains(name))) {
+            if (ownedIds.contains(ingId)) {
               matchedCount++;
             } else {
               missing.add(displayName);

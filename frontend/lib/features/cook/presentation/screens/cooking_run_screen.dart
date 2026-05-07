@@ -60,7 +60,7 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
     }
     _modifiedSteps = List.of(widget.steps.map((s) => Map<String, dynamic>.from(s)));
     _ingredientsListText = widget.ingredients?.map((ing) {
-      final name = (ing['ingredients'] as Map?)?['display_name_en'] ?? 'Unknown';
+      final name = ing['name'] ?? ing['name_en'] ?? 'Unknown';
       final qty = ing['quantity']?.toString() ?? '';
       final unit = ing['unit'] ?? '';
       return "$qty $unit $name";
@@ -376,7 +376,7 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
                 SizedBox(height: 8),
                 ...widget.ingredients!.take(8).map((ing) {
-                  final name = ing['display_name_en'] ?? ing['ingredient_name'] ?? '';
+                  final name = ing['name'] ?? ing['name_en'] ?? ing['display_name_en'] ?? '';
                   final qty = ing['quantity']?.toString() ?? '';
                   final unit = ing['unit'] ?? '';
                   return Padding(

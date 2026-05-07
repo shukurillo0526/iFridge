@@ -156,8 +156,10 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
         'timer_seconds': null
       }).toList();
 
-      // Insert recipe with JSONB data directly
-      await Supabase.instance.client.from('recipes').insert({
+      final supabase = Supabase.instance.client;
+
+      // Insert recipe with JSONB data (backward compat)
+      final recipeResult = await supabase.from('recipes').insert({
         'author_id': userId,
         'title': title,
         'description': desc,
@@ -166,10 +168,41 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
         'difficulty': diff,
         'servings': serv,
         'is_public': false,
-        'calories_per_serving': 0, // Could ask AI for this too
+        'calories_per_serving': 0,
         'ingredients': jsonIngredients,
         'steps': jsonSteps,
-      });
+      }).select('id').single();
+
+      final newRecipeId = recipeResult['id'];
+
+      // Also create relational recipe_ingredients entries
+      for (int i = 0; i < ingsRaw.length; i++) {
+        final ingName = (ingsRaw[i]['name'] ?? '').toString().trim();
+        if (ingName.isEmpty) continue;
+        
+        final canonical = ingName.toLowerCase().replaceAll(' ', '_').replaceAll('-', '_');
+        
+        // Try to find by canonical_name or display_name_en
+        final match = await supabase
+            .from('ingredients')
+            .select('id')
+            .or('canonical_name.eq.$canonical,display_name_en.ilike.$ingName')
+            .limit(1)
+            .maybeSingle();
+        
+        if (match != null) {
+          try {
+            await supabase.from('recipe_ingredients').insert({
+              'recipe_id': newRecipeId,
+              'ingredient_id': match['id'],
+              'quantity': ingsRaw[i]['quantity'],
+              'unit': ingsRaw[i]['unit'] ?? 'pcs',
+              'prep_note': '',
+              'display_order': i + 1,
+            });
+          } catch (_) {} // Skip duplicates
+        }
+      }
       
       if (!mounted) return;
       Navigator.pop(context); // Close sheet

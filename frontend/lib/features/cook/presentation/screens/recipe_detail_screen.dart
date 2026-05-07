@@ -66,30 +66,63 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     Future<void> _loadDetails() async {
     try {
       final supabase = Supabase.instance.client;
-
-      // Fetch JSONB ingredients and steps directly from the recipes table
-      final recipeData = await supabase
-          .from('recipes')
-          .select('ingredients, steps')
-          .eq('id', widget.recipeId)
-          .maybeSingle();
-          
-      if (recipeData == null) {
-         setState(() => _loading = false);
-         return;
-      }
-
-      _ingredients = List<Map<String, dynamic>>.from(recipeData['ingredients'] ?? []);
-      _steps = List<Map<String, dynamic>>.from(recipeData['steps'] ?? []);
-      _displayTitle = widget.title;
-      _displayDescription = widget.description;
-      
       final userLanguage = Localizations.localeOf(context).languageCode;
 
-      // If not English, try cache first, then trigger background AI translation
+      // 1. Fetch relational ingredients from recipe_ingredients + ingredients
+      final ingredientData = await supabase
+          .from('recipe_ingredients')
+          .select('ingredient_id, quantity, unit, prep_note, is_optional, display_order, '
+              'ingredients(id, canonical_name, display_name_en, display_name_ko, '
+              'display_name_uz, display_name_uz_cyrl, display_name_ru, category)')
+          .eq('recipe_id', widget.recipeId)
+          .order('display_order', ascending: true);
+
+      // 2. Fetch steps from the recipes JSONB (steps stay in JSONB for now)
+      final recipeData = await supabase
+          .from('recipes')
+          .select('steps')
+          .eq('id', widget.recipeId)
+          .maybeSingle();
+
+      // 3. Map relational ingredients to the format the UI expects
+      _ingredients = (ingredientData as List).map<Map<String, dynamic>>((ri) {
+        final ing = ri['ingredients'] as Map<String, dynamic>? ?? {};
+        // Pick the display name for the user's language
+        String name;
+        switch (userLanguage) {
+          case 'ko':
+            name = ing['display_name_ko'] ?? ing['display_name_en'] ?? 'Unknown';
+            break;
+          case 'uz':
+            name = ing['display_name_uz'] ?? ing['display_name_en'] ?? 'Unknown';
+            break;
+          case 'ru':
+            name = ing['display_name_ru'] ?? ing['display_name_en'] ?? 'Unknown';
+            break;
+          default:
+            name = ing['display_name_en'] ?? 'Unknown';
+        }
+        return {
+          'name': name,
+          'ingredient_id': ri['ingredient_id'],
+          'quantity': ri['quantity'],
+          'unit': ri['unit'] ?? '',
+          'prep_note': ri['prep_note'] ?? '',
+          'is_optional': ri['is_optional'] ?? false,
+          'canonical_name': ing['canonical_name'],
+          'category': ing['category'],
+          // Keep original English name for AI translation fallback
+          'name_en': ing['display_name_en'],
+        };
+      }).toList();
+
+      _steps = List<Map<String, dynamic>>.from(recipeData?['steps'] ?? []);
+      _displayTitle = widget.title;
+      _displayDescription = widget.description;
+
+      // 4. If not English, check for cached title/step translations
       if (userLanguage != 'en') {
         try {
-          // Check cache (new enhanced schema)
           final transData = await supabase
               .from('recipe_translations')
               .select('*')
@@ -98,21 +131,24 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               .maybeSingle();
 
           if (transData != null && transData['translation_status'] == 'completed') {
-            // Cache hit — apply immediately
-            _applyTranslation({
-              'title': transData['title'],
-              'description': transData['short_description'],
-              'ingredients': transData['ingredients'],
-              'steps': transData['steps'],
-            });
+            // Apply cached title and steps (ingredients already localized above)
+            if (transData['title'] != null) _displayTitle = transData['title'];
+            if (transData['short_description'] != null) {
+              _displayDescription = transData['short_description'];
+            }
+            // Apply translated steps
+            final translatedSteps = transData['steps'] as List<dynamic>?;
+            if (translatedSteps != null) {
+              for (int i = 0; i < _steps.length && i < translatedSteps.length; i++) {
+                _steps[i]['translated_text'] = translatedSteps[i]['text'];
+              }
+            }
             _isTranslated = true;
           } else {
-            // No cache or not completed — trigger background AI translation
             _triggerBackgroundTranslation(userLanguage);
           }
         } catch (e) {
           debugPrint('DB Translation fetch failed: $e');
-          // Trigger background translation as fallback
           _triggerBackgroundTranslation(userLanguage);
         }
       }
