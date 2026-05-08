@@ -20,7 +20,7 @@ class InventoryRepository {
   Future<List<Map<String, dynamic>>> loadInventory() async {
     final data = await _client
         .from('inventory_items')
-        .select('*, ingredients(display_name_en, category)')
+        .select('*, ingredients(display_name_en, display_name_ko, display_name_uz, display_name_uz_cyrl, display_name_ru, category)')
         .eq('user_id', currentUserId())
         .order('computed_expiry', ascending: true);
 

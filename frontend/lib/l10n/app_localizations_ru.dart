@@ -9,7 +9,7 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
-  String get appTitle => 'iХолодильник';
+  String get appTitle => 'Plately';
 
   @override
   String get tabShelf => 'Полка';
@@ -868,4 +868,106 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get automatic => 'Автоматически';
+
+  @override
+  String get inv_quantity => 'Количество';
+
+  @override
+  String get inv_purchased => 'Куплено';
+
+  @override
+  String get inv_expires => 'Истекает';
+
+  @override
+  String get inv_source => 'Источник';
+
+  @override
+  String get inv_storageLocation => 'Место хранения';
+
+  @override
+  String get inv_itemState => 'Состояние';
+
+  @override
+  String get inv_freshLabel => '🟢 Свежий';
+
+  @override
+  String get inv_agingLabel => '🟡 Стареет';
+
+  @override
+  String get inv_urgentLabel => '🟠 Срочно';
+
+  @override
+  String get inv_criticalLabel => '🔴 Критично';
+
+  @override
+  String get inv_expiredLabel => '⚫ Истёк';
+
+  @override
+  String inv_expiredDaysAgo(String days) {
+    return 'Истёк $daysд назад';
+  }
+
+  @override
+  String get inv_expiresToday => 'Истекает сегодня!';
+
+  @override
+  String get inv_expiresTomorrow => 'Истекает завтра';
+
+  @override
+  String inv_daysRemaining(String days) {
+    return 'Осталось $days дней';
+  }
+
+  @override
+  String get inv_stateOpened => 'ОТКРЫТО';
+
+  @override
+  String get inv_stateFrozen => 'ЗАМОРОЖЕНО';
+
+  @override
+  String get inv_stateThawed => 'РАЗМОРОЖЕНО';
+
+  @override
+  String get inv_statePartial => 'ЧАСТИЧНО';
+
+  @override
+  String get inv_sortExpiry => 'Срок ↑';
+
+  @override
+  String get inv_sortName => 'Имя А-Я';
+
+  @override
+  String get inv_sortCategory => 'Категория';
+
+  @override
+  String get inv_sortNewest => 'Сначала новые';
+
+  @override
+  String inv_removeConfirm(String name) {
+    return 'Удалить \"$name\" из инвентаря?';
+  }
+
+  @override
+  String get manual_addIngredient => 'Добавить ингредиент';
+
+  @override
+  String get manual_ingredientName => 'Название ингредиента';
+
+  @override
+  String get manual_ingredientHint => 'напр. Яблоки, Хлеб, Молоко';
+
+  @override
+  String get manual_category => 'Категория';
+
+  @override
+  String get manual_qty => 'Кол-во';
+
+  @override
+  String get manual_metricType => 'Ед. измерения';
+
+  @override
+  String get manual_estimatedExpiry => 'Срок годности';
+
+  @override
+  String get manual_required => 'Обязательно';
 }

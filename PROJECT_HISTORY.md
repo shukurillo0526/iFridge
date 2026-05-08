@@ -437,6 +437,54 @@ The pivotal release where I-Fridge became **Plately** — rebuilt the recipe-ing
 
 ---
 
+# 📦 v0.0.5 — Smart Ingredient Resolution, Inventory & Scan UI Localization
+
+Full localization of the inventory and scan modules, a smart ingredient resolution system for unknown inputs, and category translation infrastructure.
+
+### Phase 1: Ingredient Index & Database Schema
+- **`code` column:** Added stable integer index to `ingredients` table for cross-module referencing (AI, recipes, inventory).
+- **New metadata columns:** `type_primary`, `type_secondary`, `protein`, `fat`, `carbs`, `source`, `verified`, `created_by` — laying groundwork for nutritional data and user-contributed ingredients.
+- **`pg_trgm` extension:** Enabled in Supabase for trigram-based fuzzy matching.
+- **`fuzzy_match_ingredient` RPC:** PostgreSQL function using `similarity()` for typo-tolerant ingredient lookups (threshold: 0.3).
+
+### Phase 2: Smart Ingredient Resolution (Backend)
+- **`/api/v1/ingredients/resolve` endpoint:** Cascading resolution flow:
+  1. Exact match on `canonical_name`
+  2. Canonical match (lowercased, stripped)
+  3. Fuzzy match via `pg_trgm` similarity scoring
+  4. Auto-create as `user_contributed` with provenance tracking (`source='user_contributed'`, `verified=false`, `created_by=user_id`)
+- **`/api/v1/ingredients/fuzzy` endpoint:** Standalone fuzzy search returning similarity scores for autocomplete/suggestions.
+- **Provenance tracking in `add-item`:** All auto-created ingredients tagged with source and creator for later admin review.
+
+### Phase 3: Inventory UI Full Localization
+- **25 new ARB keys × 5 languages = 125 translations** covering:
+  - Detail labels: `inv_quantity`, `inv_purchased`, `inv_expires`, `inv_source`
+  - Section headers: `inv_storageLocation`, `inv_itemState`
+  - Freshness states: `inv_freshLabel` → `inv_expiredLabel` (5 states)
+  - State badges: `inv_stateOpened`, `inv_stateFrozen`, `inv_stateThawed`, `inv_statePartial`
+  - Expiry messages: `inv_expiredDaysAgo`, `inv_expiresToday`, `inv_expiresTomorrow`, `inv_daysRemaining`
+  - Sort modes: `inv_sortExpiry`, `inv_sortName`, `inv_sortCategory`, `inv_sortNewest`
+- **`inventory_detail_sheet.dart`:** All labels wired to `AppLocalizations.of(context)?.inv_*` keys.
+- **`inventory_item_card.dart`:** State badges and expiry labels fully localized.
+
+### Phase 4: Scan / Add Ingredient Dialog Localization
+- **8 new `manual_*` ARB keys × 5 languages** for the manual entry form:
+  - `manual_addIngredient`, `manual_ingredientName`, `manual_ingredientHint`, `manual_category`, `manual_qty`, `manual_metricType`, `manual_estimatedExpiry`, `manual_required`
+- **Multi-language autocomplete search:** Queries across all `display_name_*` columns (`en`, `ko`, `uz`, `uz_cyrl`, `ru`) + `canonical_name` simultaneously.
+- **Localized search results:** Ingredient names and category subtitles displayed in current language.
+- **`L10nHelper.translateCategory()`:** New utility translating 30 ingredient categories to UZ/RU/KO — used in both the category dropdown and search result tiles.
+
+### Phase 5: Locale Parity Fix
+- **UZ_Cyrl ARB cleanup:** Fixed all broken `Х0Х` / `Х1Х` hardcoded placeholders → proper ICU `{param}` format. Removed duplicate keys and corrupted lines.
+- **KO ARB backfill:** Added 29 missing recipe-related keys (`tierBadge1-5`, `needLabel`, `nOfNIngredients`, `servingsLabel`, `nHave`, `nMissing`, `ingredientsHeader`, `swapButton`, `aiAssistant`, `aiHint`, `editIngredient`, `nameLabel`, `qtyLabel`, `unitLabel`, `handsOn`, `automatic`, `noStepsAvailableYet`, `failedToRecordX`, `failedToAddItemsX`).
+- **Result:** `flutter gen-l10n` produces **zero untranslated message warnings** across all 5 locales.
+
+### Frontend API Methods
+- `fuzzySearchIngredients(query)` — trigram-based fuzzy search
+- `resolveIngredient(name, userId)` — smart resolve-or-create
+
+---
+
 ## 🚀 The VISION — Three-Pillar Marketplace
 
 Plately is now positioned as a **3-sided food commerce ecosystem**:

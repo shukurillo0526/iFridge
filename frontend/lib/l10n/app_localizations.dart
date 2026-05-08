@@ -1651,6 +1651,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Automatic'**
   String get automatic;
+
+  /// No description provided for @inv_quantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get inv_quantity;
+
+  /// No description provided for @inv_purchased.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchased'**
+  String get inv_purchased;
+
+  /// No description provided for @inv_expires.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires'**
+  String get inv_expires;
+
+  /// No description provided for @inv_source.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get inv_source;
+
+  /// No description provided for @inv_storageLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Location'**
+  String get inv_storageLocation;
+
+  /// No description provided for @inv_itemState.
+  ///
+  /// In en, this message translates to:
+  /// **'Item State'**
+  String get inv_itemState;
+
+  /// No description provided for @inv_freshLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'🟢 Fresh'**
+  String get inv_freshLabel;
+
+  /// No description provided for @inv_agingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'🟡 Aging'**
+  String get inv_agingLabel;
+
+  /// No description provided for @inv_urgentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'🟠 Urgent'**
+  String get inv_urgentLabel;
+
+  /// No description provided for @inv_criticalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'🔴 Critical'**
+  String get inv_criticalLabel;
+
+  /// No description provided for @inv_expiredLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'⚫ Expired'**
+  String get inv_expiredLabel;
+
+  /// No description provided for @inv_expiredDaysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired {days}d ago'**
+  String inv_expiredDaysAgo(String days);
+
+  /// No description provided for @inv_expiresToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires today!'**
+  String get inv_expiresToday;
+
+  /// No description provided for @inv_expiresTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires tomorrow'**
+  String get inv_expiresTomorrow;
+
+  /// No description provided for @inv_daysRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days remaining'**
+  String inv_daysRemaining(String days);
+
+  /// No description provided for @inv_stateOpened.
+  ///
+  /// In en, this message translates to:
+  /// **'OPENED'**
+  String get inv_stateOpened;
+
+  /// No description provided for @inv_stateFrozen.
+  ///
+  /// In en, this message translates to:
+  /// **'FROZEN'**
+  String get inv_stateFrozen;
+
+  /// No description provided for @inv_stateThawed.
+  ///
+  /// In en, this message translates to:
+  /// **'THAWED'**
+  String get inv_stateThawed;
+
+  /// No description provided for @inv_statePartial.
+  ///
+  /// In en, this message translates to:
+  /// **'PARTIAL'**
+  String get inv_statePartial;
+
+  /// No description provided for @inv_sortExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry ↑'**
+  String get inv_sortExpiry;
+
+  /// No description provided for @inv_sortName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name A-Z'**
+  String get inv_sortName;
+
+  /// No description provided for @inv_sortCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get inv_sortCategory;
+
+  /// No description provided for @inv_sortNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest first'**
+  String get inv_sortNewest;
+
+  /// No description provided for @inv_removeConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove \"{name}\" from your inventory?'**
+  String inv_removeConfirm(String name);
+
+  /// No description provided for @manual_addIngredient.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Ingredient'**
+  String get manual_addIngredient;
+
+  /// No description provided for @manual_ingredientName.
+  ///
+  /// In en, this message translates to:
+  /// **'Ingredient Name'**
+  String get manual_ingredientName;
+
+  /// No description provided for @manual_ingredientHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Apples, Bread, Milk'**
+  String get manual_ingredientHint;
+
+  /// No description provided for @manual_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get manual_category;
+
+  /// No description provided for @manual_qty.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty'**
+  String get manual_qty;
+
+  /// No description provided for @manual_metricType.
+  ///
+  /// In en, this message translates to:
+  /// **'Metric Type'**
+  String get manual_metricType;
+
+  /// No description provided for @manual_estimatedExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Expiry'**
+  String get manual_estimatedExpiry;
+
+  /// No description provided for @manual_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get manual_required;
 }
 
 class _AppLocalizationsDelegate

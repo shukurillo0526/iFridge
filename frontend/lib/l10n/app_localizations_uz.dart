@@ -871,6 +871,108 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get automatic => 'Avtomatik';
+
+  @override
+  String get inv_quantity => 'Miqdor';
+
+  @override
+  String get inv_purchased => 'Sotib olingan';
+
+  @override
+  String get inv_expires => 'Muddati';
+
+  @override
+  String get inv_source => 'Manba';
+
+  @override
+  String get inv_storageLocation => 'Saqlash joyi';
+
+  @override
+  String get inv_itemState => 'Holati';
+
+  @override
+  String get inv_freshLabel => '🟢 Yangi';
+
+  @override
+  String get inv_agingLabel => '🟡 Eskirmoqda';
+
+  @override
+  String get inv_urgentLabel => '🟠 Shoshilinch';
+
+  @override
+  String get inv_criticalLabel => '🔴 Jiddiy';
+
+  @override
+  String get inv_expiredLabel => '⚫ Muddati tugagan';
+
+  @override
+  String inv_expiredDaysAgo(String days) {
+    return '$days kun oldin tugagan';
+  }
+
+  @override
+  String get inv_expiresToday => 'Bugun tugaydi!';
+
+  @override
+  String get inv_expiresTomorrow => 'Ertaga tugaydi';
+
+  @override
+  String inv_daysRemaining(String days) {
+    return '$days kun qoldi';
+  }
+
+  @override
+  String get inv_stateOpened => 'OCHILGAN';
+
+  @override
+  String get inv_stateFrozen => 'MUZLATILGAN';
+
+  @override
+  String get inv_stateThawed => 'ERITILGAN';
+
+  @override
+  String get inv_statePartial => 'QISMAN';
+
+  @override
+  String get inv_sortExpiry => 'Muddat ↑';
+
+  @override
+  String get inv_sortName => 'Nom A-Z';
+
+  @override
+  String get inv_sortCategory => 'Kategoriya';
+
+  @override
+  String get inv_sortNewest => 'Eng yangi';
+
+  @override
+  String inv_removeConfirm(String name) {
+    return '\"$name\" inventardan o\'chirilsinmi?';
+  }
+
+  @override
+  String get manual_addIngredient => 'Ingredient qo\'shish';
+
+  @override
+  String get manual_ingredientName => 'Ingredient nomi';
+
+  @override
+  String get manual_ingredientHint => 'masalan: Olma, Non, Sut';
+
+  @override
+  String get manual_category => 'Kategoriya';
+
+  @override
+  String get manual_qty => 'Miqdor';
+
+  @override
+  String get manual_metricType => 'O\'lchov turi';
+
+  @override
+  String get manual_estimatedExpiry => 'Taxminiy muddat';
+
+  @override
+  String get manual_required => 'Majburiy';
 }
 
 /// The translations for Uzbek, using the Cyrillic script (`uz_Cyrl`).
@@ -1041,7 +1143,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
   String get expiryAlerts => 'Муддати тугаши ҳақида огоҳлантиришлар';
 
   @override
-  String get errorLoadInventory => 'Инвентарни йуклаб бо‘лмади';
+  String get errorLoadInventory => 'Инвентарни йуклаб бўлмади';
 
   @override
   String get errorCheckConnection =>
@@ -1077,7 +1179,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
 
   @override
   String get zoneEmptyDesc =>
-      'Рақамли ошхонангизни тўлдиришга таййор.\nЕлементларни қоʻлда қоʻшинг йоки сканерлаш тугмасини босинг.';
+      'Рақамли ошхонангизни тўлдиришга таййор.\nЕлементларни қўлда қўшинг йоки сканерлаш тугмасини босинг.';
 
   @override
   String get addIngredient => 'Ингредиент қўшинг';
@@ -1182,7 +1284,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
 
   @override
   String get auto_addSomeIngredientsToYourShelfFirst =>
-      'Аввал жавонингизга ба\'зи ингредиентларни қўшинг!';
+      'Аввал жавонингизга ингредиентларни қўшинг!';
 
   @override
   String get auto_aiRecipeGenerator => 'АИ ретсепти генератори';
@@ -1220,10 +1322,10 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
   String get auto_clearFilter => 'Филтрни тозалаш';
 
   @override
-  String get auto_deleteItem => 'Елемент оʻчирилсинми?';
+  String get auto_deleteItem => 'Елемент ўчирилсинми?';
 
   @override
-  String get auto_delete => 'Оʻчириш';
+  String get auto_delete => 'Ўчириш';
 
   @override
   String get auto_freshness => 'Йангилик';
@@ -1244,7 +1346,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
   String get auto_posts => 'Хабарлар';
 
   @override
-  String get auto_noPostsYet => 'Ҳозирча постлар йо‘қ';
+  String get auto_noPostsYet => 'Ҳозирча постлар йўқ';
 
   @override
   String get auto_explore => 'Тадқиқ қилинг';
@@ -1262,7 +1364,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
   String get auto_hasRecipe => 'Ретсепти бор';
 
   @override
-  String get auto_noCommunityPostsYet => 'Ҳозирча ҳамжамийат постлари йо‘қ';
+  String get auto_noCommunityPostsYet => 'Ҳозирча ҳамжамийат постлари йўқ';
 
   @override
   String get auto_beTheFirstToShare => 'Биринчи бўлиб баҳам кўринг!';
@@ -1283,7 +1385,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
   String get auto_checkout => 'Рўйхатдан ўчирилиш';
 
   @override
-  String get auto_yourCartIsEmpty => 'Саватингиз боʻш';
+  String get auto_yourCartIsEmpty => 'Саватингиз бўш';
 
   @override
   String get auto_yourOrder => 'Сизнинг буйуртмангиз';
@@ -1366,7 +1468,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
   String get auto_confirmReservation => 'Резервасйонни тасдиқланг';
 
   @override
-  String get auto_locationDirections => 'Жойлашув ва йоʻналишлар';
+  String get auto_locationDirections => 'Жойлашув ва йўналишлар';
 
   @override
   String get auto_mapView => 'Харита кўриниши';
@@ -1395,7 +1497,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
 
   @override
   String get auto_accountDeletionRequestedContactSupportToFinalize =>
-      'Ҳисобни оʻчириш соʻралди. Тугатиш учун қо‘ллаб-қувватлаш хизматига мурожаат қилинг.';
+      'Ҳисобни ўчириш сўралди. Тугатиш учун қўллаб-қувватлаш хизматига мурожаат қилинг.';
 
   @override
   String get auto_plately => 'иФридге';
@@ -1403,7 +1505,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
   @override
   String
   get auto_platelyIsYourAipoweredKitchenEcosystemItAutomaticallyTracksYourIngredientsPredictsExpirationsGeneratesPersonalizedRecipesAndLetsYouOrderFromLocalRestaurants =>
-      'иФридге сизнинг сун\'ий интеллект асосида ишлайдиган ошхона екотизимидир. У автоматик равишда ингредиентларингизни кузатиб боради, амал қилиш муддатини башорат қилади, мослаштирилган ретсептлар йаратади ва маҳаллий ресторанлардан буйуртма бериш имконини беради.';
+      'иФридге сизнинг сунъий интеллект асосида ишлайдиган ошхона екотизимидир. У автоматик равишда ингредиентларингизни кузатиб боради, амал қилиш муддатини башорат қилади, мослаштирилган ретсептлар йаратади ва маҳаллий ресторанлардан буйуртма бериш имконини беради.';
 
   @override
   String get auto_gotIt => 'Тушундим';
@@ -1499,20 +1601,20 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
 
   @override
   String scaledToNServings(String newServings) {
-    return '$newServings порсийаларига оʻлчанди 🍳';
+    return '$newServings порсийаларига ўлчанди 🍳';
   }
 
   @override
   String findingSubstitutesForX(String ingredientName) {
-    return '$ingredientName о‘рнини босувчилар қидирилмоқда...';
+    return '$ingredientName ўрнини босувчилар қидирилмоқда...';
   }
 
   @override
-  String get couldNotFindSubstitutes => 'О‘ринбосарларни топиб бо‘лмади';
+  String get couldNotFindSubstitutes => 'Ўринбосарларни топиб бўлмади';
 
   @override
   String substitutesForX(String ingredientName) {
-    return '“$ingredientName” о‘рнига';
+    return '\"$ingredientName\" ўрнига';
   }
 
   @override
@@ -1538,7 +1640,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
 
   @override
   String failedToAddItemsX(String e) {
-    return 'Елементларни қо‘шиб бо‘лмади: $e';
+    return 'Елементларни қўшиб бўлмади: $e';
   }
 
   @override
@@ -1559,7 +1661,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
 
   @override
   String failedToRecordX(String e) {
-    return 'Йозиб бо‘лмади: $e';
+    return 'Йозиб бўлмади: $e';
   }
 
   @override
@@ -1585,7 +1687,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
 
   @override
   String nItemsNeedAttention(String count) {
-    return 'Х0Х елемент(лар)ига е\'тибор керак';
+    return '$count елемент(лар)ига еътибор керак';
   }
 
   @override
@@ -1596,7 +1698,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
   String get addManually => 'Қўлда қўшиш';
 
   @override
-  String get recognitionFailed => 'Таниб бо‘лмади. Қайта уриниб кўринг.';
+  String get recognitionFailed => 'Таниб бўлмади. Қайта уриниб кўринг.';
 
   @override
   String get analyzingYourFood => 'Озиқ-овқатингиз таҳлил қилинмоқда...';
@@ -1606,7 +1708,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
 
   @override
   String nItemsDetected(String count) {
-    return 'Х0Х елементлари аниқланди';
+    return '$count елементлари аниқланди';
   }
 
   @override
@@ -1614,52 +1716,52 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
 
   @override
   String nIngredientsDetected(String count) {
-    return 'Х0Х ингредийентлари аниқланди';
+    return '$count ингредийентлари аниқланди';
   }
 
   @override
   String nOfNAdded(String added, String total) {
-    return 'Х0Х / Х1Х қўшилди';
+    return '$added / $total қўшилди';
   }
 
   @override
   String addedItem(String item) {
-    return 'Х0Х қўшилди!';
+    return '$item қўшилди!';
   }
 
   @override
   String failedToAddItem(String item) {
-    return 'Х0Х қо‘шиб бо‘лмади';
+    return '$item қўшиб бўлмади';
   }
 
   @override
   String addedNItemsToShelf(String count) {
-    return 'Х0Х буйумлари жавонга қўшилди!';
+    return '$count буйумлари жавонга қўшилди!';
   }
 
   @override
   String noProductFoundForBarcode(String barcode) {
-    return 'Х0Х штрих-коди учун маҳсулот топилмади';
+    return '$barcode штрих-коди учун маҳсулот топилмади';
   }
 
   @override
   String addedItemToShelf(String item) {
-    return 'Х0Х жавонга қўшилди!';
+    return '$item жавонга қўшилди!';
   }
 
   @override
   String errorX(String e) {
-    return 'Хато: Х0Х';
+    return 'Хато: $e';
   }
 
   @override
   String analysisFailedX(String e) {
-    return 'Таҳлил бажарилмади: Х0Х';
+    return 'Таҳлил бажарилмади: $e';
   }
 
   @override
   String failedToLogX(String e) {
-    return 'Журналга киритилмади: Х0Х';
+    return 'Журналга киритилмади: $e';
   }
 
   @override
@@ -1670,4 +1772,175 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
 
   @override
   String get deleteAccount => 'Ҳисобни ўчириш';
+
+  @override
+  String get tierBadge1 => '✅ Ҳамма нарса бор!';
+
+  @override
+  String get tierBadge2 => '🔥 Сиз учун тавсийа';
+
+  @override
+  String get tierBadge3 => '⏰ Муддати тугайотганларни ишлатинг';
+
+  @override
+  String get tierBadge4 => '🛒 Бир нечта маҳсулот йетишмайди';
+
+  @override
+  String get tierBadge5 => '🌍 Йанги нарса кашф етинг';
+
+  @override
+  String needLabel(String items) {
+    return 'Керак: $items';
+  }
+
+  @override
+  String nOfNIngredients(String matched, String total) {
+    return '$matched/$total ингредиент';
+  }
+
+  @override
+  String get servingsLabel => 'Порсийа';
+
+  @override
+  String nHave(String count) {
+    return '$count та бор';
+  }
+
+  @override
+  String nMissing(String count) {
+    return '$count та йетишмайди';
+  }
+
+  @override
+  String get ingredientsHeader => 'Ингредиентлар';
+
+  @override
+  String get swapButton => 'Алмаштириш →';
+
+  @override
+  String get aiAssistant => '🤖 АИ йордамчи';
+
+  @override
+  String get aiHint =>
+      'масалан: \"Менда гўшт йўқ, ўрнига нимани ишлатсам бўлади?\"';
+
+  @override
+  String get editIngredient => 'Ингредиентни таҳрирлаш';
+
+  @override
+  String get nameLabel => 'Номи';
+
+  @override
+  String get qtyLabel => 'Миқдор';
+
+  @override
+  String get unitLabel => 'Бирлик';
+
+  @override
+  String get handsOn => 'Қўлда';
+
+  @override
+  String get automatic => 'Автоматик';
+
+  @override
+  String get inv_quantity => 'Миқдор';
+
+  @override
+  String get inv_purchased => 'Сотиб олинган';
+
+  @override
+  String get inv_expires => 'Муддати';
+
+  @override
+  String get inv_source => 'Манба';
+
+  @override
+  String get inv_storageLocation => 'Сақлаш жойи';
+
+  @override
+  String get inv_itemState => 'Ҳолати';
+
+  @override
+  String get inv_freshLabel => '🟢 Йанги';
+
+  @override
+  String get inv_agingLabel => '🟡 Ескирмоқда';
+
+  @override
+  String get inv_urgentLabel => '🟠 Шошилинч';
+
+  @override
+  String get inv_criticalLabel => '🔴 Жиддий';
+
+  @override
+  String get inv_expiredLabel => '⚫ Муддати тугаган';
+
+  @override
+  String inv_expiredDaysAgo(String days) {
+    return '$days кун олдин тугаган';
+  }
+
+  @override
+  String get inv_expiresToday => 'Бугун тугайди!';
+
+  @override
+  String get inv_expiresTomorrow => 'Ертага тугайди';
+
+  @override
+  String inv_daysRemaining(String days) {
+    return '$days кун қолди';
+  }
+
+  @override
+  String get inv_stateOpened => 'ОЧИЛГАН';
+
+  @override
+  String get inv_stateFrozen => 'МУЗЛАТИЛГАН';
+
+  @override
+  String get inv_stateThawed => 'ЕРИТИЛГАН';
+
+  @override
+  String get inv_statePartial => 'ҚИСМАН';
+
+  @override
+  String get inv_sortExpiry => 'Муддат ↑';
+
+  @override
+  String get inv_sortName => 'Ном А-Я';
+
+  @override
+  String get inv_sortCategory => 'Категория';
+
+  @override
+  String get inv_sortNewest => 'Енг янги';
+
+  @override
+  String inv_removeConfirm(String name) {
+    return '\"$name\" инвентардан ўчирилсинми?';
+  }
+
+  @override
+  String get manual_addIngredient => 'Ингредиент қўшиш';
+
+  @override
+  String get manual_ingredientName => 'Ингредиент номи';
+
+  @override
+  String get manual_ingredientHint => 'масалан: Олма, Нон, Сут';
+
+  @override
+  String get manual_category => 'Категория';
+
+  @override
+  String get manual_qty => 'Миқдор';
+
+  @override
+  String get manual_metricType => 'Ўлчов тури';
+
+  @override
+  String get manual_estimatedExpiry => 'Тахминий муддат';
+
+  @override
+  String get manual_required => 'Мажбурий';
 }

@@ -271,6 +271,35 @@ class ApiService {
     return List<Map<String, dynamic>>.from(data['ingredients'] ?? []);
   }
 
+  /// Fuzzy search ingredients using pg_trgm similarity (typo-tolerant).
+  Future<List<Map<String, dynamic>>> fuzzySearchIngredients(String query, {int limit = 5}) async {
+    final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/ingredients/fuzzy?q=${Uri.encodeComponent(query)}&limit=$limit');
+    final response = await _client.get(uri, headers: _headers);
+    final data = _handleResponse(response);
+    return List<Map<String, dynamic>>.from(data['ingredients'] ?? []);
+  }
+
+  /// Resolve an ingredient: fuzzy-match first, auto-create if no match.
+  /// Returns: {ingredient: {...}, resolution: 'exact'|'fuzzy'|'created', created: bool}
+  Future<Map<String, dynamic>> resolveIngredient({
+    required String name,
+    String category = 'other',
+    String? userId,
+  }) async {
+    final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/ingredients/resolve');
+    final body = {
+      'name': name,
+      'category': category,
+      if (userId != null) 'user_id': userId,
+    };
+    final response = await _client.post(
+      uri,
+      headers: {..._headers, 'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
+    return _handleResponse(response);
+  }
+
   // ── Calorie Analysis ───────────────────────────────────────────
 
   /// Analyze food items for calorie content.

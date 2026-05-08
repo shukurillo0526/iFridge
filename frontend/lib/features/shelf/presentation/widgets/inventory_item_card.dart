@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:plately_app/core/utils/ingredient_icons.dart';
 import 'package:plately_app/features/shelf/domain/inventory_item.dart';
 import 'package:plately_app/features/shelf/presentation/widgets/freshness_overlay.dart';
+import 'package:plately_app/l10n/app_localizations.dart';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -136,7 +137,7 @@ class InventoryItemCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              item.name,
+                              item.localizedName(context),
                               style: TextStyle(
                                 color: isExpired
                                     ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)
@@ -153,7 +154,7 @@ class InventoryItemCard extends StatelessWidget {
                             ),
                             SizedBox(height: 3),
                             Text(
-                              _expiryLabel,
+                              _expiryLabel(context),
                               style: TextStyle(
                                 color: _expiryLabelColor(context),
                                 fontSize: 10,
@@ -209,7 +210,7 @@ class InventoryItemCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      _stateBadgeLabel,
+                      _stateBadgeLabel(context),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface,
                         fontSize: 8,
@@ -225,13 +226,14 @@ class InventoryItemCard extends StatelessWidget {
     );
   }
 
-  String get _expiryLabel {
+  String _expiryLabel(BuildContext context) {
     final days = item.daysUntilExpiry;
-    if (days < 0) return 'Expired';
-    if (days == 0) return 'Use today!';
-    if (days == 1) return 'Tomorrow';
-    if (days <= 7) return '$days days';
-    return '${(days / 7).floor()}w left';
+    final l10n = AppLocalizations.of(context);
+    if (days < 0) return l10n?.expired ?? 'Expired';
+    if (days == 0) return l10n?.expiringSoon ?? 'Use today!';
+    if (days == 1) return '1d';
+    if (days <= 7) return '${days}d';
+    return '${(days / 7).floor()}w';
   }
 
   Color _expiryLabelColor(BuildContext context) {
@@ -249,16 +251,17 @@ class InventoryItemCard extends StatelessWidget {
     }
   }
 
-  String get _stateBadgeLabel {
+  String _stateBadgeLabel(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     switch (item.itemState) {
       case 'opened':
-        return 'OPENED';
+        return l10n?.inv_stateOpened ?? 'OPENED';
       case 'partially_used':
-        return 'PARTIAL';
+        return l10n?.inv_statePartial ?? 'PARTIAL';
       case 'frozen':
-        return 'FROZEN';
+        return l10n?.inv_stateFrozen ?? 'FROZEN';
       case 'thawed':
-        return 'THAWED';
+        return l10n?.inv_stateThawed ?? 'THAWED';
       default:
         return '';
     }

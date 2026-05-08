@@ -92,4 +92,120 @@ class L10nHelper {
     
     return unit; // Default English
   }
+
+  /// Translate an ingredient category for display.
+  static String translateCategory(String category, String localeCode) {
+    if (category.isEmpty) return category;
+    
+    final lower = category.toLowerCase();
+    
+    if (localeCode.startsWith('uz')) {
+      switch (lower) {
+        case 'produce': return 'Mahsulotlar';
+        case 'vegetable': return 'Sabzavot';
+        case 'fruit': return 'Meva';
+        case 'meat': return 'Go\'sht';
+        case 'poultry': return 'Parranda';
+        case 'seafood': return 'Dengiz mahsuloti';
+        case 'dairy': return 'Sut mahsuloti';
+        case 'milk': return 'Sut';
+        case 'cheese': return 'Pishloq';
+        case 'yogurt': return 'Yogurt';
+        case 'eggs': return 'Tuxum';
+        case 'bakery': return 'Novvoyxona';
+        case 'bread': return 'Non';
+        case 'grain': return 'Don';
+        case 'pasta': return 'Makaron';
+        case 'pantry': return 'Ombor';
+        case 'canned': return 'Konserva';
+        case 'frozen': return 'Muzlatilgan';
+        case 'beverage': return 'Ichimlik';
+        case 'juice': return 'Sharbat';
+        case 'snack': return 'Gazak';
+        case 'condiment': return 'Ziravorlar';
+        case 'spice': return 'Ziravor';
+        case 'oil': return 'Yog\'';
+        case 'sauce': return 'Sous';
+        case 'nuts': return 'Yong\'oq';
+        case 'legumes': return 'Dukkakli';
+        case 'tofu': return 'Tofu';
+        case 'protein': return 'Oqsil';
+        case 'baking': return 'Pishirish';
+        case 'seasoning': return 'Ziravorlar';
+        default: return category;
+      }
+    } else if (localeCode.startsWith('ru')) {
+      switch (lower) {
+        case 'produce': return 'Продукты';
+        case 'vegetable': return 'Овощи';
+        case 'fruit': return 'Фрукты';
+        case 'meat': return 'Мясо';
+        case 'poultry': return 'Птица';
+        case 'seafood': return 'Морепродукты';
+        case 'dairy': return 'Молочные';
+        case 'milk': return 'Молоко';
+        case 'cheese': return 'Сыр';
+        case 'yogurt': return 'Йогурт';
+        case 'eggs': return 'Яйца';
+        case 'bakery': return 'Выпечка';
+        case 'bread': return 'Хлеб';
+        case 'grain': return 'Крупы';
+        case 'pasta': return 'Макароны';
+        case 'pantry': return 'Кладовая';
+        case 'canned': return 'Консервы';
+        case 'frozen': return 'Заморож.';
+        case 'beverage': return 'Напитки';
+        case 'juice': return 'Соки';
+        case 'snack': return 'Закуски';
+        case 'condiment': return 'Приправы';
+        case 'spice': return 'Специи';
+        case 'oil': return 'Масло';
+        case 'sauce': return 'Соус';
+        case 'nuts': return 'Орехи';
+        case 'legumes': return 'Бобовые';
+        case 'tofu': return 'Тофу';
+        case 'protein': return 'Белки';
+        case 'baking': return 'Выпечка';
+        case 'seasoning': return 'Приправы';
+        default: return category;
+      }
+    } else if (localeCode.startsWith('ko')) {
+      switch (lower) {
+        case 'produce': return '농산물';
+        case 'vegetable': return '채소';
+        case 'fruit': return '과일';
+        case 'meat': return '고기';
+        case 'poultry': return '가금류';
+        case 'seafood': return '해산물';
+        case 'dairy': return '유제품';
+        case 'milk': return '우유';
+        case 'cheese': return '치즈';
+        case 'yogurt': return '요거트';
+        case 'eggs': return '계란';
+        case 'bakery': return '베이커리';
+        case 'bread': return '빵';
+        case 'grain': return '곡물';
+        case 'pasta': return '파스타';
+        case 'pantry': return '식료품';
+        case 'canned': return '통조림';
+        case 'frozen': return '냉동';
+        case 'beverage': return '음료';
+        case 'juice': return '주스';
+        case 'snack': return '간식';
+        case 'condiment': return '양념';
+        case 'spice': return '향신료';
+        case 'oil': return '기름';
+        case 'sauce': return '소스';
+        case 'nuts': return '견과류';
+        case 'legumes': return '콩류';
+        case 'tofu': return '두부';
+        case 'protein': return '단백질';
+        case 'baking': return '베이킹';
+        case 'seasoning': return '조미료';
+        default: return category;
+      }
+    }
+    
+    return category; // Default English
+  }
 }

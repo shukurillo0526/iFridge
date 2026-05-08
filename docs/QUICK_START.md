@@ -1,4 +1,4 @@
-# Plately v0.0.2 — Quick Start Guide
+# Plately v0.0.4 — Quick Start Guide
 
 > **The Intelligent Fridge Ecosystem** — AI-powered kitchen management, recipe recommendations,
 > community cooking feeds, and restaurant ordering.

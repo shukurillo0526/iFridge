@@ -26,6 +26,7 @@ class AddItemRequest(BaseModel):
     unit: str = "pcs"
     location: str = "Fridge"
     expiry_date: Optional[str] = None  # ISO 8601, defaults to 7 days
+    ingredient_id: Optional[str] = None  # If known, skip search
 
 
 @router.post("/api/v1/inventory/add-item")
@@ -39,45 +40,65 @@ async def add_inventory_item(req: AddItemRequest):
     db = get_supabase()
 
     try:
-        # 1. Find or create ingredient (fetch full metadata)
-        existing = (
-            db.table("ingredients")
-            .select("*")
-            .ilike("display_name_en", req.ingredient_name)
-            .limit(1)
-            .execute()
-        )
-
-        if existing.data and len(existing.data) > 0:
-            ingredient = existing.data[0]
-            ingredient_id = ingredient["id"]
-        else:
-            # Try canonical_name match as well
-            canonical = req.ingredient_name.strip().lower().replace(" ", "_")
-            canonical_match = (
+        # 1. If ingredient_id is provided, skip search
+        if req.ingredient_id:
+            existing_by_id = (
                 db.table("ingredients")
                 .select("*")
-                .eq("canonical_name", canonical)
+                .eq("id", req.ingredient_id)
                 .limit(1)
                 .execute()
             )
-            if canonical_match.data and len(canonical_match.data) > 0:
-                ingredient = canonical_match.data[0]
+            if existing_by_id.data and len(existing_by_id.data) > 0:
+                ingredient = existing_by_id.data[0]
                 ingredient_id = ingredient["id"]
             else:
-                # Create new ingredient
-                inserted = (
+                raise HTTPException(status_code=404, detail=f"Ingredient {req.ingredient_id} not found")
+        else:
+            # 1b. Find or create ingredient (fetch full metadata)
+            existing = (
+                db.table("ingredients")
+                .select("*")
+                .ilike("display_name_en", req.ingredient_name)
+                .limit(1)
+                .execute()
+            )
+
+            if existing.data and len(existing.data) > 0:
+                ingredient = existing.data[0]
+                ingredient_id = ingredient["id"]
+            else:
+                # Try canonical_name match as well
+                canonical = req.ingredient_name.strip().lower().replace(" ", "_")
+                canonical_match = (
                     db.table("ingredients")
-                    .insert({
-                        "canonical_name": canonical,
-                        "display_name_en": req.ingredient_name.strip(),
-                        "category": req.category,
-                        "default_unit": req.unit,
-                    })
+                    .select("*")
+                    .eq("canonical_name", canonical)
+                    .limit(1)
                     .execute()
                 )
-                ingredient = inserted.data[0]
-                ingredient_id = ingredient["id"]
+                if canonical_match.data and len(canonical_match.data) > 0:
+                    ingredient = canonical_match.data[0]
+                    ingredient_id = ingredient["id"]
+                else:
+                    # Create new ingredient — tagged as user-contributed
+                    inserted = (
+                        db.table("ingredients")
+                        .insert({
+                            "canonical_name": canonical,
+                            "display_name_en": req.ingredient_name.strip(),
+                            "category": req.category.lower(),
+                            "sub_category": "general",
+                            "default_unit": req.unit,
+                            "source": "user_contributed",
+                            "verified": False,
+                            "created_by": req.user_id,
+                        })
+                        .execute()
+                    )
+                    ingredient = inserted.data[0]
+                    ingredient_id = ingredient["id"]
+                    logger.info(f"[Inventory] Auto-created ingredient: {req.ingredient_name} (user_contributed)")
 
         # 2. Auto-compute expiry from ingredient shelf-life data
         location = req.location.lower()
@@ -184,6 +205,150 @@ async def search_ingredients(q: str, limit: int = 8):
         return {"ingredients": results.data}
     except Exception as e:
         logger.error(f"[Ingredients] Search failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/api/v1/ingredients/fuzzy")
+async def fuzzy_search_ingredients(q: str, limit: int = 5):
+    """
+    Fuzzy search ingredients using PostgreSQL pg_trgm similarity.
+    Returns results ranked by best match across all language columns.
+    Useful for typo-tolerant search in the 'add ingredient' flow.
+    """
+    db = get_supabase()
+    try:
+        # Use the existing fuzzy_match_ingredient RPC for English,
+        # then also do a multilingual ILIKE fallback
+        fuzzy_results = db.rpc(
+            "fuzzy_match_ingredient",
+            {"search_name": q, "min_similarity": 0.15, "max_results": limit}
+        ).execute()
+
+        if fuzzy_results.data and len(fuzzy_results.data) > 0:
+            # Enrich with full ingredient data
+            ids = [r["id"] for r in fuzzy_results.data]
+            full_data = (
+                db.table("ingredients")
+                .select("*")
+                .in_("id", ids)
+                .execute()
+            )
+            # Merge similarity scores
+            score_map = {r["id"]: r["similarity_score"] for r in fuzzy_results.data}
+            for item in full_data.data:
+                item["similarity_score"] = score_map.get(item["id"], 0)
+            # Sort by similarity descending
+            full_data.data.sort(key=lambda x: x.get("similarity_score", 0), reverse=True)
+            return {"ingredients": full_data.data, "exact_match": False}
+        else:
+            return {"ingredients": [], "exact_match": False}
+    except Exception as e:
+        logger.error(f"[Ingredients] Fuzzy search failed: {e}")
+        # Fallback to basic ILIKE search
+        try:
+            results = (
+                db.table("ingredients")
+                .select("*")
+                .or_(
+                    f"display_name_en.ilike.%{q}%,"
+                    f"canonical_name.ilike.%{q}%"
+                )
+                .limit(limit)
+                .execute()
+            )
+            return {"ingredients": results.data, "exact_match": False}
+        except Exception as e2:
+            logger.error(f"[Ingredients] Fallback search also failed: {e2}")
+            raise HTTPException(status_code=500, detail=str(e2))
+
+
+class ResolveIngredientRequest(BaseModel):
+    name: str
+    category: str = "other"
+    user_id: Optional[str] = None
+
+
+@router.post("/api/v1/ingredients/resolve")
+async def resolve_ingredient(req: ResolveIngredientRequest):
+    """
+    Smart ingredient resolver: fuzzy-match first, auto-create if no match.
+
+    Flow:
+    1. Exact match on display_name_en → return immediately
+    2. Exact match on canonical_name → return immediately
+    3. Fuzzy match via pg_trgm → return top match if similarity > 0.5
+    4. No match → create as user_contributed ingredient
+
+    Returns: ingredient data + resolution method (exact/fuzzy/created)
+    """
+    db = get_supabase()
+    name = req.name.strip()
+    canonical = name.lower().replace(" ", "_")
+
+    try:
+        # Step 1: Exact match on display_name_en
+        exact = (
+            db.table("ingredients")
+            .select("*")
+            .ilike("display_name_en", name)
+            .limit(1)
+            .execute()
+        )
+        if exact.data and len(exact.data) > 0:
+            return {"ingredient": exact.data[0], "resolution": "exact", "created": False}
+
+        # Step 2: Exact match on canonical_name
+        canonical_match = (
+            db.table("ingredients")
+            .select("*")
+            .eq("canonical_name", canonical)
+            .limit(1)
+            .execute()
+        )
+        if canonical_match.data and len(canonical_match.data) > 0:
+            return {"ingredient": canonical_match.data[0], "resolution": "canonical", "created": False}
+
+        # Step 3: Fuzzy match
+        try:
+            fuzzy = db.rpc(
+                "fuzzy_match_ingredient",
+                {"search_name": name, "min_similarity": 0.5, "max_results": 1}
+            ).execute()
+            if fuzzy.data and len(fuzzy.data) > 0:
+                match_id = fuzzy.data[0]["id"]
+                full = db.table("ingredients").select("*").eq("id", match_id).limit(1).execute()
+                if full.data:
+                    return {
+                        "ingredient": full.data[0],
+                        "resolution": "fuzzy",
+                        "similarity": fuzzy.data[0]["similarity_score"],
+                        "created": False,
+                    }
+        except Exception:
+            pass  # pg_trgm not available, fall through to create
+
+        # Step 4: Create as user-contributed
+        inserted = (
+            db.table("ingredients")
+            .insert({
+                "canonical_name": canonical,
+                "display_name_en": name,
+                "category": req.category.lower(),
+                "sub_category": "general",
+                "default_unit": "piece",
+                "source": "user_contributed",
+                "verified": False,
+                "created_by": req.user_id,
+            })
+            .execute()
+        )
+        logger.info(f"[Ingredients] Auto-created '{name}' as user_contributed")
+        return {"ingredient": inserted.data[0], "resolution": "created", "created": True}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"[Ingredients] Resolve failed: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

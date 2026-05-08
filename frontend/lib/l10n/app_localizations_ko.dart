@@ -672,7 +672,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get noStepsAvailableYet => '아직 사용 가능한 단계가 없습니다.';
+  String get noStepsAvailableYet => '아직 단계가 없습니다';
 
   @override
   String get recordedTasteProfileEvolving =>
@@ -792,70 +792,172 @@ class AppLocalizationsKo extends AppLocalizations {
   String get deleteAccount => '계정 삭제';
 
   @override
-  String get tierBadge1 => '✅ Everything you need!';
+  String get tierBadge1 => '✅ 재료 완비!';
 
   @override
-  String get tierBadge2 => '🔥 Recommended for you';
+  String get tierBadge2 => '🔥 추천 레시피';
 
   @override
-  String get tierBadge3 => '⏰ Use expiring items';
+  String get tierBadge3 => '⏰ 곧 만료되는 재료 활용';
 
   @override
-  String get tierBadge4 => '🛒 Just a few items away';
+  String get tierBadge4 => '🛒 몇 가지 재료 부족';
 
   @override
-  String get tierBadge5 => '🌍 Discover something new';
+  String get tierBadge5 => '🌍 새로운 요리 발견';
 
   @override
   String needLabel(String items) {
-    return 'Need: $items';
+    return '필요: $items';
   }
 
   @override
   String nOfNIngredients(String matched, String total) {
-    return '$matched/$total ingredients';
+    return '$matched/$total 재료';
   }
 
   @override
-  String get servingsLabel => 'Servings';
+  String get servingsLabel => '인분';
 
   @override
   String nHave(String count) {
-    return '$count have';
+    return '$count개 보유';
   }
 
   @override
   String nMissing(String count) {
-    return '$count missing';
+    return '$count개 부족';
   }
 
   @override
-  String get ingredientsHeader => 'Ingredients';
+  String get ingredientsHeader => '재료';
 
   @override
-  String get swapButton => 'Swap →';
+  String get swapButton => '대체 →';
 
   @override
-  String get aiAssistant => '🤖 AI Assistant';
+  String get aiAssistant => '🤖 AI 어시스턴트';
 
   @override
-  String get aiHint => 'e.g. \"I don\'t have lamb, suggest alternatives\"';
+  String get aiHint => '예: \"양고기가 없는데 대체할 수 있는 것은?\"';
 
   @override
-  String get editIngredient => 'Edit Ingredient';
+  String get editIngredient => '재료 편집';
 
   @override
-  String get nameLabel => 'Name';
+  String get nameLabel => '이름';
 
   @override
-  String get qtyLabel => 'Qty';
+  String get qtyLabel => '수량';
 
   @override
-  String get unitLabel => 'Unit';
+  String get unitLabel => '단위';
 
   @override
-  String get handsOn => 'Hands-on';
+  String get handsOn => '직접';
 
   @override
-  String get automatic => 'Automatic';
+  String get automatic => '자동';
+
+  @override
+  String get inv_quantity => '수량';
+
+  @override
+  String get inv_purchased => '구매일';
+
+  @override
+  String get inv_expires => '만료일';
+
+  @override
+  String get inv_source => '출처';
+
+  @override
+  String get inv_storageLocation => '보관 위치';
+
+  @override
+  String get inv_itemState => '상태';
+
+  @override
+  String get inv_freshLabel => '🟢 신선';
+
+  @override
+  String get inv_agingLabel => '🟡 노화중';
+
+  @override
+  String get inv_urgentLabel => '🟠 긴급';
+
+  @override
+  String get inv_criticalLabel => '🔴 위험';
+
+  @override
+  String get inv_expiredLabel => '⚫ 만료됨';
+
+  @override
+  String inv_expiredDaysAgo(String days) {
+    return '$days일 전 만료';
+  }
+
+  @override
+  String get inv_expiresToday => '오늘 만료!';
+
+  @override
+  String get inv_expiresTomorrow => '내일 만료';
+
+  @override
+  String inv_daysRemaining(String days) {
+    return '$days일 남음';
+  }
+
+  @override
+  String get inv_stateOpened => '개봉';
+
+  @override
+  String get inv_stateFrozen => '냉동';
+
+  @override
+  String get inv_stateThawed => '해동';
+
+  @override
+  String get inv_statePartial => '일부사용';
+
+  @override
+  String get inv_sortExpiry => '만료일 ↑';
+
+  @override
+  String get inv_sortName => '이름 순';
+
+  @override
+  String get inv_sortCategory => '카테고리';
+
+  @override
+  String get inv_sortNewest => '최신 순';
+
+  @override
+  String inv_removeConfirm(String name) {
+    return '\"$name\"을(를) 인벤토리에서 삭제하시겠습니까?';
+  }
+
+  @override
+  String get manual_addIngredient => '재료 추가';
+
+  @override
+  String get manual_ingredientName => '재료 이름';
+
+  @override
+  String get manual_ingredientHint => '예: 사과, 빵, 우유';
+
+  @override
+  String get manual_category => '카테고리';
+
+  @override
+  String get manual_qty => '수량';
+
+  @override
+  String get manual_metricType => '단위';
+
+  @override
+  String get manual_estimatedExpiry => '예상 유통기한';
+
+  @override
+  String get manual_required => '필수';
 }

@@ -1,6 +1,6 @@
 {
     "@@locale": "ru",
-    "appTitle": "iХолодильник",
+    "appTitle": "Plately",
     "tabShelf": "Полка",
     "tabCook": "Готовить",
     "tabScan": "Сканер",
@@ -304,27 +304,37 @@
     "needLabel": "Нужно: {items}",
     "@needLabel": {
         "placeholders": {
-            "items": { "type": "String" }
+            "items": {
+                "type": "String"
+            }
         }
     },
     "nOfNIngredients": "{matched}/{total} ингредиентов",
     "@nOfNIngredients": {
         "placeholders": {
-            "matched": { "type": "String" },
-            "total": { "type": "String" }
+            "matched": {
+                "type": "String"
+            },
+            "total": {
+                "type": "String"
+            }
         }
     },
     "servingsLabel": "Порции",
     "nHave": "{count} есть",
     "@nHave": {
         "placeholders": {
-            "count": { "type": "String" }
+            "count": {
+                "type": "String"
+            }
         }
     },
     "nMissing": "{count} не хватает",
     "@nMissing": {
         "placeholders": {
-            "count": { "type": "String" }
+            "count": {
+                "type": "String"
+            }
         }
     },
     "ingredientsHeader": "Ингредиенты",
@@ -348,5 +358,39 @@
     "recordedTasteProfileEvolving": "Записано! Ваш вкусовой профиль улучшается 🧠",
     "addedMissingItemsToShoppingList": "Недостающие продукты добавлены в список!",
     "ingredientsWithCount": "Ингредиенты ({count})",
-    "cookingStepsWithCount": "Шаги приготовления ({count})"
+    "cookingStepsWithCount": "Шаги приготовления ({count})",
+
+    "inv_quantity": "Количество",
+    "inv_purchased": "Куплено",
+    "inv_expires": "Истекает",
+    "inv_source": "Источник",
+    "inv_storageLocation": "Место хранения",
+    "inv_itemState": "Состояние",
+    "inv_freshLabel": "🟢 Свежий",
+    "inv_agingLabel": "🟡 Стареет",
+    "inv_urgentLabel": "🟠 Срочно",
+    "inv_criticalLabel": "🔴 Критично",
+    "inv_expiredLabel": "⚫ Истёк",
+    "inv_expiredDaysAgo": "Истёк {days}д назад",
+    "inv_expiresToday": "Истекает сегодня!",
+    "inv_expiresTomorrow": "Истекает завтра",
+    "inv_daysRemaining": "Осталось {days} дней",
+    "inv_stateOpened": "ОТКРЫТО",
+    "inv_stateFrozen": "ЗАМОРОЖЕНО",
+    "inv_stateThawed": "РАЗМОРОЖЕНО",
+    "inv_statePartial": "ЧАСТИЧНО",
+    "inv_sortExpiry": "Срок ↑",
+    "inv_sortName": "Имя А-Я",
+    "inv_sortCategory": "Категория",
+    "inv_sortNewest": "Сначала новые",
+    "inv_removeConfirm": "Удалить \"{name}\" из инвентаря?",
+
+    "manual_addIngredient": "Добавить ингредиент",
+    "manual_ingredientName": "Название ингредиента",
+    "manual_ingredientHint": "напр. Яблоки, Хлеб, Молоко",
+    "manual_category": "Категория",
+    "manual_qty": "Кол-во",
+    "manual_metricType": "Ед. измерения",
+    "manual_estimatedExpiry": "Срок годности",
+    "manual_required": "Обязательно"
 }

@@ -13,6 +13,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:plately_app/core/services/api_service.dart';
 import 'package:plately_app/core/services/auth_helper.dart';
 import 'package:plately_app/core/utils/category_images.dart';
+import 'package:plately_app/core/utils/l10n_helper.dart';
 import 'package:plately_app/features/scan/presentation/screens/audit_screen.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -1149,7 +1150,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
             ),
             
             Text(
-              'Add Ingredient',
+              AppLocalizations.of(context)?.manual_addIngredient ?? 'Add Ingredient',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
@@ -1190,16 +1191,29 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
             // Autocomplete Field
             LayoutBuilder(
               builder: (context, constraints) => Autocomplete<Map<String, dynamic>>(
-                displayStringForOption: (opt) => opt['display_name_en'] as String,
+                displayStringForOption: (opt) {
+                  // Show localized name based on current locale
+                  final lang = Localizations.localeOf(context).languageCode;
+                  final locale = Localizations.localeOf(context);
+                  final isUzCyrl = lang == 'uz' && locale.scriptCode == 'Cyrl';
+                  if (isUzCyrl) return opt['display_name_uz_cyrl'] ?? opt['display_name_uz'] ?? opt['display_name_en'] ?? '';
+                  switch (lang) {
+                    case 'ko': return opt['display_name_ko'] ?? opt['display_name_en'] ?? '';
+                    case 'uz': return opt['display_name_uz'] ?? opt['display_name_en'] ?? '';
+                    case 'ru': return opt['display_name_ru'] ?? opt['display_name_en'] ?? '';
+                    default: return opt['display_name_en'] ?? '';
+                  }
+                },
                 optionsBuilder: (TextEditingValue textEditingValue) async {
                   if (textEditingValue.text.isEmpty) {
                     return const Iterable<Map<String, dynamic>>.empty();
                   }
                   try {
+                    final q = textEditingValue.text;
                     final res = await Supabase.instance.client
                         .from('ingredients')
                         .select('*')
-                        .ilike('display_name_en', '%${textEditingValue.text}%')
+                        .or('display_name_en.ilike.%$q%,display_name_ko.ilike.%$q%,display_name_uz.ilike.%$q%,display_name_uz_cyrl.ilike.%$q%,display_name_ru.ilike.%$q%,canonical_name.ilike.%$q%')
                         .limit(5);
                     return (res as List).map((e) => e as Map<String, dynamic>);
                   } catch (e) {
@@ -1208,7 +1222,8 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                 },
                 onSelected: (Map<String, dynamic> selection) {
                   setState(() {
-                    _ingredientName = selection['display_name_en'];
+                    // Store English name for backend, but show localized
+                    _ingredientName = selection['display_name_en'] ?? '';
                     if (selection['category'] != null && _categories.contains(selection['category'])) {
                       _category = selection['category'];
                     }
@@ -1235,18 +1250,18 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                   textEditingController.addListener(() {
                     _ingredientName = textEditingController.text;
                   });
-                  return TextFormField(
+                    return TextFormField(
                     controller: textEditingController,
                     focusNode: focusNode,
                     decoration: InputDecoration(
-                      labelText: 'Ingredient Name',
-                      hintText: 'e.g. Apples, Bread, Milk',
+                      labelText: AppLocalizations.of(context)?.manual_ingredientName ?? 'Ingredient Name',
+                      hintText: AppLocalizations.of(context)?.manual_ingredientHint ?? 'e.g. Apples, Bread, Milk',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       prefixIcon: Icon(Icons.search),
                     ),
-                    validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+                    validator: (v) => v == null || v.isEmpty ? (AppLocalizations.of(context)?.manual_required ?? 'Required') : null,
                   );
                 },
                 optionsViewBuilder: (context, onSelected, options) {
@@ -1266,6 +1281,22 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                           itemBuilder: (context, index) {
                             final option = options.elementAt(index);
                             final cat = option['category'] as String? ?? '';
+                            final lang = Localizations.localeOf(context).languageCode;
+                            final locale = Localizations.localeOf(context);
+                            final isUzCyrl = lang == 'uz' && locale.scriptCode == 'Cyrl';
+                            // Pick localized display name
+                            String displayName;
+                            if (isUzCyrl) {
+                              displayName = option['display_name_uz_cyrl'] ?? option['display_name_uz'] ?? option['display_name_en'] ?? '';
+                            } else {
+                              switch (lang) {
+                                case 'ko': displayName = option['display_name_ko'] ?? option['display_name_en'] ?? ''; break;
+                                case 'uz': displayName = option['display_name_uz'] ?? option['display_name_en'] ?? ''; break;
+                                case 'ru': displayName = option['display_name_ru'] ?? option['display_name_en'] ?? ''; break;
+                                default: displayName = option['display_name_en'] ?? '';
+                              }
+                            }
+                            final translatedCat = L10nHelper.translateCategory(cat, lang);
                             return ListTile(
                               leading: ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
@@ -1281,8 +1312,8 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                                   ),
                                 ),
                               ),
-                              title: Text(option['display_name_en'] ?? '', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600)),
-                              subtitle: Text(cat, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
+                              title: Text(displayName, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600)),
+                              subtitle: Text(translatedCat, style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
                               onTap: () => onSelected(option),
                             );
                           },
@@ -1299,13 +1330,16 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
             DropdownButtonFormField<String>(
               initialValue: _category,
               decoration: InputDecoration(
-                labelText: 'Category',
+                labelText: AppLocalizations.of(context)?.manual_category ?? 'Category',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 prefixIcon: Icon(Icons.category),
               ),
-              items: _categories.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+              items: _categories.map((c) {
+                final lang = Localizations.localeOf(context).languageCode;
+                return DropdownMenuItem(value: c, child: Text(L10nHelper.translateCategory(c, lang)));
+              }).toList(),
               onChanged: (v) {
                 if (v != null) {
                   setState(() {
@@ -1326,7 +1360,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                     initialValue: '1',
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
-                      labelText: 'Qty',
+                      labelText: AppLocalizations.of(context)?.manual_qty ?? 'Qty',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -1340,7 +1374,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
                   child: DropdownButtonFormField<String>(
                     initialValue: _unit,
                     decoration: InputDecoration(
-                      labelText: 'Metric Type',
+                      labelText: AppLocalizations.of(context)?.manual_metricType ?? 'Metric Type',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -1366,7 +1400,7 @@ class _ManualEntryBottomSheetState extends State<_ManualEntryBottomSheet> {
               },
               child: InputDecorator(
                 decoration: InputDecoration(
-                  labelText: 'Estimated Expiry',
+                  labelText: AppLocalizations.of(context)?.manual_estimatedExpiry ?? 'Estimated Expiry',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

@@ -2,6 +2,8 @@
 /// ========================================
 library;
 
+import 'package:flutter/material.dart';
+
 class InventoryItem {
   final String id;
   final String ingredientId;
@@ -16,6 +18,7 @@ class InventoryItem {
   final String source;          // manual, camera, barcode
   final double? confidenceScore;
   final String category;        // fruit, dairy, protein, etc.
+  final Map<String, String> localizedNames; // {en, ko, uz, uz_cyrl, ru}
 
   InventoryItem({
     required this.id,
@@ -31,6 +34,7 @@ class InventoryItem {
     this.source = 'manual',
     this.confidenceScore,
     this.category = 'other',
+    this.localizedNames = const {},
   });
 
   /// Days until this item expires. Negative = already expired.
@@ -77,6 +81,7 @@ class InventoryItem {
       source: json['source'] as String? ?? 'manual',
       confidenceScore: (json['confidence_score'] as num?)?.toDouble(),
       category: json['category'] as String? ?? 'other',
+      localizedNames: _extractNames(json),
     );
   }
 
@@ -102,7 +107,37 @@ class InventoryItem {
       source: row['source'] as String? ?? 'manual',
       confidenceScore: (row['confidence_score'] as num?)?.toDouble(),
       category: ingredient?['category'] as String? ?? 'other',
+      localizedNames: _extractNames(ingredient ?? {}),
     );
+  }
+
+  /// Extract all display_name_* columns into a map.
+  static Map<String, String> _extractNames(Map<String, dynamic> data) {
+    final names = <String, String>{};
+    if (data['display_name_en'] != null) names['en'] = data['display_name_en'];
+    if (data['display_name_ko'] != null) names['ko'] = data['display_name_ko'];
+    if (data['display_name_uz'] != null) names['uz'] = data['display_name_uz'];
+    if (data['display_name_uz_cyrl'] != null) names['uz_cyrl'] = data['display_name_uz_cyrl'];
+    if (data['display_name_ru'] != null) names['ru'] = data['display_name_ru'];
+    return names;
+  }
+
+  /// Resolve the display name for the given BuildContext locale.
+  String localizedName(BuildContext context) {
+    if (localizedNames.isEmpty) return name;
+    final locale = Localizations.localeOf(context);
+    final lang = locale.languageCode;
+    final isUzCyrillic = lang == 'uz' && locale.scriptCode == 'Cyrl';
+
+    if (isUzCyrillic) {
+      return localizedNames['uz_cyrl'] ?? localizedNames['uz'] ?? localizedNames['en'] ?? name;
+    }
+    switch (lang) {
+      case 'ko': return localizedNames['ko'] ?? localizedNames['en'] ?? name;
+      case 'uz': return localizedNames['uz'] ?? localizedNames['en'] ?? name;
+      case 'ru': return localizedNames['ru'] ?? localizedNames['en'] ?? name;
+      default:  return localizedNames['en'] ?? name;
+    }
   }
 }
 

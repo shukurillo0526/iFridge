@@ -87,7 +87,7 @@ class _InventoryDetailSheetState extends State<InventoryDetailSheet> {
       builder: (ctx) => AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(AppLocalizations.of(context)?.auto_deleteItem ?? 'Delete item?'),
-        content: Text('Remove "${item.name}" from your inventory?'),
+        content: Text('Remove "${item.localizedName(context)}" from your inventory?'),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
@@ -222,7 +222,7 @@ class _InventoryDetailSheetState extends State<InventoryDetailSheet> {
   Widget _nameSection() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 24),
         child: Column(children: [
-          Text(item.name,
+          Text(item.localizedName(context),
               style: TextStyle(
                   color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 24,
@@ -279,16 +279,16 @@ class _InventoryDetailSheetState extends State<InventoryDetailSheet> {
           ),
           child: Column(children: [
             Row(children: [
-              _infoCell('📦', 'Quantity',
+          _infoCell('📦', AppLocalizations.of(context)?.inv_quantity ?? 'Quantity',
                   '${_fmtQty(_quantity)} ${item.unit}'),
               _vDiv(),
-              _infoCell('📅', 'Purchased', _fmtDate(item.purchaseDate)),
+              _infoCell('📅', AppLocalizations.of(context)?.inv_purchased ?? 'Purchased', _fmtDate(item.purchaseDate)),
             ]),
             Divider(height: 1, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06)),
             Row(children: [
-              _infoCell('⏰', 'Expires', _fmtDate(item.computedExpiry)),
+              _infoCell('⏰', AppLocalizations.of(context)?.inv_expires ?? 'Expires', _fmtDate(item.computedExpiry)),
               _vDiv(),
-              _infoCell('🎯', 'Source', _cap(item.source)),
+              _infoCell('🎯', AppLocalizations.of(context)?.inv_source ?? 'Source', _cap(item.source)),
             ]),
           ]),
         ),
@@ -373,7 +373,7 @@ class _InventoryDetailSheetState extends State<InventoryDetailSheet> {
       );
 
   Widget _locationSelector() => _chipRow(
-        label: 'Storage Location',
+        label: AppLocalizations.of(context)?.inv_storageLocation ?? 'Storage Location',
         options: const ['fridge', 'freezer', 'pantry'],
         icons: const [Icons.kitchen, Icons.ac_unit, Icons.inventory_2],
         selected: _location,
@@ -385,7 +385,7 @@ class _InventoryDetailSheetState extends State<InventoryDetailSheet> {
       );
 
   Widget _stateSelector() => _chipRow(
-        label: 'Item State',
+        label: AppLocalizations.of(context)?.inv_itemState ?? 'Item State',
         options: const ['sealed', 'opened', 'frozen'],
         icons: const [Icons.verified_outlined, Icons.lock_open, Icons.ac_unit],
         selected: _itemState,
@@ -505,21 +505,23 @@ class _InventoryDetailSheetState extends State<InventoryDetailSheet> {
   }
 
   String get _freshnessLabel {
+    final l10n = AppLocalizations.of(context);
     switch (item.freshnessState) {
-      case FreshnessState.fresh:    return '🟢 Fresh';
-      case FreshnessState.aging:    return '🟡 Aging';
-      case FreshnessState.urgent:   return '🟠 Urgent';
-      case FreshnessState.critical: return '🔴 Critical';
-      case FreshnessState.expired:  return '⚫ Expired';
+      case FreshnessState.fresh:    return l10n?.inv_freshLabel ?? '🟢 Fresh';
+      case FreshnessState.aging:    return l10n?.inv_agingLabel ?? '🟡 Aging';
+      case FreshnessState.urgent:   return l10n?.inv_urgentLabel ?? '🟠 Urgent';
+      case FreshnessState.critical: return l10n?.inv_criticalLabel ?? '🔴 Critical';
+      case FreshnessState.expired:  return l10n?.inv_expiredLabel ?? '⚫ Expired';
     }
   }
 
   String get _expiryDetail {
     final d = item.daysUntilExpiry;
-    if (d < 0) return 'Expired ${-d} day(s) ago';
-    if (d == 0) return 'Expires today!';
-    if (d == 1) return 'Expires tomorrow';
-    return '$d days remaining';
+    final l10n = AppLocalizations.of(context);
+    if (d < 0) return l10n?.inv_expiredDaysAgo('${-d}') ?? 'Expired ${-d}d ago';
+    if (d == 0) return l10n?.inv_expiresToday ?? 'Expires today!';
+    if (d == 1) return l10n?.inv_expiresTomorrow ?? 'Expires tomorrow';
+    return l10n?.inv_daysRemaining('$d') ?? '$d days remaining';
   }
 
   String _fmtQty(double q) =>

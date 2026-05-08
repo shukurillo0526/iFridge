@@ -864,4 +864,106 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get automatic => 'Automatic';
+
+  @override
+  String get inv_quantity => 'Quantity';
+
+  @override
+  String get inv_purchased => 'Purchased';
+
+  @override
+  String get inv_expires => 'Expires';
+
+  @override
+  String get inv_source => 'Source';
+
+  @override
+  String get inv_storageLocation => 'Storage Location';
+
+  @override
+  String get inv_itemState => 'Item State';
+
+  @override
+  String get inv_freshLabel => '🟢 Fresh';
+
+  @override
+  String get inv_agingLabel => '🟡 Aging';
+
+  @override
+  String get inv_urgentLabel => '🟠 Urgent';
+
+  @override
+  String get inv_criticalLabel => '🔴 Critical';
+
+  @override
+  String get inv_expiredLabel => '⚫ Expired';
+
+  @override
+  String inv_expiredDaysAgo(String days) {
+    return 'Expired ${days}d ago';
+  }
+
+  @override
+  String get inv_expiresToday => 'Expires today!';
+
+  @override
+  String get inv_expiresTomorrow => 'Expires tomorrow';
+
+  @override
+  String inv_daysRemaining(String days) {
+    return '$days days remaining';
+  }
+
+  @override
+  String get inv_stateOpened => 'OPENED';
+
+  @override
+  String get inv_stateFrozen => 'FROZEN';
+
+  @override
+  String get inv_stateThawed => 'THAWED';
+
+  @override
+  String get inv_statePartial => 'PARTIAL';
+
+  @override
+  String get inv_sortExpiry => 'Expiry ↑';
+
+  @override
+  String get inv_sortName => 'Name A-Z';
+
+  @override
+  String get inv_sortCategory => 'Category';
+
+  @override
+  String get inv_sortNewest => 'Newest first';
+
+  @override
+  String inv_removeConfirm(String name) {
+    return 'Remove \"$name\" from your inventory?';
+  }
+
+  @override
+  String get manual_addIngredient => 'Add Ingredient';
+
+  @override
+  String get manual_ingredientName => 'Ingredient Name';
+
+  @override
+  String get manual_ingredientHint => 'e.g. Apples, Bread, Milk';
+
+  @override
+  String get manual_category => 'Category';
+
+  @override
+  String get manual_qty => 'Qty';
+
+  @override
+  String get manual_metricType => 'Metric Type';
+
+  @override
+  String get manual_estimatedExpiry => 'Estimated Expiry';
+
+  @override
+  String get manual_required => 'Required';
 }

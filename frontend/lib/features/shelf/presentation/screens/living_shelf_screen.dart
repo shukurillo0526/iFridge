@@ -67,7 +67,7 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
 
       final data = await Supabase.instance.client
           .from('inventory_items')
-          .select('*, ingredients(display_name_en, category)')
+          .select('*, ingredients(display_name_en, display_name_ko, display_name_uz, display_name_uz_cyrl, display_name_ru, category)')
           .eq('user_id', currentUserId())
           .order('computed_expiry', ascending: true);
 
@@ -114,8 +114,15 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
 
     // Search filter
     if (_searchQuery.isNotEmpty) {
-      final q = _searchQuery.toLowerCase();
-      filtered = filtered.where((i) => i.name.toLowerCase().contains(q));
+      filtered = filtered.where((i) {
+        final q = _searchQuery.toLowerCase();
+        // Search across all localized names
+        if (i.name.toLowerCase().contains(q)) return true;
+        for (final n in i.localizedNames.values) {
+          if (n.toLowerCase().contains(q)) return true;
+        }
+        return false;
+      });
     }
 
     // Category filter
@@ -685,17 +692,17 @@ class _LivingShelfScreenState extends State<LivingShelfScreen>
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(item.name,
+                  Text(item.localizedName(context),
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.w600,
                           fontSize: 13)),
                   Text(
                     isExpired
-                        ? 'Expired ${-item.daysUntilExpiry} day(s) ago'
+                        ? '${AppLocalizations.of(context)?.expired ?? "Expired"} ${-item.daysUntilExpiry}d'
                         : item.daysUntilExpiry == 0
-                            ? 'Expires today'
-                            : 'Expires in ${item.daysUntilExpiry} day(s)',
+                            ? AppLocalizations.of(context)?.expiringSoon ?? 'Expires today'
+                            : '${item.daysUntilExpiry}d',
                     style: TextStyle(
                         color: isExpired
                             ? Theme.of(context).colorScheme.error
