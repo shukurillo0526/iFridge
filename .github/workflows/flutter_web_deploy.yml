@@ -30,7 +30,7 @@ jobs:
         run: |
           cd frontend
           flutter pub get
-          flutter build web --base-href /iFridge/
+          flutter build web --base-href /Plately/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
