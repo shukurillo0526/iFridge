@@ -157,10 +157,10 @@ Return ONLY a valid JSON array:
 TRANSLATION_SYSTEM_PROMPT = "You are a professional recipe translator. Return only valid JSON. No markdown, no explanation."
 
 
-async def call_translation_ai(prompt: str) -> dict:
+async def call_translation_ai(prompt: str, model: str = "gemini-2.5-flash") -> dict:
     """
     Call the best available AI for translation.
-    Priority: Gemini Flash → OpenAI → Local Ollama
+    Priority: Gemini 2.5 Pro/Flash → OpenAI → Local Ollama
     Translation quality matters more than speed since results are cached forever.
     """
     # Try cloud AI first (better quality for translations)
@@ -168,12 +168,14 @@ async def call_translation_ai(prompt: str) -> dict:
         from app.services.cloud_ai_service import get_cloud_ai_service
         cloud = get_cloud_ai_service()
         if cloud.is_configured:
-            logger.info(f"[Translation] Using cloud AI ({cloud.provider}) for translation")
+            logger.info(f"[Translation] Using cloud AI ({cloud.provider}, model={model}) for translation")
             raw = await cloud.generate_text(
                 prompt,
                 system_prompt=TRANSLATION_SYSTEM_PROMPT,
                 temperature=0.2,
                 max_tokens=4096,
+                format="json",
+                model=model,
             )
             return _parse_json(raw)
     except Exception as e:
@@ -313,6 +315,8 @@ async def translate_recipe(
 
     # ── Step 3: Build prompt ──
     method = lang_config["method"]
+    target_model = "gemini-2.5-pro" if lang_config["tier"] == 2 else "gemini-2.5-flash"
+    
     if method == "ai_glossary":
         glossary = load_glossary(target_language)
         if glossary:
@@ -325,7 +329,7 @@ async def translate_recipe(
 
     # ── Step 4: Call AI ──
     try:
-        result = await call_translation_ai(prompt)
+        result = await call_translation_ai(prompt, model=target_model)
 
         if "error" in result:
             raise ValueError(result.get("raw_response", "AI returned invalid JSON"))
@@ -432,9 +436,10 @@ async def translate_titles_batch(
 
     # 3. Single AI call for all missing titles
     prompt = build_batch_titles_prompt(titles_to_translate, lang_config["name"])
+    target_model = "gemini-2.5-pro" if lang_config["tier"] == 2 else "gemini-2.5-flash"
 
     try:
-        result = await call_translation_ai(prompt)
+        result = await call_translation_ai(prompt, model=target_model)
         items = result.get("items", [result] if "title" in result else [])
 
         # 4. Save each and merge into result

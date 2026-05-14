@@ -54,20 +54,20 @@
     "caloriesPerServing": "kal/porsiya",
     "totalCalories": "jami kal",
     "creatorProfile": "Muallif profili",
-    "follow": "Kuzatish",
-    "following": "Kuzatilmoqda",
-    "nutritionTracker": "Ovqatlanish kuzatuvi",
-    "reels": "Rillar",
+    "follow": "Obuna bo'lish",
+    "following": "Obuna bo'lingan",
+    "nutritionTracker": "Oziqlanish kuzatuvi",
+    "reels": "Video",
     "community": "Jamoa",
     "hasRecipe": "Retsept bor",
-    "noReelsYet": "Hozircha rillar yo'q",
+    "noReelsYet": "Hozircha videolar yo'q",
     "settings": "Sozlamalar",
     "settingsLanguage": "Til",
     "settingsTheme": "Mavzu",
     "aboutApp": "Plately haqida",
     "myFridge": "🧊 Mening muzlatgichim",
     "expiryAlerts": "Muddati tugashi haqida ogohlantirishlar",
-    "errorLoadInventory": "Inventarni yuklab bo‘lmadi",
+    "errorLoadInventory": "Omborni yuklab bo‘lmadi",
     "errorCheckConnection": "Ulanishingizni tekshiring va qaytadan urining.",
     "total": "Jami",
     "fresh": "Yangi",
@@ -160,17 +160,17 @@
     "auto_delete": "Oʻchirish",
     "auto_freshness": "Yangilik",
     "auto_use1Unit": "1 birlikdan foydalaning",
-    "auto_removeFromInventory": "Inventarizatsiyadan olib tashlang",
-    "auto_following": "Kuzatish",
-    "auto_follow": "Kuzatish",
+    "auto_removeFromInventory": "Ombordan olib tashlash",
+    "auto_following": "Obuna bo'lingan",
+    "auto_follow": "Obuna bo'lish",
     "auto_posts": "Xabarlar",
     "auto_noPostsYet": "Hozircha postlar yo‘q",
-    "auto_explore": "Tadqiq qiling",
-    "auto_noReelsYet": "Hali makaralar yo'q",
+    "auto_explore": "Kashf qilish",
+    "auto_noReelsYet": "Hali videolar yo'q",
     "auto_cookThisRecipe": "Ushbu retseptni pishiring",
     "auto_recipeNotFound": "Retsept topilmadi",
     "auto_hasRecipe": "Retsepti bor",
-    "auto_noCommunityPostsYet": "Hozircha hamjamiyat postlari yo‘q",
+    "auto_noCommunityPostsYet": "Hozircha jamoat postlari yo‘q",
     "auto_beTheFirstToShare": "Birinchi bo'lib baham ko'ring!",
     "auto_createPost": "Post yaratish",
     "auto_savedPosts": "Saqlangan xabarlar",
@@ -183,7 +183,7 @@
     "auto_orderConfirmed": "Buyurtma tasdiqlandi!",
     "auto_yourPickupCode": "Qabul qilish kodingiz",
     "auto_showThisCodeAtTheCounter": "Ushbu kodni peshtaxtada ko'rsating",
-    "auto_deliveryOnTheWay": "Yo'lda yetkazib berish",
+    "auto_deliveryOnTheWay": "Yetkazib berish yo'lda",
     "auto_aDriverWillBeAssignedShortly": "Tez orada haydovchi tayinlanadi",
     "auto_backToHome": "Uyga qaytish",
     "auto_incomingOrders": "Kiruvchi Buyurtmalar",
@@ -202,7 +202,7 @@
     "auto_best": "🔥 Eng yaxshi",
     "auto_popularDishes": "🍽️ Mashhur taomlar",
     "auto_fromVideo": "Videodan",
-    "auto_bookATable": "Jadvalni bron qilish",
+    "auto_bookATable": "Joy buyurtma qilish",
     "auto_confirmReservation": "Rezervasyonni tasdiqlang",
     "auto_locationDirections": "Joylashuv va yoʻnalishlar",
     "auto_mapView": "Xarita ko'rinishi",
@@ -210,14 +210,14 @@
     "auto_writeAReview": "Sharh yozing",
     "auto_viewCart": "Savatni ko'rish",
     "auto_signOut": "Tizimdan chiqish?",
-    "auto_youWillNeedToSignInAgain": "Siz yana tizimga kirishingiz kerak bo'ladi.",
+    "auto_youWillNeedToSignInAgain": "Qayta tizimga kirishingiz kerak bo'ladi.",
     "auto_deleteAccount": "Akkauntni o'chirish",
     "auto_deleteForever": "Abadiy o'chirish",
     "auto_accountDeletionRequestedContactSupportToFinalize": "Hisobni oʻchirish soʻraldi. Tugatish uchun qo‘llab-quvvatlash xizmatiga murojaat qiling.",
     "auto_plately": "Plately",
-    "auto_platelyIsYourAipoweredKitchenEcosystemItAutomaticallyTracksYourIngredientsPredictsExpirationsGeneratesPersonalizedRecipesAndLetsYouOrderFromLocalRestaurants": "Plately sizning sun'iy intellekt asosida ishlaydigan oshxona ekotizimidir. U avtomatik ravishda ingredientlaringizni kuzatib boradi, amal qilish muddatini bashorat qiladi, moslashtirilgan retseptlar yaratadi va mahalliy restoranlardan buyurtma berish imkonini beradi.",
-    "auto_gotIt": "Tushundim",
-    "auto_editDisplayName": "Displey nomini tahrirlash",
+    "auto_platelyIsYourAipoweredKitchenEcosystemItAutomaticallyTracksYourIngredientsPredictsExpirationsGeneratesPersonalizedRecipesAndLetsYouOrderFromLocalRestaurants": "Plately sizning sun'iy intellekt asosida ishlaydigan oshxona ekotizimingizdir. U avtomatik ravishda ingredientlaringizni kuzatib boradi, amal qilish muddatini bashorat qiladi, moslashtirilgan retseptlar yaratadi va mahalliy restoranlardan buyurtma berish imkonini beradi.",
+    "auto_gotIt": "Tushunarli",
+    "auto_editDisplayName": "Taqdim etilgan ismni tahrirlash",
     "auto_save": "Saqlash",
     "auto_addShoppingItem": "Xarid qilish elementini qo'shing",
     "auto_add": "Qo'shish",
@@ -246,14 +246,14 @@
     "takePhotoToAdd": "Javonga avtomatik qo'shish uchun ovqat rasmini oling",
     "scanReceipt": "Chek",
     "scanPhoto": "Rasm",
-    "scanBarcode": "Shtrix-kodni skanerlash",
+    "scanBarcode": "Shtrix-kod",
     "takePhotoBtn": "Rasmga olish",
     "auto_account": "Akkaunt",
     "auto_settings": "Sozlamalar",
     "adjustPortions": "Porsiyalarni sozlash",
     "currentRecipeMakesNServings": "Joriy retsept }Y porsiyani { porsiya qiladi.",
-    "scaleToNServings": "{ newServings} porsiyalariga o'lchab ko'ring",
-    "scaledToNServings": "{newServings} porsiyalariga oʻlchandi 🍳",
+    "scaleToNServings": "{ newServings} porsiyalarga o'lchab ko'ring",
+    "scaledToNServings": "{newServings} porsiyalarga oʻlchandi 🍳",
     "findingSubstitutesForX": "{ingredientName} o‘rnini bosuvchilar qidirilmoqda...",
     "couldNotFindSubstitutes": "O‘rinbosarlarni topib bo‘lmadi",
     "substitutesForX": "“{ingredientName}” o‘rniga",
@@ -272,7 +272,7 @@
     "startCooking": "Ovqat pishirishni boshlang",
     "optional_tag": "ixtiyoriy",
     "servings_tag": "porsiya",
-    "min_tag": "min",
+    "min_tag": "daq",
     "difficulty_tag": "Qiyinchilik",
     "expiringSoon": "Tez orada tugaydi",
     "nItemsNeedAttention": "{count} element(lar)iga e'tibor kerak",
@@ -280,7 +280,7 @@
     "addManually": "Qo'lda qo'shish",
     "recognitionFailed": "Tanib bo‘lmadi. Qayta urinib ko'ring.",
     "analyzingYourFood": "Oziq-ovqatingiz tahlil qilinmoqda...",
-    "aiIsIdentifying": "AI ingredientlarni aniqlaydi",
+    "aiIsIdentifying": "AI ingredientlarni aniqlayapti",
     "nItemsDetected": "{count} elementlari aniqlandi",
     "photoAnalysisSelected": "Fotosurat tahlili tanlandi",
     "nIngredientsDetected": "{count} ingrediyentlari aniqlandi",
@@ -304,27 +304,37 @@
     "needLabel": "Kerak: {items}",
     "@needLabel": {
         "placeholders": {
-            "items": { "type": "String" }
+            "items": {
+                "type": "String"
+            }
         }
     },
     "nOfNIngredients": "{matched}/{total} ingredient",
     "@nOfNIngredients": {
         "placeholders": {
-            "matched": { "type": "String" },
-            "total": { "type": "String" }
+            "matched": {
+                "type": "String"
+            },
+            "total": {
+                "type": "String"
+            }
         }
     },
     "servingsLabel": "Porsiya",
     "nHave": "{count} ta bor",
     "@nHave": {
         "placeholders": {
-            "count": { "type": "String" }
+            "count": {
+                "type": "String"
+            }
         }
     },
     "nMissing": "{count} ta yetishmaydi",
     "@nMissing": {
         "placeholders": {
-            "count": { "type": "String" }
+            "count": {
+                "type": "String"
+            }
         }
     },
     "ingredientsHeader": "Ingredientlar",
@@ -349,7 +359,6 @@
     "addedMissingItemsToShoppingList": "Yetishmayotgan mahsulotlar xarid ro'yxatiga qo'shildi!",
     "ingredientsWithCount": "Mahsulotlar ({count})",
     "cookingStepsWithCount": "Pishirish qadamlari ({count})",
-
     "inv_quantity": "Miqdor",
     "inv_purchased": "Sotib olingan",
     "inv_expires": "Muddati",
@@ -374,7 +383,6 @@
     "inv_sortCategory": "Kategoriya",
     "inv_sortNewest": "Eng yangi",
     "inv_removeConfirm": "\"{name}\" inventardan o'chirilsinmi?",
-
     "manual_addIngredient": "Ingredient qo'shish",
     "manual_ingredientName": "Ingredient nomi",
     "manual_ingredientHint": "masalan: Olma, Non, Sut",

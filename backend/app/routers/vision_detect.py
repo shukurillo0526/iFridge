@@ -134,31 +134,28 @@ async def detect_ingredients(request: Request, file: UploadFile = File(...)):
     # ── Attempt 2: Cloud Gemini ─────────────────────────────────
     if parsed_data is None:
         try:
-            import os
-            api_key = os.environ.get("GEMINI_API_KEY")
-            if api_key:
-                import google.generativeai as genai
-                genai.configure(api_key=api_key)
-                model = genai.GenerativeModel('gemini-1.5-flash')
-                response = model.generate_content(
-                    [
-                        CLOUD_VISION_PROMPT,
-                        {"mime_type": file.content_type, "data": image_bytes},
-                    ],
-                    generation_config=genai.GenerationConfig(
-                        temperature=0.1,
-                        max_output_tokens=2048,
-                    ),
+            from app.services.cloud_ai_service import get_cloud_ai_service
+            cloud = get_cloud_ai_service()
+            if cloud.is_configured:
+                logger.info(f"[Vision] Local failed, trying cloud fallback ({cloud.provider})...")
+                
+                raw_text = await cloud.generate_text(
+                    prompt=CLOUD_VISION_PROMPT,
+                    temperature=0.1,
+                    max_tokens=2048,
+                    image_bytes=image_bytes,
+                    mime_type=file.content_type,
+                    format="json"
                 )
-                raw_text = response.text.strip()
+                
                 if raw_text.startswith("```"):
                     raw_text = raw_text.split("\n", 1)[1]
                     if raw_text.endswith("```"):
                         raw_text = raw_text[:-3]
                 parsed_data = json.loads(raw_text)
-                source = "gemini"
+                source = "cloud_fallback"
         except Exception as e:
-            logger.warning(f"[Vision] Gemini failed: {e}")
+            logger.warning(f"[Vision] Cloud fallback failed: {e}")
 
     # ── Attempt 3: Mock fallback ────────────────────────────────
     if parsed_data is None:

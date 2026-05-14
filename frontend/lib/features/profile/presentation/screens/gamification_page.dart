@@ -110,28 +110,138 @@ class _GamificationPageState extends State<GamificationPage> {
                   itemBuilder: (ctx, i) {
                     final badge = WasteBadge.values[i];
                     final earned = earnedIds.contains(badge.name);
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: earned ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.08) : Theme.of(context).colorScheme.surface,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: earned ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.3) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06))),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          badge.icon.endsWith('.png') || badge.icon.endsWith('.jpg')
-                              ? Image.asset(badge.icon, height: 32, width: 32, color: earned ? null : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), colorBlendMode: earned ? null : BlendMode.saturation)
-                              : Text(badge.icon,
-                            style: TextStyle(fontSize: 32, color: earned ? null : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
-                          SizedBox(height: 6),
-                          Text(badge.title,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: earned ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
-                              fontSize: 11, fontWeight: FontWeight.w600)),
-                          if (!earned)
-                            Text('🔒', style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
-                        ],
+                    return InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => Dialog(
+                            backgroundColor: Theme.of(context).colorScheme.surface,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(24.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  badge.icon.endsWith('.png') || badge.icon.endsWith('.jpg')
+                                      ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(24),
+                                          child: Transform.scale(
+                                            scale: 1.15,
+                                            child: Image.asset(
+                                              badge.icon,
+                                              height: 200,
+                                              width: 200,
+                                              fit: BoxFit.cover,
+                                              color: earned ? null : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                                              colorBlendMode: earned ? null : BlendMode.saturation,
+                                            ),
+                                          ),
+                                        )
+                                      : Text(
+                                          badge.icon,
+                                          style: TextStyle(
+                                            fontSize: 100,
+                                            color: earned ? null : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                                          ),
+                                        ),
+                                  SizedBox(height: 24),
+                                  Text(
+                                    badge.title,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface),
+                                  ),
+                                  SizedBox(height: 12),
+                                  Text(
+                                    badge.description,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), height: 1.4),
+                                  ),
+                                  if (!earned) ...[
+                                    SizedBox(height: 16),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).colorScheme.error.withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Text(
+                                        '🔒 Locked',
+                                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.error),
+                                      ),
+                                    )
+                                  ],
+                                  SizedBox(height: 24),
+                                  FilledButton(
+                                    onPressed: () => Navigator.pop(ctx),
+                                    style: FilledButton.styleFrom(minimumSize: Size(double.infinity, 50)),
+                                    child: Text('Close'),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: earned ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.08) : Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: earned ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.3) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 8),
+                            badge.icon.endsWith('.png') || badge.icon.endsWith('.jpg')
+                                ? Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                      child: AspectRatio(
+                                        aspectRatio: 1,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(14),
+                                          child: Transform.scale(
+                                            scale: 1.15,
+                                            child: Image.asset(
+                                              badge.icon,
+                                              fit: BoxFit.cover,
+                                              color: earned ? null : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                                              colorBlendMode: earned ? null : BlendMode.saturation,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        badge.icon,
+                                        style: TextStyle(fontSize: 40, color: earned ? null : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2)),
+                                      ),
+                                    ),
+                                  ),
+                            SizedBox(height: 8),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Text(
+                                badge.title,
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: earned ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 12),
+                          ],
+                        ),
                       ),
                     );
                   },

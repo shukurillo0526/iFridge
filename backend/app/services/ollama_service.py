@@ -145,6 +145,10 @@ class OllamaService:
         Generate text from a prompt using a local LLM via /api/chat.
         Returns the raw text response.
         """
+        # If explicitly asking for a Gemini model, skip local Ollama completely
+        if model and model.startswith("gemini-"):
+            return await self._cloud_fallback(prompt, system_prompt, temperature, max_tokens, format, model)
+
         model = model or await self._resolve_model("text")
 
         messages = []
@@ -177,19 +181,23 @@ class OllamaService:
             return self._strip_thinking_tags(msg.get("content", ""))
         except (httpx.ConnectError, httpx.TimeoutException) as e:
             logger.warning(f"[Ollama] Unavailable, trying cloud fallback: {e}")
-            return await self._cloud_fallback(prompt, system_prompt, temperature, max_tokens)
+            return await self._cloud_fallback(prompt, system_prompt, temperature, max_tokens, format, model)
 
     async def _cloud_fallback(
         self, prompt: str, system_prompt: Optional[str] = None,
         temperature: float = 0.7, max_tokens: int = 1024,
+        format: Optional[str] = None, model: Optional[str] = None,
     ) -> str:
         """Fall back to cloud AI (OpenAI/Gemini) when Ollama is down."""
         try:
             from app.services.cloud_ai_service import get_cloud_ai_service
             cloud = get_cloud_ai_service()
             if cloud.is_configured:
-                logger.info(f"[Ollama] Cloud fallback → {cloud.provider}")
-                return await cloud.generate_text(prompt, system_prompt, temperature, max_tokens)
+                # If they requested a specific model string that isn't Ollama-specific, map it.
+                # E.g. "gemini-2.5-pro"
+                cloud_model = model if model and model.startswith("gemini-") else None
+                logger.info(f"[Ollama] Cloud fallback → {cloud.provider} (model={cloud_model or 'default'}, format={format})")
+                return await cloud.generate_text(prompt, system_prompt, temperature, max_tokens, format=format, model=cloud_model)
         except Exception as fallback_err:
             logger.error(f"[Ollama] Cloud fallback also failed: {fallback_err}")
         raise httpx.ConnectError("Both Ollama and cloud AI are unavailable")

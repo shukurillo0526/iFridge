@@ -8,11 +8,22 @@ enum WasteBadge {
   wasteWarrior('🌿', 'Waste Warrior', 'Cook 50 Tier 1 meals', 50),
   streak67(
     'assets/images/badges/streak_67.png',
-    '6,7 Day Streak',
-    'Cook for 6-7 consecutive days',
+    '6-7 Day Streak',
+    'Log in for 6-7 consecutive days!',
     7,
   ),
-  monthStreak('👑', 'Iron Chef', '30-day cooking streak', 30),
+  streak15(
+    'assets/images/badges/streak_15.jpg',
+    '15 Day Streak',
+    'Log in for 15 consecutive days and flatten the chaos curve!',
+    15,
+  ),
+  streak30(
+    'assets/images/badges/streak_30.jpg',
+    '30 Day Streak',
+    'Log in for 30 consecutive days and become a brave penguin!',
+    30,
+  ),
   explorer('🧭', 'Flavor Explorer', 'Cook 5 different cuisines', 5),
   rescuer('🦸', 'Expiry Rescuer', 'Save 20 items from expiring', 20),
   zeroWasteWeek('✨', 'Zero Waste Week', 'No expired items for 7 days', 7);
@@ -71,18 +82,21 @@ Set<WasteBadge> computeEarnedBadges(Map<String, dynamic>? stats) {
   final tier1 = stats['tier1_meals'] as int? ?? 0;
   final saved = stats['items_saved'] as int? ?? 0;
   final streak = stats['longest_streak'] as int? ?? 0;
-  
+
   final earned = <WasteBadge>{};
   if (meals >= 1) earned.add(WasteBadge.firstMeal);
-  if (tier1 >= WasteBadge.wasteFighter.threshold) earned.add(WasteBadge.wasteFighter);
-  if (tier1 >= WasteBadge.wasteWarrior.threshold) earned.add(WasteBadge.wasteWarrior);
+  if (tier1 >= WasteBadge.wasteFighter.threshold)
+    earned.add(WasteBadge.wasteFighter);
+  if (tier1 >= WasteBadge.wasteWarrior.threshold)
+    earned.add(WasteBadge.wasteWarrior);
   if (streak >= WasteBadge.streak67.threshold) earned.add(WasteBadge.streak67);
-  if (streak >= WasteBadge.monthStreak.threshold) earned.add(WasteBadge.monthStreak);
+  if (streak >= WasteBadge.streak15.threshold) earned.add(WasteBadge.streak15);
+  if (streak >= WasteBadge.streak30.threshold) earned.add(WasteBadge.streak30);
   if (saved >= WasteBadge.rescuer.threshold) earned.add(WasteBadge.rescuer);
-  
+
   // Derived approximations for things not yet fully tracked:
-  if (meals >= 15) earned.add(WasteBadge.explorer); 
+  if (meals >= 15) earned.add(WasteBadge.explorer);
   if (streak >= 14) earned.add(WasteBadge.zeroWasteWeek);
-  
+
   return earned;
 }

@@ -483,6 +483,30 @@ Full localization of the inventory and scan modules, a smart ingredient resoluti
 - `fuzzySearchIngredients(query)` — trigram-based fuzzy search
 - `resolveIngredient(name, userId)` — smart resolve-or-create
 
+# 📦 v0.0.6 — Branding, Gamification & CI/CD
+### App Branding & Iconography
+- Configured `flutter_launcher_icons` to generate native Android, iOS, and PWA icons using a professional 3D "P" logo.
+
+### Gamification Overhaul
+- **New Achievements:** Added highly requested meme-based badges: `streak15` ("Flatten the Chaos") and `streak30` ("Determined March").
+- **UI Modernization:** Refactored the rigid `GamificationPage` grid into an interactive, tap-to-expand premium badge gallery using `ClipRRect` and scalable dialogs.
+
+### CI/CD Fixes
+- Fixed `.github/workflows/backend-tests.yml` to explicitly install testing frameworks (`pytest`), keeping `requirements.txt` strictly optimized for production.
+
+---
+
+# 📦 v0.0.7 — Gemini 2.5 Architecture & UI Polish
+### AI Engine Overhaul (Gemini 2.5 Triad)
+- **Primary Engine (`gemini-2.5-flash`):** Set as the core backend model for high-volume receipt scanning, raw recipe parsing, and Tier-1 translations.
+- **Cost-Optimized Engine (`gemini-2.5-flash-lite`):** Specifically routed high-frequency, simple endpoints (Cooking Tips, Ingredient Substitutes) to the extremely cheap `$0.10/1M` model.
+- **Complex Reasoning Engine (`gemini-2.5-pro`):** Dynamically triggered solely for translating recipes into low-resource languages (e.g., Uzbek) to guarantee native grammar and context.
+- **SDK Optimization:** Ripped out the heavy `google.generativeai` package in favor of lightweight native REST calls via `httpx` with strict `application/json` enforcement.
+
+### UI & Asset Polish
+- **Web Favicon:** Built a Python-based processing script (`round_icon.py`) to flawlessly zoom-crop and squircle-mask the web tab icon to match Apple/Instagram standards.
+- **Gamification Images:** Added a dynamic `Transform.scale` mask in the Flutter UI to perfectly crop out blurred screenshot UI edges from user-provided meme badge images, preserving the original text context while looking natively embedded.
+
 ---
 
 ## 🚀 The VISION — Three-Pillar Marketplace

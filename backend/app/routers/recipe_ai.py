@@ -141,7 +141,9 @@ Suggest 3 substitutes. Return JSON only:
 
     system = "You are a cooking expert. Suggest practical ingredient substitutes. Return only valid JSON."
 
-    result = await ollama.generate_text_json(prompt, system_prompt=system)
+    result = await ollama.generate_text_json(
+        prompt, system_prompt=system, model="gemini-2.5-flash-lite"
+    )
 
     return {
         "status": "success" if "error" not in result else "partial",
@@ -168,7 +170,9 @@ Give a brief, practical cooking tip (2-3 sentences max)."""
 
     system = "You are a friendly cooking assistant. Give brief, practical tips."
 
-    response = await ollama.generate_text(prompt, system_prompt=system, max_tokens=300)
+    response = await ollama.generate_text(
+        prompt, system_prompt=system, max_tokens=300, model="gemini-2.5-flash-lite"
+    )
 
     return {
         "status": "success",

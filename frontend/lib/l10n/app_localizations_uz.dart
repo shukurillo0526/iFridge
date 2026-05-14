@@ -133,16 +133,16 @@ class AppLocalizationsUz extends AppLocalizations {
   String get creatorProfile => 'Muallif profili';
 
   @override
-  String get follow => 'Kuzatish';
+  String get follow => 'Obuna bo\'lish';
 
   @override
-  String get following => 'Kuzatilmoqda';
+  String get following => 'Obuna bo\'lingan';
 
   @override
-  String get nutritionTracker => 'Ovqatlanish kuzatuvi';
+  String get nutritionTracker => 'Oziqlanish kuzatuvi';
 
   @override
-  String get reels => 'Rillar';
+  String get reels => 'Video';
 
   @override
   String get community => 'Jamoa';
@@ -151,7 +151,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get hasRecipe => 'Retsept bor';
 
   @override
-  String get noReelsYet => 'Hozircha rillar yo\'q';
+  String get noReelsYet => 'Hozircha videolar yo\'q';
 
   @override
   String get settings => 'Sozlamalar';
@@ -172,7 +172,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get expiryAlerts => 'Muddati tugashi haqida ogohlantirishlar';
 
   @override
-  String get errorLoadInventory => 'Inventarni yuklab bo‘lmadi';
+  String get errorLoadInventory => 'Omborni yuklab bo‘lmadi';
 
   @override
   String get errorCheckConnection =>
@@ -363,13 +363,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get auto_use1Unit => '1 birlikdan foydalaning';
 
   @override
-  String get auto_removeFromInventory => 'Inventarizatsiyadan olib tashlang';
+  String get auto_removeFromInventory => 'Ombordan olib tashlash';
 
   @override
-  String get auto_following => 'Kuzatish';
+  String get auto_following => 'Obuna bo\'lingan';
 
   @override
-  String get auto_follow => 'Kuzatish';
+  String get auto_follow => 'Obuna bo\'lish';
 
   @override
   String get auto_posts => 'Xabarlar';
@@ -378,10 +378,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get auto_noPostsYet => 'Hozircha postlar yo‘q';
 
   @override
-  String get auto_explore => 'Tadqiq qiling';
+  String get auto_explore => 'Kashf qilish';
 
   @override
-  String get auto_noReelsYet => 'Hali makaralar yo\'q';
+  String get auto_noReelsYet => 'Hali videolar yo\'q';
 
   @override
   String get auto_cookThisRecipe => 'Ushbu retseptni pishiring';
@@ -393,7 +393,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get auto_hasRecipe => 'Retsepti bor';
 
   @override
-  String get auto_noCommunityPostsYet => 'Hozircha hamjamiyat postlari yo‘q';
+  String get auto_noCommunityPostsYet => 'Hozircha jamoat postlari yo‘q';
 
   @override
   String get auto_beTheFirstToShare => 'Birinchi bo\'lib baham ko\'ring!';
@@ -433,7 +433,7 @@ class AppLocalizationsUz extends AppLocalizations {
       'Ushbu kodni peshtaxtada ko\'rsating';
 
   @override
-  String get auto_deliveryOnTheWay => 'Yo\'lda yetkazib berish';
+  String get auto_deliveryOnTheWay => 'Yetkazib berish yo\'lda';
 
   @override
   String get auto_aDriverWillBeAssignedShortly =>
@@ -492,7 +492,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get auto_fromVideo => 'Videodan';
 
   @override
-  String get auto_bookATable => 'Jadvalni bron qilish';
+  String get auto_bookATable => 'Joy buyurtma qilish';
 
   @override
   String get auto_confirmReservation => 'Rezervasyonni tasdiqlang';
@@ -517,7 +517,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get auto_youWillNeedToSignInAgain =>
-      'Siz yana tizimga kirishingiz kerak bo\'ladi.';
+      'Qayta tizimga kirishingiz kerak bo\'ladi.';
 
   @override
   String get auto_deleteAccount => 'Akkauntni o\'chirish';
@@ -535,13 +535,13 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String
   get auto_platelyIsYourAipoweredKitchenEcosystemItAutomaticallyTracksYourIngredientsPredictsExpirationsGeneratesPersonalizedRecipesAndLetsYouOrderFromLocalRestaurants =>
-      'Plately sizning sun\'iy intellekt asosida ishlaydigan oshxona ekotizimidir. U avtomatik ravishda ingredientlaringizni kuzatib boradi, amal qilish muddatini bashorat qiladi, moslashtirilgan retseptlar yaratadi va mahalliy restoranlardan buyurtma berish imkonini beradi.';
+      'Plately sizning sun\'iy intellekt asosida ishlaydigan oshxona ekotizimingizdir. U avtomatik ravishda ingredientlaringizni kuzatib boradi, amal qilish muddatini bashorat qiladi, moslashtirilgan retseptlar yaratadi va mahalliy restoranlardan buyurtma berish imkonini beradi.';
 
   @override
-  String get auto_gotIt => 'Tushundim';
+  String get auto_gotIt => 'Tushunarli';
 
   @override
-  String get auto_editDisplayName => 'Displey nomini tahrirlash';
+  String get auto_editDisplayName => 'Taqdim etilgan ismni tahrirlash';
 
   @override
   String get auto_save => 'Saqlash';
@@ -611,7 +611,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get scanPhoto => 'Rasm';
 
   @override
-  String get scanBarcode => 'Shtrix-kodni skanerlash';
+  String get scanBarcode => 'Shtrix-kod';
 
   @override
   String get takePhotoBtn => 'Rasmga olish';
@@ -626,12 +626,12 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String scaleToNServings(String newServings) {
-    return '$newServings porsiyalariga o\'lchab ko\'ring';
+    return '$newServings porsiyalarga o\'lchab ko\'ring';
   }
 
   @override
   String scaledToNServings(String newServings) {
-    return '$newServings porsiyalariga oʻlchandi 🍳';
+    return '$newServings porsiyalarga oʻlchandi 🍳';
   }
 
   @override
@@ -734,7 +734,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get analyzingYourFood => 'Oziq-ovqatingiz tahlil qilinmoqda...';
 
   @override
-  String get aiIsIdentifying => 'AI ingredientlarni aniqlaydi';
+  String get aiIsIdentifying => 'AI ingredientlarni aniqlayapti';
 
   @override
   String nItemsDetected(String count) {
