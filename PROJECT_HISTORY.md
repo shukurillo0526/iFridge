@@ -509,6 +509,18 @@ Full localization of the inventory and scan modules, a smart ingredient resoluti
 
 ---
 
+# 📦 v0.0.8 — Context-Aware AI & Dynamic Nutrition
+
+This update dramatically enhances the cooking experience by providing the AI with global inventory awareness and surfacing crucial nutritional information directly in the cooking flow.
+
+### Highlights
+- **Global Inventory AI Context:** Re-architected the `RecipePrepScreen` and `CookingRunScreen` context builders. The AI now pulls the user's *entire* inventory (not just the recipe's ingredients) from Supabase on demand, allowing it to suggest highly accurate, personalized ingredient substitutions based on what the user actually owns.
+- **Dynamic Macro Calculations:** Integrated the backend's dynamic calorie calculator directly into the frontend. The `RecipeDetailScreen` now fetches and visually displays Calories, Protein, Carbs, and Fat scaled per serving in real-time.
+- **Inventory Deduction Fix:** Patched a critical bug in the post-cooking `Skip` dialog where skipping deduction would falsely return an empty array (which triggered a full deduction) instead of gracefully bypassing it.
+- **Curated Recipe Photography:** Successfully populated all 133 recipes with high-quality, verified stock photography mapped to their respective cuisines, replacing the placeholder gradient fallback system.
+
+---
+
 ## 🚀 The VISION — Three-Pillar Marketplace
 
 Plately is now positioned as a **3-sided food commerce ecosystem**:
