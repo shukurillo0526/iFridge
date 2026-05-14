@@ -1136,7 +1136,9 @@ class _RecipeCard extends StatelessWidget {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: CachedNetworkImageProvider(
-                    _cuisineImageUrl(cuisine),
+                    recipe['image_url']?.toString().isNotEmpty == true
+                        ? recipe['image_url']
+                        : _cuisineImageUrl(cuisine),
                   ),
                   fit: BoxFit.cover,
                 ),

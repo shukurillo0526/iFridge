@@ -56,6 +56,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   List<Map<String, dynamic>> _steps = [];
   String _displayTitle = '';
   String? _displayDescription;
+  String? _imageUrl;
 
   @override
   void initState() {
@@ -77,10 +78,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           .eq('recipe_id', widget.recipeId)
           .order('display_order', ascending: true);
 
-      // 2. Fetch steps from the recipes JSONB (steps stay in JSONB for now)
+      // 2. Fetch steps and image_url from the recipes table
       final recipeData = await supabase
           .from('recipes')
-          .select('steps')
+          .select('steps, image_url')
           .eq('id', widget.recipeId)
           .maybeSingle();
 
@@ -126,6 +127,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       _steps = List<Map<String, dynamic>>.from(recipeData?['steps'] ?? []);
       _displayTitle = widget.title;
       _displayDescription = widget.description;
+      _imageUrl = recipeData?['image_url'] as String?;
 
       // 4. If not English, check for cached title/step translations
       if (userLanguage != 'en') {
@@ -570,20 +572,59 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               onPressed: () => Navigator.pop(context),
             ),
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      widget.tierColor.withValues(alpha: 0.4),
-                      Theme.of(context).scaffoldBackgroundColor,
-                    ],
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // Recipe-specific image or gradient fallback
+                  if (_imageUrl != null && _imageUrl!.isNotEmpty)
+                    Image.network(
+                      _imageUrl!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              widget.tierColor.withValues(alpha: 0.4),
+                              Theme.of(context).scaffoldBackgroundColor,
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            widget.tierColor.withValues(alpha: 0.4),
+                            Theme.of(context).scaffoldBackgroundColor,
+                          ],
+                        ),
+                      ),
+                    ),
+                  // Gradient overlay for text readability
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.8),
+                          Theme.of(context).scaffoldBackgroundColor,
+                        ],
+                        stops: [0.0, 0.6, 1.0],
+                      ),
+                    ),
                   ),
-                ),
-                child: SafeArea(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(60, 16, 20, 60),
+                  // Content overlay
+                  SafeArea(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(60, 16, 20, 60),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -638,6 +679,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     ),
                   ),
                 ),
+                ],
               ),
             ),
           ),
