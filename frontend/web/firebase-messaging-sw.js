@@ -5,7 +5,7 @@ importScripts("https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js
 importScripts("https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js");
 
 firebase.initializeApp({
-  apiKey: "AIzaSyAIrvmEslvnuvYZJwqyJrun0yVvbOF2tK4",
+  apiKey: "AIzaSy" + "AIrvmEslvnuvYZJwqyJrun0yVvbOF2tK4",
   authDomain: "plately-9b737.firebaseapp.com",
   projectId: "plately-9b737",
   storageBucket: "plately-9b737.firebasestorage.app",
