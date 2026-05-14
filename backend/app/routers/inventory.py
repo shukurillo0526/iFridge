@@ -438,7 +438,118 @@ async def consume_inventory_item(req: ConsumeItemRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# ── Batch Consume for Cooking ────────────────────────────────────
+
+class ConsumeRecipeRequest(BaseModel):
+    user_id: str
+    recipe_id: str
+    servings_cooked: float  # actual servings user cooked
+    skipped_ingredient_ids: list[str] = []  # ingredients user unchecked
+
+@router.post("/api/v1/inventory/consume-recipe")
+async def consume_recipe_ingredients(req: ConsumeRecipeRequest):
+    """
+    Batch-deduct recipe ingredients from inventory after cooking.
+    Scales quantities by (servings_cooked / recipe_default_servings).
+    Skips ingredients not in user's inventory or explicitly unchecked.
+    """
+    db = get_supabase()
+
+    try:
+        # 1. Get recipe default servings
+        recipe = (
+            db.table("recipes")
+            .select("servings")
+            .eq("id", req.recipe_id)
+            .maybe_single()
+            .execute()
+        )
+        default_servings = (recipe.data or {}).get("servings", 2) or 2
+        scale = req.servings_cooked / default_servings
+
+        # 2. Get recipe ingredients
+        ings = (
+            db.table("recipe_ingredients")
+            .select("ingredient_id, quantity, unit, ingredients(display_name_en)")
+            .eq("recipe_id", req.recipe_id)
+            .execute()
+        )
+
+        # 3. Get user's inventory (ingredient_id → inventory row)
+        inv = (
+            db.table("inventory_items")
+            .select("id, ingredient_id, quantity, unit")
+            .eq("user_id", req.user_id)
+            .gt("quantity", 0)
+            .execute()
+        )
+        inv_map = {}
+        for row in (inv.data or []):
+            inv_map[row["ingredient_id"]] = row
+
+        consumed = []
+        skipped = []
+
+        for ing in (ings.data or []):
+            iid = ing["ingredient_id"]
+            ing_name = (ing.get("ingredients") or {}).get("display_name_en", "Unknown")
+
+            # Skip if user unchecked this ingredient
+            if iid in req.skipped_ingredient_ids:
+                skipped.append({"ingredient_id": iid, "name": ing_name, "reason": "user_skipped"})
+                continue
+
+            # Skip if not in inventory
+            if iid not in inv_map:
+                skipped.append({"ingredient_id": iid, "name": ing_name, "reason": "not_in_inventory"})
+                continue
+
+            recipe_qty = float(ing.get("quantity", 0)) * scale
+            if recipe_qty <= 0:
+                continue
+
+            inv_item = inv_map[iid]
+
+            # Deduct (cap at available quantity)
+            actual_deduct = min(recipe_qty, inv_item["quantity"])
+
+            try:
+                db.rpc(
+                    "consume_inventory_item",
+                    {
+                        "p_inventory_id": inv_item["id"],
+                        "p_qty_to_consume": actual_deduct,
+                    },
+                ).execute()
+
+                consumed.append({
+                    "ingredient_id": iid,
+                    "name": ing_name,
+                    "deducted": actual_deduct,
+                    "unit": inv_item.get("unit", ing.get("unit", "")),
+                })
+            except Exception as e:
+                logger.warning(f"[Inventory] Failed to consume {ing_name}: {e}")
+                skipped.append({"ingredient_id": iid, "name": ing_name, "reason": f"error: {e}"})
+
+        logger.info(
+            f"[Inventory] Recipe {req.recipe_id} consumed: "
+            f"{len(consumed)} deducted, {len(skipped)} skipped"
+        )
+        return {
+            "status": "success",
+            "consumed": consumed,
+            "skipped": skipped,
+            "total_deducted": len(consumed),
+        }
+
+    except Exception as e:
+        logger.error(f"[Inventory] Consume recipe failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 # ── Smart Expiry Prediction ──────────────────────────────────────
+
 
 class PredictExpiryRequest(BaseModel):
     category: str

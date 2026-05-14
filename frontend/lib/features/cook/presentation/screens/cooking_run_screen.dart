@@ -20,6 +20,8 @@ class CookingRunScreen extends StatefulWidget {
   final int matchedIngredientsCount;
   final double matchPct;
   final String userInventoryText;
+  final int servingsCooked;
+  final Set<String> ownedIngredientIds;
 
   const CookingRunScreen({
     super.key,
@@ -31,6 +33,8 @@ class CookingRunScreen extends StatefulWidget {
     required this.matchedIngredientsCount,
     required this.matchPct,
     required this.userInventoryText,
+    required this.servingsCooked,
+    this.ownedIngredientIds = const {},
   });
 
   @override
@@ -129,6 +133,124 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
   }
 
   void _finishCooking() {
+    _showDeductionDialog();
+  }
+
+  Future<void> _showDeductionDialog() async {
+    final ingredients = widget.ingredients ?? [];
+    if (ingredients.isEmpty) {
+      _navigateToReward([]);
+      return;
+    }
+
+    // Build checklist: only owned ingredients are pre-checked
+    final checked = <int, bool>{};
+    for (int i = 0; i < ingredients.length; i++) {
+      final ing = ingredients[i];
+      final ingId = ing['ingredient_id'] ?? ing['id'] ?? '';
+      checked[i] = widget.ownedIngredientIds.contains(ingId);
+    }
+
+    final result = await showDialog<List<String>?>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setDialogState) {
+            return AlertDialog(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              title: Row(
+                children: [
+                  Icon(Icons.inventory_2, color: Theme.of(context).colorScheme.primary, size: 22),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text('Deduct from shelf?',
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700)),
+                  ),
+                ],
+              ),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Uncheck any ingredients you didn\'t use:',
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 13)),
+                    SizedBox(height: 12),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxHeight: 300),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: ingredients.length,
+                        itemBuilder: (ctx, i) {
+                          final ing = ingredients[i];
+                          final name = ing['translated_name'] ?? ing['name'] ?? ing['display_name_en'] ?? 'Unknown';
+                          final qty = ing['quantity']?.toString() ?? '';
+                          final unit = ing['unit'] ?? '';
+                          final ingId = ing['ingredient_id'] ?? ing['id'] ?? '';
+                          final isOwned = widget.ownedIngredientIds.contains(ingId);
+
+                          return CheckboxListTile(
+                            value: checked[i] ?? false,
+                            onChanged: isOwned ? (val) {
+                              setDialogState(() => checked[i] = val ?? false);
+                            } : null,
+                            title: Text(name,
+                              style: TextStyle(
+                                color: isOwned
+                                    ? Theme.of(context).colorScheme.onSurface
+                                    : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.35),
+                                fontSize: 14, fontWeight: FontWeight.w500)),
+                            subtitle: Text('$qty $unit${isOwned ? '' : ' (not in shelf)'}',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+                                fontSize: 12)),
+                            dense: true,
+                            controlAffinity: ListTileControlAffinity.leading,
+                            activeColor: Theme.of(context).colorScheme.primary,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx, <String>[]),
+                  child: Text('Skip', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5))),
+                ),
+                FilledButton.icon(
+                  onPressed: () {
+                    // Collect skipped ingredient IDs (unchecked ones that are owned)
+                    final skipped = <String>[];
+                    for (int i = 0; i < ingredients.length; i++) {
+                      if (checked[i] != true) {
+                        final ingId = ingredients[i]['ingredient_id'] ?? ingredients[i]['id'] ?? '';
+                        if (ingId.toString().isNotEmpty) skipped.add(ingId.toString());
+                      }
+                    }
+                    Navigator.pop(ctx, skipped);
+                  },
+                  icon: Icon(Icons.check, size: 18),
+                  label: Text('Deduct & Finish'),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    if (result == null) return; // dialog dismissed
+    _navigateToReward(result);
+  }
+
+  void _navigateToReward(List<String> skippedIds) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -137,6 +259,8 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
           title: widget.title,
           matchedIngredientsCount: widget.matchedIngredientsCount,
           matchPct: widget.matchPct,
+          servingsCooked: widget.servingsCooked,
+          skippedIngredientIds: skippedIds,
         ),
       ),
     );

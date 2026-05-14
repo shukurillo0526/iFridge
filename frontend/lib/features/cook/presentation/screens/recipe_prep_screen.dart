@@ -256,6 +256,8 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
           matchedIngredientsCount: widget.ownedIngredientIds.length,
           matchPct: widget.matchPct,
           userInventoryText: _buildUserInventoryText(),
+          servingsCooked: _servings,
+          ownedIngredientIds: widget.ownedIngredientIds,
         ),
       ),
     );

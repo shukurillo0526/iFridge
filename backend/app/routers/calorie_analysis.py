@@ -272,3 +272,158 @@ def _estimate_serving(category: str) -> int:
         "nut": 30, "beverage": 250, "snack": 50,
     }
     return serving_map.get(cat, 100)
+
+
+# Unit → grams conversion for common cooking measurements
+UNIT_TO_GRAMS = {
+    "g": 1, "gram": 1, "grams": 1,
+    "kg": 1000, "kilogram": 1000,
+    "ml": 1, "milliliter": 1,
+    "l": 1000, "liter": 1000,
+    "tbsp": 15, "tablespoon": 15,
+    "tsp": 5, "teaspoon": 5,
+    "cup": 240, "cups": 240,
+    "large": 60, "medium": 45, "small": 30,
+    "slice": 30, "slices": 30,
+    "piece": 50, "pieces": 50, "pcs": 50, "pc": 50,
+    "clove": 5, "cloves": 5,
+    "pinch": 0.5, "dash": 0.6,
+    "oz": 28, "ounce": 28,
+    "lb": 454, "pound": 454,
+    "bunch": 100, "head": 300, "stalk": 60,
+    "can": 400,
+}
+
+def _unit_to_grams(quantity: float, unit: str, category: str = "") -> float:
+    """Convert a quantity+unit to grams for calorie computation."""
+    unit_lower = unit.lower().strip()
+    if unit_lower in UNIT_TO_GRAMS:
+        return quantity * UNIT_TO_GRAMS[unit_lower]
+    # Fallback: use category-based serving estimate
+    return quantity * _estimate_serving(category)
+
+
+@router.get("/api/v1/calories/recipe/{recipe_id}")
+async def get_recipe_calories(recipe_id: str, servings: Optional[int] = None):
+    """
+    Compute total and per-serving calories + macros for a recipe.
+    Uses per-ingredient calories_per_100g from the ingredients table.
+    Falls back to AI estimate for ingredients missing calorie data.
+    
+    Returns: per-ingredient breakdown + totals + per-serving values.
+    """
+    db = get_supabase()
+
+    try:
+        # 1. Get recipe default servings
+        recipe = (
+            db.table("recipes")
+            .select("servings, title")
+            .eq("id", recipe_id)
+            .maybe_single()
+            .execute()
+        )
+        recipe_data = recipe.data or {}
+        default_servings = recipe_data.get("servings", 2) or 2
+        requested_servings = servings or default_servings
+        scale = requested_servings / default_servings
+
+        # 2. Get recipe ingredients with calorie data
+        ings = (
+            db.table("recipe_ingredients")
+            .select(
+                "ingredient_id, quantity, unit, "
+                "ingredients(display_name_en, calories_per_100g, category)"
+            )
+            .eq("recipe_id", recipe_id)
+            .execute()
+        )
+
+        items = []
+        total_cal = 0
+        total_protein = 0
+        total_carbs = 0
+        total_fat = 0
+        unknown_items = []
+
+        for ing in (ings.data or []):
+            ing_data = ing.get("ingredients") or {}
+            name = ing_data.get("display_name_en", "Unknown")
+            cal_per_100g = ing_data.get("calories_per_100g")
+            category = ing_data.get("category", "")
+            qty = float(ing.get("quantity", 0)) * scale
+            unit = ing.get("unit", "")
+
+            if cal_per_100g and cal_per_100g > 0:
+                grams = _unit_to_grams(qty, unit, category)
+                item_cal = round(cal_per_100g * grams / 100)
+                items.append({
+                    "name": name,
+                    "quantity": round(qty, 2),
+                    "unit": unit,
+                    "grams": round(grams, 1),
+                    "calories_per_100g": cal_per_100g,
+                    "calories": item_cal,
+                    "source": "database",
+                })
+                total_cal += item_cal
+            else:
+                unknown_items.append({
+                    "name": name,
+                    "quantity": qty,
+                    "unit": unit,
+                    "ingredient_id": ing.get("ingredient_id"),
+                })
+
+        # 3. AI fallback for unknown items
+        if unknown_items:
+            try:
+                ollama = get_ollama_service()
+                item_list = ", ".join(
+                    f"{u['quantity']} {u['unit']} {u['name']}" for u in unknown_items
+                )
+                prompt = f"""Estimate calories for these recipe ingredients: {item_list}.
+Return JSON only:
+{{"items": [{{"name": "...", "calories": 120, "protein_g": 5, "carbs_g": 15, "fat_g": 3}}]}}"""
+                system = "Certified nutritionist. Return only valid JSON."
+                ai_result = await ollama.generate_text_json(
+                    prompt, system_prompt=system, model="gemini-2.5-flash-lite"
+                )
+                for ai_item in ai_result.get("items", []):
+                    cal = ai_item.get("calories", 0)
+                    items.append({
+                        "name": ai_item.get("name", "Unknown"),
+                        "calories": cal,
+                        "protein_g": ai_item.get("protein_g", 0),
+                        "carbs_g": ai_item.get("carbs_g", 0),
+                        "fat_g": ai_item.get("fat_g", 0),
+                        "source": "ai_estimate",
+                    })
+                    total_cal += cal
+                    total_protein += ai_item.get("protein_g", 0)
+                    total_carbs += ai_item.get("carbs_g", 0)
+                    total_fat += ai_item.get("fat_g", 0)
+            except Exception as e:
+                logger.warning(f"[Calories] AI fallback failed: {e}")
+
+        per_serving = round(total_cal / requested_servings) if requested_servings > 0 else 0
+
+        return {
+            "status": "success",
+            "recipe_id": recipe_id,
+            "title": recipe_data.get("title", ""),
+            "servings": requested_servings,
+            "items": items,
+            "totals": {
+                "calories": total_cal,
+                "per_serving": per_serving,
+                "protein_g": total_protein,
+                "carbs_g": total_carbs,
+                "fat_g": total_fat,
+            },
+        }
+
+    except Exception as e:
+        logger.error(f"[Calories] Recipe calorie computation failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+

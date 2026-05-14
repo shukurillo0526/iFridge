@@ -777,6 +777,42 @@ class ApiService {
     return _handleResponse(response);
   }
 
+  /// Get computed calories + macros for a recipe (per-ingredient breakdown)
+  Future<Map<String, dynamic>> getRecipeCalories({
+    required String recipeId,
+    int? servings,
+  }) async {
+    final params = <String, String>{};
+    if (servings != null) params['servings'] = servings.toString();
+
+    final uri = Uri.parse(
+      '${ApiConfig.baseUrl}/api/v1/calories/recipe/$recipeId',
+    ).replace(queryParameters: params.isNotEmpty ? params : null);
+
+    final response = await _client.get(uri, headers: _headers);
+    return _handleResponse(response);
+  }
+
+  /// Batch-deduct recipe ingredients from inventory after cooking
+  Future<Map<String, dynamic>> consumeRecipeIngredients({
+    required String userId,
+    required String recipeId,
+    required double servingsCooked,
+    List<String> skippedIngredientIds = const [],
+  }) async {
+    final response = await _client.post(
+      Uri.parse('${ApiConfig.baseUrl}/api/v1/inventory/consume-recipe'),
+      headers: {..._headers, 'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'user_id': userId,
+        'recipe_id': recipeId,
+        'servings_cooked': servingsCooked,
+        'skipped_ingredient_ids': skippedIngredientIds,
+      }),
+    );
+    return _handleResponse(response);
+  }
+
   void dispose() => _client.close();
 }
 
