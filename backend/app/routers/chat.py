@@ -76,8 +76,6 @@ async def chat(request: Request, req: ChatRequest):
     message list each time for context.
     """
     ollama = get_ollama_service()
-    if not await ollama.is_available():
-        raise HTTPException(status_code=503, detail="AI service unavailable. Start Ollama.")
 
     # Build messages with system prompt
     system_content = KITCHEN_SYSTEM_PROMPT

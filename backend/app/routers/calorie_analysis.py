@@ -162,8 +162,7 @@ async def analyze_calories(req: CalorieAnalyzeRequest):
     # For items not in DB, use AI to estimate
     if unknown_items:
         ollama = get_ollama_service()
-        if await ollama.is_available():
-            prompt = f"""Estimate the nutrition for these food items: {', '.join(unknown_items)}.
+        prompt = f"""Estimate the nutrition for these food items: {', '.join(unknown_items)}.
 
 For each item, provide:
 - Typical serving size in grams
@@ -174,13 +173,13 @@ For each item, provide:
 Return JSON only:
 {{"items": [{{"name": "...", "serving_g": 150, "calories_per_100g": 200, "estimated_calories": 300, "protein_g": 10, "carbs_g": 30, "fat_g": 15}}]}}"""
 
-            system = "You are a certified nutritionist. Provide accurate calorie estimates. Return only valid JSON."
-            ai_result = await ollama.generate_text_json(prompt, system_prompt=system)
+        system = "You are a certified nutritionist. Provide accurate calorie estimates. Return only valid JSON."
+        ai_result = await ollama.generate_text_json(prompt, system_prompt=system)
 
-            if "items" in ai_result:
-                for item in ai_result["items"]:
-                    item["source"] = "ai_estimate"
-                    results.append(item)
+        if "items" in ai_result:
+            for item in ai_result["items"]:
+                item["source"] = "ai_estimate"
+                results.append(item)
 
     # Calculate totals
     total_calories = sum(r.get("estimated_calories", 0) for r in results)

@@ -80,8 +80,6 @@ async def generate_recipe(request: Request, req: GenerateRecipeRequest):
     Generate a recipe from available ingredients using the local LLM.
     """
     ollama = get_ollama_service()
-    if not await ollama.is_available():
-        raise HTTPException(status_code=503, detail="AI service unavailable. Start Ollama.")
 
     constraints = []
     if req.cuisine:
@@ -129,8 +127,6 @@ async def suggest_substitute(req: SubstituteRequest):
     Suggest substitutes for a missing ingredient.
     """
     ollama = get_ollama_service()
-    if not await ollama.is_available():
-        raise HTTPException(status_code=503, detail="AI service unavailable. Start Ollama.")
 
     context = f" Recipe context: {req.recipe_context}" if req.recipe_context else ""
 
@@ -158,8 +154,6 @@ async def get_cooking_tip(req: CookingTipRequest):
     Get a cooking tip or answer a question about a recipe step.
     """
     ollama = get_ollama_service()
-    if not await ollama.is_available():
-        raise HTTPException(status_code=503, detail="AI service unavailable. Start Ollama.")
 
     question = req.question or "Give me a helpful tip for this step."
 
@@ -192,8 +186,6 @@ async def ai_chat(req: ChatRequest):
     Generic chat endpoint for AI assistant.
     """
     ollama = get_ollama_service()
-    if not await ollama.is_available():
-        raise HTTPException(status_code=503, detail="AI service unavailable. Start Ollama.")
     
     # We will just pass the messages directly to Ollama generate_text if it supports history,
     # but ollama_service.py's generate_text expects a prompt string.
@@ -234,8 +226,6 @@ async def normalize_recipe(req: NormalizeRecipeRequest):
     with timer data. Useful for importing or enriching recipes.
     """
     ollama = get_ollama_service()
-    if not await ollama.is_available():
-        raise HTTPException(status_code=503, detail="AI service unavailable. Start Ollama.")
 
     title_hint = f" for '{req.recipe_title}'" if req.recipe_title else ""
 
@@ -271,8 +261,6 @@ async def parse_raw_recipe(req: ParseRawRecipeRequest):
     into a fully structured recipe object with title, ingredients, and steps.
     """
     ollama = get_ollama_service()
-    if not await ollama.is_available():
-        raise HTTPException(status_code=503, detail="AI service unavailable. Start Ollama.")
 
     prompt = f"""Extract and structure the recipe from this raw text.
 
