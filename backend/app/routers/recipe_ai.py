@@ -39,10 +39,12 @@ class GenerateRecipeRequest(BaseModel):
 class SubstituteRequest(BaseModel):
     ingredient: str
     recipe_context: Optional[str] = None
+    locale: Optional[str] = None
 
 class CookingTipRequest(BaseModel):
     step_text: str
     question: Optional[str] = None
+    locale: Optional[str] = None
 
 class YouTubeRecipeRequest(BaseModel):
     video_title: str
@@ -130,12 +132,18 @@ async def suggest_substitute(req: SubstituteRequest):
 
     context = f" Recipe context: {req.recipe_context}" if req.recipe_context else ""
 
+    # Language instruction based on locale
+    lang_map = {"en": "English", "ko": "Korean", "uz": "O'zbek (Uzbek)", "ru": "Russian",
+                "ja": "Japanese", "zh": "Chinese", "es": "Spanish", "tr": "Turkish"}
+    lang_name = lang_map.get(req.locale, "English") if req.locale else "English"
+    lang_instruction = f" Respond entirely in {lang_name}." if req.locale and req.locale != "en" else ""
+
     prompt = f"""I'm missing "{req.ingredient}" for cooking.{context}
 
-Suggest 3 substitutes. Return JSON only:
+Suggest 3 substitutes.{lang_instruction} Return JSON only:
 {{"ingredient": "{req.ingredient}", "substitutes": [{{"name": "...", "ratio": "1:1", "notes": "..."}}]}}"""
 
-    system = "You are a cooking expert. Suggest practical ingredient substitutes. Return only valid JSON."
+    system = f"You are a cooking expert. Suggest practical ingredient substitutes.{lang_instruction} Return only valid JSON."
 
     result = await ollama.generate_text_json(
         prompt, system_prompt=system, model="gemini-2.5-flash-lite"
@@ -157,12 +165,18 @@ async def get_cooking_tip(req: CookingTipRequest):
 
     question = req.question or "Give me a helpful tip for this step."
 
+    # Language instruction based on locale
+    lang_map = {"en": "English", "ko": "Korean", "uz": "O'zbek (Uzbek)", "ru": "Russian",
+                "ja": "Japanese", "zh": "Chinese", "es": "Spanish", "tr": "Turkish"}
+    lang_name = lang_map.get(req.locale, "English") if req.locale else "English"
+    lang_instruction = f"\nIMPORTANT: Respond entirely in {lang_name}." if req.locale and req.locale != "en" else ""
+
     prompt = f"""Recipe step: "{req.step_text}"
 Question: {question}
 
-Give a brief, practical cooking tip (2-3 sentences max)."""
+Give a brief, practical cooking tip (2-3 sentences max).{lang_instruction}"""
 
-    system = "You are a friendly cooking assistant. Give brief, practical tips."
+    system = f"You are a friendly cooking assistant. Give brief, practical tips.{' Always respond in ' + lang_name + '.' if req.locale and req.locale != 'en' else ''}"
 
     response = await ollama.generate_text(
         prompt, system_prompt=system, max_tokens=300, model="gemini-2.5-flash-lite"

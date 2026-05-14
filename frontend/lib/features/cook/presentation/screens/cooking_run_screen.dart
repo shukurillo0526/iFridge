@@ -581,6 +581,12 @@ class _CookingStepCardState extends State<_CookingStepCard> {
 
     try {
       final userLanguage = Localizations.localeOf(context).languageCode;
+      final langMap = {
+        'en': 'English', 'ko': 'Korean', 'uz': "O'zbek (Uzbek)",
+        'ru': 'Russian', 'ja': 'Japanese', 'zh': 'Chinese',
+        'es': 'Spanish', 'tr': 'Turkish',
+      };
+      final langName = langMap[userLanguage] ?? 'English';
       final stepText = widget.step['translated_text'] ?? widget.step['human_text'] ?? widget.step['text'] ?? '';
       
       final prompt = '''
@@ -597,7 +603,7 @@ Current Step (${widget.stepIndex + 1}/${widget.totalSteps}): $stepText
 **User's Question:**
 $q
 
-Answer in $userLanguage language.
+IMPORTANT: Respond entirely in $langName.
 Be helpful, clear, and natural. 
 If they ask for substitutions, suggest realistic alternatives based on what they have in their inventory.
 Keep your answer short and easy to read while cooking.
@@ -616,9 +622,10 @@ Keep your answer short and easy to read while cooking.
         });
       }
     } catch (e) {
+      debugPrint('AI cooking chat error: $e');
       if (mounted) {
         setState(() {
-          _chatMessages.add({'role': 'assistant', 'content': 'Could not reach AI. Is Ollama running?'});
+          _chatMessages.add({'role': 'assistant', 'content': 'AI is temporarily unavailable. Please try again later.'});
           _aiLoading = false;
         });
       }

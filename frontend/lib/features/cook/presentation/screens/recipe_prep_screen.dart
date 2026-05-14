@@ -143,13 +143,24 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
   Future<void> _askSubstitute(int index) async {
     final ing = widget.ingredients[index];
     final name = ing['translated_name'] ?? ing['name'] ?? 'Unknown';
+    final locale = Localizations.localeOf(context).languageCode;
 
     setState(() => _loadingSub[index] = true);
+
+    // Build inventory context so AI knows what user has available
+    final haveItems = widget.ingredients.where((i) {
+      final id = i['ingredient_id'] ?? i['id'] ?? i['name'] ?? '';
+      return widget.ownedIngredientIds.contains(id);
+    }).map((i) => i['translated_name'] ?? i['name'] ?? '').where((n) => n.isNotEmpty);
+    final inventoryHint = haveItems.isNotEmpty
+        ? '${widget.title}. User has: ${haveItems.join(', ')}'
+        : widget.title;
 
     try {
       final result = await _api.suggestSubstitute(
         ingredient: name,
-        recipeContext: widget.title,
+        recipeContext: inventoryHint,
+        locale: locale,
       );
       final data = result['data'];
       if (data != null && data['substitutes'] != null) {
@@ -178,13 +189,31 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
     setState(() => _aiLoading = true);
 
     try {
-      final ingNames = widget.ingredients.map((i) {
-        return i['translated_name'] ?? i['name'] ?? '';
-      }).where((n) => n.isNotEmpty).join(', ');
+      final locale = Localizations.localeOf(context).languageCode;
+
+      // Build rich context: recipe + ingredients with have/missing + substitutions
+      final ingLines = widget.ingredients.asMap().entries.map((entry) {
+        final i = entry.key;
+        final ing = entry.value;
+        final name = ing['translated_name'] ?? ing['name'] ?? 'Unknown';
+        final rawQty = ing['quantity'];
+        final unit = ing['unit'] ?? '';
+        final ingId = ing['ingredient_id'] ?? ing['id'] ?? ing['name'] ?? '';
+        final hasIt = widget.ownedIngredientIds.contains(ingId);
+        final scaledQty = _scaleQuantity(rawQty);
+        final qtyStr = UnitConverter.simplifyMetric(scaledQty, unit);
+        final status = hasIt ? '✓ HAVE' : '✗ MISSING';
+        final subNote = _substitutions.containsKey(i) ? ' [Substituted]' : '';
+        return '- $name $qtyStr ($status)$subNote';
+      }).join('\n');
+
+      final contextText = 'Recipe: ${widget.title} (${_servings} servings)\n'
+          'Ingredients:\n$ingLines';
 
       final result = await _api.getCookingTip(
-        stepText: 'Recipe: ${widget.title}. Ingredients: $ingNames',
+        stepText: contextText,
         question: _aiQuestion,
+        locale: locale,
       );
       setState(() {
         _aiResponse = result['data']?['tip'] ?? 'No response.';

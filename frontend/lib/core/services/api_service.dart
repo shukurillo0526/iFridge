@@ -148,11 +148,13 @@ class ApiService {
   Future<Map<String, dynamic>> getCookingTip({
     required String stepText,
     String? question,
+    String? locale,
   }) async {
     final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/ai/cooking-tip');
     final body = {
       'step_text': stepText,
       'question': ?question,
+      'locale': ?locale,
     };
     final response = await _client.post(
       uri,
@@ -194,11 +196,13 @@ class ApiService {
   Future<Map<String, dynamic>> suggestSubstitute({
     required String ingredient,
     String? recipeContext,
+    String? locale,
   }) async {
     final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/ai/substitute');
     final body = {
       'ingredient': ingredient,
       'recipe_context': ?recipeContext,
+      'locale': ?locale,
     };
     final response = await _client.post(
       uri,
