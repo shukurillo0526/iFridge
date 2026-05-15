@@ -11,7 +11,7 @@ Strategy:
   3. Static subs are language-agnostic (names matched in English)
 """
 
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Any
 
 
 # Each entry: ingredient → list of {name, ratio, notes}

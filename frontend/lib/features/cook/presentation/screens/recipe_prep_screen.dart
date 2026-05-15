@@ -319,7 +319,9 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
           matchPct: widget.matchPct,
           userInventoryText: inventoryText,
           servingsCooked: _servings,
+          originalServings: widget.originalServings,
           ownedIngredientIds: widget.ownedIngredientIds,
+          calories: widget.caloriesPerServing != null ? (widget.caloriesPerServing! * _servings) : null,
         ),
       ),
     );

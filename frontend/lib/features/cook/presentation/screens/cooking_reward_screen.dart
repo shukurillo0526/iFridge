@@ -14,7 +14,13 @@ class CookingRewardScreen extends StatefulWidget {
   final int matchedIngredientsCount;
   final double matchPct;
   final int servingsCooked;
+  final int originalServings;
   final List<String> skippedIngredientIds;
+  final List<Map<String, dynamic>>? ingredients;
+  final int? calories;
+  final int? proteinG;
+  final int? carbsG;
+  final int? fatG;
 
   const CookingRewardScreen({
     super.key,
@@ -23,7 +29,13 @@ class CookingRewardScreen extends StatefulWidget {
     required this.matchedIngredientsCount,
     required this.matchPct,
     required this.servingsCooked,
+    required this.originalServings,
     this.skippedIngredientIds = const [],
+    this.ingredients,
+    this.calories,
+    this.proteinG,
+    this.carbsG,
+    this.fatG,
   });
 
   @override
@@ -84,47 +96,85 @@ class _CookingRewardScreenState extends State<CookingRewardScreen>
         matchedIngredientsCount: widget.matchedIngredientsCount,
       );
 
-      // 2. Deduct inventory (if not all skipped)
+      // 2. Flavor profile update
       try {
-        final consumeResult = await _api.consumeRecipeIngredients(
-          userId: userId,
-          recipeId: widget.recipeId,
-          servingsCooked: widget.servingsCooked.toDouble(),
-          skippedIngredientIds: widget.skippedIngredientIds,
-        );
-        final consumed = consumeResult['consumed'];
-        if (consumed is List) {
-          _consumedItems = consumed.cast<Map<String, dynamic>>();
+        await _api.recordCook(userId: userId, recipeId: widget.recipeId);
+        debugPrint('[Reward] Flavor profile recorded');
+      } catch (e) {
+        debugPrint('[Reward] Flavor record failed (non-critical): $e');
+      }
+
+      // 3. Deduct inventory via Supabase RPC
+      try {
+        final skippedIds = Set<String>.from(widget.skippedIngredientIds);
+        final inventoryItems = await Supabase.instance.client
+            .from('inventory_items')
+            .select('id, ingredient_id, quantity, unit, ingredients(display_name_en)')
+            .eq('user_id', userId)
+            .gt('quantity', 0);
+            
+        final invMap = <String, Map<String, dynamic>>{};
+        for (final item in inventoryItems) {
+          invMap[item['ingredient_id']] = item;
         }
+
+        final consumedList = <Map<String, dynamic>>[];
+        final recipeIngredients = widget.ingredients ?? [];
+        final scale = widget.servingsCooked / (widget.originalServings > 0 ? widget.originalServings : 2);
+
+        for (final ing in recipeIngredients) {
+          final iid = ing['ingredient_id'] ?? ing['id'];
+          if (iid == null || skippedIds.contains(iid)) continue;
+          
+          final invItem = invMap[iid];
+          if (invItem == null) continue;
+
+          final qty = ((ing['quantity'] as num?) ?? 0) * scale;
+          if (qty <= 0) continue;
+
+          final deduct = qty < invItem['quantity'] ? qty : invItem['quantity'];
+          await Supabase.instance.client.rpc('consume_inventory_item', params: {
+            'p_inventory_id': invItem['id'],
+            'p_qty_to_consume': deduct,
+          });
+
+          consumedList.add({
+            'name': invItem['ingredients']?['display_name_en'] ?? ing['name'] ?? '',
+            'deducted': deduct,
+            'unit': invItem['unit'] ?? ing['unit'] ?? '',
+          });
+        }
+        
+        _consumedItems = consumedList;
         debugPrint('[Reward] Inventory deducted: ${_consumedItems.length} items');
       } catch (e) {
         debugPrint('[Reward] Inventory deduction failed (non-critical): $e');
       }
 
-      // 3. Log nutrition (fetch calories for this recipe+servings)
+      // 4. Log nutrition
       try {
-        final calResult = await _api.getRecipeCalories(
-          recipeId: widget.recipeId,
-          servings: widget.servingsCooked,
-        );
-        final totals = calResult['totals'];
-        if (totals != null) {
-          _caloriesLogged = totals['calories'] as int?;
-          await _api.logNutrition(
-            userId: userId,
-            mealType: 'cooked',
-            foodItems: [
+        final cal = widget.calories ?? 0;
+        if (cal > 0) {
+          _caloriesLogged = cal;
+          await Supabase.instance.client.from('nutrition_logs').insert({
+            'user_id': userId,
+            'meal_type': 'cooked',
+            'calories': cal,
+            'protein_g': widget.proteinG ?? 0,
+            'carbs_g': widget.carbsG ?? 0,
+            'fat_g': widget.fatG ?? 0,
+            'food_items': [
               {
                 'name': widget.title,
-                'calories': totals['calories'] ?? 0,
-                'protein_g': totals['protein_g'] ?? 0,
-                'carbs_g': totals['carbs_g'] ?? 0,
-                'fat_g': totals['fat_g'] ?? 0,
-              },
+                'calories': cal,
+                'protein_g': widget.proteinG ?? 0,
+                'carbs_g': widget.carbsG ?? 0,
+                'fat_g': widget.fatG ?? 0,
+              }
             ],
-            notes: 'Cooked ${widget.servingsCooked} servings',
-          );
-          debugPrint('[Reward] Nutrition logged: ${totals['calories']} kcal');
+            'notes': 'Cooked ${widget.servingsCooked} servings',
+          });
+          debugPrint('[Reward] Nutrition logged: $cal kcal');
         }
       } catch (e) {
         debugPrint('[Reward] Nutrition logging failed (non-critical): $e');

@@ -31,7 +31,16 @@ class _RecipeImportScreenState extends State<RecipeImportScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+        String msg = e.toString();
+        if (msg.contains('Failed to fetch') || msg.contains('SocketException') || msg.contains('Connection')) {
+          msg = 'Backend AI is offline or unreachable. Please check your Railway/server status.';
+        } else {
+          msg = msg.replaceAll('Exception: ', '');
+        }
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Error: $msg'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ));
       }
     } finally {
       if (mounted) setState(() => _isProcessing = false);

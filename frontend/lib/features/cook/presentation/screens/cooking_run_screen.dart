@@ -21,7 +21,12 @@ class CookingRunScreen extends StatefulWidget {
   final double matchPct;
   final String userInventoryText;
   final int servingsCooked;
+  final int originalServings;
   final Set<String> ownedIngredientIds;
+  final int? calories;
+  final int? proteinG;
+  final int? carbsG;
+  final int? fatG;
 
   const CookingRunScreen({
     super.key,
@@ -34,7 +39,12 @@ class CookingRunScreen extends StatefulWidget {
     required this.matchPct,
     required this.userInventoryText,
     required this.servingsCooked,
+    required this.originalServings,
     this.ownedIngredientIds = const {},
+    this.calories,
+    this.proteinG,
+    this.carbsG,
+    this.fatG,
   });
 
   @override
@@ -264,7 +274,13 @@ class _CookingRunScreenState extends State<CookingRunScreen> {
           matchedIngredientsCount: widget.matchedIngredientsCount,
           matchPct: widget.matchPct,
           servingsCooked: widget.servingsCooked,
+          originalServings: widget.originalServings,
           skippedIngredientIds: skippedIds,
+          ingredients: widget.ingredients,
+          calories: widget.calories,
+          proteinG: widget.proteinG,
+          carbsG: widget.carbsG,
+          fatG: widget.fatG,
         ),
       ),
     );
