@@ -14,6 +14,7 @@ import 'package:plately_app/core/services/api_service.dart';
 import 'package:plately_app/core/utils/l10n_helper.dart';
 import 'package:plately_app/features/cook/presentation/screens/recipe_detail_screen.dart';
 import 'package:plately_app/features/cook/presentation/screens/recipe_import_screen.dart';
+import 'package:plately_app/features/cook/presentation/screens/my_recipes_screen.dart';
 import 'package:plately_app/core/services/auth_helper.dart';
 import 'package:plately_app/core/services/app_settings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -813,6 +814,13 @@ class _CookScreenState extends State<CookScreen>
               Navigator.push(context, MaterialPageRoute(builder: (_) => const RecipeImportScreen()));
             },
             tooltip: AppLocalizations.of(context)?.auto_importRecipe ?? 'Import Recipe',
+          ),
+          IconButton(
+            icon: Icon(Icons.menu_book),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const MyRecipesScreen()));
+            },
+            tooltip: 'My Recipes',
           ),
           IconButton(
             icon: Icon(Icons.refresh),
