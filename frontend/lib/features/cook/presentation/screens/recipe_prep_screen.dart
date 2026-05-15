@@ -398,9 +398,9 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('${widget.caloriesPerServing! * _servings} cal total',
+                              Text('${widget.caloriesPerServing! * _servings} ${L10nHelper.translateNutritionLabel('cal', Localizations.localeOf(context).languageCode)} ${AppLocalizations.of(context)?.auto_total ?? 'total'}',
                                 style: TextStyle(color: Colors.orange, fontSize: 18, fontWeight: FontWeight.w800)),
-                              Text('${widget.caloriesPerServing} cal × $_servings servings',
+                              Text('${widget.caloriesPerServing} ${L10nHelper.translateNutritionLabel('cal', Localizations.localeOf(context).languageCode)} × $_servings ${AppLocalizations.of(context)?.servings_tag ?? 'servings'}',
                                 style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4), fontSize: 12)),
                             ],
                           ),
@@ -586,7 +586,7 @@ class _RecipePrepScreenState extends State<RecipePrepScreen> {
                 child: FilledButton.icon(
                   onPressed: _startCooking,
                   icon: Icon(Icons.restaurant, size: 22),
-                  label: Text('🍳 Start Cooking',
+                  label: Text('🍳 ${AppLocalizations.of(context)?.startCooking ?? 'Start Cooking'}',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                   style: FilledButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,

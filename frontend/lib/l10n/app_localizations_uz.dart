@@ -420,7 +420,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get auto_yourOrder => 'Sizning buyurtmangiz';
 
   @override
-  String get auto_total => 'Jami';
+  String get auto_total => 'jami';
 
   @override
   String get auto_orderConfirmed => 'Buyurtma tasdiqlandi!';
@@ -973,6 +973,126 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get manual_required => 'Majburiy';
+
+  @override
+  String get auth_tagline => 'Isrofgarchilik yo\'q, ta\'m eng zo\'r.';
+
+  @override
+  String get auth_subtitle => 'Oshxonangiz — aqlli boshqaruv.';
+
+  @override
+  String get auth_email => 'Email';
+
+  @override
+  String get auth_password => 'Parol';
+
+  @override
+  String get auth_continue => 'Davom etish';
+
+  @override
+  String get auth_or => 'YOKI';
+
+  @override
+  String get auth_continueGoogle => 'Google orqali davom etish';
+
+  @override
+  String get auth_continueGuest => 'Mehmon sifatida davom etish';
+
+  @override
+  String get auth_autoDetectHint =>
+      'Yangi foydalanuvchimisiz? Hisobingiz avtomatik yaratiladi.';
+
+  @override
+  String get auth_checkEmail =>
+      'Hisobingizni tasdiqlash uchun emailingizni tekshiring.';
+
+  @override
+  String get auth_enterBoth => 'Email va parolni kiriting.';
+
+  @override
+  String get auth_unexpectedError =>
+      'Kutilmagan xatolik yuz berdi. Qayta urinib ko\'ring.';
+
+  @override
+  String get auth_googleFailed =>
+      'Google orqali kirish amalga oshmadi. Qayta urinib ko\'ring.';
+
+  @override
+  String get auth_guestFailed =>
+      'Mehmon sifatida kirish amalga oshmadi. Email yoki Google orqali urinib ko\'ring.';
+
+  @override
+  String get import_recipe => 'Retsept import qilish';
+
+  @override
+  String get import_pasteRaw => 'Retsept matnini joylashtiring';
+
+  @override
+  String get import_description =>
+      'Veb-sayt, kitob yoki eslatmalar ilovasidan ko\'chirib joylashtiring. Sun\'iy intellektimiz uni bosqichma-bosqich aqlli retseptga aylantiradi.';
+
+  @override
+  String get import_hint =>
+      'Masalan: Buvining pechene\'si\n2 stakan un va 1 stakan shakarni aralashtiring... 180° da 10 daqiqa pishiring.';
+
+  @override
+  String get import_analyzing => 'Retsept tahlil qilinmoqda...';
+
+  @override
+  String get import_parseWithAi => 'AI bilan tahlil qilish';
+
+  @override
+  String get import_parsedRecipe => 'Tahlil qilingan retsept';
+
+  @override
+  String get import_steps => 'Bosqichlar';
+
+  @override
+  String get import_saveButton => 'Ajoyib — Retseptlarimga saqlash';
+
+  @override
+  String get import_savedLocally => 'Retsept Retseptlarimga saqlandi!';
+
+  @override
+  String get tutorial_next => 'Keyingisi →';
+
+  @override
+  String get tutorial_gotIt => 'Tushunarli! 🎉';
+
+  @override
+  String get tutorial_cookTitle => 'Retseptlaringiz';
+
+  @override
+  String get tutorial_cookDesc =>
+      'Muzlatgichda bor narsalarga asoslangan AI tomonidan tanlangan retseptlarni ko\'ring. Mos kelish foizi qancha yuqori bo\'lsa, shuncha ko\'p ingredientlar sizda bor!';
+
+  @override
+  String get tutorial_scanTitle => 'Ingredientlarni skanerlash';
+
+  @override
+  String get tutorial_scanDesc =>
+      'Kamerangiz bilan cheklarni, shtrix-kodlarni skanerlang yoki ingredientlar suratini oling. AI ularni bir zumda aniqlaydi.';
+
+  @override
+  String get tutorial_shelfTitle => 'Sizning tokchangiz';
+
+  @override
+  String get tutorial_shelfDesc =>
+      'Raqamli muzlatgich, freezer va omborxona. Yaroqlilik muddatlarini va miqdorlarni kuzatib boring — oziq-ovqat buzilishidan oldin xabardor qilamiz.';
+
+  @override
+  String get tutorial_profileTitle => 'Profil va sozlamalar';
+
+  @override
+  String get tutorial_profileDesc =>
+      'Profil ikonkasiga bosib tilni, mavzuni o\'zgartiring, ta\'m profilingizni boshqaring va pishirish seriyalarini kuzating!';
+
+  @override
+  String get tutorial_replay => 'O\'quv qo\'llanmani qayta ko\'rish';
+
+  @override
+  String get tutorial_replayConfirm =>
+      'Keyingi ishga tushirishda o\'quv qo\'llanma ko\'rsatiladi.';
 }
 
 /// The translations for Uzbek, using the Cyrillic script (`uz_Cyrl`).
@@ -1391,7 +1511,7 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
   String get auto_yourOrder => 'Сизнинг буйуртмангиз';
 
   @override
-  String get auto_total => 'Жами';
+  String get auto_total => 'жами';
 
   @override
   String get auto_orderConfirmed => 'Буйуртма тасдиқланди!';
@@ -1943,4 +2063,124 @@ class AppLocalizationsUzCyrl extends AppLocalizationsUz {
 
   @override
   String get manual_required => 'Мажбурий';
+
+  @override
+  String get auth_tagline => 'Исрофгарчилик йўқ, та\'м энг зўр.';
+
+  @override
+  String get auth_subtitle => 'Ошхонангиз — ақлли бошқарув.';
+
+  @override
+  String get auth_email => 'Электрон почта';
+
+  @override
+  String get auth_password => 'Парол';
+
+  @override
+  String get auth_continue => 'Давом этиш';
+
+  @override
+  String get auth_or => 'ЙОКИ';
+
+  @override
+  String get auth_continueGoogle => 'Google орқали давом этиш';
+
+  @override
+  String get auth_continueGuest => 'Меҳмон сифатида давом этиш';
+
+  @override
+  String get auth_autoDetectHint =>
+      'Йанги фойдаланувчимисиз? Ҳисобингиз автоматик йаратилади.';
+
+  @override
+  String get auth_checkEmail =>
+      'Ҳисобингизни тасдиқлаш учун электрон почтангизни текширинг.';
+
+  @override
+  String get auth_enterBoth => 'Электрон почта ва паролни киритинг.';
+
+  @override
+  String get auth_unexpectedError =>
+      'Кутилмаган хатолик юз берди. Қайта уриниб кўринг.';
+
+  @override
+  String get auth_googleFailed =>
+      'Google орқали кириш амалга ошмади. Қайта уриниб кўринг.';
+
+  @override
+  String get auth_guestFailed =>
+      'Меҳмон сифатида кириш амалга ошмади. Электрон почта йоки Google орқали уриниб кўринг.';
+
+  @override
+  String get import_recipe => 'Рецепт импорт қилиш';
+
+  @override
+  String get import_pasteRaw => 'Рецепт матнини жойлаштиринг';
+
+  @override
+  String get import_description =>
+      'Веб-сайт, китоб йоки эслатмалар иловасидан кўчириб жойлаштиринг. Сунъий интеллектимиз уни босқичма-босқич ақлли рецептга айлантиради.';
+
+  @override
+  String get import_hint =>
+      'Масалан: Бувининг печенеси\n2 стакан ун ва 1 стакан шакарни аралаштиринг... 180° да 10 дақиқа пиширинг.';
+
+  @override
+  String get import_analyzing => 'Рецепт таҳлил қилинмоқда...';
+
+  @override
+  String get import_parseWithAi => 'AI билан таҳлил қилиш';
+
+  @override
+  String get import_parsedRecipe => 'Таҳлил қилинган рецепт';
+
+  @override
+  String get import_steps => 'Босқичлар';
+
+  @override
+  String get import_saveButton => 'Ажойиб — Рецептларимга сақлаш';
+
+  @override
+  String get import_savedLocally => 'Рецепт Рецептларимга сақланди!';
+
+  @override
+  String get tutorial_next => 'Кейингиси →';
+
+  @override
+  String get tutorial_gotIt => 'Тушунарли! 🎉';
+
+  @override
+  String get tutorial_cookTitle => 'Рецептларингиз';
+
+  @override
+  String get tutorial_cookDesc =>
+      'Музлатгичда бор нарсаларга асосланган AI томонидан танланган рецептларни кўринг. Мос келиш фоизи қанча юқори бўлса, шунча кўп ингредиентлар сизда бор!';
+
+  @override
+  String get tutorial_scanTitle => 'Ингредиентларни сканерлаш';
+
+  @override
+  String get tutorial_scanDesc =>
+      'Камерангиз билан чекларни, штрих-кодларни сканерланг ёки ингредиентлар суратини олинг. AI уларни бир зумда аниқлайди.';
+
+  @override
+  String get tutorial_shelfTitle => 'Сизнинг токчангиз';
+
+  @override
+  String get tutorial_shelfDesc =>
+      'Рақамли музлатгич, фризер ва омборхона. Яроқлилик муддатларини ва миқдорларни кузатиб боринг — озиқ-овқат бузилишидан олдин хабардор қиламиз.';
+
+  @override
+  String get tutorial_profileTitle => 'Профил ва созламалар';
+
+  @override
+  String get tutorial_profileDesc =>
+      'Профил иконкасига босиб тилни, мавзуни ўзгартиринг, таъм профилингизни бошқаринг ва пиширишш сериялариини кузатинг!';
+
+  @override
+  String get tutorial_replay => 'Ўқув қўлланмани қайта кўриш';
+
+  @override
+  String get tutorial_replayConfirm =>
+      'Кейинги ишга туширишда ўқув қўлланма кўрсатилади.';
 }

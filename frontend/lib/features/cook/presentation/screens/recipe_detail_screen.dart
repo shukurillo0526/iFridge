@@ -735,19 +735,19 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                   if (_dynamicCalories != null && _dynamicCalories! > 0)
                     _QuickChip(
                       icon: Icons.local_fire_department,
-                      label: '$_dynamicCalories kcal/srv',
+                      label: '$_dynamicCalories ${L10nHelper.translateNutritionLabel('kcal/srv', Localizations.localeOf(context).languageCode)}',
                     )
                   else if (widget.caloriesPerServing != null && widget.caloriesPerServing! > 0)
                     _QuickChip(
                       icon: Icons.local_fire_department,
-                      label: '${widget.caloriesPerServing} kcal/srv',
+                      label: '${widget.caloriesPerServing} ${L10nHelper.translateNutritionLabel('kcal/srv', Localizations.localeOf(context).languageCode)}',
                     ),
                   if (_dynamicProtein != null && _dynamicProtein! > 0)
-                    _QuickChip(icon: Icons.fitness_center, label: '${_dynamicProtein!.toStringAsFixed(1)}g P', color: Colors.blueAccent),
+                    _QuickChip(icon: Icons.fitness_center, label: '${_dynamicProtein!.toStringAsFixed(1)}${L10nHelper.translateNutritionLabel('g', Localizations.localeOf(context).languageCode)} ${L10nHelper.translateNutritionLabel('P', Localizations.localeOf(context).languageCode)}', color: Colors.blueAccent),
                   if (_dynamicCarbs != null && _dynamicCarbs! > 0)
-                    _QuickChip(icon: Icons.bolt, label: '${_dynamicCarbs!.toStringAsFixed(1)}g C', color: Colors.amber),
+                    _QuickChip(icon: Icons.bolt, label: '${_dynamicCarbs!.toStringAsFixed(1)}${L10nHelper.translateNutritionLabel('g', Localizations.localeOf(context).languageCode)} ${L10nHelper.translateNutritionLabel('C', Localizations.localeOf(context).languageCode)}', color: Colors.amber),
                   if (_dynamicFat != null && _dynamicFat! > 0)
-                    _QuickChip(icon: Icons.water_drop, label: '${_dynamicFat!.toStringAsFixed(1)}g F', color: Colors.orangeAccent),
+                    _QuickChip(icon: Icons.water_drop, label: '${_dynamicFat!.toStringAsFixed(1)}${L10nHelper.translateNutritionLabel('g', Localizations.localeOf(context).languageCode)} ${L10nHelper.translateNutritionLabel('F', Localizations.localeOf(context).languageCode)}', color: Colors.orangeAccent),
                 ],
               ),
             ),
@@ -813,7 +813,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     child: _IngredientRow(
                       name: name,
                       quantity: '$qty ${L10nHelper.translateUnit(unit, Localizations.localeOf(context).languageCode)}',
-                      prepNote: prepNote,
+                      prepNote: L10nHelper.translatePrepNote(prepNote, Localizations.localeOf(context).languageCode),
                       isOptional: isOptional,
                       isOwned: isOwned,
                       onSubstitute: (!isOwned && !isOptional)

@@ -390,5 +390,47 @@
     "manual_qty": "Miqdor",
     "manual_metricType": "O'lchov turi",
     "manual_estimatedExpiry": "Taxminiy muddat",
-    "manual_required": "Majburiy"
+    "manual_required": "Majburiy",
+
+    "auth_tagline": "Isrofgarchilik yo'q, ta'm eng zo'r.",
+    "auth_subtitle": "Oshxonangiz — aqlli boshqaruv.",
+    "auth_email": "Email",
+    "auth_password": "Parol",
+    "auth_continue": "Davom etish",
+    "auth_or": "YOKI",
+    "auth_continueGoogle": "Google orqali davom etish",
+    "auth_continueGuest": "Mehmon sifatida davom etish",
+    "auth_autoDetectHint": "Yangi foydalanuvchimisiz? Hisobingiz avtomatik yaratiladi.",
+    "auth_checkEmail": "Hisobingizni tasdiqlash uchun emailingizni tekshiring.",
+    "auth_enterBoth": "Email va parolni kiriting.",
+    "auth_unexpectedError": "Kutilmagan xatolik yuz berdi. Qayta urinib ko'ring.",
+    "auth_googleFailed": "Google orqali kirish amalga oshmadi. Qayta urinib ko'ring.",
+    "auth_guestFailed": "Mehmon sifatida kirish amalga oshmadi. Email yoki Google orqali urinib ko'ring.",
+
+    "import_recipe": "Retsept import qilish",
+    "import_pasteRaw": "Retsept matnini joylashtiring",
+    "import_description": "Veb-sayt, kitob yoki eslatmalar ilovasidan ko'chirib joylashtiring. Sun'iy intellektimiz uni bosqichma-bosqich aqlli retseptga aylantiradi.",
+    "import_hint": "Masalan: Buvining pechene'si\n2 stakan un va 1 stakan shakarni aralashtiring... 180° da 10 daqiqa pishiring.",
+    "import_analyzing": "Retsept tahlil qilinmoqda...",
+    "import_parseWithAi": "AI bilan tahlil qilish",
+    "import_parsedRecipe": "Tahlil qilingan retsept",
+    "import_steps": "Bosqichlar",
+    "import_saveButton": "Ajoyib — Retseptlarimga saqlash",
+    "import_savedLocally": "Retsept Retseptlarimga saqlandi!",
+
+    "auto_total": "jami",
+
+    "tutorial_next": "Keyingisi →",
+    "tutorial_gotIt": "Tushunarli! 🎉",
+    "tutorial_cookTitle": "Retseptlaringiz",
+    "tutorial_cookDesc": "Muzlatgichda bor narsalarga asoslangan AI tomonidan tanlangan retseptlarni ko'ring. Mos kelish foizi qancha yuqori bo'lsa, shuncha ko'p ingredientlar sizda bor!",
+    "tutorial_scanTitle": "Ingredientlarni skanerlash",
+    "tutorial_scanDesc": "Kamerangiz bilan cheklarni, shtrix-kodlarni skanerlang yoki ingredientlar suratini oling. AI ularni bir zumda aniqlaydi.",
+    "tutorial_shelfTitle": "Sizning tokchangiz",
+    "tutorial_shelfDesc": "Raqamli muzlatgich, freezer va omborxona. Yaroqlilik muddatlarini va miqdorlarni kuzatib boring — oziq-ovqat buzilishidan oldin xabardor qilamiz.",
+    "tutorial_profileTitle": "Profil va sozlamalar",
+    "tutorial_profileDesc": "Profil ikonkasiga bosib tilni, mavzuni o'zgartiring, ta'm profilingizni boshqaring va pishirish seriyalarini kuzating!",
+
+    "tutorial_replay": "O'quv qo'llanmani qayta ko'rish",
+    "tutorial_replayConfirm": "Keyingi ishga tushirishda o'quv qo'llanma ko'rsatiladi."
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:plately_app/core/services/api_service.dart';
 import 'package:plately_app/core/services/auth_helper.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:plately_app/core/services/cache_service.dart';
+import 'package:plately_app/l10n/app_localizations.dart';
 
 class RecipeImportScreen extends StatefulWidget {
   const RecipeImportScreen({super.key});
@@ -54,23 +55,25 @@ class _RecipeImportScreenState extends State<RecipeImportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text('Import Recipe', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(l10n?.import_recipe ?? 'Import Recipe', style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Paste Raw Recipe', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 22, fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
-            Text('Copy and paste instructions from a website, book, or notes app. Our AI will magically convert it into a step-by-step smart recipe.',
+            Text(l10n?.import_pasteRaw ?? 'Paste Raw Recipe', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 22, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Text(l10n?.import_description ?? 'Copy and paste instructions from a website, book, or notes app. Our AI will magically convert it into a step-by-step smart recipe.',
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14)),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             
             Expanded(
               child: Container(
@@ -85,15 +88,15 @@ class _RecipeImportScreenState extends State<RecipeImportScreen> {
                   expands: true,
                   style: TextStyle(color: Theme.of(context).colorScheme.onSurface, height: 1.5),
                   decoration: InputDecoration(
-                    hintText: "e.g. Grandma's Cookies\\nMix 2 cups flour with 1 cup sugar... bake at 350 for 10 mins.",
+                    hintText: l10n?.import_hint ?? "e.g. Grandma's Cookies\nMix 2 cups flour with 1 cup sugar... bake at 350 for 10 mins.",
                     hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3)),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(16),
+                    contentPadding: const EdgeInsets.all(16),
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             
             SizedBox(
               width: double.infinity,
@@ -102,8 +105,8 @@ class _RecipeImportScreenState extends State<RecipeImportScreen> {
                 onPressed: _isProcessing ? null : _parseRecipe,
                 icon: _isProcessing
                     ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurface, strokeWidth: 2))
-                    : Icon(Icons.auto_awesome),
-                label: Text(_isProcessing ? 'Analyzing Recipe...' : 'Parse with AI', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    : const Icon(Icons.auto_awesome),
+                label: Text(_isProcessing ? (l10n?.import_analyzing ?? 'Analyzing Recipe...') : (l10n?.import_parseWithAi ?? 'Parse with AI'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 style: FilledButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Theme.of(context).colorScheme.onSurface,
@@ -129,7 +132,10 @@ class _ParsedRecipePreview extends StatefulWidget {
 class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
   bool _isSaving = false;
 
-  void _saveToDb() async {
+  /// Save recipe to local Hive storage instead of Supabase.
+  /// This is the local-first approach: imported recipes stay on-device,
+  /// keeping the main database clean while giving AI full context access.
+  void _saveLocally() {
     setState(() => _isSaving = true);
     
     try {
@@ -156,59 +162,30 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
         'timer_seconds': null
       }).toList();
 
-      final supabase = Supabase.instance.client;
-
-      // Insert recipe with JSONB data (backward compat)
-      final recipeResult = await supabase.from('recipes').insert({
-        'author_id': userId,
+      final recipeData = {
         'title': title,
         'description': desc,
         'prep_time_minutes': pt,
         'cook_time_minutes': ct,
         'difficulty': diff,
         'servings': serv,
-        'is_public': false,
         'calories_per_serving': 0,
         'ingredients': jsonIngredients,
         'steps': jsonSteps,
-      }).select('id').single();
+        'cuisine': widget.data['cuisine'] ?? 'Unknown',
+      };
 
-      final newRecipeId = recipeResult['id'];
-
-      // Also create relational recipe_ingredients entries
-      for (int i = 0; i < ingsRaw.length; i++) {
-        final ingName = (ingsRaw[i]['name'] ?? '').toString().trim();
-        if (ingName.isEmpty) continue;
-        
-        final canonical = ingName.toLowerCase().replaceAll(' ', '_').replaceAll('-', '_');
-        
-        // Try to find by canonical_name or display_name_en
-        final match = await supabase
-            .from('ingredients')
-            .select('id')
-            .or('canonical_name.eq.$canonical,display_name_en.ilike.$ingName')
-            .limit(1)
-            .maybeSingle();
-        
-        if (match != null) {
-          try {
-            await supabase.from('recipe_ingredients').insert({
-              'recipe_id': newRecipeId,
-              'ingredient_id': match['id'],
-              'quantity': ingsRaw[i]['quantity'],
-              'unit': ingsRaw[i]['unit'] ?? 'pcs',
-              'prep_note': '',
-              'display_order': i + 1,
-            });
-          } catch (_) {} // Skip duplicates
-        }
-      }
+      // Save to local Hive box
+      CacheService().saveLocalRecipe(userId, recipeData);
       
       if (!mounted) return;
       Navigator.pop(context); // Close sheet
       Navigator.pop(context); // Close import screen
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Recipe imported successfully!'), backgroundColor: Theme.of(context).colorScheme.tertiary)
+        SnackBar(
+          content: Text(AppLocalizations.of(context)?.import_savedLocally ?? 'Recipe saved to My Recipes!'),
+          backgroundColor: Theme.of(context).colorScheme.tertiary,
+        ),
       );
       
     } catch (e) {
@@ -221,6 +198,8 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return DraggableScrollableSheet(
       initialChildSize: 0.9,
       minChildSize: 0.5,
@@ -229,20 +208,20 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
         return Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.symmetric(vertical: 12),
+                margin: const EdgeInsets.symmetric(vertical: 12),
                 width: 40, height: 4,
                 decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.24), borderRadius: BorderRadius.circular(2)),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 16),
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
                 child: Row(
                   children: [
-                    Expanded(child: Text(widget.data['title'] ?? 'Parsed Recipe', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.bold))),
+                    Expanded(child: Text(widget.data['title'] ?? (l10n?.import_parsedRecipe ?? 'Parsed Recipe'), style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.bold))),
                     IconButton(icon: Icon(Icons.close, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.54)), onPressed: () => Navigator.pop(context)),
                   ],
                 ),
@@ -250,18 +229,18 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
               Expanded(
                 child: ListView(
                   controller: scrollController,
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   children: [
-                    _buildSectionHeader('Ingredients'),
+                    _buildSectionHeader(l10n?.ingredientsHeader ?? 'Ingredients'),
                     ...(widget.data['ingredients'] as List? ?? []).map((ing) => Padding(
-                      padding: EdgeInsets.only(bottom: 8.0),
+                      padding: const EdgeInsets.only(bottom: 8.0),
                       child: Text('• ${ing['quantity']} ${ing['unit']} ${ing['name']}', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
                     )),
                     
-                    SizedBox(height: 24),
-                    _buildSectionHeader('Steps'),
+                    const SizedBox(height: 24),
+                    _buildSectionHeader(l10n?.import_steps ?? 'Steps'),
                     ...(widget.data['steps'] as List? ?? []).map((step) => Padding(
-                      padding: EdgeInsets.only(bottom: 12.0),
+                      padding: const EdgeInsets.only(bottom: 12.0),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -274,19 +253,19 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: SizedBox(
                   width: double.infinity,
                   height: 56,
                   child: FilledButton(
-                    onPressed: _isSaving ? null : _saveToDb,
+                    onPressed: _isSaving ? null : _saveLocally,
                     style: FilledButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
                     child: _isSaving 
                       ? CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurface)
-                      : Text('Looks Good — Save to My Recipes', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      : Text(l10n?.import_saveButton ?? 'Looks Good — Save to My Recipes', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   ),
                 ),
               )
@@ -299,7 +278,7 @@ class _ParsedRecipePreviewState extends State<_ParsedRecipePreview> {
 
   Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Text(title, style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.bold)),
     );
   }

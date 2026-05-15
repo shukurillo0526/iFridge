@@ -960,4 +960,117 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get manual_required => '필수';
+
+  @override
+  String get auth_tagline => '음식물 낭비 제로, 맛은 최대로.';
+
+  @override
+  String get auth_subtitle => '스마트하게 관리되는 당신의 주방.';
+
+  @override
+  String get auth_email => '이메일';
+
+  @override
+  String get auth_password => '비밀번호';
+
+  @override
+  String get auth_continue => '계속하기';
+
+  @override
+  String get auth_or => '또는';
+
+  @override
+  String get auth_continueGoogle => 'Google로 계속하기';
+
+  @override
+  String get auth_continueGuest => '게스트로 계속하기';
+
+  @override
+  String get auth_autoDetectHint => '처음이세요? 계정이 자동으로 생성됩니다.';
+
+  @override
+  String get auth_checkEmail => '계정 확인을 위해 이메일을 확인하세요.';
+
+  @override
+  String get auth_enterBoth => '이메일과 비밀번호를 입력하세요.';
+
+  @override
+  String get auth_unexpectedError => '예기치 않은 오류가 발생했습니다. 다시 시도해 주세요.';
+
+  @override
+  String get auth_googleFailed => 'Google 로그인에 실패했습니다. 다시 시도해 주세요.';
+
+  @override
+  String get auth_guestFailed => '게스트 로그인에 실패했습니다. 이메일이나 Google을 사용해 보세요.';
+
+  @override
+  String get import_recipe => '레시피 가져오기';
+
+  @override
+  String get import_pasteRaw => '레시피 텍스트 붙여넣기';
+
+  @override
+  String get import_description =>
+      '웹사이트, 책 또는 메모 앱에서 복사하여 붙여넣으세요. AI가 단계별 스마트 레시피로 변환합니다.';
+
+  @override
+  String get import_hint => '예: 할머니의 쿠키\n밀가루 2컵과 설탕 1컵을 섞고... 180°에서 10분 굽기.';
+
+  @override
+  String get import_analyzing => '레시피 분석 중...';
+
+  @override
+  String get import_parseWithAi => 'AI로 분석하기';
+
+  @override
+  String get import_parsedRecipe => '분석된 레시피';
+
+  @override
+  String get import_steps => '단계';
+
+  @override
+  String get import_saveButton => '좋아요 — 내 레시피에 저장';
+
+  @override
+  String get import_savedLocally => '레시피가 내 레시피에 저장되었습니다!';
+
+  @override
+  String get tutorial_next => '다음 →';
+
+  @override
+  String get tutorial_gotIt => '알겠어요! 🎉';
+
+  @override
+  String get tutorial_cookTitle => '내 레시피';
+
+  @override
+  String get tutorial_cookDesc =>
+      '냉장고에 있는 재료를 기반으로 AI가 매칭한 레시피를 탐색하세요. 매칭률이 높을수록 이미 가지고 있는 재료가 많습니다!';
+
+  @override
+  String get tutorial_scanTitle => '재료 스캔';
+
+  @override
+  String get tutorial_scanDesc =>
+      '카메라로 영수증, 바코드를 스캔하거나 재료 사진을 찍으세요. AI가 즉시 인식합니다.';
+
+  @override
+  String get tutorial_shelfTitle => '나의 식품 선반';
+
+  @override
+  String get tutorial_shelfDesc =>
+      '디지털 냉장고, 냉동실, 식품 저장실. 유통기한과 수량을 추적하고 — 음식이 상하기 전에 알려드립니다.';
+
+  @override
+  String get tutorial_profileTitle => '프로필 & 설정';
+
+  @override
+  String get tutorial_profileDesc =>
+      '프로필 아이콘을 눌러 언어, 테마를 변경하고 맛 프로필을 관리하며 요리 스트릭을 추적하세요!';
+
+  @override
+  String get tutorial_replay => '튜토리얼 다시 보기';
+
+  @override
+  String get tutorial_replayConfirm => '다음 앱 실행 시 튜토리얼이 표시됩니다.';
 }

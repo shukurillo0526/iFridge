@@ -197,12 +197,14 @@ class ApiService {
     required String ingredient,
     String? recipeContext,
     String? locale,
+    List<String>? inventoryIngredients,
   }) async {
     final uri = Uri.parse('${ApiConfig.baseUrl}/api/v1/ai/substitute');
     final body = {
       'ingredient': ingredient,
       'recipe_context': ?recipeContext,
       'locale': ?locale,
+      if (inventoryIngredients != null) 'inventory_ingredients': inventoryIngredients,
     };
     final response = await _client.post(
       uri,

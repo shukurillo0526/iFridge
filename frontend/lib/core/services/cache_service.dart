@@ -30,6 +30,7 @@ class CacheService {
   late Box _profileBox;
   late Box _syncQueueBox;
   late Box _metaBox;
+  late Box _localRecipesBox;
 
   final _connectivityController = StreamController<bool>.broadcast();
   Stream<bool> get onConnectivityChange => _connectivityController.stream;
@@ -49,6 +50,7 @@ class CacheService {
     _profileBox = await Hive.openBox('user_profile');
     _syncQueueBox = await Hive.openBox('sync_queue');
     _metaBox = await Hive.openBox('cache_meta');
+    _localRecipesBox = await Hive.openBox('local_recipes');
 
     _initialized = true;
     debugPrint('[Cache] Initialized — ${_inventoryBox.length} inventory, ${_recipesBox.length} recipes cached');
@@ -211,7 +213,57 @@ class CacheService {
     await _profileBox.clear();
     await _syncQueueBox.clear();
     await _metaBox.clear();
+    // Note: local_recipes is NOT cleared on logout — it's user-created content
     debugPrint('[Cache] All caches cleared');
+  }
+
+  // ── Local Recipes (Imported/AI-generated) ──────────────────────
+
+  /// Save a recipe to local-only storage.
+  /// Returns the generated local ID.
+  String saveLocalRecipe(String userId, Map<String, dynamic> recipe) {
+    final id = 'local_${DateTime.now().millisecondsSinceEpoch}';
+    recipe['local_id'] = id;
+    recipe['user_id'] = userId;
+    recipe['created_at'] = DateTime.now().toIso8601String();
+    recipe['is_local'] = true;
+    _localRecipesBox.put(id, jsonEncode(recipe));
+    debugPrint('[Cache] Saved local recipe: ${recipe['title']} ($id)');
+    return id;
+  }
+
+  /// Get all local recipes for a user.
+  List<Map<String, dynamic>> getLocalRecipes(String userId) {
+    final results = <Map<String, dynamic>>[];
+    for (final key in _localRecipesBox.keys) {
+      final raw = _localRecipesBox.get(key);
+      if (raw == null) continue;
+      final recipe = jsonDecode(raw) as Map<String, dynamic>;
+      if (recipe['user_id'] == userId) {
+        results.add(recipe);
+      }
+    }
+    // Sort by creation date, newest first
+    results.sort((a, b) => (b['created_at'] ?? '').compareTo(a['created_at'] ?? ''));
+    return results;
+  }
+
+  /// Delete a local recipe by its local ID.
+  Future<void> deleteLocalRecipe(String localId) async {
+    await _localRecipesBox.delete(localId);
+    debugPrint('[Cache] Deleted local recipe: $localId');
+  }
+
+  /// Get count of local recipes for a user.
+  int localRecipeCount(String userId) {
+    int count = 0;
+    for (final key in _localRecipesBox.keys) {
+      final raw = _localRecipesBox.get(key);
+      if (raw == null) continue;
+      final recipe = jsonDecode(raw) as Map<String, dynamic>;
+      if (recipe['user_id'] == userId) count++;
+    }
+    return count;
   }
 
   /// Get cache statistics for debugging.

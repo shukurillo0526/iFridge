@@ -31,6 +31,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:plately_app/l10n/app_localizations.dart';
 import 'package:plately_app/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:plately_app/core/services/cache_service.dart';
+import 'package:plately_app/core/services/tutorial_service.dart';
+import 'package:plately_app/core/widgets/tutorial_overlay.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
@@ -224,13 +226,13 @@ class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
   // ── Cook mode nav items ────────────────────────────
   List<NavItem> _cookNavItems(AppLocalizations? l10n) => [
     NavItem(
-      icon: CupertinoIcons.book,
-      activeIcon: CupertinoIcons.book_fill,
+      icon: Icons.restaurant_outlined,
+      activeIcon: Icons.restaurant,
       label: l10n?.tabCook ?? 'Cook',
     ),
     NavItem(
-      icon: CupertinoIcons.viewfinder,
-      activeIcon: CupertinoIcons.viewfinder,
+      icon: Icons.camera_alt_outlined,
+      activeIcon: Icons.camera_alt,
       label: l10n?.tabScan ?? 'Scan',
       isCenter: true,
     ),
@@ -265,6 +267,11 @@ class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _settings.addListener(_onSettingsChanged);
+
+    // Trigger tutorial on first app load (after onboarding)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showHomeTutorialIfNeeded();
+    });
   }
 
   @override
@@ -282,6 +289,46 @@ class _AppShellState extends State<AppShell> with TickerProviderStateMixin {
       _currentIndex = 0;
     }
     setState(() {});
+  }
+
+  /// Show the home walkthrough tutorial for first-time users.
+  void _showHomeTutorialIfNeeded() {
+    final l10n = AppLocalizations.of(context);
+
+    TutorialOverlay.show(
+      context: context,
+      tutorialId: TutorialService.homeWalkthrough,
+      steps: [
+        TutorialStep(
+          emoji: '🍽️',
+          title: l10n?.tutorial_cookTitle ?? 'Your Recipes',
+          description: l10n?.tutorial_cookDesc ??
+              'Browse AI-matched recipes based on what\'s in your fridge. The higher the match %, the more ingredients you already have!',
+          tooltipPosition: TooltipPosition.center,
+        ),
+        TutorialStep(
+          emoji: '📸',
+          title: l10n?.tutorial_scanTitle ?? 'Scan Ingredients',
+          description: l10n?.tutorial_scanDesc ??
+              'Use your camera to scan receipts, barcodes, or snap a photo of ingredients. Our AI will identify them instantly.',
+          tooltipPosition: TooltipPosition.center,
+        ),
+        TutorialStep(
+          emoji: '📦',
+          title: l10n?.tutorial_shelfTitle ?? 'Your Living Shelf',
+          description: l10n?.tutorial_shelfDesc ??
+              'Your digital fridge, freezer, and pantry. Track expiry dates and quantities — we\'ll warn you before food goes bad.',
+          tooltipPosition: TooltipPosition.center,
+        ),
+        TutorialStep(
+          emoji: '👤',
+          title: l10n?.tutorial_profileTitle ?? 'Profile & Settings',
+          description: l10n?.tutorial_profileDesc ??
+              'Tap the profile icon to change language, theme, manage your flavor profile, and track cooking streaks!',
+          tooltipPosition: TooltipPosition.center,
+        ),
+      ],
+    );
   }
 
   void _switchMode(AppMode mode) {

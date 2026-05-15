@@ -886,7 +886,7 @@ abstract class AppLocalizations {
   /// No description provided for @auto_total.
   ///
   /// In en, this message translates to:
-  /// **'Total'**
+  /// **'total'**
   String get auto_total;
 
   /// No description provided for @auto_orderConfirmed.
@@ -1843,6 +1843,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Required'**
   String get manual_required;
+
+  /// No description provided for @auth_tagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Zero‑Waste, Maximum Taste.'**
+  String get auth_tagline;
+
+  /// No description provided for @auth_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your kitchen, intelligently managed.'**
+  String get auth_subtitle;
+
+  /// No description provided for @auth_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get auth_email;
+
+  /// No description provided for @auth_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get auth_password;
+
+  /// No description provided for @auth_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get auth_continue;
+
+  /// No description provided for @auth_or.
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get auth_or;
+
+  /// No description provided for @auth_continueGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get auth_continueGoogle;
+
+  /// No description provided for @auth_continueGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue as Guest'**
+  String get auth_continueGuest;
+
+  /// No description provided for @auth_autoDetectHint.
+  ///
+  /// In en, this message translates to:
+  /// **'New here? We\'ll create your account automatically.'**
+  String get auth_autoDetectHint;
+
+  /// No description provided for @auth_checkEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your email to verify your account.'**
+  String get auth_checkEmail;
+
+  /// No description provided for @auth_enterBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter both email and password.'**
+  String get auth_enterBoth;
+
+  /// No description provided for @auth_unexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred. Please try again.'**
+  String get auth_unexpectedError;
+
+  /// No description provided for @auth_googleFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign‑in failed. Please try again.'**
+  String get auth_googleFailed;
+
+  /// No description provided for @auth_guestFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest sign‑in failed. Please try email or Google instead.'**
+  String get auth_guestFailed;
+
+  /// No description provided for @import_recipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Recipe'**
+  String get import_recipe;
+
+  /// No description provided for @import_pasteRaw.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste Raw Recipe'**
+  String get import_pasteRaw;
+
+  /// No description provided for @import_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy and paste instructions from a website, book, or notes app. Our AI will magically convert it into a step-by-step smart recipe.'**
+  String get import_description;
+
+  /// No description provided for @import_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Grandma\'s Cookies\nMix 2 cups flour with 1 cup sugar... bake at 350 for 10 mins.'**
+  String get import_hint;
+
+  /// No description provided for @import_analyzing.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing Recipe...'**
+  String get import_analyzing;
+
+  /// No description provided for @import_parseWithAi.
+  ///
+  /// In en, this message translates to:
+  /// **'Parse with AI'**
+  String get import_parseWithAi;
+
+  /// No description provided for @import_parsedRecipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Parsed Recipe'**
+  String get import_parsedRecipe;
+
+  /// No description provided for @import_steps.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get import_steps;
+
+  /// No description provided for @import_saveButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Looks Good — Save to My Recipes'**
+  String get import_saveButton;
+
+  /// No description provided for @import_savedLocally.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe saved to My Recipes!'**
+  String get import_savedLocally;
+
+  /// No description provided for @tutorial_next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next →'**
+  String get tutorial_next;
+
+  /// No description provided for @tutorial_gotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it! 🎉'**
+  String get tutorial_gotIt;
+
+  /// No description provided for @tutorial_cookTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Recipes'**
+  String get tutorial_cookTitle;
+
+  /// No description provided for @tutorial_cookDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse AI-matched recipes based on what\'s in your fridge. The higher the match %, the more ingredients you already have!'**
+  String get tutorial_cookDesc;
+
+  /// No description provided for @tutorial_scanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Ingredients'**
+  String get tutorial_scanTitle;
+
+  /// No description provided for @tutorial_scanDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Use your camera to scan receipts, barcodes, or snap a photo of ingredients. Our AI will identify them instantly.'**
+  String get tutorial_scanDesc;
+
+  /// No description provided for @tutorial_shelfTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Living Shelf'**
+  String get tutorial_shelfTitle;
+
+  /// No description provided for @tutorial_shelfDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your digital fridge, freezer, and pantry. Track expiry dates and quantities — we\'ll warn you before food goes bad.'**
+  String get tutorial_shelfDesc;
+
+  /// No description provided for @tutorial_profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile & Settings'**
+  String get tutorial_profileTitle;
+
+  /// No description provided for @tutorial_profileDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the profile icon to change language, theme, manage your flavor profile, and track cooking streaks!'**
+  String get tutorial_profileDesc;
+
+  /// No description provided for @tutorial_replay.
+  ///
+  /// In en, this message translates to:
+  /// **'Replay Tutorial'**
+  String get tutorial_replay;
+
+  /// No description provided for @tutorial_replayConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Tutorial will show on next app launch.'**
+  String get tutorial_replayConfirm;
 }
 
 class _AppLocalizationsDelegate

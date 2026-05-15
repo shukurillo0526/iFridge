@@ -583,5 +583,47 @@
     "manual_qty": "Qty",
     "manual_metricType": "Metric Type",
     "manual_estimatedExpiry": "Estimated Expiry",
-    "manual_required": "Required"
+    "manual_required": "Required",
+
+    "auth_tagline": "Zero‑Waste, Maximum Taste.",
+    "auth_subtitle": "Your kitchen, intelligently managed.",
+    "auth_email": "Email",
+    "auth_password": "Password",
+    "auth_continue": "Continue",
+    "auth_or": "OR",
+    "auth_continueGoogle": "Continue with Google",
+    "auth_continueGuest": "Continue as Guest",
+    "auth_autoDetectHint": "New here? We'll create your account automatically.",
+    "auth_checkEmail": "Please check your email to verify your account.",
+    "auth_enterBoth": "Please enter both email and password.",
+    "auth_unexpectedError": "An unexpected error occurred. Please try again.",
+    "auth_googleFailed": "Google sign‑in failed. Please try again.",
+    "auth_guestFailed": "Guest sign‑in failed. Please try email or Google instead.",
+
+    "import_recipe": "Import Recipe",
+    "import_pasteRaw": "Paste Raw Recipe",
+    "import_description": "Copy and paste instructions from a website, book, or notes app. Our AI will magically convert it into a step-by-step smart recipe.",
+    "import_hint": "e.g. Grandma's Cookies\nMix 2 cups flour with 1 cup sugar... bake at 350 for 10 mins.",
+    "import_analyzing": "Analyzing Recipe...",
+    "import_parseWithAi": "Parse with AI",
+    "import_parsedRecipe": "Parsed Recipe",
+    "import_steps": "Steps",
+    "import_saveButton": "Looks Good — Save to My Recipes",
+    "import_savedLocally": "Recipe saved to My Recipes!",
+
+    "auto_total": "total",
+
+    "tutorial_next": "Next →",
+    "tutorial_gotIt": "Got it! 🎉",
+    "tutorial_cookTitle": "Your Recipes",
+    "tutorial_cookDesc": "Browse AI-matched recipes based on what's in your fridge. The higher the match %, the more ingredients you already have!",
+    "tutorial_scanTitle": "Scan Ingredients",
+    "tutorial_scanDesc": "Use your camera to scan receipts, barcodes, or snap a photo of ingredients. Our AI will identify them instantly.",
+    "tutorial_shelfTitle": "Your Living Shelf",
+    "tutorial_shelfDesc": "Your digital fridge, freezer, and pantry. Track expiry dates and quantities — we'll warn you before food goes bad.",
+    "tutorial_profileTitle": "Profile & Settings",
+    "tutorial_profileDesc": "Tap the profile icon to change language, theme, manage your flavor profile, and track cooking streaks!",
+
+    "tutorial_replay": "Replay Tutorial",
+    "tutorial_replayConfirm": "Tutorial will show on next app launch."
 }

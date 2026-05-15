@@ -420,7 +420,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get auto_yourOrder => 'Ваш заказ';
 
   @override
-  String get auto_total => 'Общий';
+  String get auto_total => 'всего';
 
   @override
   String get auto_orderConfirmed => 'Заказ подтвержден!';
@@ -970,4 +970,123 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get manual_required => 'Обязательно';
+
+  @override
+  String get auth_tagline => 'Ноль отходов, максимум вкуса.';
+
+  @override
+  String get auth_subtitle => 'Ваша кухня — под умным управлением.';
+
+  @override
+  String get auth_email => 'Электронная почта';
+
+  @override
+  String get auth_password => 'Пароль';
+
+  @override
+  String get auth_continue => 'Продолжить';
+
+  @override
+  String get auth_or => 'ИЛИ';
+
+  @override
+  String get auth_continueGoogle => 'Продолжить через Google';
+
+  @override
+  String get auth_continueGuest => 'Продолжить как гость';
+
+  @override
+  String get auth_autoDetectHint =>
+      'Впервые здесь? Аккаунт создастся автоматически.';
+
+  @override
+  String get auth_checkEmail => 'Проверьте почту для подтверждения аккаунта.';
+
+  @override
+  String get auth_enterBoth => 'Введите email и пароль.';
+
+  @override
+  String get auth_unexpectedError =>
+      'Произошла непредвиденная ошибка. Попробуйте ещё раз.';
+
+  @override
+  String get auth_googleFailed =>
+      'Вход через Google не удался. Попробуйте ещё раз.';
+
+  @override
+  String get auth_guestFailed =>
+      'Гостевой вход не удался. Попробуйте email или Google.';
+
+  @override
+  String get import_recipe => 'Импорт рецепта';
+
+  @override
+  String get import_pasteRaw => 'Вставьте текст рецепта';
+
+  @override
+  String get import_description =>
+      'Скопируйте и вставьте инструкции с сайта, книги или заметок. Наш ИИ превратит их в пошаговый умный рецепт.';
+
+  @override
+  String get import_hint =>
+      'Например: Бабушкино печенье\nСмешайте 2 стакана муки с 1 стаканом сахара... Выпекайте при 180° 10 мин.';
+
+  @override
+  String get import_analyzing => 'Анализируем рецепт...';
+
+  @override
+  String get import_parseWithAi => 'Разобрать с ИИ';
+
+  @override
+  String get import_parsedRecipe => 'Разобранный рецепт';
+
+  @override
+  String get import_steps => 'Шаги';
+
+  @override
+  String get import_saveButton => 'Отлично — Сохранить в Мои рецепты';
+
+  @override
+  String get import_savedLocally => 'Рецепт сохранён в Мои рецепты!';
+
+  @override
+  String get tutorial_next => 'Далее →';
+
+  @override
+  String get tutorial_gotIt => 'Понял! 🎉';
+
+  @override
+  String get tutorial_cookTitle => 'Ваши рецепты';
+
+  @override
+  String get tutorial_cookDesc =>
+      'Просматривайте рецепты, подобранные ИИ на основе содержимого холодильника. Чем выше процент совпадения, тем больше ингредиентов у вас есть!';
+
+  @override
+  String get tutorial_scanTitle => 'Сканирование';
+
+  @override
+  String get tutorial_scanDesc =>
+      'Сканируйте чеки, штрих-коды или фото продуктов. ИИ мгновенно их распознает.';
+
+  @override
+  String get tutorial_shelfTitle => 'Ваша полка';
+
+  @override
+  String get tutorial_shelfDesc =>
+      'Цифровой холодильник, морозилка и кладовая. Следите за сроками годности — мы предупредим заранее.';
+
+  @override
+  String get tutorial_profileTitle => 'Профиль и настройки';
+
+  @override
+  String get tutorial_profileDesc =>
+      'Нажмите на иконку профиля, чтобы изменить язык, тему, управлять вкусовым профилем и отслеживать серии готовок!';
+
+  @override
+  String get tutorial_replay => 'Повторить обучение';
+
+  @override
+  String get tutorial_replayConfirm =>
+      'Обучение появится при следующем запуске.';
 }

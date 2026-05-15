@@ -134,48 +134,309 @@ class L10nHelper {
   static String translateUnit(String unit, String localeCode) {
     if (unit.isEmpty) return unit;
     
-    final lower = unit.toLowerCase();
+    final lower = unit.toLowerCase().trim();
     
     if (localeCode.startsWith('uz')) {
-      switch (lower) {
-        case 'tbsp': return 'osh qoshiq';
-        case 'tsp': return 'choy qoshiq';
-        case 'cup': return 'stakan';
-        case 'clove': return 'dona'; // or bo'lak
-        case 'can': return 'banka';
-        case 'piece': return 'dona';
-        case 'pinch': return 'chimdim';
-        case 'slice': return 'bo\'lak';
-        case 'g': return 'g';
-        case 'kg': return 'kg';
-        case 'ml': return 'ml';
-        case 'l': return 'l';
-        case 'oz': return 'unsiya';
-        case 'lb': return 'funt';
-        default: return unit;
+      if (localeCode.contains('Cyrl')) {
+        // Uzbek Cyrillic
+        return _unitMapUzCyrl[lower] ?? unit;
       }
+      return _unitMapUz[lower] ?? unit;
     } else if (localeCode.startsWith('ru')) {
-      switch (lower) {
-        case 'tbsp': return 'ст. л.';
-        case 'tsp': return 'ч. л.';
-        case 'cup': return 'стакан';
-        case 'clove': return 'зубчик';
-        case 'can': return 'банка';
-        case 'piece': return 'шт';
-        case 'pinch': return 'щепотка';
-        case 'slice': return 'ломтик';
-        case 'g': return 'г';
-        case 'kg': return 'кг';
-        case 'ml': return 'мл';
-        case 'l': return 'л';
-        case 'oz': return 'унция';
-        case 'lb': return 'фунт';
-        default: return unit;
-      }
+      return _unitMapRu[lower] ?? unit;
+    } else if (localeCode.startsWith('ko')) {
+      return _unitMapKo[lower] ?? unit;
     }
     
     return unit; // Default English
   }
+
+  /// Translate nutrition labels like kcal/srv, P, C, F for the current locale.
+  static String translateNutritionLabel(String label, String localeCode) {
+    if (label.isEmpty) return label;
+    
+    if (localeCode.startsWith('ru')) {
+      return _nutritionMapRu[label] ?? label;
+    } else if (localeCode.startsWith('ko')) {
+      return _nutritionMapKo[label] ?? label;
+    } else if (localeCode.startsWith('uz')) {
+      return _nutritionMapUz[label] ?? label;
+    }
+    return label;
+  }
+
+  /// Translate common prep notes (e.g. "Melted, plus extra for pan")
+  static String translatePrepNote(String note, String localeCode) {
+    if (note.isEmpty) return note;
+    
+    final lower = note.toLowerCase().trim();
+    
+    if (localeCode.startsWith('ru')) {
+      return _prepNoteMapRu[lower] ?? note;
+    } else if (localeCode.startsWith('ko')) {
+      return _prepNoteMapKo[lower] ?? note;
+    } else if (localeCode.startsWith('uz')) {
+      return _prepNoteMapUz[lower] ?? note;
+    }
+    return note;
+  }
+
+  // ── Unit Translation Maps ──────────────────────────────
+
+  static const _unitMapRu = <String, String>{
+    'tbsp': 'ст. л.',
+    'tbsp.': 'ст. л.',
+    'tablespoon': 'ст. л.',
+    'tablespoons': 'ст. л.',
+    'tsp': 'ч. л.',
+    'tsp.': 'ч. л.',
+    'teaspoon': 'ч. л.',
+    'teaspoons': 'ч. л.',
+    'cup': 'стакан',
+    'cups': 'стакана',
+    'clove': 'зубчик',
+    'cloves': 'зубчика',
+    'can': 'банка',
+    'cans': 'банки',
+    'piece': 'шт',
+    'pieces': 'шт',
+    'pcs': 'шт',
+    'pinch': 'щепотка',
+    'slice': 'ломтик',
+    'slices': 'ломтика',
+    'bunch': 'пучок',
+    'g': 'г',
+    'gram': 'г',
+    'grams': 'г',
+    'kg': 'кг',
+    'kilogram': 'кг',
+    'ml': 'мл',
+    'milliliter': 'мл',
+    'l': 'л',
+    'liter': 'л',
+    'liters': 'л',
+    'oz': 'унция',
+    'ounce': 'унция',
+    'ounces': 'унции',
+    'lb': 'фунт',
+    'lbs': 'фунты',
+    'pound': 'фунт',
+    'pounds': 'фунты',
+    'large': 'крупн.',
+    'medium': 'средн.',
+    'small': 'мелк.',
+    'to taste': 'по вкусу',
+    'serving': 'порция',
+    'servings': 'порций',
+    'package': 'упаковка',
+    'stick': 'палочка',
+    'head': 'головка',
+    'sprig': 'веточка',
+    'dash': 'капля',
+  };
+
+  static const _unitMapKo = <String, String>{
+    'tbsp': '큰술',
+    'tbsp.': '큰술',
+    'tablespoon': '큰술',
+    'tablespoons': '큰술',
+    'tsp': '티스푼',
+    'tsp.': '티스푼',
+    'teaspoon': '티스푼',
+    'teaspoons': '티스푼',
+    'cup': '컵',
+    'cups': '컵',
+    'clove': '쪽',
+    'cloves': '쪽',
+    'can': '캔',
+    'cans': '캔',
+    'piece': '개',
+    'pieces': '개',
+    'pcs': '개',
+    'pinch': '꼬집',
+    'slice': '조각',
+    'slices': '조각',
+    'bunch': '다발',
+    'g': 'g',
+    'gram': 'g',
+    'grams': 'g',
+    'kg': 'kg',
+    'ml': 'ml',
+    'l': '리터',
+    'liter': '리터',
+    'oz': '온스',
+    'ounce': '온스',
+    'lb': '파운드',
+    'lbs': '파운드',
+    'large': '큰',
+    'medium': '중간',
+    'small': '작은',
+    'to taste': '적당량',
+    'serving': '인분',
+    'servings': '인분',
+    'package': '봉지',
+    'stick': '개',
+    'head': '통',
+    'sprig': '줄기',
+    'dash': '약간',
+  };
+
+  static const _unitMapUz = <String, String>{
+    'tbsp': 'osh-q.',
+    'tbsp.': 'osh-q.',
+    'tablespoon': 'osh qoshiq',
+    'tablespoons': 'osh qoshiq',
+    'tsp': 'choy-q.',
+    'tsp.': 'choy-q.',
+    'teaspoon': 'choy qoshiq',
+    'teaspoons': 'choy qoshiq',
+    'cup': 'stakan',
+    'cups': 'stakan',
+    'clove': 'bo\'lak',
+    'cloves': 'bo\'lak',
+    'can': 'banka',
+    'piece': 'dona',
+    'pieces': 'dona',
+    'pcs': 'dona',
+    'pinch': 'chimdim',
+    'slice': 'tilim',
+    'slices': 'tilim',
+    'bunch': 'bog\'lam',
+    'g': 'g',
+    'gram': 'g',
+    'kg': 'kg',
+    'ml': 'ml',
+    'l': 'l',
+    'oz': 'unsiya',
+    'lb': 'funt',
+    'large': 'katta',
+    'medium': 'o\'rtacha',
+    'small': 'kichik',
+    'to taste': 'didiga qarab',
+    'serving': 'porsiya',
+    'servings': 'porsiya',
+  };
+
+  static const _unitMapUzCyrl = <String, String>{
+    'tbsp': 'ош-қ.',
+    'tablespoon': 'ош қошиқ',
+    'tsp': 'чой-қ.',
+    'teaspoon': 'чой қошиқ',
+    'cup': 'стакан',
+    'cups': 'стакан',
+    'clove': 'бўлак',
+    'can': 'банка',
+    'piece': 'дона',
+    'pieces': 'дона',
+    'pcs': 'дона',
+    'pinch': 'чимдим',
+    'slice': 'тилим',
+    'bunch': 'боғлам',
+    'g': 'г',
+    'kg': 'кг',
+    'ml': 'мл',
+    'l': 'л',
+    'large': 'катта',
+    'medium': 'ўртача',
+    'small': 'кичик',
+    'to taste': 'дидига қараб',
+    'serving': 'порсийа',
+    'servings': 'порсийа',
+  };
+
+  // ── Nutrition Label Maps ──────────────────────────────
+
+  static const _nutritionMapRu = <String, String>{
+    'g': 'г',
+    'kcal/srv': 'ккал/пор',
+    'kcal': 'ккал',
+    'cal': 'кал',
+    'P': 'Б',        // Белки (Protein)
+    'C': 'У',        // Углеводы (Carbs)
+    'F': 'Ж',        // Жиры (Fat)
+    'Protein': 'Белки',
+    'Carbs': 'Углеводы',
+    'Fat': 'Жиры',
+  };
+
+  static const _nutritionMapKo = <String, String>{
+    'g': 'g',
+    'kcal/srv': 'kcal/인분',
+    'kcal': 'kcal',
+    'cal': '칼',
+    'P': '단',        // 단백질 (Protein)
+    'C': '탄',        // 탄수화물 (Carbs)
+    'F': '지',        // 지방 (Fat)
+    'Protein': '단백질',
+    'Carbs': '탄수화물',
+    'Fat': '지방',
+  };
+
+  static const _nutritionMapUz = <String, String>{
+    'g': 'g',
+    'kcal/srv': 'kkal/por',
+    'kcal': 'kkal',
+    'cal': 'kal',
+    'P': 'O',        // Oqsil (Protein)
+    'C': 'U',        // Uglevodlar (Carbs)
+    'F': 'Y',        // Yog' (Fat)
+    'Protein': 'Oqsil',
+    'Carbs': 'Uglevodlar',
+    'Fat': 'Yog\'',
+  };
+
+  // ── Common Prep Note Maps ──────────────────────────────
+
+  static const _prepNoteMapRu = <String, String>{
+    'melted': 'растопленное',
+    'melted, plus extra for pan': 'растопленное, плюс для сковороды',
+    'diced': 'нарезанное кубиками',
+    'minced': 'измельчённое',
+    'chopped': 'нарезанное',
+    'finely chopped': 'мелко нарезанное',
+    'sliced': 'нарезанное ломтиками',
+    'grated': 'натёртое',
+    'peeled': 'очищенное',
+    'beaten': 'взбитое',
+    'room temperature': 'комнатной температуры',
+    'softened': 'размягчённое',
+    'to taste': 'по вкусу',
+    'optional': 'по желанию',
+  };
+
+  static const _prepNoteMapKo = <String, String>{
+    'melted': '녹인',
+    'melted, plus extra for pan': '녹인, 팬용 추가',
+    'diced': '깍둑썰기',
+    'minced': '다진',
+    'chopped': '썬',
+    'finely chopped': '잘게 썬',
+    'sliced': '슬라이스',
+    'grated': '간',
+    'peeled': '껍질 벗긴',
+    'beaten': '풀어놓은',
+    'room temperature': '실온',
+    'softened': '부드럽게 한',
+    'to taste': '적당량',
+    'optional': '선택사항',
+  };
+
+  static const _prepNoteMapUz = <String, String>{
+    'melted': 'eritilgan',
+    'melted, plus extra for pan': 'eritilgan, qozoncha uchun qo\'shimcha',
+    'diced': 'kubik qilib kesilgan',
+    'minced': 'maydalangan',
+    'chopped': 'kesilgan',
+    'finely chopped': 'mayda kesilgan',
+    'sliced': 'tilim qilingan',
+    'grated': 'qirg\'ichdan o\'tkazilgan',
+    'peeled': 'tozalangan',
+    'beaten': 'ko\'pirtirilgan',
+    'room temperature': 'xona haroratida',
+    'softened': 'yumshatilgan',
+    'to taste': 'didiga qarab',
+    'optional': 'ixtiyoriy',
+  };
 
   /// Helper to get effective locale key for switches.
   static String _localeKey(Locale locale) {

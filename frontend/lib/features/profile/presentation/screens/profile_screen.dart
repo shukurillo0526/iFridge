@@ -22,6 +22,7 @@ import 'package:plately_app/features/profile/presentation/screens/gamification_p
 import 'package:plately_app/features/profile/presentation/screens/meal_planner_page.dart';
 import 'package:plately_app/features/profile/presentation/screens/shopping_list_page.dart';
 import 'package:plately_app/core/services/social_service.dart';
+import 'package:plately_app/core/services/tutorial_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -734,6 +735,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             label: _userEmail,
                             trailing: SizedBox.shrink(),
                           ),
+                        // Replay Tutorial
+                        _SettingsRow(
+                          icon: Icons.school_outlined,
+                          label: l10n?.tutorial_replay ?? 'Replay Tutorial',
+                          onTap: () async {
+                            await TutorialService().resetAll();
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(l10n?.tutorial_replayConfirm ?? 'Tutorial will show on next app launch.'),
+                                  backgroundColor: Theme.of(context).colorScheme.primary,
+                                ),
+                              );
+                            }
+                          },
+                        ),
                         // Sign Out
                         _SettingsRow(
                           icon: Icons.logout,
@@ -762,6 +779,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             );
                             if (confirm == true) {
                               await Supabase.instance.client.auth.signOut();
+                              if (mounted) {
+                                Navigator.of(context).popUntil((route) => route.isFirst);
+                              }
                             }
                           },
                         ),

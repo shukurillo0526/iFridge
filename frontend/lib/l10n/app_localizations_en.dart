@@ -417,7 +417,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get auto_yourOrder => 'Your Order';
 
   @override
-  String get auto_total => 'Total';
+  String get auto_total => 'total';
 
   @override
   String get auto_orderConfirmed => 'Order Confirmed!';
@@ -966,4 +966,122 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get manual_required => 'Required';
+
+  @override
+  String get auth_tagline => 'Zero‑Waste, Maximum Taste.';
+
+  @override
+  String get auth_subtitle => 'Your kitchen, intelligently managed.';
+
+  @override
+  String get auth_email => 'Email';
+
+  @override
+  String get auth_password => 'Password';
+
+  @override
+  String get auth_continue => 'Continue';
+
+  @override
+  String get auth_or => 'OR';
+
+  @override
+  String get auth_continueGoogle => 'Continue with Google';
+
+  @override
+  String get auth_continueGuest => 'Continue as Guest';
+
+  @override
+  String get auth_autoDetectHint =>
+      'New here? We\'ll create your account automatically.';
+
+  @override
+  String get auth_checkEmail =>
+      'Please check your email to verify your account.';
+
+  @override
+  String get auth_enterBoth => 'Please enter both email and password.';
+
+  @override
+  String get auth_unexpectedError =>
+      'An unexpected error occurred. Please try again.';
+
+  @override
+  String get auth_googleFailed => 'Google sign‑in failed. Please try again.';
+
+  @override
+  String get auth_guestFailed =>
+      'Guest sign‑in failed. Please try email or Google instead.';
+
+  @override
+  String get import_recipe => 'Import Recipe';
+
+  @override
+  String get import_pasteRaw => 'Paste Raw Recipe';
+
+  @override
+  String get import_description =>
+      'Copy and paste instructions from a website, book, or notes app. Our AI will magically convert it into a step-by-step smart recipe.';
+
+  @override
+  String get import_hint =>
+      'e.g. Grandma\'s Cookies\nMix 2 cups flour with 1 cup sugar... bake at 350 for 10 mins.';
+
+  @override
+  String get import_analyzing => 'Analyzing Recipe...';
+
+  @override
+  String get import_parseWithAi => 'Parse with AI';
+
+  @override
+  String get import_parsedRecipe => 'Parsed Recipe';
+
+  @override
+  String get import_steps => 'Steps';
+
+  @override
+  String get import_saveButton => 'Looks Good — Save to My Recipes';
+
+  @override
+  String get import_savedLocally => 'Recipe saved to My Recipes!';
+
+  @override
+  String get tutorial_next => 'Next →';
+
+  @override
+  String get tutorial_gotIt => 'Got it! 🎉';
+
+  @override
+  String get tutorial_cookTitle => 'Your Recipes';
+
+  @override
+  String get tutorial_cookDesc =>
+      'Browse AI-matched recipes based on what\'s in your fridge. The higher the match %, the more ingredients you already have!';
+
+  @override
+  String get tutorial_scanTitle => 'Scan Ingredients';
+
+  @override
+  String get tutorial_scanDesc =>
+      'Use your camera to scan receipts, barcodes, or snap a photo of ingredients. Our AI will identify them instantly.';
+
+  @override
+  String get tutorial_shelfTitle => 'Your Living Shelf';
+
+  @override
+  String get tutorial_shelfDesc =>
+      'Your digital fridge, freezer, and pantry. Track expiry dates and quantities — we\'ll warn you before food goes bad.';
+
+  @override
+  String get tutorial_profileTitle => 'Profile & Settings';
+
+  @override
+  String get tutorial_profileDesc =>
+      'Tap the profile icon to change language, theme, manage your flavor profile, and track cooking streaks!';
+
+  @override
+  String get tutorial_replay => 'Replay Tutorial';
+
+  @override
+  String get tutorial_replayConfirm => 'Tutorial will show on next app launch.';
 }

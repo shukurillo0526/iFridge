@@ -15,6 +15,8 @@ from typing import List, Optional
 
 from app.services.ollama_service import get_ollama_service
 from app.services.youtube_intelligence import extract_recipe_from_youtube
+from app.services.static_substitutes import get_static_substitute
+from app.services.ai_cache import get_ai_cache
 from app.db.supabase_client import get_supabase
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -40,6 +42,7 @@ class SubstituteRequest(BaseModel):
     ingredient: str
     recipe_context: Optional[str] = None
     locale: Optional[str] = None
+    inventory_ingredients: Optional[List[str]] = None  # User's available ingredients
 
 class CookingTipRequest(BaseModel):
     step_text: str
@@ -127,10 +130,46 @@ Return JSON only:
 async def suggest_substitute(req: SubstituteRequest):
     """
     Suggest substitutes for a missing ingredient.
+    
+    Strategy (3-tier, cheapest first):
+      1. Static map — instant, no tokens (35+ common ingredients)
+      2. AI cache — instant, previously computed result
+      3. AI call — generates fresh, caches on success
     """
+    cache = get_ai_cache()
+    cache_key_parts = ("substitute", req.ingredient, req.locale or "en")
+
+    # ── Tier 1: Static substitution map (free, instant) ──
+    if not req.inventory_ingredients:  # Static subs don't know user inventory
+        static_result = get_static_substitute(req.ingredient)
+        if static_result:
+            logger.info(f"[Substitute] Static hit for '{req.ingredient}'")
+            return {
+                "status": "success",
+                "source": "static_map",
+                "data": static_result,
+            }
+
+    # ── Tier 2: AI response cache ──
+    cached = cache.get(*cache_key_parts)
+    if cached:
+        logger.info(f"[Substitute] Cache hit for '{req.ingredient}' (locale={req.locale})")
+        return {
+            "status": "success",
+            "source": "ai_cached",
+            "data": cached,
+        }
+
+    # ── Tier 3: AI call (Gemini Flash Lite) ──
     ollama = get_ollama_service()
 
     context = f" Recipe context: {req.recipe_context}" if req.recipe_context else ""
+
+    # Inventory-aware hint
+    inventory_hint = ""
+    if req.inventory_ingredients and len(req.inventory_ingredients) > 0:
+        inventory_list = ", ".join(req.inventory_ingredients[:30])  # Cap to reduce tokens
+        inventory_hint = f"\nThe user currently has these ingredients available: {inventory_list}. PRIORITIZE substitutes from this list when possible and mark them with '✅ Available'."
 
     # Language instruction based on locale
     lang_map = {"en": "English", "ko": "Korean", "uz": "O'zbek (Uzbek)", "ru": "Russian",
@@ -138,10 +177,10 @@ async def suggest_substitute(req: SubstituteRequest):
     lang_name = lang_map.get(req.locale, "English") if req.locale else "English"
     lang_instruction = f" Respond entirely in {lang_name}." if req.locale and req.locale != "en" else ""
 
-    prompt = f"""I'm missing "{req.ingredient}" for cooking.{context}
+    prompt = f"""I'm missing "{req.ingredient}" for cooking.{context}{inventory_hint}
 
 Suggest 3 substitutes.{lang_instruction} Return JSON only:
-{{"ingredient": "{req.ingredient}", "substitutes": [{{"name": "...", "ratio": "1:1", "notes": "..."}}]}}"""
+{{"ingredient": "{req.ingredient}", "substitutes": [{{"name": "...", "ratio": "1:1", "notes": "...", "available": true/false}}]}}"""
 
     system = f"You are a cooking expert. Suggest practical ingredient substitutes.{lang_instruction} Return only valid JSON."
 
@@ -149,9 +188,14 @@ Suggest 3 substitutes.{lang_instruction} Return JSON only:
         prompt, system_prompt=system, model="gemini-2.5-flash-lite"
     )
 
+    # Cache successful AI responses for 2 hours
+    if "error" not in result:
+        cache.put(result, *cache_key_parts, ttl=7200)
+        logger.info(f"[Substitute] AI result cached for '{req.ingredient}'")
+
     return {
         "status": "success" if "error" not in result else "partial",
-        "source": "ollama-local",
+        "source": "ai_live",
         "data": result,
     }
 
@@ -160,10 +204,23 @@ Suggest 3 substitutes.{lang_instruction} Return JSON only:
 async def get_cooking_tip(req: CookingTipRequest):
     """
     Get a cooking tip or answer a question about a recipe step.
+    Uses AI cache to avoid duplicate calls for identical questions.
     """
-    ollama = get_ollama_service()
-
+    cache = get_ai_cache()
     question = req.question or "Give me a helpful tip for this step."
+    cache_key_parts = ("tip", req.step_text[:100], question[:80], req.locale or "en")
+
+    # Check cache first
+    cached = cache.get(*cache_key_parts)
+    if cached:
+        logger.info(f"[CookingTip] Cache hit")
+        return {
+            "status": "success",
+            "source": "ai_cached",
+            "data": cached,
+        }
+
+    ollama = get_ollama_service()
 
     # Language instruction based on locale
     lang_map = {"en": "English", "ko": "Korean", "uz": "O'zbek (Uzbek)", "ru": "Russian",
@@ -182,12 +239,26 @@ Give a brief, practical cooking tip (2-3 sentences max).{lang_instruction}"""
         prompt, system_prompt=system, max_tokens=300, model="gemini-2.5-flash-lite"
     )
 
+    tip_data = {"tip": response.strip()}
+
+    # Cache for 1 hour
+    cache.put(tip_data, *cache_key_parts, ttl=3600)
+
     return {
         "status": "success",
-        "source": "ollama-local",
-        "data": {"tip": response.strip()},
+        "source": "ai_live",
+        "data": tip_data,
     }
 
+
+@router.get("/api/v1/ai/cache-stats")
+async def cache_stats():
+    """Return AI cache performance statistics for monitoring."""
+    cache = get_ai_cache()
+    return {
+        "status": "success",
+        "data": cache.stats,
+    }
 
 class ChatRequest(BaseModel):
     messages: list[dict]

@@ -1,12 +1,16 @@
 // Plately — Auth Screen
 // =====================
-// Beautiful login screen with Google OAuth and Guest login.
-// Uses Supabase Auth for both flows.
+// Localized login screen with language picker, Google OAuth, and Guest login.
+// Uses a unified "Continue" flow that auto-detects sign-in vs sign-up
+// to eliminate user confusion between the two modes.
+// Uses Supabase Auth for all flows.
 
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:plately_app/core/services/auth_helper.dart';
+import 'package:plately_app/core/services/app_settings.dart';
+import 'package:plately_app/l10n/app_localizations.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -19,9 +23,8 @@ class _AuthScreenState extends State<AuthScreen>
     with SingleTickerProviderStateMixin {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   bool _loading = false;
-  bool _isSignUp = false;
   String? _error;
   late AnimationController _pulseController;
 
@@ -42,66 +45,81 @@ class _AuthScreenState extends State<AuthScreen>
     super.dispose();
   }
 
-  Future<void> _processAuth(Future<void> Function() authAction) async {
+  /// Unified "Continue" flow: tries sign-in first, then sign-up if credentials are invalid.
+  /// This eliminates the confusing Sign In / Sign Up toggle entirely.
+  Future<void> _continueWithEmail() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final l10n = AppLocalizations.of(context);
+
+    if (email.isEmpty || password.isEmpty) {
+      setState(() => _error = l10n?.auth_enterBoth ?? 'Please enter both email and password.');
+      return;
+    }
+
     setState(() {
       _loading = true;
       _error = null;
     });
+
     try {
-      await authAction();
-      if (mounted) {
-        setState(() {
-          _loading = false;
-        });
-        // Feedback for signups regarding email verification
-        if (_isSignUp && Supabase.instance.client.auth.currentSession == null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Please check your email to verify your account.'),
-              backgroundColor: Colors.green,
-            ),
+      // Step 1: Try signing in with existing credentials
+      await Supabase.instance.client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+      // Success — AuthGate will handle navigation
+      if (mounted) setState(() => _loading = false);
+    } on AuthException catch (signInError) {
+      // Step 2: If "Invalid login credentials", auto-attempt sign-up
+      if (signInError.message.contains('Invalid login credentials') ||
+          signInError.message.contains('invalid_credentials')) {
+        try {
+          final signUpResult = await Supabase.instance.client.auth.signUp(
+            email: email,
+            password: password,
           );
+
+          if (mounted) {
+            setState(() => _loading = false);
+            // If email confirmation is required, session will be null
+            if (signUpResult.session == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(l10n?.auth_checkEmail ?? 'Please check your email to verify your account.'),
+                  backgroundColor: Colors.green,
+                  behavior: SnackBarBehavior.floating,
+                  duration: const Duration(seconds: 5),
+                ),
+              );
+            }
+          }
+        } on AuthException catch (signUpError) {
+          if (mounted) {
+            setState(() {
+              _error = signUpError.message;
+              _loading = false;
+            });
+          }
         }
-      }
-    } on AuthException catch (e) {
-      if (mounted) {
-        setState(() {
-          _error = e.message;
-          _loading = false;
-        });
+      } else {
+        // Other sign-in errors (network, etc.)
+        if (mounted) {
+          setState(() {
+            _error = signInError.message;
+            _loading = false;
+          });
+        }
       }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = 'An unexpected error occurred. Please try again.';
+          _error = AppLocalizations.of(context)?.auth_unexpectedError ??
+              'An unexpected error occurred. Please try again.';
           _loading = false;
         });
       }
     }
-  }
-
-  Future<void> _signInOutWithEmail() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
-
-    if (email.isEmpty || password.isEmpty) {
-      setState(() => _error = 'Please enter both email and password.');
-      return;
-    }
-
-    await _processAuth(() async {
-      if (_isSignUp) {
-        await Supabase.instance.client.auth.signUp(
-          email: email,
-          password: password,
-        );
-      } else {
-        await Supabase.instance.client.auth.signInWithPassword(
-          email: email,
-          password: password,
-        );
-      }
-    });
   }
 
   Future<void> _signInWithGoogle() async {
@@ -123,7 +141,8 @@ class _AuthScreenState extends State<AuthScreen>
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = 'Google sign‑in failed: ${e.toString()}';
+          final l10n = AppLocalizations.of(context);
+          _error = l10n?.auth_googleFailed ?? 'Google sign‑in failed. Please try again.';
           _loading = false;
         });
       }
@@ -140,21 +159,96 @@ class _AuthScreenState extends State<AuthScreen>
       // Their data is isolated and can be migrated when they
       // later sign up with email or Google (via identity linking).
       await Supabase.instance.client.auth.signInAnonymously();
-      
+
       // Initialize profile rows for this anonymous user
       await ensureUserInitialized();
     } catch (e) {
       if (mounted) {
         setState(() {
-          _error = 'Guest sign‑in failed. Please try email or Google instead.';
+          final l10n = AppLocalizations.of(context);
+          _error = l10n?.auth_guestFailed ?? 'Guest sign‑in failed. Please try email or Google instead.';
           _loading = false;
         });
       }
     }
   }
 
+  /// Show language picker bottom sheet — identical to profile's language picker
+  void _showLanguagePicker() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        final settings = AppSettings();
+        final currentLocaleStr = settings.locale.scriptCode != null
+            ? '${settings.locale.languageCode}_${settings.locale.scriptCode}'
+            : settings.locale.languageCode;
+
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle bar
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                AppLocalizations.of(context)?.settingsLanguage ?? 'Language',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ...AppSettings.supportedLanguages.entries.map((entry) {
+                final code = entry.key;
+                final name = entry.value['name']!;
+                final flag = entry.value['flag']!;
+                final isSelected = code == currentLocaleStr;
+
+                return ListTile(
+                  leading: Text(flag, style: const TextStyle(fontSize: 24)),
+                  title: Text(
+                    name,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+                    ),
+                  ),
+                  trailing: isSelected
+                      ? Icon(Icons.check_circle, color: Theme.of(context).colorScheme.primary)
+                      : null,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  selectedTileColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                  selected: isSelected,
+                  onTap: () {
+                    settings.setLocale(AppSettings.parseLocale(code));
+                    Navigator.pop(ctx);
+                  },
+                );
+              }),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
@@ -175,11 +269,53 @@ class _AuthScreenState extends State<AuthScreen>
             ),
           ),
 
+          // ── Language Picker Button (top-right) ──
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 8,
+            right: 12,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: _showLanguagePicker,
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.language,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${AppSettings().currentLanguageFlag} ${AppSettings().currentLanguageName}',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
           // ── Content ──
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 32),
+                padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -216,14 +352,14 @@ class _AuthScreenState extends State<AuthScreen>
                             ),
                           ],
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Text('🧊',
                               style: TextStyle(fontSize: 56)),
                         ),
                       ),
                     ),
 
-                    SizedBox(height: 32),
+                    const SizedBox(height: 32),
 
                     // ── Title ──
                     Text(
@@ -235,9 +371,9 @@ class _AuthScreenState extends State<AuthScreen>
                         letterSpacing: -1,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
-                      'Zero‑Waste, Maximum Taste.',
+                      l10n?.auth_tagline ?? 'Zero‑Waste, Maximum Taste.',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                         fontSize: 15,
@@ -245,89 +381,80 @@ class _AuthScreenState extends State<AuthScreen>
                       ),
                     ),
 
-                    SizedBox(height: 48),
+                    const SizedBox(height: 48),
 
                     // ── Email & Password Fields ──
                     _TextField(
                       controller: _emailController,
-                      hintText: 'Email',
+                      hintText: l10n?.auth_email ?? 'Email',
                       icon: Icons.email_outlined,
                       keyboardType: TextInputType.emailAddress,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     _TextField(
                       controller: _passwordController,
-                      hintText: 'Password',
+                      hintText: l10n?.auth_password ?? 'Password',
                       icon: Icons.lock_outline,
                       obscureText: true,
                     ),
 
-                    SizedBox(height: 24),
+                    const SizedBox(height: 12),
 
-                    // ── Email Sign In / Sign Up Button ──
+                    // ── Helper text — explains auto-detection ──
+                    Text(
+                      l10n?.auth_autoDetectHint ?? 'New here? We\'ll create your account automatically.',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // ── Unified "Continue" Button ──
                     _AuthButton(
-                      onPressed: _loading ? null : _signInOutWithEmail,
-                      icon: _isSignUp ? Icons.person_add_alt_1 : Icons.login,
-                      label: _isSignUp ? 'Create Account' : 'Sign In',
+                      onPressed: _loading ? null : _continueWithEmail,
+                      icon: Icons.arrow_forward,
+                      label: l10n?.auth_continue ?? 'Continue',
                       isPrimary: true,
                     ),
 
-                    SizedBox(height: 16),
+                    const SizedBox(height: 32),
 
-                    // ── Toggle Mode ──
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _isSignUp = !_isSignUp;
-                          _error = null;
-                        });
-                      },
-                      child: Text(
-                        _isSignUp
-                            ? 'Already have an account? Sign In'
-                            : 'Need an account? Sign Up',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 32),
-                    
                     Row(
                       children: [
                         Expanded(child: Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: Text('OR', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(l10n?.auth_or ?? 'OR', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 12)),
                         ),
                         Expanded(child: Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
                       ],
                     ),
 
-                    SizedBox(height: 32),
+                    const SizedBox(height: 32),
 
                     // ── Google Sign In ──
                     _AuthButton(
                       onPressed: _loading ? null : _signInWithGoogle,
                       icon: Icons.g_mobiledata,
-                      label: 'Continue with Google',
-                      isPrimary: false, // Changed from true to false
+                      label: l10n?.auth_continueGoogle ?? 'Continue with Google',
+                      isPrimary: false,
                     ),
 
-                    SizedBox(height: 14),
+                    const SizedBox(height: 14),
 
                     // ── Guest ──
                     _AuthButton(
                       onPressed: _loading ? null : _signInAsGuest,
                       icon: Icons.person_outline,
-                      label: 'Continue as Guest',
+                      label: l10n?.auth_continueGuest ?? 'Continue as Guest',
                       isPrimary: false,
                     ),
 
                     if (_loading) ...[
-                      SizedBox(height: 28),
+                      const SizedBox(height: 28),
                       SizedBox(
                         width: 24,
                         height: 24,
@@ -339,9 +466,9 @@ class _AuthScreenState extends State<AuthScreen>
                     ],
 
                     if (_error != null) ...[
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
                           color: Colors.red.withValues(alpha: 0.1),
@@ -351,13 +478,13 @@ class _AuthScreenState extends State<AuthScreen>
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.error_outline,
+                            const Icon(Icons.error_outline,
                                 color: Colors.redAccent, size: 20),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Expanded(
                               child: Text(
                                 _error!,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.redAccent,
                                   fontSize: 13,
                                 ),
@@ -368,10 +495,10 @@ class _AuthScreenState extends State<AuthScreen>
                       ),
                     ],
 
-                    SizedBox(height: 48),
+                    const SizedBox(height: 48),
 
                     Text(
-                      'Your kitchen, intelligently managed.',
+                      l10n?.auth_subtitle ?? 'Your kitchen, intelligently managed.',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                         fontSize: 12,
@@ -413,7 +540,7 @@ class _AuthButton extends StatelessWidget {
               onPressed: onPressed,
               icon: Icon(icon, size: 28),
               label: Text(label,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 15, fontWeight: FontWeight.w600)),
               style: FilledButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primary,
@@ -479,7 +606,7 @@ class _TextField extends StatelessWidget {
           hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)),
           prefixIcon: Icon(icon, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), size: 22),
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
         ),
       ),
     );
