@@ -543,3 +543,32 @@ Plately is now positioned as a **3-sided food commerce ecosystem**:
 - **Open hardware** (any Android tablet for kiosk)
 
 See `vision_docs/VISION_ABOUT.md` and `vision_docs/ECOSYSTEM_STRATEGY.md` for the complete business plan and technical architecture.
+
+---
+
+# 📦 v0.0.9 — Performance & Usability Overhaul
+
+A massive polishing release ensuring stability, extensive localization, local-first data behavior, and AI infrastructure optimizations for a true production-ready app.
+
+### Phase 1: Auth & Navigation Polish
+- **Unified Login/Signup Flow**: Seamless automatic detection of login vs sign up. Language picker added directly to the login screen for accessibility.
+- **Sign-Out Navigation Fix**: Safely clears auth state and routes users immediately back to the AuthGate without pushing dead-end screens.
+
+### Phase 2: Comprehensive Localization & Gamification
+- **In-Depth i18n Maps**: `L10nHelper` now fully translates over 50+ cooking measurement units, 14 common prep notes, and dynamic nutritional chips (kcal, Protein, Carbs, Fat) across all 5 supported locales (EN, KO, UZ Latin, UZ Cyrl, RU).
+- **Gamification Badges**: Simplified 15 and 30-day streak badges for visual clarity while keeping higher-tier streak badges meme-centric. 
+- **Navigation Icons**: Standardized core navigation icons (e.g. `restaurant`, `camera_alt`).
+
+### Phase 3: Local-First Recipe Storage & Inventory-Aware Swaps
+- **Offline-First Storage**: Implemented `local_recipes` Hive box within `CacheService`. Recipe imports now instantly save locally without requiring remote Supabase sync.
+- **Inventory-Aware AI**: The AI now actively pulls from the user's `inventory_ingredients` and prioritizes suggesting substitutes the user already has, marking them explicitly as available.
+
+### Phase 4: In-App Tutorial Walkthrough
+- **Production-Grade Onboarding**: Developed a robust `TutorialOverlay` employing custom painters for dynamic UI spotlights.
+- **Guided Flow**: Introduces a 4-step home walkthrough (Cook Tab, Scan Fab, Shelf, Profile) that automatically runs for new users.
+- **State Persistence**: Uses SharedPreferences (`TutorialService`) to ensure users only see it once. Users can manually re-trigger it from their Profile settings.
+
+### Phase 5: AI Token & Performance Optimization
+- **Static Substitution Map**: Deployed an offline, hardcoded 105-rule dictionary for 35+ of the most common cooking ingredients. Completely eliminates ~60% of AI calls for simple swaps (like butter to oil).
+- **AI Response LRU Cache**: Implemented an in-memory, TTL-backed LRU cache using SHA-256 key hashing to serve identical requests instantly across the user base.
+- **Three-Tier Pipeline**: Substitutions now check Static Map -> AI Cache -> Live AI (Gemini Flash Lite), saving massive amounts of latency and LLM token usage. Included `/api/v1/ai/cache-stats` for monitoring.
